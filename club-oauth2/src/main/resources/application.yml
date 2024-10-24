@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: SMH Club Authentication Server

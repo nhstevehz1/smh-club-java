@@ -1,0 +1,5 @@
+rootProject.name = 'smh-club-java'
+
+include 'club-gateway'
+include 'club-api'
+include 'club-oauth2'
