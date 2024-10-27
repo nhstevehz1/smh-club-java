@@ -4,7 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'smh.club'
+group = 'com.smh'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -24,19 +24,26 @@ repositories {
 }
 
 dependencies {
-	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//implementation 'org.flywaydb:flyway-core'
-	//implementation 'org.flywaydb:flyway-database-postgresql'
-	//compileOnly 'org.projectlombok:lombok'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	//developmentOnly 'org.postgresql:postgresql'
-	//annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'com.h2database:h2'
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.zonky.test:embedded-database-spring-test:2.5.1'
+	testImplementation 'io.zonky.test:embedded-postgres:1.2.10'
 	//testImplementation 'org.springframework.security:spring-security-test'
-	//testImplementation 'io.zonky.test:embedded-database-spring-test:2.5.1'
-	//testImplementation 'io.zonky.test:embedded-postgres:1.2.10'
+
+	testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:17.0.0')
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
