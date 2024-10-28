@@ -1,6 +1,6 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.Services.IMemberService;
+import com.smh.club.api.Services.MemberService;
 import com.smh.club.api.models.Member;
 import com.smh.club.api.models.MemberDetail;
 import com.smh.club.api.request.PageParams;
@@ -16,9 +16,9 @@ import java.util.Optional;
 @RequestMapping(value = "/members", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MemberController {
 
-    private final IMemberService memberSvc;
+    private final MemberService memberSvc;
 
-    public MemberController(IMemberService memberSvc) {
+    public MemberController(MemberService memberSvc) {
         this.memberSvc = memberSvc;
     }
 
