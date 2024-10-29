@@ -1,4 +1,4 @@
-package com.smh.club.api.mappers;
+package com.smh.club.api.common.mappers;
 
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.models.Member;

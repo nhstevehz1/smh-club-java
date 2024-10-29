@@ -1,4 +1,4 @@
-package com.smh.club.api.mappers;
+package com.smh.club.api.common.mappers;
 
 import java.util.List;
 

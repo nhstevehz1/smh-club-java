@@ -1,5 +1,6 @@
 package com.smh.club.api.mappers;
 
+import com.smh.club.api.common.mappers.MemberMapper;
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.models.Member;
 import org.springframework.stereotype.Service;
