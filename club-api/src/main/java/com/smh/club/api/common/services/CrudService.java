@@ -3,7 +3,6 @@ package com.smh.club.api.common.services;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
-import org.springframework.data.domain.PageRequest;
 
 public interface CrudService<T> {
     PageResponse<T> getItemListPage(PageParams pageParams);

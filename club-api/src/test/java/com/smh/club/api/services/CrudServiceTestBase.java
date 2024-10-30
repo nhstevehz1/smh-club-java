@@ -32,7 +32,7 @@ public abstract class CrudServiceTestBase<D, E> {
     }
 
     protected Page<E> createPage(int size, Pageable pageable, int total) {
-        return new PageImpl<E>(createEntityList(size), pageable, total);
+        return new PageImpl<>(createEntityList(size), pageable, total);
     }
 
     protected PageParams createPageParam(int pageNumber, int pageSize, Sort.Direction direction, String column) {
