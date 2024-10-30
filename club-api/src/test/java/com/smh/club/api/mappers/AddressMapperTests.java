@@ -131,8 +131,8 @@ public class AddressMapperTests {
 
     private Address createDataObject() {
         return Address.builder()
-                .Address1("ad_address1")
-                .Address2("ad_address2")
+                .address1("ad_address1")
+                .address2("ad_address2")
                 .city("ad_city")
                 .state("ad_state")
                 .addressType(AddressType.Work)
