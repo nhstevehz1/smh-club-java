@@ -1,54 +1,54 @@
 package com.smh.club.api.Services;
 
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.mappers.DataObjectMapper;
+import com.smh.club.api.common.mappers.*;
+import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.models.Member;
 import com.smh.club.api.models.MemberDetail;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
 @Service
 public class MemberServiceImpl implements MemberService {
 
     private final MembersRepo membersRepo;
-    private final DataObjectMapper<Member, MemberEntity> memberMapper;
 
-    private final Map<String, String> sortColumnMap;
+    private final MemberMapper memberMapper;
+    private final AddressMapper addressMapper;
+    private final EmailMapper emailMapper;
+    private final PhoneMapper phoneMapper;
+    private final RenewalMapper renewalMapper;
 
-    public MemberServiceImpl(MembersRepo membersRepo, DataObjectMapper<Member, MemberEntity> memberMapper) {
-        log.debug("Creating Member Service");
+    private final Map<String, String> sortColumnMap = initSortColumnMap();
 
-        this.membersRepo = membersRepo;
-        this.memberMapper = memberMapper;
-        this.sortColumnMap = initSortColumnMap();
-    }
 
     @Override
-    public PageResponse<Member> getMemberPage(Optional<PageParams> pageParams) {
-        log.debug("Getting member page, prams: " + (pageParams.isPresent() ? pageParams.get().toString() : "null"));
+    public PageResponse<Member> getItemListPage(@NonNull PageParams pageParams) {
+        log.debug("Getting member item list page: {}", pageParams);
 
-        var request = pageParams.orElse(PageParams.getDefault());
-        request.setSortColumn(sortColumnMap.get(request.getSortColumn()));
+        var pageRequest = PageRequest.of(
+                pageParams.getPageNumber(),
+                pageParams.getPageSize(),
+                pageParams.getSortDirection(),
+                sortColumnMap.getOrDefault(pageParams.getSortColumn(),
+                        sortColumnMap.get("default")));
+        log.debug("Created pageable: {}", pageRequest);
 
-        var pageable = PageRequest.of(
-                request.getPageNumber(),
-                request.getPageSize(),
-                request.getSortDirection(),
-                request.getSortColumn());
-
-        var page = membersRepo.findAll(pageable);
+        var page = membersRepo.findAll(pageRequest);
 
         return PageResponse.<Member>builder()
                 .totalPages(page.getTotalPages())
@@ -58,31 +58,61 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDetail getMemberDetail(int id) {
-        return null;
+    public Member getItem(int id) {
+        log.debug("Getting member by id: {}", id);
+
+        var memberEntity = membersRepo.findById(id).orElseThrow();
+        return memberMapper.toDataObject(memberEntity);
     }
 
     @Override
-    public Member createMember(Member member) {
+    public Member createItem(Member member) {
+        log.debug("creating member: {}", member);
+
         var memberEntity = memberMapper.toEntity(member);
         return memberMapper.toDataObject(membersRepo.save(memberEntity));
     }
 
     @Override
-    public Member updateMember(Member member) {
-        var memberEntity = membersRepo.getReferenceById(member.getId());
+    public Member updateItem(int id, Member member) {
+        log.debug("Updating member id: {}, with data: {}", id, member);
+
+        if(id != member.getId()) {
+            throw new IllegalArgumentException();
+        }
+
+        var memberEntity = membersRepo.findById(id).orElseThrow();
         memberMapper.update(member, memberEntity);
+        membersRepo.save(memberEntity);
+
         return memberMapper.toDataObject(memberEntity);
     }
 
     @Override
-    public void deleteMember(int id) {
+    public void deleteItem(int id) {
+        log.debug("Deleting member id: {}", id);
         membersRepo.deleteById(id);
     }
 
     @Override
-    public CountResponse getMemberCount() {
-        return new CountResponse(membersRepo.count());
+    public CountResponse getItemCount() {
+        log.debug("Getting member count");
+        return CountResponse.of(membersRepo.count());
+    }
+
+    @Override
+    public MemberDetail getMemberDetail(int id) {
+        log.debug("Getting member detail by id: {}", id);
+
+        var entity = membersRepo.findById(id).orElseThrow();
+
+        var detail = memberMapper.toMemberDetail(entity);
+        detail.setAddresses(addressMapper.toDataObjectList(entity.getAddresses()));
+        detail.setEmails(emailMapper.toDataObjectList(entity.getEmails()));
+        detail.setPhones(phoneMapper.toDataObjectList(entity.getPhones()));
+        detail.setRenewals(renewalMapper.toDataObjectList(entity.getRenewals()));
+
+        return detail;
     }
 
     private Map<String,String> initSortColumnMap() {

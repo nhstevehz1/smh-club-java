@@ -18,7 +18,7 @@ public class MemberDetail extends Member{
 
     @Builder.Default
     @JsonProperty("addresses")
-    private List<Address> address = new ArrayList<>();
+    private List<Address> addresses = new ArrayList<>();
 
     @Builder.Default
     @JsonProperty("emails")

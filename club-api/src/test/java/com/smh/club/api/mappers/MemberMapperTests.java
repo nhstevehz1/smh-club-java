@@ -119,6 +119,25 @@ public class MemberMapperTests {
         }
     }
 
+    @Test
+    public void mapper_toMemberDetail() {
+        // setup
+        var entity = createEntity();
+
+        // execute
+        var detail = mapper.toMemberDetail(entity);
+
+        // verify
+        assertEquals(entity.getId(), detail.getId());
+        assertEquals(entity.getMemberNumber(), detail.getMemberNumber());
+        assertEquals(entity.getFirstName(), detail.getFirstName());
+        assertEquals(entity.getMiddleName(), detail.getMiddleName());
+        assertEquals(entity.getLastName(), detail.getLastName());
+        assertEquals(entity.getSuffix(), detail.getSuffix());
+        assertEquals(entity.getBirthDate(), detail.getBirthDate());
+        assertEquals(entity.getJoinedDate(), detail.getJoinedDate());
+    }
+
     private MemberEntity createEntity() {
         return MemberEntity.builder()
                 .memberNumber(10)
