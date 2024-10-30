@@ -43,7 +43,7 @@ public class MemberMapperImpl implements MemberMapper {
     }
 
     @Override
-    public void update(Member dataObject, MemberEntity entity) {
+    public void updateEntity(Member dataObject, MemberEntity entity) {
         entity.setMemberNumber(dataObject.getMemberNumber());
         entity.setFirstName(dataObject.getFirstName());
         entity.setMiddleName(dataObject.getMiddleName());

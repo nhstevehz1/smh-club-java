@@ -77,7 +77,7 @@ public class MemberMapperTests {
         entity.setMemberNumber(100);
 
         // execute
-        mapper.update(dataObject, entity);
+        mapper.updateEntity(dataObject, entity);
 
         // verify
         assertEquals(300, entity.getId());

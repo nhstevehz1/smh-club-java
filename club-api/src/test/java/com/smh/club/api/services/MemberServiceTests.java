@@ -232,7 +232,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         when(repoMock.findById(id)).thenReturn(optional);
         when(repoMock.save(entity)).thenReturn(entity);
 
-        doNothing().when(memMapMock).update(m1, entity);
+        doNothing().when(memMapMock).updateEntity(m1, entity);
         when(memMapMock.toDataObject(entity)).thenReturn(m1);
 
         // execute
@@ -243,7 +243,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         verify(repoMock).findById(id);
         verify(repoMock).save(entity);
 
-        verify(memMapMock).update(m1, entity);
+        verify(memMapMock).updateEntity(m1, entity);
         verify(memMapMock).toDataObject(entity);
         verifyNoMoreInteractions(repoMock, memMapMock);
     }

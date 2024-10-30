@@ -82,7 +82,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         var memberEntity = membersRepo.findById(id).orElseThrow();
-        memberMapper.update(member, memberEntity);
+        memberMapper.updateEntity(member, memberEntity);
         membersRepo.save(memberEntity);
 
         return memberMapper.toDataObject(memberEntity);

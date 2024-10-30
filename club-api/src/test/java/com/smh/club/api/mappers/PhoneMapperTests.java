@@ -70,7 +70,7 @@ public class PhoneMapperTests {
         var entity = createEntity();
 
         // execute
-        mapper.update(dataObject, entity);
+        mapper.updateEntity(dataObject, entity);
 
         // verify
         assertEquals(entity.getPhoneNum(), dataObject.getPhoneNum());

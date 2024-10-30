@@ -70,7 +70,7 @@ public class RenewalMapperTests {
         var entity = createEntity();
 
         // execute
-        mapper.update(dataObject, entity);
+        mapper.updateEntity(dataObject, entity);
 
         // verify
         assertEquals(entity.getRenewalDate(), dataObject.getRenewalDate());

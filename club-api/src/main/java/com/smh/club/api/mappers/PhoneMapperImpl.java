@@ -29,7 +29,7 @@ public class PhoneMapperImpl implements PhoneMapper {
     }
 
     @Override
-    public void update(Phone dataObject, PhoneEntity entity) {
+    public void updateEntity(Phone dataObject, PhoneEntity entity) {
         entity.setPhoneNum(dataObject.getPhoneNum());
         entity.setPhoneType(dataObject.getPhoneType());
     }

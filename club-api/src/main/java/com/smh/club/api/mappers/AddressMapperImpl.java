@@ -37,7 +37,7 @@ public class AddressMapperImpl implements AddressMapper {
     }
 
     @Override
-    public void update(Address dataObject, AddressEntity entity) {
+    public void updateEntity(Address dataObject, AddressEntity entity) {
         entity.setAddress1(dataObject.getAddress1());
         entity.setAddress2(dataObject.getAddress2());
         entity.setCity(dataObject.getCity());

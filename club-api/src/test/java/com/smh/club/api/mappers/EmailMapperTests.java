@@ -69,7 +69,7 @@ public class EmailMapperTests {
         var entity = createEntity();
 
         // execute
-        mapper.update(dataObject, entity);
+        mapper.updateEntity(dataObject, entity);
 
         // verify
         assertEquals(entity.getEmail(), dataObject.getEmail());

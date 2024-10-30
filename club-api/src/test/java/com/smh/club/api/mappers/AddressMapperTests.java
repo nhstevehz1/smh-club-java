@@ -78,7 +78,7 @@ public class AddressMapperTests {
         var entity = createEntity();
 
         // execute
-        mapper.update(dataObject, entity);
+        mapper.updateEntity(dataObject, entity);
 
         // verify
         assertEquals(entity.getAddress1(), dataObject.getAddress1());
