@@ -18,10 +18,10 @@ public class Address {
     private int memberId;
 
     @JsonProperty("address-1")
-    private String Address1;
+    private String address1;
 
     @JsonProperty("address-2")
-    private String Address2;
+    private String address2;
 
     @JsonProperty("city")
     private String city;
