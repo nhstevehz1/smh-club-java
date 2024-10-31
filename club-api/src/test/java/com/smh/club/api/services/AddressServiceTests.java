@@ -199,7 +199,7 @@ public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEnt
     }
 
     @Test
-    public void createItem_returnsMember() {
+    public void createItem_returnsAddress() {
         // setup
         var memberId = 10;
         var m1 = MemberEntity.builder().id(memberId).build();
@@ -227,7 +227,7 @@ public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEnt
     }
 
     @Test
-    public void updateItem_returnsMember() {
+    public void updateItem_returnsAddress() {
         // setup
         int id = 1;
         var entity = createEntity(1);
@@ -254,7 +254,7 @@ public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEnt
     }
 
     @Test
-    public void deleteItem_deletesMember() {
+    public void deleteItem_deletesAddress() {
         // setup
         int id = 1;
         doNothing().when(addRepoMock).deleteById(id);
