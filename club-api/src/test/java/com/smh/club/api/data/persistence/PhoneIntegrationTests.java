@@ -2,7 +2,6 @@ package com.smh.club.api.data.persistence;
 
 import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.data.repos.PhoneRepo;
-import com.smh.club.api.models.EmailType;
 import com.smh.club.api.models.PhoneType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import java.time.LocalDate;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @ActiveProfiles("tests")
