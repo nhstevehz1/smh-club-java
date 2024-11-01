@@ -47,7 +47,7 @@ public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEnt
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        var ret = svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(addRepoMock).findAll(acPageRequest.capture());
