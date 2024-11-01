@@ -28,7 +28,7 @@ public class RenewalEntity {
     @JsonIgnore // do not serialize to json
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private MemberEntity member;
 }
