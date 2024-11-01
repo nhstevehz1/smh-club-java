@@ -45,13 +45,13 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
     @Test
-    public void getItemListPage_defaultPageParams() {
+    public void getItemListPage_with_default_pageParams() {
         // setup
         var params = PageParams.getDefault();
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -69,13 +69,13 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getItemListPage_nonDefaultPageParams() {
+    public void getItemListPage_with_nonDefault_pageParams() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, "first-name");
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -93,13 +93,13 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getItemListPage_PageParamsUnknownSortColumn() {
+    public void getItemListPage_unknown_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, "thisIsNotAColumn");
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -117,13 +117,13 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortColumn() {
+    public void getItemListPage_null_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, null);
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -141,24 +141,24 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortDirection_throwsException() {
+    public void getItemListPage_null_sortDirection_throwsException() {
         // setup
         var params = createPageParam(5,100, null, "first-name");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> this.svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
         verifyNoInteractions(repoMock);
     }
 
     @Test
-    public void getItemListPage_returnsMemberList() {
+    public void getItemListPage_returns_memberList() {
         // setup
         var page = createPage(10, pageableMock, 200);
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(page);
         when(memMapMock.toDataObjectList(page.getContent())).thenReturn(createDataObjectList(10));
 
         // execute
-        var pageResponse = this.svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getItemListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
@@ -170,38 +170,40 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getItem_returnsMember() {
+    public void getItem_returns_member() {
         // setup
         int id = 1;
-        var optional = Optional.of(createEntity(id));
-        when(repoMock.findById(id)).thenReturn(optional);
+        var entity = createEntity(id);
+        when(repoMock.findById(id)).thenReturn(Optional.of(entity));
         when(memMapMock.toDataObject(any(MemberEntity.class))).thenReturn(createDataObject(id));
 
         // execute
-        var member = svc.getItem(id);
+        var ret = svc.getItem(id);
 
         // verify
-        assertNotNull(member);
+        assertTrue(ret.isPresent());
         verify(repoMock).findById(id);
         verify(memMapMock).toDataObject(any(MemberEntity.class));
         verifyNoMoreInteractions(repoMock, memMapMock);
     }
 
     @Test
-    public void getItem_notFound_ThrowsException() {
+    public void getItem_notFound_returns_empty_optional() {
         // setup
         int id = 1;
-        Optional<MemberEntity> optional = Optional.empty();
-        when(repoMock.findById(id)).thenReturn(optional);
+        when(repoMock.findById(id)).thenReturn(Optional.empty());
 
-        // execute and verify
-        assertThrows(NoSuchElementException.class, () -> svc.getItem(id));
+        // execute
+        var ret = svc.getItem(id);
+
+        //
+        assertFalse(ret.isPresent());
         verify(repoMock).findById(id);
         verifyNoMoreInteractions(repoMock, memMapMock);
     }
 
     @Test
-    public void createItem_returnsMember() {
+    public void createItem_returns_member() {
         // setup
         var m1 = createDataObject(1);
         var entity = createEntity(1);
@@ -222,34 +224,31 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void updateItem_returnsMember() {
+    public void updateItem_returns_member() {
         // setup
         int id = 1;
-        var entity = createEntity(1);
-        var m1 = createDataObject(1);
-        var optional = Optional.of(entity);
+        var entity = createEntity(id);
+        var member = createDataObject(id);
 
-        when(repoMock.findById(id)).thenReturn(optional);
-        when(repoMock.save(entity)).thenReturn(entity);
+        when(repoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        doNothing().when(memMapMock).updateEntity(m1, entity);
-        when(memMapMock.toDataObject(entity)).thenReturn(m1);
+        when(memMapMock.updateEntity(member, entity)).thenReturn(entity);
+        when(memMapMock.toDataObject(entity)).thenReturn(member);
 
         // execute
-        var member = svc.updateItem(id, m1);
+        var ret = svc.updateItem(id, member);
 
         // verify
-        assertNotNull(member);
+        assertTrue(ret.isPresent());
         verify(repoMock).findById(id);
-        verify(repoMock).save(entity);
 
-        verify(memMapMock).updateEntity(m1, entity);
+        verify(memMapMock).updateEntity(member, entity);
         verify(memMapMock).toDataObject(entity);
         verifyNoMoreInteractions(repoMock, memMapMock);
     }
 
     @Test
-    public void deleteItem_deletesMember() {
+    public void deleteItem_deletes_member() {
         // setup
         int id = 1;
         doNothing().when(repoMock).deleteById(id);
@@ -263,7 +262,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getCount() {
+    public void getCount_returns_member_count() {
         // setup
         long num = 5;
         when(repoMock.count()).thenReturn(num);
@@ -278,7 +277,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getMemberDetail() {
+    public void getMemberDetail_returns_memberDetail() {
         // setup
         int id = 1;
         var entity = createEntity(1);
@@ -286,8 +285,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         entity.setEmails(List.of(EmailEntity.builder().build()));
         entity.setPhones(List.of(PhoneEntity.builder().build()));
         entity.setRenewals(List.of(RenewalEntity.builder().build()));
-        var optional = Optional.of(entity);
-        when(repoMock.findById(id)).thenReturn(optional);
+        when(repoMock.findById(id)).thenReturn(Optional.of(entity));
 
         when(memMapMock.toMemberDetail(entity)).thenReturn(MemberDetail.builder().build());
         when(addMapMock.toDataObjectList(entity.getAddresses())).thenReturn(List.of(Address.builder().build()));
@@ -295,9 +293,12 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         when(phnMapMock.toDataObjectList(entity.getPhones())).thenReturn(List.of(Phone.builder().build()));
         when(renMapMock.toDataObjectList(entity.getRenewals())).thenReturn(List.of(Renewal.builder().build()));
 
-        var detail = svc.getMemberDetail(id);
+        var ret = svc.getMemberDetail(id);
 
         // verify
+        assertTrue(ret.isPresent());
+
+        var detail = ret.get();
         assertNotNull(detail.getAddresses());
         assertEquals(1, detail.getAddresses().size());
         assertNotNull(detail.getEmails());
@@ -319,14 +320,17 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
     }
 
     @Test
-    public void getMemberDetail_NotFoundThrowsException() {
+    public void getMemberDetail_notFound_returns_empty_optional() {
         // setup
         int id = 1;
-        Optional<MemberEntity> optional = Optional.empty();
-        when(repoMock.findById(id)).thenReturn(optional);
+        when(repoMock.findById(id)).thenReturn(Optional.empty());
 
-        // execute and verify
-        assertThrows(NoSuchElementException.class, () -> svc.getMemberDetail(id));
+        // execute
+        var ret = svc.getMemberDetail(id);
+
+        // verify
+        assertFalse(ret.isPresent());
+
         verifyNoMoreInteractions(renMapMock, memMapMock, addMapMock, phnMapMock, renMapMock);
     }
 

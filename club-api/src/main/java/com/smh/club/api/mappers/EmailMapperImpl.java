@@ -29,9 +29,10 @@ public class EmailMapperImpl implements EmailMapper {
     }
 
     @Override
-    public void updateEntity(Email dataObject, EmailEntity entity) {
+    public EmailEntity updateEntity(Email dataObject, EmailEntity entity) {
         entity.setEmail(dataObject.getEmail());
         entity.setEmailType(dataObject.getEmailType());
+        return entity;
     }
 
     @Override

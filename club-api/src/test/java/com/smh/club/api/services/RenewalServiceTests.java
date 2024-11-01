@@ -21,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,13 +43,13 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
     @Test
-    public void getItemListPage_defaultPageParams() {
+    public void getItemListPage_uses_default_pageParams() {
         // setup
         var params = PageParams.getDefault();
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -68,13 +67,13 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
 
     @Test
-    public void getItemListPage_nonDefaultPageParams() {
+    public void getItemListPage_nonDefault_pageParams() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, "renewal-year");
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -92,13 +91,13 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
 
     @Test
-    public void getItemListPage_PageParamsUnknownSortColumn() {
+    public void getItemListPage_unknown_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, "thisIsNotAColumn");
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -116,13 +115,13 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortColumn() {
+    public void getItemListPage_null_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, null);
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -140,24 +139,24 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortDirection_throwsException() {
+    public void getItemListPage_null_sortDirection_throwsException() {
         // setup
         var params = createPageParam(5,100, null, "renewal-year");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> this.svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
         verifyNoInteractions(renRepoMock);
     }
 
     @Test
-    public void getItemListPage_returnsRenewalList() {
+    public void getItemListPage_returns_renewalList() {
         // setup
         var page = createPage(10, pageableMock, 200);
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
         when(renMapMock.toDataObjectList(page.getContent())).thenReturn(createDataObjectList(10));
 
         // execute
-        var pageResponse = this.svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getItemListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
@@ -169,11 +168,11 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
 
     @Test
-    public void getItem_returnsRenewal() {
+    public void getItem_returns_renewal() {
         // setup
         int id = 1;
-        var optional = Optional.of(createEntity(id));
-        when(renRepoMock.findById(id)).thenReturn(optional);
+        var entity = createEntity(id);
+        when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
         when(renMapMock.toDataObject(any(RenewalEntity.class))).thenReturn(createDataObject(id));
 
         // execute
@@ -187,75 +186,74 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
 
     @Test
-    public void getItem_notFound_ThrowsException() {
+    public void getItem_notFound_returns_empty_optional() {
         // setup
         int id = 1;
-        Optional<RenewalEntity> optional = Optional.empty();
-        when(renRepoMock.findById(id)).thenReturn(optional);
+        when(renRepoMock.findById(id)).thenReturn(Optional.empty());
 
-        // execute and verify
-        assertThrows(NoSuchElementException.class, () -> svc.getItem(id));
+        // execute
+        var ret = svc.getItem(id);
+
+        //verify
+        assertFalse(ret.isPresent());
         verify(renRepoMock).findById(id);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
     @Test
-    public void createItem_returnsRenewal() {
+    public void createItem_returns_renewal() {
         // setup
         var memberId = 10;
-        var m1 = MemberEntity.builder().id(memberId).build();
-        var optional = Optional.of(m1);
-        when(memRepoMock.findById(memberId)).thenReturn(optional);
+        var member = MemberEntity.builder().id(memberId).build();
+        when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var a1 = createDataObject(1);
-        a1.setMemberId(memberId);
+        var renewal = createDataObject(1);
+        renewal.setMemberId(memberId);
+
         var entity = createEntity(1);
         when(renRepoMock.save(entity)).thenReturn(entity);
-        when(renMapMock.toEntity(a1)).thenReturn(entity);
-        when(renMapMock.toDataObject(entity)).thenReturn(a1);
+        when(renMapMock.toEntity(renewal)).thenReturn(entity);
+        when(renMapMock.toDataObject(entity)).thenReturn(renewal);
 
         // execute
-        var renewal = svc.createItem(a1);
+        var ret = svc.createItem(renewal);
 
         // verify
         assertNotNull(renewal);
-        assertEquals(a1, renewal);
-        verify(memRepoMock).findById(memberId);
+        assertEquals(renewal, ret);
+        verify(memRepoMock).getReferenceById(memberId);
         verify(renRepoMock).save(entity);
-        verify(renMapMock).toEntity(a1);
+        verify(renMapMock).toEntity(renewal);
         verify(renMapMock).toDataObject(entity);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
     @Test
-    public void updateItem_returnsRenewal() {
+    public void updateItem_returns_renewal() {
         // setup
         int id = 1;
         var entity = createEntity(id);
-        var e1 = createDataObject(id);
-        var optional = Optional.of(entity);
+        var renewal = createDataObject(id);
+        
+        when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        when(renRepoMock.findById(id)).thenReturn(optional);
-        when(renRepoMock.save(entity)).thenReturn(entity);
-
-        doNothing().when(renMapMock).updateEntity(e1, entity);
-        when(renMapMock.toDataObject(entity)).thenReturn(e1);
+        when(renMapMock.updateEntity(renewal, entity)).thenReturn(entity);
+        when(renMapMock.toDataObject(entity)).thenReturn(renewal);
 
         // execute
-        var member = svc.updateItem(id, e1);
+        var ret = svc.updateItem(id, renewal);
 
         // verify
-        assertNotNull(member);
+        assertTrue(ret.isPresent());
         verify(renRepoMock).findById(id);
-        verify(renRepoMock).save(entity);
 
-        verify(renMapMock).updateEntity(e1, entity);
+        verify(renMapMock).updateEntity(renewal, entity);
         verify(renMapMock).toDataObject(entity);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
     @Test
-    public void deleteItem_deletesRenewal() {
+    public void deleteItem_deletes_renewal() {
         // setup
         int id = 1;
         doNothing().when(renRepoMock).deleteById(id);

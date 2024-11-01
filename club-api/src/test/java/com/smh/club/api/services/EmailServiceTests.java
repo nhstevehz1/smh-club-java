@@ -21,7 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,13 +42,13 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
     @Test
-    public void getItemListPage_defaultPageParams() {
+    public void getItemListPage_with_default_pageParams() {
         // setup
         var params = PageParams.getDefault();
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -67,13 +66,13 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
     }
 
     @Test
-    public void getItemListPage_nonDefaultPageParams() {
+    public void getItemListPage_with_nonDefault_pageParams() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, "email");
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -91,13 +90,13 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
     }
 
     @Test
-    public void getItemListPage_PageParamsUnknownSortColumn() {
+    public void getItemListPage_unknown_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, "thisIsNotAColumn");
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -115,13 +114,13 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortColumn() {
+    public void getItemListPage_null_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, null);
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -139,24 +138,24 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortDirection_throwsException() {
+    public void getItemListPage_null_sortDirection_throwsException() {
         // setup
         var params = createPageParam(5,100, null, "email");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> this.svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
         verifyNoInteractions(emailRepoMock);
     }
 
     @Test
-    public void getItemListPage_returnsEmailList() {
+    public void getItemListPage_returns_emailList() {
         // setup
         var page = createPage(10, pageableMock, 200);
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
         when(emlMapMock.toDataObjectList(page.getContent())).thenReturn(createDataObjectList(10));
 
         // execute
-        var pageResponse = this.svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getItemListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
@@ -168,93 +167,92 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
     }
 
     @Test
-    public void getItem_returnsEmail() {
+    public void getItem_returns_email() {
         // setup
         int id = 1;
-        var optional = Optional.of(createEntity(id));
-        when(emailRepoMock.findById(id)).thenReturn(optional);
+        var entity = createEntity(id);
+        when(emailRepoMock.findById(id)).thenReturn(Optional.of(entity));
         when(emlMapMock.toDataObject(any(EmailEntity.class))).thenReturn(createDataObject(id));
 
         // execute
-        var member = svc.getItem(id);
+        var ret = svc.getItem(id);
 
         // verify
-        assertNotNull(member);
+        assertTrue(ret.isPresent());
         verify(emailRepoMock).findById(id);
         verify(emlMapMock).toDataObject(any(EmailEntity.class));
         verifyNoMoreInteractions(emailRepoMock, emlMapMock, memRepoMock);
     }
 
     @Test
-    public void getItem_notFound_ThrowsException() {
+    public void getItem_notFound_returns_empty_optional() {
         // setup
         int id = 1;
-        Optional<EmailEntity> optional = Optional.empty();
-        when(emailRepoMock.findById(id)).thenReturn(optional);
+        when(emailRepoMock.findById(id)).thenReturn(Optional.empty());
 
-        // execute and verify
-        assertThrows(NoSuchElementException.class, () -> svc.getItem(id));
+        // execute
+        var ret = svc.getItem(id);
+
+        // verify
+        assertFalse(ret.isPresent());
         verify(emailRepoMock).findById(id);
         verifyNoMoreInteractions(emailRepoMock, emlMapMock, memRepoMock);
     }
 
     @Test
-    public void createItem_returnsEmail() {
+    public void createItem_returns_email() {
         // setup
         var memberId = 10;
-        var m1 = MemberEntity.builder().id(memberId).build();
-        var optional = Optional.of(m1);
-        when(memRepoMock.findById(memberId)).thenReturn(optional);
+        var member = MemberEntity.builder().id(memberId).build();
+        when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var a1 = createDataObject(1);
-        a1.setMemberId(memberId);
+        var email = createDataObject(1);
+        email.setMemberId(memberId);
+
         var entity = createEntity(1);
         when(emailRepoMock.save(entity)).thenReturn(entity);
-        when(emlMapMock.toEntity(a1)).thenReturn(entity);
-        when(emlMapMock.toDataObject(entity)).thenReturn(a1);
+        when(emlMapMock.toEntity(email)).thenReturn(entity);
+        when(emlMapMock.toDataObject(entity)).thenReturn(email);
 
         // execute
-        var email = svc.createItem(a1);
+        var ret = svc.createItem(email);
 
         // verify
         assertNotNull(email);
-        assertEquals(a1, email);
-        verify(memRepoMock).findById(memberId);
+        assertEquals(email, ret);
+        verify(memRepoMock).getReferenceById(memberId);
         verify(emailRepoMock).save(entity);
-        verify(emlMapMock).toEntity(a1);
+        verify(emlMapMock).toEntity(email);
         verify(emlMapMock).toDataObject(entity);
         verifyNoMoreInteractions(emailRepoMock, emlMapMock, memRepoMock);
     }
 
     @Test
-    public void updateItem_returnsEmail() {
+    public void updateItem_returns_email() {
         // setup
         int id = 1;
         var entity = createEntity(id);
-        var e1 = createDataObject(id);
-        var optional = Optional.of(entity);
+        var email = createDataObject(id);
 
-        when(emailRepoMock.findById(id)).thenReturn(optional);
-        when(emailRepoMock.save(entity)).thenReturn(entity);
+        when(emailRepoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        doNothing().when(emlMapMock).updateEntity(e1, entity);
-        when(emlMapMock.toDataObject(entity)).thenReturn(e1);
+        when(emlMapMock.updateEntity(email, entity)).thenReturn(entity);
+        when(emlMapMock.toDataObject(entity)).thenReturn(email);
 
         // execute
-        var member = svc.updateItem(id, e1);
+        var ret = svc.updateItem(id, email);
 
         // verify
-        assertNotNull(member);
+        assertTrue(ret.isPresent());
         verify(emailRepoMock).findById(id);
-        verify(emailRepoMock).save(entity);
 
-        verify(emlMapMock).updateEntity(e1, entity);
+        verify(emlMapMock).updateEntity(email, entity);
         verify(emlMapMock).toDataObject(entity);
         verifyNoMoreInteractions(emailRepoMock, emlMapMock, memRepoMock);
     }
 
     @Test
-    public void deleteItem_deletesEmail() {
+    public void deleteItem_deletes_email() {
         // setup
         int id = 1;
         doNothing().when(emailRepoMock).deleteById(id);

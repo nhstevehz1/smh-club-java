@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -54,37 +55,33 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Email getItem(int id) {
+    public Optional<Email> getItem(int id) {
         log.debug("Getting email by id: {}", id);
 
-        var emailEntity = emailRepo.findById(id).orElseThrow();
-        return emailMapper.toDataObject(emailEntity);
+        return emailRepo.findById(id).map(emailMapper::toDataObject);
     }
 
     @Override
     public Email createItem(Email email) {
         log.debug("creating email: {}", email);
 
-        var memberEntity = memberRepo.findById(email.getMemberId()).orElseThrow();
+        var memberRef = memberRepo.getReferenceById(email.getMemberId());
         var addressEntity = emailMapper.toEntity(email);
-        addressEntity.setMember(memberEntity);
+        addressEntity.setMember(memberRef);
         return emailMapper.toDataObject(emailRepo.save(addressEntity));
     }
 
     @Override
-    public Email updateItem(int id, Email email) {
+    public Optional<Email> updateItem(int id, Email email) {
         log.debug("Updating email, id: {}, with data: {}", id, email);
 
         if(id != email.getId()) {
             throw new IllegalArgumentException();
         }
 
-        var emailEntity = emailRepo.findById(id).orElseThrow();
-
-        emailMapper.updateEntity(email, emailEntity);
-        emailRepo.save(emailEntity);
-
-        return emailMapper.toDataObject(emailEntity);
+        return emailRepo.findById(id)
+                .map(e -> emailMapper.updateEntity(email, e))
+                .map(emailMapper::toDataObject);
     }
 
     @Override

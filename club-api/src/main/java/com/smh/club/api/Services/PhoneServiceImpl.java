@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -55,37 +56,33 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public Phone getItem(int id) {
+    public Optional<Phone> getItem(int id) {
         log.debug("Getting phone by id: {}", id);
 
-        var phoneEntity = phoneRepo.findById(id).orElseThrow();
-        return phoneMapper.toDataObject(phoneEntity);
+        return phoneRepo.findById(id).map(phoneMapper::toDataObject);
     }
 
     @Override
     public Phone createItem(Phone phone) {
         log.debug("creating phone: {}", phone);
 
-        var memberEntity = memberRepo.findById(phone.getMemberId()).orElseThrow();
+        var memberRef = memberRepo.getReferenceById(phone.getMemberId());
         var phoneEntity = phoneMapper.toEntity(phone);
-        phoneEntity.setMember(memberEntity);
+        phoneEntity.setMember(memberRef);
         return phoneMapper.toDataObject(phoneRepo.save(phoneEntity));
     }
 
     @Override
-    public Phone updateItem(int id, Phone phone) {
+    public Optional<Phone> updateItem(int id, Phone phone) {
         log.debug("Updating phone, id: {}, with data: {}", id, phone);
 
         if(id != phone.getId()) {
             throw new IllegalArgumentException();
         }
 
-        var phoneEntity = phoneRepo.findById(id).orElseThrow();
-
-        phoneMapper.updateEntity(phone, phoneEntity);
-        phoneRepo.save(phoneEntity);
-
-        return phoneMapper.toDataObject(phoneEntity);
+        return phoneRepo.findById(id)
+                .map(e -> phoneMapper.updateEntity(phone, e))
+                .map(phoneMapper::toDataObject);
     }
 
     @Override

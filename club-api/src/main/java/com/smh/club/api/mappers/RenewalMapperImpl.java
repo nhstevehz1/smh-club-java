@@ -29,9 +29,10 @@ public class RenewalMapperImpl implements RenewalMapper {
     }
 
     @Override
-    public void updateEntity(Renewal dataObject, RenewalEntity entity) {
+    public RenewalEntity updateEntity(Renewal dataObject, RenewalEntity entity) {
         entity.setRenewalDate(dataObject.getRenewalDate());
         entity.setRenewalYear((dataObject.getRenewalYear()));
+        return entity;
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -54,37 +55,34 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public Address getItem(int id) {
+    public Optional<Address> getItem(int id) {
         log.debug("Getting address by id: {}", id);
 
-        var addressEntity = addressRepo.findById(id).orElseThrow();
-        return addressMapper.toDataObject(addressEntity);
+        return addressRepo.findById(id).map(addressMapper::toDataObject);
     }
 
     @Override
     public Address createItem(Address address) {
         log.debug("creating address: {}", address);
 
-        var memberEntity = memberRepo.findById(address.getMemberId()).orElseThrow();
+        var memberRef = memberRepo.getReferenceById(address.getMemberId());
+
         var addressEntity = addressMapper.toEntity(address);
-        addressEntity.setMember(memberEntity);
+        addressEntity.setMember(memberRef);
         return addressMapper.toDataObject(addressRepo.save(addressEntity));
     }
 
     @Override
-    public Address updateItem(int id, Address address) {
+    public Optional<Address> updateItem(int id, Address address) {
         log.debug("Updating address id: {}, with data: {}", id, address);
 
         if(id != address.getId()) {
             throw new IllegalArgumentException();
         }
+        return addressRepo.findById(id)
+                .map(e -> addressMapper.updateEntity(address, e))
+                .map(addressMapper::toDataObject);
 
-        var addressEntity = addressRepo.findById(id).orElseThrow();
-
-        addressMapper.updateEntity(address, addressEntity);
-        addressRepo.save(addressEntity);
-
-        return addressMapper.toDataObject(addressEntity);
     }
 
     @Override

@@ -43,13 +43,13 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
     @Test
-    public void getItemListPage_defaultPageParams() {
+    public void getItemListPage_with_default_pageParams() {
         // setup
         var params = PageParams.getDefault();
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -67,13 +67,13 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     }
 
     @Test
-    public void getItemListPage_nonDefaultPageParams() {
+    public void getItemListPage_with_nonDefault_pageParams() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, "phone-num");
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -91,13 +91,13 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     }
 
     @Test
-    public void getItemListPage_PageParamsUnknownSortColumn() {
+    public void getItemListPage_unknown_sortColumn() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, "thisIsNotAColumn");
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -115,13 +115,13 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortColumn() {
+    public void getItemListPage_null_sortColumn() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, null);
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        this.svc.getItemListPage(params);
+        svc.getItemListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -139,24 +139,24 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     }
 
     @Test
-    public void getItemListPage_PageParamsNullSortDirection_throwsException() {
+    public void getItemListPage_null_sortDirection_throwsException() {
         // setup
         var params = createPageParam(5,100, null, "phoneNum");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> this.svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
         verifyNoInteractions(phnRepoMock);
     }
 
     @Test
-    public void getItemListPage_returnsPhoneList() {
+    public void getItemListPage_returns_phoneList() {
         // setup
         var page = createPage(10, pageableMock, 200);
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
         when(phnMapMock.toDataObjectList(page.getContent())).thenReturn(createDataObjectList(10));
 
         // execute
-        var pageResponse = this.svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getItemListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
@@ -168,93 +168,92 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     }
 
     @Test
-    public void getItem_returnsPhone() {
+    public void getItem_returns_phone() {
         // setup
         int id = 1;
-        var optional = Optional.of(createEntity(id));
-        when(phnRepoMock.findById(id)).thenReturn(optional);
-        when(phnMapMock.toDataObject(any(PhoneEntity.class))).thenReturn(createDataObject(id));
+        var entity = createEntity(id);
+        when(phnRepoMock.findById(id)).thenReturn(Optional.of(entity));
+        when(phnMapMock.toDataObject(entity)).thenReturn(createDataObject(id));
 
         // execute
         var member = svc.getItem(id);
 
         // verify
-        assertNotNull(member);
+        assertTrue(member.isPresent());
         verify(phnRepoMock).findById(id);
-        verify(phnMapMock).toDataObject(any(PhoneEntity.class));
+        verify(phnMapMock).toDataObject(entity);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void getItem_notFound_ThrowsException() {
+    public void getItem_notFound_returns_empty_optional() {
         // setup
         int id = 1;
-        Optional<PhoneEntity> optional = Optional.empty();
-        when(phnRepoMock.findById(id)).thenReturn(optional);
+        when(phnRepoMock.findById(id)).thenReturn(Optional.empty());
 
-        // execute and verify
-        assertThrows(NoSuchElementException.class, () -> svc.getItem(id));
+        // execute
+        var ret = svc.getItem(id);
+
+        // and verify
+        assertFalse(ret.isPresent());
         verify(phnRepoMock).findById(id);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void createItem_returnsPhone() {
+    public void createItem_returns_phone() {
         // setup
         var memberId = 10;
-        var m1 = MemberEntity.builder().id(memberId).build();
-        var optional = Optional.of(m1);
-        when(memRepoMock.findById(memberId)).thenReturn(optional);
+        var member = MemberEntity.builder().id(memberId).build();
+        when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var a1 = createDataObject(1);
-        a1.setMemberId(memberId);
+        var address = createDataObject(1);
+        address.setMemberId(memberId);
+
         var entity = createEntity(1);
         when(phnRepoMock.save(entity)).thenReturn(entity);
-        when(phnMapMock.toEntity(a1)).thenReturn(entity);
-        when(phnMapMock.toDataObject(entity)).thenReturn(a1);
+        when(phnMapMock.toEntity(address)).thenReturn(entity);
+        when(phnMapMock.toDataObject(entity)).thenReturn(address);
 
         // execute
-        var address = svc.createItem(a1);
+        var ret = svc.createItem(address);
 
         // verify
         assertNotNull(address);
-        assertEquals(a1, address);
-        verify(memRepoMock).findById(memberId);
+        assertEquals(address, ret);
+        verify(memRepoMock).getReferenceById(memberId);
         verify(phnRepoMock).save(entity);
-        verify(phnMapMock).toEntity(a1);
+        verify(phnMapMock).toEntity(address);
         verify(phnMapMock).toDataObject(entity);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void updateItem_returnsPhone() {
+    public void updateItem_returns_phone() {
         // setup
         int id = 1;
         var entity = createEntity(id);
-        var e1 = createDataObject(id);
-        var optional = Optional.of(entity);
+        var email = createDataObject(id);
 
-        when(phnRepoMock.findById(id)).thenReturn(optional);
-        when(phnRepoMock.save(entity)).thenReturn(entity);
+        when(phnRepoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        doNothing().when(phnMapMock).updateEntity(e1, entity);
-        when(phnMapMock.toDataObject(entity)).thenReturn(e1);
+        when(phnMapMock.updateEntity(email, entity)).thenReturn(entity);
+        when(phnMapMock.toDataObject(entity)).thenReturn(email);
 
         // execute
-        var member = svc.updateItem(id, e1);
+        var ret = svc.updateItem(id, email);
 
         // verify
-        assertNotNull(member);
+        assertTrue(ret.isPresent());
         verify(phnRepoMock).findById(id);
-        verify(phnRepoMock).save(entity);
 
-        verify(phnMapMock).updateEntity(e1, entity);
+        verify(phnMapMock).updateEntity(email, entity);
         verify(phnMapMock).toDataObject(entity);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void deleteItem_deletesPhone() {
+    public void deleteItem_deletes_phone() {
         // setup
         int id = 1;
         doNothing().when(phnRepoMock).deleteById(id);

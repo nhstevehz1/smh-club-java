@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -58,11 +59,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member getItem(int id) {
+    public Optional<Member> getItem(int id) {
         log.debug("Getting member by id: {}", id);
 
-        var memberEntity = membersRepo.findById(id).orElseThrow();
-        return memberMapper.toDataObject(memberEntity);
+        return membersRepo.findById(id).map(memberMapper::toDataObject);
     }
 
     @Override
@@ -74,18 +74,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member updateItem(int id, Member member) {
+    public Optional<Member> updateItem(int id, Member member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         if(id != member.getId()) {
             throw new IllegalArgumentException();
         }
 
-        var memberEntity = membersRepo.findById(id).orElseThrow();
-        memberMapper.updateEntity(member, memberEntity);
-        membersRepo.save(memberEntity);
-
-        return memberMapper.toDataObject(memberEntity);
+        return membersRepo.findById(id)
+                .map(e -> memberMapper.updateEntity(member, e))
+                .map(memberMapper::toDataObject);
     }
 
     @Override
@@ -101,18 +99,22 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDetail getMemberDetail(int id) {
+    public Optional<MemberDetail> getMemberDetail(int id) {
         log.debug("Getting member detail by id: {}", id);
 
-        var entity = membersRepo.findById(id).orElseThrow();
-
-        var detail = memberMapper.toMemberDetail(entity);
-        detail.setAddresses(addressMapper.toDataObjectList(entity.getAddresses()));
-        detail.setEmails(emailMapper.toDataObjectList(entity.getEmails()));
-        detail.setPhones(phoneMapper.toDataObjectList(entity.getPhones()));
-        detail.setRenewals(renewalMapper.toDataObjectList(entity.getRenewals()));
-
-        return detail;
+        var ret = membersRepo.findById(id);
+        
+        if (ret.isPresent()) {
+            var entity = ret.get();
+            var detail = memberMapper.toMemberDetail(entity);
+            detail.setAddresses(addressMapper.toDataObjectList(entity.getAddresses()));
+            detail.setEmails(emailMapper.toDataObjectList(entity.getEmails()));
+            detail.setPhones(phoneMapper.toDataObjectList(entity.getPhones()));
+            detail.setRenewals(renewalMapper.toDataObjectList(entity.getRenewals()));
+            return Optional.of(detail);
+        } else {
+            return Optional.empty();
+        }
     }
 
     private Map<String,String> initSortColumnMap() {

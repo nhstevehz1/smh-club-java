@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -51,37 +52,33 @@ public class RenewalServiceIml implements RenewalService {
     }
 
     @Override
-    public Renewal getItem(int id) {
+    public Optional<Renewal> getItem(int id) {
         log.debug("Getting renewal by id: {}", id);
 
-        var renewalEntity = renewalRepo.findById(id).orElseThrow();
-        return renewalMapper.toDataObject(renewalEntity);
+        return renewalRepo.findById(id).map(renewalMapper::toDataObject);
     }
 
     @Override
     public Renewal createItem(Renewal renewal) {
         log.debug("creating renewal: {}", renewal);
 
-        var memberEntity = memberRepo.findById(renewal.getMemberId()).orElseThrow();
+        var memberRef = memberRepo.getReferenceById(renewal.getMemberId());
         var addressEntity = renewalMapper.toEntity(renewal);
-        addressEntity.setMember(memberEntity);
+        addressEntity.setMember(memberRef);
         return renewalMapper.toDataObject(renewalRepo.save(addressEntity));
     }
 
     @Override
-    public Renewal updateItem(int id, Renewal renewal) {
+    public Optional<Renewal> updateItem(int id, Renewal renewal) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewal);
 
         if(id != renewal.getId()) {
             throw new IllegalArgumentException();
         }
 
-        var renewalEntity = renewalRepo.findById(id).orElseThrow();
-
-        renewalMapper.updateEntity(renewal, renewalEntity);
-        renewalRepo.save(renewalEntity);
-
-        return renewalMapper.toDataObject(renewalEntity);
+        return renewalRepo.findById(id)
+                .map(r -> renewalMapper.updateEntity(renewal, r))
+                .map(renewalMapper::toDataObject);
     }
 
     @Override

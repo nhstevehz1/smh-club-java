@@ -1,6 +1,7 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.MemberMapper;
+import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.models.Member;
 import com.smh.club.api.models.MemberDetail;
@@ -43,7 +44,7 @@ public class MemberMapperImpl implements MemberMapper {
     }
 
     @Override
-    public void updateEntity(Member dataObject, MemberEntity entity) {
+    public MemberEntity updateEntity(Member dataObject, MemberEntity entity) {
         entity.setMemberNumber(dataObject.getMemberNumber());
         entity.setFirstName(dataObject.getFirstName());
         entity.setMiddleName(dataObject.getMiddleName());
@@ -51,6 +52,7 @@ public class MemberMapperImpl implements MemberMapper {
         entity.setSuffix(dataObject.getSuffix());
         entity.setBirthDate(dataObject.getBirthDate());
         entity.setJoinedDate(dataObject.getJoinedDate());
+        return entity;
     }
 
     @Override
