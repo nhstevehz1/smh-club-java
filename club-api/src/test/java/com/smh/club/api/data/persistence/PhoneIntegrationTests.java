@@ -2,6 +2,7 @@ package com.smh.club.api.data.persistence;
 
 import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.data.repos.PhoneRepo;
+import com.smh.club.api.models.EmailType;
 import com.smh.club.api.models.PhoneType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @ActiveProfiles("tests")
@@ -96,5 +97,37 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
         assertThrows(Exception.class, () -> phoneRepo.save(phone));
     }
 
+    @Test
+    public void findByIdAndMemberId_returns_email() {
+        var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
+
+        var entity = createPhone(0, PhoneType.Other);
+        entity.setMember(member);
+
+        var saved = phoneRepo.save(entity);
+
+        // execute
+        var ret = phoneRepo.findByIdAndMemberId(saved.getId(), member.getId());
+
+        //verify
+        assertTrue(ret.isPresent());
+        assertEquals(saved.getId(), ret.get().getId());
+        assertEquals(member.getId(), ret.get().getMember().getId());
+    }
+
+    @Test
+    public void findByIdAndMemberId_returns_empty_optional() {
+        var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
+        var entity = createPhone(0, PhoneType.Other);
+        entity.setMember(member);
+
+        var saved = phoneRepo.save(entity);
+
+        // execute
+        var ret = phoneRepo.findByIdAndMemberId(saved.getId(),10);
+
+        //verify
+        assertFalse(ret.isPresent());
+    }
 
 }

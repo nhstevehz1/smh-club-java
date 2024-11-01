@@ -29,11 +29,9 @@ import static org.junit.jupiter.api.Assertions.*;
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 class AddressIntegrationTests extends PersistenceTestsBase {
 
-    @SuppressWarnings("unused")
     @Autowired
     private AddressRepo addressRepo;
 
-    @SuppressWarnings("unused")
     @Autowired
     private MembersRepo membersRepo;
 
@@ -126,15 +124,46 @@ class AddressIntegrationTests extends PersistenceTestsBase {
     public void saveAddress_Address2IsNullDoesNotThrowException() {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var a1 = createAddress(0, AddressType.Home);
-        a1.setMember(member);
-        a1.setAddress2(null);
+        var address = createAddress(0, AddressType.Home);
+        address.setMember(member);
+        address.setAddress2(null);
 
-        // verify
-        var address = addressRepo.save(a1);
+        // execute
+        var ret = addressRepo.save(address);
 
         // verify
         assertNull(address.getAddress2(), "Address2 is not null");
     }
 
+    @Test
+    public void findByIdAndMemberId_returns_address() {
+        var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
+        var address = createAddress(0, AddressType.Home);
+        address.setMember(member);
+        var entity = addressRepo.save(address);
+
+        // execute
+        var ret = addressRepo.findByIdAndMemberId(address.getId(), member.getId());
+
+        //verify
+        assertTrue(ret.isPresent());
+        assertEquals(member.getId(), ret.get().getMember().getId());
+        assertEquals(entity.getId(), ret.get().getId());
+    }
+
+    @Test
+    public void findByIdAndMemberId_returns_empty_optional() {
+        var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
+
+        var entity = createAddress(0, AddressType.Home);
+        entity.setMember(member);
+
+        var saved = addressRepo.save(entity);
+
+        // execute
+        var ret = addressRepo.findByIdAndMemberId(saved.getId(),10);
+
+        //verify
+        assertFalse(ret.isPresent());
+    }
 }
