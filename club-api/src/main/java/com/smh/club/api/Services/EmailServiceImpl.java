@@ -79,7 +79,7 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
 
-        return emailRepo.findById(id)
+        return emailRepo.findByIdAndMemberId(id, email.getMemberId())
                 .map(e -> emailMapper.updateEntity(email, e))
                 .map(emailMapper::toDataObject);
     }

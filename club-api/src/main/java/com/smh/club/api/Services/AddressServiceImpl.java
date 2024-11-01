@@ -79,7 +79,7 @@ public class AddressServiceImpl implements AddressService {
         if(id != address.getId()) {
             throw new IllegalArgumentException();
         }
-        return addressRepo.findById(id)
+        return addressRepo.findByIdAndMemberId(id, address.getMemberId())
                 .map(e -> addressMapper.updateEntity(address, e))
                 .map(addressMapper::toDataObject);
 

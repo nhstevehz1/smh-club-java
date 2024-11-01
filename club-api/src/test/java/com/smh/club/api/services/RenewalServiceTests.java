@@ -235,7 +235,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         var entity = createEntity(id);
         var renewal = createDataObject(id);
         
-        when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
+        when(renRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
         when(renMapMock.updateEntity(renewal, entity)).thenReturn(entity);
         when(renMapMock.toDataObject(entity)).thenReturn(renewal);
@@ -245,7 +245,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
 
         // verify
         assertTrue(ret.isPresent());
-        verify(renRepoMock).findById(id);
+        verify(renRepoMock).findByIdAndMemberId(id, id);
 
         verify(renMapMock).updateEntity(renewal, entity);
         verify(renMapMock).toDataObject(entity);

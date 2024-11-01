@@ -76,7 +76,7 @@ public class RenewalServiceIml implements RenewalService {
             throw new IllegalArgumentException();
         }
 
-        return renewalRepo.findById(id)
+        return renewalRepo.findByIdAndMemberId(id, renewal.getMemberId())
                 .map(r -> renewalMapper.updateEntity(renewal, r))
                 .map(renewalMapper::toDataObject);
     }

@@ -80,7 +80,7 @@ public class PhoneServiceImpl implements PhoneService {
             throw new IllegalArgumentException();
         }
 
-        return phoneRepo.findById(id)
+        return phoneRepo.findByIdAndMemberId(id, phone.getMemberId())
                 .map(e -> phoneMapper.updateEntity(phone, e))
                 .map(phoneMapper::toDataObject);
     }

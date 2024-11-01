@@ -232,21 +232,21 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         // setup
         int id = 1;
         var entity = createEntity(id);
-        var email = createDataObject(id);
+        var phone = createDataObject(id);
 
-        when(phnRepoMock.findById(id)).thenReturn(Optional.of(entity));
+        when(phnRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
-        when(phnMapMock.updateEntity(email, entity)).thenReturn(entity);
-        when(phnMapMock.toDataObject(entity)).thenReturn(email);
+        when(phnMapMock.updateEntity(phone, entity)).thenReturn(entity);
+        when(phnMapMock.toDataObject(entity)).thenReturn(phone);
 
         // execute
-        var ret = svc.updateItem(id, email);
+        var ret = svc.updateItem(id, phone);
 
         // verify
         assertTrue(ret.isPresent());
-        verify(phnRepoMock).findById(id);
+        verify(phnRepoMock).findByIdAndMemberId(id, id);
 
-        verify(phnMapMock).updateEntity(email, entity);
+        verify(phnMapMock).updateEntity(phone, entity);
         verify(phnMapMock).toDataObject(entity);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
@@ -278,6 +278,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     protected Phone createDataObject(int flag) {
         return Phone.builder()
                 .id(flag)
+                .memberId(flag)
                 .phoneNum("phoneNum")
                 .phoneType(PhoneType.Home)
                 .build();

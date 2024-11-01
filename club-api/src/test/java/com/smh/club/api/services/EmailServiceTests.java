@@ -234,7 +234,7 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
         var entity = createEntity(id);
         var email = createDataObject(id);
 
-        when(emailRepoMock.findById(id)).thenReturn(Optional.of(entity));
+        when(emailRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
         when(emlMapMock.updateEntity(email, entity)).thenReturn(entity);
         when(emlMapMock.toDataObject(entity)).thenReturn(email);
@@ -244,7 +244,7 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
 
         // verify
         assertTrue(ret.isPresent());
-        verify(emailRepoMock).findById(id);
+        verify(emailRepoMock).findByIdAndMemberId(id, id);
 
         verify(emlMapMock).updateEntity(email, entity);
         verify(emlMapMock).toDataObject(entity);

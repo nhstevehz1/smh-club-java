@@ -232,10 +232,10 @@ public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEnt
     public void updateItem_returns_address() {
         // setup
         int id = 1;
-        var entity = createEntity(1);
-        var address= createDataObject(1);
+        var entity = createEntity(id);
+        var address= createDataObject(id);
 
-        when(addRepoMock.findById(id)).thenReturn(Optional.of(entity));
+        when(addRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
         when(addMapMock.updateEntity(address, entity)).thenReturn(entity);
         when(addMapMock.toDataObject(entity)).thenReturn(address);
@@ -245,7 +245,7 @@ public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEnt
 
         // verify
         assertTrue(ret.isPresent());
-        verify(addRepoMock).findById(id);
+        verify(addRepoMock).findByIdAndMemberId(id, id);
 
         verify(addMapMock).updateEntity(address, entity);
         verify(addMapMock).toDataObject(entity);
