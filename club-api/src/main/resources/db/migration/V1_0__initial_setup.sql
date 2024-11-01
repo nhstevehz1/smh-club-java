@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS member_mgmt;
 
-CREATE TABLE member_mgmt.members (
+CREATE TABLE member_mgmt.member (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_number int NOT NULL,
 	lifetime boolean DEFAULt FALSE,
@@ -41,7 +41,7 @@ CREATE TABLE member_mgmt.email (
 	CONSTRAINT fk_email_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
 );
 
-CREATE TABLE member_mgmt.renewals (
+CREATE TABLE member_mgmt.renewal (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
 	renewal_date DATE NOT NULL,
