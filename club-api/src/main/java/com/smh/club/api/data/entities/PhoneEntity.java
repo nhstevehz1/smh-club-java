@@ -2,7 +2,7 @@ package com.smh.club.api.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smh.club.api.data.converters.PhoneTypeConverter;
-import com.smh.club.api.models.PhoneType;
+import com.smh.club.api.data.dto.PhoneType;
 import jakarta.persistence.*;
 import lombok.*;
 

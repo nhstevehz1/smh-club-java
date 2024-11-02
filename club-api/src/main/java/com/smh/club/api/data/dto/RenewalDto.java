@@ -1,4 +1,4 @@
-package com.smh.club.api.models;
+package com.smh.club.api.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -6,20 +6,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Email {
+public class RenewalDto {
     @JsonProperty("id")
     private int id;
 
     @JsonProperty("member-id")
     private int memberId;
 
-    @JsonProperty("email")
-    private String email;
+    @JsonProperty("renewal-date")
+    private LocalDate renewalDate;
 
-    @JsonProperty("email-type")
-    private EmailType emailType;
+    @JsonProperty("renewal-year")
+    private String renewalYear;
 }

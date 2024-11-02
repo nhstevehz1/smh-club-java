@@ -1,4 +1,4 @@
-package com.smh.club.api.models;
+package com.smh.club.api.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

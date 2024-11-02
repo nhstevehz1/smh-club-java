@@ -2,8 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.models.Address;
-import com.smh.club.api.models.AddressType;
+import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.data.dto.AddressType;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @WebMvcTest(AddressControllerImpl.class)
-public class AddressControllerTests extends ControllerTestBase<Address> {
+public class AddressControllerTests extends ControllerTestBase<AddressDto> {
     @MockBean
     private AddressService svc;
 
@@ -42,7 +42,7 @@ public class AddressControllerTests extends ControllerTestBase<Address> {
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<Address>builder()
+        var response = PageResponse.<AddressDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(createDataObjectList(5))
                 .build();
@@ -204,8 +204,8 @@ public class AddressControllerTests extends ControllerTestBase<Address> {
     }
 
     @Override
-    protected Address createDataObject(int flag) {
-        return Address.builder()
+    protected AddressDto createDataObject(int flag) {
+        return AddressDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .address1("address1_" + flag)

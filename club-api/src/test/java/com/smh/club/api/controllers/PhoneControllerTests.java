@@ -2,8 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.models.Phone;
-import com.smh.club.api.models.PhoneType;
+import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.data.dto.PhoneType;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @WebMvcTest(PhoneControllerImpl.class)
-public class PhoneControllerTests extends ControllerTestBase<Phone> {
+public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
     @MockBean
     private PhoneService svc;
 
@@ -42,7 +42,7 @@ public class PhoneControllerTests extends ControllerTestBase<Phone> {
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<Phone>builder()
+        var response = PageResponse.<PhoneDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(createDataObjectList(5))
                 .build();
@@ -199,8 +199,8 @@ public class PhoneControllerTests extends ControllerTestBase<Phone> {
     }
 
     @Override
-    protected Phone createDataObject(int flag) {
-        return Phone.builder()
+    protected PhoneDto createDataObject(int flag) {
+        return PhoneDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .phoneNum("5555555555"+flag)

@@ -4,7 +4,7 @@ import com.smh.club.api.common.mappers.PhoneMapper;
 import com.smh.club.api.common.services.PhoneService;
 import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.data.repos.PhoneRepo;
-import com.smh.club.api.models.Phone;
+import com.smh.club.api.data.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -34,7 +34,7 @@ public class PhoneServiceImpl implements PhoneService {
     private final Map<String, String> sortColumnMap = initSortColumnMap();
     
     @Override
-    public PageResponse<Phone> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<PhoneDto> getItemListPage(@NonNull PageParams pageParams) {
         log.debug("Getting phone item list page: {}", pageParams);
 
         var pageRequest = PageRequest.of(
@@ -48,7 +48,7 @@ public class PhoneServiceImpl implements PhoneService {
 
         var page = phoneRepo.findAll(pageRequest);
 
-        return PageResponse.<Phone>builder()
+        return PageResponse.<PhoneDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
                 .items(phoneMapper.toDataObjectList(page.getContent()))
@@ -56,14 +56,14 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public Optional<Phone> getItem(int id) {
+    public Optional<PhoneDto> getItem(int id) {
         log.debug("Getting phone by id: {}", id);
 
         return phoneRepo.findById(id).map(phoneMapper::toDataObject);
     }
 
     @Override
-    public Phone createItem(Phone phone) {
+    public PhoneDto createItem(PhoneDto phone) {
         log.debug("creating phone: {}", phone);
 
         var memberRef = memberRepo.getReferenceById(phone.getMemberId());
@@ -73,15 +73,15 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public Optional<Phone> updateItem(int id, Phone phone) {
-        log.debug("Updating phone, id: {}, with data: {}", id, phone);
+    public Optional<PhoneDto> updateItem(int id, PhoneDto phoneDto) {
+        log.debug("Updating phone, id: {}, with data: {}", id, phoneDto);
 
-        if(id != phone.getId()) {
+        if(id != phoneDto.getId()) {
             throw new IllegalArgumentException();
         }
 
-        return phoneRepo.findByIdAndMemberId(id, phone.getMemberId())
-                .map(e -> phoneMapper.updateEntity(phone, e))
+        return phoneRepo.findByIdAndMemberId(id, phoneDto.getMemberId())
+                .map(e -> phoneMapper.updateEntity(phoneDto, e))
                 .map(phoneMapper::toDataObject);
     }
 

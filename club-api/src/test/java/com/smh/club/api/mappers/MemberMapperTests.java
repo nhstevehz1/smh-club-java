@@ -1,7 +1,7 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.models.Member;
+import com.smh.club.api.data.dto.MemberDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -99,7 +99,7 @@ public class MemberMapperTests {
 
         // execute
         var dataObjectList = mapper.toDataObjectList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(Member::getId));
+        dataObjectList.sort(Comparator.comparingInt(MemberDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -150,8 +150,8 @@ public class MemberMapperTests {
                 .build();
     }
 
-    private Member createDataObject() {
-        return Member.builder()
+    private MemberDto createDataObject() {
+        return MemberDto.builder()
                 .memberNumber(50)
                 .firstName("m_firstName")
                 .middleName("m_middleName")

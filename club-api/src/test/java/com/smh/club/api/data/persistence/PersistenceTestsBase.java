@@ -1,9 +1,9 @@
 package com.smh.club.api.data.persistence;
 
 import com.smh.club.api.data.entities.*;
-import com.smh.club.api.models.AddressType;
-import com.smh.club.api.models.EmailType;
-import com.smh.club.api.models.PhoneType;
+import com.smh.club.api.data.dto.AddressType;
+import com.smh.club.api.data.dto.EmailType;
+import com.smh.club.api.data.dto.PhoneType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

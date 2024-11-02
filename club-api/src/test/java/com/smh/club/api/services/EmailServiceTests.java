@@ -6,8 +6,8 @@ import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.data.repos.EmailRepo;
 import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.Email;
-import com.smh.club.api.models.EmailType;
+import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.data.dto.EmailType;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
+public class EmailServiceTests extends CrudServiceTestBase<EmailDto, EmailEntity> {
 
     @Mock private MembersRepo memRepoMock;
     @Mock private EmailRepo emailRepoMock;
@@ -275,8 +275,8 @@ public class EmailServiceTests extends CrudServiceTestBase<Email, EmailEntity> {
     }
 
     @Override
-    protected Email createDataObject(int flag) {
-        return Email.builder()
+    protected EmailDto createDataObject(int flag) {
+        return EmailDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .email("email@emal.com")

@@ -1,4 +1,4 @@
-package com.smh.club.api.models;
+package com.smh.club.api.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Member {
+public class MemberDto {
     @JsonProperty("id")
     private int id;
 

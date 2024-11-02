@@ -6,8 +6,8 @@ import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.data.repos.PhoneRepo;
-import com.smh.club.api.models.Phone;
-import com.smh.club.api.models.PhoneType;
+import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.data.dto.PhoneType;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
+public class PhoneServiceTests extends CrudServiceTestBase<PhoneDto, PhoneEntity> {
     
     @Mock private MembersRepo memRepoMock;
     @Mock private PhoneRepo phnRepoMock;
@@ -275,8 +275,8 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     }
 
     @Override
-    protected Phone createDataObject(int flag) {
-        return Phone.builder()
+    protected PhoneDto createDataObject(int flag) {
+        return PhoneDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .phoneNum("phoneNum")

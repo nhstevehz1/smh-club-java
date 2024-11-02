@@ -2,8 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.models.Email;
-import com.smh.club.api.models.EmailType;
+import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.data.dto.EmailType;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @WebMvcTest(EmailControllerImpl.class)
-public class EmailControllerTests extends ControllerTestBase<Email> {
+public class EmailControllerTests extends ControllerTestBase<EmailDto> {
     @MockBean
     private EmailService svc;
 
@@ -42,7 +42,7 @@ public class EmailControllerTests extends ControllerTestBase<Email> {
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<Email>builder()
+        var response = PageResponse.<EmailDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(createDataObjectList(5))
                 .build();
@@ -200,8 +200,8 @@ public class EmailControllerTests extends ControllerTestBase<Email> {
     }
 
     @Override
-    protected Email createDataObject(int flag) {
-        return Email.builder()
+    protected EmailDto createDataObject(int flag) {
+        return EmailDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .email("something@test.com")

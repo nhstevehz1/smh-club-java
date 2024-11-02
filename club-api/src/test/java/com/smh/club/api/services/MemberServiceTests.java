@@ -2,9 +2,9 @@ package com.smh.club.api.services;
 
 import com.smh.club.api.Services.MemberServiceImpl;
 import com.smh.club.api.common.mappers.*;
+import com.smh.club.api.data.dto.*;
 import com.smh.club.api.data.entities.*;
 import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.*;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity> {
+public class MemberServiceTests extends CrudServiceTestBase<MemberDto, MemberEntity> {
 
     @Mock private MembersRepo repoMock;
     @Mock private MemberMapper memMapMock;
@@ -286,11 +286,11 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         entity.setRenewals(List.of(RenewalEntity.builder().build()));
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        when(memMapMock.toMemberDetail(entity)).thenReturn(MemberDetail.builder().build());
-        when(addMapMock.toDataObjectList(entity.getAddresses())).thenReturn(List.of(Address.builder().build()));
-        when(emlMapMock.toDataObjectList(entity.getEmails())).thenReturn(List.of(Email.builder().build()));
-        when(phnMapMock.toDataObjectList(entity.getPhones())).thenReturn(List.of(Phone.builder().build()));
-        when(renMapMock.toDataObjectList(entity.getRenewals())).thenReturn(List.of(Renewal.builder().build()));
+        when(memMapMock.toMemberDetail(entity)).thenReturn(MemberDetailDto.builder().build());
+        when(addMapMock.toDataObjectList(entity.getAddresses())).thenReturn(List.of(AddressDto.builder().build()));
+        when(emlMapMock.toDataObjectList(entity.getEmails())).thenReturn(List.of(EmailDto.builder().build()));
+        when(phnMapMock.toDataObjectList(entity.getPhones())).thenReturn(List.of(PhoneDto.builder().build()));
+        when(renMapMock.toDataObjectList(entity.getRenewals())).thenReturn(List.of(RenewalDto.builder().build()));
 
         var ret = svc.getMemberDetail(id);
 
@@ -348,10 +348,10 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
                 .build();
     }
 
-    protected Member createDataObject(int flag) {
+    protected MemberDto createDataObject(int flag) {
         var now = LocalDate.now();
 
-        return Member.builder()
+        return MemberDto.builder()
                 .id(flag)
                 .memberNumber(flag)
                 .firstName("first")

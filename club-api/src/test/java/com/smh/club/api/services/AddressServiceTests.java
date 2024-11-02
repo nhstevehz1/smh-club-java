@@ -6,8 +6,8 @@ import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.data.repos.AddressRepo;
 import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.Address;
-import com.smh.club.api.models.AddressType;
+import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.data.dto.AddressType;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEntity> {
+public class AddressServiceTests extends CrudServiceTestBase<AddressDto, AddressEntity> {
     @Mock private MembersRepo memRepoMock;
     @Mock private AddressRepo addRepoMock;
     @Mock private AddressMapper addMapMock;
@@ -295,8 +295,8 @@ public class AddressServiceTests extends CrudServiceTestBase<Address, AddressEnt
     }
 
     @Override
-    protected Address createDataObject(int flag) {
-        return Address.builder()
+    protected AddressDto createDataObject(int flag) {
+        return AddressDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .address1("a_address1_" + flag)

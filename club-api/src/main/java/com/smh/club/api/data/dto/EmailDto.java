@@ -1,4 +1,4 @@
-package com.smh.club.api.models;
+package com.smh.club.api.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Phone {
+public class EmailDto {
     @JsonProperty("id")
     private int id;
 
     @JsonProperty("member-id")
     private int memberId;
 
-    @JsonProperty("phone-number")
-    private String phoneNum;
+    @JsonProperty("email")
+    private String email;
 
-    @JsonProperty("phone-type")
-    private PhoneType phoneType;
+    @JsonProperty("email-type")
+    private EmailType emailType;
 }

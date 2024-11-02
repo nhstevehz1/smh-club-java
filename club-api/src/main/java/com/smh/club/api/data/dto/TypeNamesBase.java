@@ -1,4 +1,4 @@
-package com.smh.club.api.models;
+package com.smh.club.api.data.dto;
 
 public abstract class TypeNamesBase {
     public final static String HOME = "HOME";

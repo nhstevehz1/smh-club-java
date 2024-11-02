@@ -2,8 +2,8 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.MemberMapper;
 import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.models.Member;
-import com.smh.club.api.models.MemberDetail;
+import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.data.dto.MemberDetailDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberMapperImpl implements MemberMapper {
-    public MemberEntity toEntity(Member dataObject) {
+    public MemberEntity toEntity(MemberDto dataObject) {
         return MemberEntity.builder()
                 .memberNumber(dataObject.getMemberNumber())
                 .firstName(dataObject.getFirstName())
@@ -24,8 +24,8 @@ public class MemberMapperImpl implements MemberMapper {
     }
 
     @Override
-    public Member toDataObject(MemberEntity entity) {
-        return Member.builder()
+    public MemberDto toDataObject(MemberEntity entity) {
+        return MemberDto.builder()
                 .id(entity.getId())
                 .memberNumber(entity.getMemberNumber())
                 .firstName(entity.getFirstName())
@@ -38,12 +38,12 @@ public class MemberMapperImpl implements MemberMapper {
     }
 
     @Override
-    public List<Member> toDataObjectList(List<MemberEntity> entityList) {
+    public List<MemberDto> toDataObjectList(List<MemberEntity> entityList) {
         return entityList.stream().map(this::toDataObject).collect(Collectors.toList());
     }
 
     @Override
-    public MemberEntity updateEntity(Member dataObject, MemberEntity entity) {
+    public MemberEntity updateEntity(MemberDto dataObject, MemberEntity entity) {
         entity.setMemberNumber(dataObject.getMemberNumber());
         entity.setFirstName(dataObject.getFirstName());
         entity.setMiddleName(dataObject.getMiddleName());
@@ -55,8 +55,8 @@ public class MemberMapperImpl implements MemberMapper {
     }
 
     @Override
-    public MemberDetail toMemberDetail(MemberEntity entity) {
-        return MemberDetail.builder()
+    public MemberDetailDto toMemberDetail(MemberEntity entity) {
+        return MemberDetailDto.builder()
                 .id(entity.getId())
                 .memberNumber(entity.getMemberNumber())
                 .firstName(entity.getFirstName())

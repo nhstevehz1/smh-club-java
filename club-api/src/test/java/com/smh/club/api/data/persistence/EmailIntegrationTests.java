@@ -2,7 +2,7 @@ package com.smh.club.api.data.persistence;
 
 import com.smh.club.api.data.repos.EmailRepo;
 import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.EmailType;
+import com.smh.club.api.data.dto.EmailType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

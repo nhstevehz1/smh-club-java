@@ -1,4 +1,4 @@
-package com.smh.club.api.models;
+package com.smh.club.api.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -14,21 +14,21 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder // listed as experimental on lombok site
-public class MemberDetail extends Member{
+public class MemberDetailDto extends MemberDto {
 
     @Builder.Default
     @JsonProperty("addresses")
-    private List<Address> addresses = new ArrayList<>();
+    private List<AddressDto> addresses = new ArrayList<>();
 
     @Builder.Default
     @JsonProperty("emails")
-    private List<Email> emails = new ArrayList<>();
+    private List<EmailDto> emails = new ArrayList<>();
 
     @Builder.Default
     @JsonProperty("phones")
-    private List<Phone> phones = new ArrayList<>();
+    private List<PhoneDto> phones = new ArrayList<>();
 
     @Builder.Default
     @JsonProperty("renewals")
-    private List<Renewal> renewals = new ArrayList<>();
+    private List<RenewalDto> renewals = new ArrayList<>();
 }

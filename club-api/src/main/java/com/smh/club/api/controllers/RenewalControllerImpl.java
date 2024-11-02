@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.RenewalController;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.models.Renewal;
+import com.smh.club.api.data.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -21,7 +21,7 @@ public class RenewalControllerImpl implements RenewalController {
     private final RenewalService renewSvc;
     
     @GetMapping
-    public ResponseEntity<PageResponse<Renewal>> getItemListPage(@RequestBody PageParams pageParams) {
+    public ResponseEntity<PageResponse<RenewalDto>> getItemListPage(@RequestBody PageParams pageParams) {
         if (pageParams == null) {
             pageParams = PageParams.getDefault();
         }
@@ -30,7 +30,7 @@ public class RenewalControllerImpl implements RenewalController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Renewal> getItem(@PathVariable int id) {
+    public ResponseEntity<RenewalDto> getItem(@PathVariable int id) {
         var ret = renewSvc.getItem(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -41,13 +41,13 @@ public class RenewalControllerImpl implements RenewalController {
     }
 
     @PostMapping
-    public ResponseEntity<Renewal> createItem(@RequestBody Renewal renewal) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createItem(renewal));
+    public ResponseEntity<RenewalDto> createItem(@RequestBody RenewalDto renewalDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createItem(renewalDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Renewal> updateItem(@PathVariable int id, @RequestBody Renewal renewal) {
-        var ret = renewSvc.updateItem(id, renewal);
+    public ResponseEntity<RenewalDto> updateItem(@PathVariable int id, @RequestBody RenewalDto renewalDto) {
+        var ret = renewSvc.updateItem(id, renewalDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

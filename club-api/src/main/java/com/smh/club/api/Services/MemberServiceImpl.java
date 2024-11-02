@@ -3,8 +3,8 @@ package com.smh.club.api.Services;
 import com.smh.club.api.common.mappers.*;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.Member;
-import com.smh.club.api.models.MemberDetail;
+import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.data.dto.MemberDetailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -38,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public PageResponse<Member> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<MemberDto> getItemListPage(@NonNull PageParams pageParams) {
         log.debug("Getting member item list page: {}", pageParams);
 
         var pageRequest = PageRequest.of(
@@ -51,7 +51,7 @@ public class MemberServiceImpl implements MemberService {
 
         var page = membersRepo.findAll(pageRequest);
 
-        return PageResponse.<Member>builder()
+        return PageResponse.<MemberDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
                 .items(memberMapper.toDataObjectList(page.getContent()))
@@ -59,14 +59,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<Member> getItem(int id) {
+    public Optional<MemberDto> getItem(int id) {
         log.debug("Getting member by id: {}", id);
 
         return membersRepo.findById(id).map(memberMapper::toDataObject);
     }
 
     @Override
-    public Member createItem(Member member) {
+    public MemberDto createItem(MemberDto member) {
         log.debug("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);
@@ -74,15 +74,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<Member> updateItem(int id, Member member) {
-        log.debug("Updating member id: {}, with data: {}", id, member);
+    public Optional<MemberDto> updateItem(int id, MemberDto memberDto) {
+        log.debug("Updating member id: {}, with data: {}", id, memberDto);
 
-        if(id != member.getId()) {
+        if(id != memberDto.getId()) {
             throw new IllegalArgumentException();
         }
 
         return membersRepo.findById(id)
-                .map(e -> memberMapper.updateEntity(member, e))
+                .map(e -> memberMapper.updateEntity(memberDto, e))
                 .map(memberMapper::toDataObject);
     }
 
@@ -99,7 +99,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<MemberDetail> getMemberDetail(int id) {
+    public Optional<MemberDetailDto> getMemberDetail(int id) {
         log.debug("Getting member detail by id: {}", id);
 
         var ret = membersRepo.findById(id);

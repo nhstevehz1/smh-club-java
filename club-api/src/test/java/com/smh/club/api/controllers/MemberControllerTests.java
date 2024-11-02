@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.models.Member;
+import com.smh.club.api.data.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberControllerImpl.class)
-public class MemberControllerTests extends ControllerTestBase<Member> {
+public class MemberControllerTests extends ControllerTestBase<MemberDto> {
 
     @MockBean
     private MemberService svc;
@@ -40,7 +40,7 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<Member>builder()
+        var response = PageResponse.<MemberDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(createDataObjectList(5))
                 .build();
@@ -186,10 +186,10 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
     }
 
     @Override
-    protected Member createDataObject(int flag) {
+    protected MemberDto createDataObject(int flag) {
         var now = LocalDate.now();
 
-        return Member.builder()
+        return MemberDto.builder()
                 .id(flag)
                 .memberNumber(flag + 10)
                 .firstName("first_" + flag)

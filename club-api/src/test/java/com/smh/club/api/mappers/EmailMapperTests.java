@@ -2,8 +2,8 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.models.Email;
-import com.smh.club.api.models.EmailType;
+import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.data.dto.EmailType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -85,7 +85,7 @@ public class EmailMapperTests {
 
         // execute
         var dataObjectList = mapper.toDataObjectList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(Email::getId));
+        dataObjectList.sort(Comparator.comparingInt(EmailDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -107,8 +107,8 @@ public class EmailMapperTests {
                 .build();
     }
 
-    private Email createDataObject() {
-        return Email.builder()
+    private EmailDto createDataObject() {
+        return EmailDto.builder()
                 .email("test-add#test.com")
                 .emailType(EmailType.Other)
                 .build();

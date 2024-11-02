@@ -2,7 +2,7 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.models.Address;
+import com.smh.club.api.data.dto.AddressDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Service
 public class AddressMapperImpl implements AddressMapper {
     @Override
-    public AddressEntity toEntity(Address dataObject) {
+    public AddressEntity toEntity(AddressDto dataObject) {
         return AddressEntity.builder()
                 .address1(dataObject.getAddress1())
                 .address2(dataObject.getAddress2())
@@ -23,8 +23,8 @@ public class AddressMapperImpl implements AddressMapper {
     }
 
     @Override
-    public Address toDataObject(AddressEntity entity) {
-        return Address.builder()
+    public AddressDto toDataObject(AddressEntity entity) {
+        return AddressDto.builder()
                 .id(entity.getId())
                 .memberId(entity.getMember().getId())
                 .address1(entity.getAddress1())
@@ -37,7 +37,7 @@ public class AddressMapperImpl implements AddressMapper {
     }
 
     @Override
-    public AddressEntity updateEntity(Address dataObject, AddressEntity entity) {
+    public AddressEntity updateEntity(AddressDto dataObject, AddressEntity entity) {
         entity.setAddress1(dataObject.getAddress1());
         entity.setAddress2(dataObject.getAddress2());
         entity.setCity(dataObject.getCity());
@@ -48,7 +48,7 @@ public class AddressMapperImpl implements AddressMapper {
     }
 
     @Override
-    public List<Address> toDataObjectList(List<AddressEntity> entityList) {
+    public List<AddressDto> toDataObjectList(List<AddressEntity> entityList) {
         return entityList.stream().map(this::toDataObject).collect(Collectors.toList());
     }
 }

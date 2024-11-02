@@ -6,7 +6,7 @@ import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.data.entities.RenewalEntity;
 import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.data.repos.RenewalsRepo;
-import com.smh.club.api.models.Renewal;
+import com.smh.club.api.data.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEntity> {
+public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, RenewalEntity> {
     
     @Mock private MembersRepo memRepoMock;
     @Mock private RenewalsRepo renRepoMock;
@@ -278,10 +278,10 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
     
     @Override
-    protected Renewal createDataObject(int flag) {
+    protected RenewalDto createDataObject(int flag) {
         var now = LocalDate.now();
         
-        return Renewal.builder()
+        return RenewalDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .renewalDate(now)

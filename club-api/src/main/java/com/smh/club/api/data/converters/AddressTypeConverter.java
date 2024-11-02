@@ -1,6 +1,6 @@
 package com.smh.club.api.data.converters;
 
-import com.smh.club.api.models.AddressType;
+import com.smh.club.api.data.dto.AddressType;
 import jakarta.persistence.AttributeConverter;
 
 public class AddressTypeConverter implements AttributeConverter<AddressType, Integer> {

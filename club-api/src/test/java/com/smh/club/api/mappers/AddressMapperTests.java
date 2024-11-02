@@ -2,8 +2,8 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.models.Address;
-import com.smh.club.api.models.AddressType;
+import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.data.dto.AddressType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -98,7 +98,7 @@ public class AddressMapperTests {
 
         // execute
         var dataObjectList = mapper.toDataObjectList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(Address::getId));
+        dataObjectList.sort(Comparator.comparingInt(AddressDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -129,8 +129,8 @@ public class AddressMapperTests {
                 .build();
     }
 
-    private Address createDataObject() {
-        return Address.builder()
+    private AddressDto createDataObject() {
+        return AddressDto.builder()
                 .address1("ad_address1")
                 .address2("ad_address2")
                 .city("ad_city")

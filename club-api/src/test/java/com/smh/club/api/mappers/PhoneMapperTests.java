@@ -2,8 +2,8 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.data.entities.PhoneEntity;
-import com.smh.club.api.models.Phone;
-import com.smh.club.api.models.PhoneType;
+import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.data.dto.PhoneType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -86,7 +86,7 @@ public class PhoneMapperTests {
 
         // execute
         var dataObjectList = mapper.toDataObjectList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(Phone::getId));
+        dataObjectList.sort(Comparator.comparingInt(PhoneDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -108,8 +108,8 @@ public class PhoneMapperTests {
                 .build();
     }
 
-    private Phone createDataObject() {
-        return Phone.builder()
+    private PhoneDto createDataObject() {
+        return PhoneDto.builder()
                 .phoneNum("Phone_do")
                 .phoneType(PhoneType.Other)
                 .build();

@@ -2,7 +2,7 @@ package com.smh.club.api.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smh.club.api.data.converters.EmailTypeConverter;
-import com.smh.club.api.models.EmailType;
+import com.smh.club.api.data.dto.EmailType;
 import jakarta.persistence.*;
 import lombok.*;
 

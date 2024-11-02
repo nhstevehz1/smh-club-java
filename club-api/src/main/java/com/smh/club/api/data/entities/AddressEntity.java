@@ -2,7 +2,7 @@ package com.smh.club.api.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smh.club.api.data.converters.AddressTypeConverter;
-import com.smh.club.api.models.AddressType;
+import com.smh.club.api.data.dto.AddressType;
 import jakarta.persistence.*;
 import lombok.*;
 

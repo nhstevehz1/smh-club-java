@@ -1,6 +1,6 @@
 package com.smh.club.api.common.services;
 
-import com.smh.club.api.models.Phone;
+import com.smh.club.api.data.dto.PhoneDto;
 
-public interface PhoneService extends CrudService<Phone> {
+public interface PhoneService extends CrudService<PhoneDto> {
 }
