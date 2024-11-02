@@ -1,5 +1,6 @@
 package com.smh.club.api.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -7,8 +8,13 @@ import java.util.Arrays;
 @Getter
 public enum EmailType {
 
+    @JsonProperty(EmailTypeNames.HOME)
     Home(0, EmailTypeNames.HOME),
+
+    @JsonProperty(EmailTypeNames.WORK)
     Work(1, EmailTypeNames.WORK),
+
+    @JsonProperty(EmailTypeNames.OTHER)
     Other(2, EmailTypeNames.OTHER);
 
     private final int emailId;

@@ -1,5 +1,6 @@
 package com.smh.club.api.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -7,8 +8,13 @@ import java.util.Arrays;
 @Getter
 public enum PhoneType {
 
+    @JsonProperty(PhoneTypeNames.HOME)
     Home(0, PhoneTypeNames.HOME),
+
+    @JsonProperty(PhoneTypeNames.WORK)
     Work(1, PhoneTypeNames.WORK),
+
+    @JsonProperty(PhoneTypeNames.OTHER)
     Other(2, PhoneTypeNames.OTHER);
 
     private final int phoneId;

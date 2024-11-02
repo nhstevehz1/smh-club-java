@@ -107,7 +107,7 @@ public class RenewalIntegrationTests extends PersistenceTestsBase {
     }
 
     @Test
-    public void findByIdAndMemberId_returns_email() {
+    public void findByIdAndMemberId_returns_renewal() {
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
 
         var entity = createRenewal(0, LocalDate.now());

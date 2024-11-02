@@ -17,7 +17,7 @@ public class Phone {
     @JsonProperty("member-id")
     private int memberId;
 
-    @JsonProperty("phone-num")
+    @JsonProperty("phone-number")
     private String phoneNum;
 
     @JsonProperty("phone-type")

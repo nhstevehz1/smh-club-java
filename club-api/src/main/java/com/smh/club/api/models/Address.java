@@ -17,10 +17,10 @@ public class Address {
     @JsonProperty("member-id")
     private int memberId;
 
-    @JsonProperty("address-1")
+    @JsonProperty("address1")
     private String address1;
 
-    @JsonProperty("address-2")
+    @JsonProperty("address2")
     private String address2;
 
     @JsonProperty("city")

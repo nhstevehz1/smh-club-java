@@ -27,7 +27,7 @@ CREATE TABLE member_mgmt.address (
 	address_type smallint NOT NULL,
 
 	CONSTRAINT pk_address PRIMARY KEY (id),
-	CONSTRAINT fk_address_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_address_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 
 );
 
@@ -38,7 +38,7 @@ CREATE TABLE member_mgmt.email (
 	email_type smallint NOT NULL,
 
 	CONSTRAINT pk_email PRIMARY KEY (id),
-	CONSTRAINT fk_email_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_email_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 );
 
 CREATE TABLE member_mgmt.renewal (
@@ -48,7 +48,7 @@ CREATE TABLE member_mgmt.renewal (
 	renewal_year char(4) NOT NULL,
 
 	CONSTRAINT pk_renewals PRIMARY KEY (id),
-	CONSTRAINT fk_renewals_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_renewals_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 );
 
 CREATE TABLE member_mgmt.phone (
@@ -58,5 +58,5 @@ CREATE TABLE member_mgmt.phone (
 	phone_type integer,
 
 	CONSTRAINT pk_phone PRIMARY KEY(id),
-	CONSTRAINT fk_phone_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_phone_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 );
