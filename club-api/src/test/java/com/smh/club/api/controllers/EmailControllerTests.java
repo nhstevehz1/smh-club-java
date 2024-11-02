@@ -2,13 +2,17 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.EmailService;
+import com.smh.club.api.models.Address;
 import com.smh.club.api.models.Email;
 import com.smh.club.api.models.EmailType;
+import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
+import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +38,34 @@ public class EmailControllerTests extends ControllerTestBase<Email> {
     private ObjectMapper mapper;
 
     @Test
+    public void shouldReturnPage() throws Exception {
+        // setup
+        var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
+                .sortDirection(Sort.Direction.DESC).build();
+
+        var response = PageResponse.<Email>builder()
+                .totalPages(100).totalCount(20)
+                .items(createDataObjectList(5))
+                .build();
+
+        when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
+
+        // execute and verify
+        var ret = mockMvc.perform(get("/emails")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(params)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total-pages").value(response.getTotalPages()))
+                .andExpect(jsonPath("$.total-count").value(response.getTotalCount()))
+                .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
+                .andDo(print());
+
+        verify(svc).getItemListPage(any(PageParams.class));
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
     public void shouldReturnEmail() throws Exception {
         // setup
         var id = 12;
@@ -48,6 +80,22 @@ public class EmailControllerTests extends ControllerTestBase<Email> {
                 .andExpect(jsonPath("$.member-id").value(email.getMemberId()))
                 .andExpect(jsonPath("$.email").value(email.getEmail()))
                 .andExpect(jsonPath("$.email-type").value(email.getEmailType().getEmailName()))
+                .andDo(print());
+
+        verify(svc).getItem(id);
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
+    public void shouldReturnNotFound_when_emailId_does_not_exist() throws Exception {
+        // setup
+        var id = 12;
+        when(svc.getItem(id)).thenReturn(Optional.empty());
+
+        // execute
+        mockMvc.perform(get("/emails/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
                 .andDo(print());
 
         verify(svc).getItem(id);
@@ -98,6 +146,25 @@ public class EmailControllerTests extends ControllerTestBase<Email> {
                 .andDo(print());
 
         verify(svc).updateItem(id, email);
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
+    public void update_email_should_return_badRequest() throws Exception {
+        // setup
+        var id = 10;
+        var email = createDataObject(id);
+        when(svc.updateItem(id, email)).thenReturn(Optional.empty());
+
+        // execute and verify
+        mockMvc.perform(put("/emails/{id}", email.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(email)))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+        verify(svc).updateItem(email.getId(), email);
         verifyNoMoreInteractions(svc);
     }
 

@@ -2,12 +2,16 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.RenewalService;
+import com.smh.club.api.models.Address;
 import com.smh.club.api.models.Renewal;
+import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
+import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +38,34 @@ public class RenewalControllerTests extends ControllerTestBase<Renewal> {
     private ObjectMapper mapper;
 
     @Test
+    public void shouldReturnPage() throws Exception {
+        // setup
+        var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
+                .sortDirection(Sort.Direction.DESC).build();
+
+        var response = PageResponse.<Renewal>builder()
+                .totalPages(100).totalCount(20)
+                .items(createDataObjectList(5))
+                .build();
+
+        when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
+
+        // execute and verify
+        var ret = mockMvc.perform(get("/renewals")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(params)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total-pages").value(response.getTotalPages()))
+                .andExpect(jsonPath("$.total-count").value(response.getTotalCount()))
+                .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
+                .andDo(print());
+
+        verify(svc).getItemListPage(any(PageParams.class));
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
     public void shouldReturnRenewal() throws Exception {
         // setup
         var id = 12;
@@ -48,6 +80,22 @@ public class RenewalControllerTests extends ControllerTestBase<Renewal> {
                 .andExpect(jsonPath("$.member-id").value(renewal.getMemberId()))
                 .andExpect(jsonPath("$.renewal-date").value(renewal.getRenewalDate()))
                 .andExpect(jsonPath("$.renewal-year").value(renewal.getRenewalYear()))
+                .andDo(print());
+
+        verify(svc).getItem(id);
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
+    public void shouldReturnNotFound_when_renewalId_does_not_exist() throws Exception {
+        // setup
+        var id = 12;
+        when(svc.getItem(id)).thenReturn(Optional.empty());
+
+        // execute
+        mockMvc.perform(get("/renewals/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
                 .andDo(print());
 
         verify(svc).getItem(id);
@@ -97,6 +145,25 @@ public class RenewalControllerTests extends ControllerTestBase<Renewal> {
                 .andDo(print());
 
         verify(svc).updateItem(id, renewal);
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
+    public void update_renewal_should_return_badRequest() throws Exception {
+        // setup
+        var id = 10;
+        var renewal = createDataObject(id);
+        when(svc.updateItem(id, renewal)).thenReturn(Optional.empty());
+
+        // execute and verify
+        mockMvc.perform(put("/renewals/{id}", renewal.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(renewal)))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+        verify(svc).updateItem(renewal.getId(), renewal);
         verifyNoMoreInteractions(svc);
     }
 

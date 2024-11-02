@@ -2,11 +2,15 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.MemberService;
+import com.smh.club.api.models.Address;
 import com.smh.club.api.models.Member;
+import com.smh.club.api.request.PageParams;
+import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,6 +36,34 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
     private ObjectMapper mapper;
 
     @Test
+    public void shouldReturnPage() throws Exception {
+        // setup
+        var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
+                .sortDirection(Sort.Direction.DESC).build();
+
+        var response = PageResponse.<Member>builder()
+                .totalPages(100).totalCount(20)
+                .items(createDataObjectList(5))
+                .build();
+
+        when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
+
+        // execute and verify
+        var ret = mockMvc.perform(get("/members")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(params)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total-pages").value(response.getTotalPages()))
+                .andExpect(jsonPath("$.total-count").value(response.getTotalCount()))
+                .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
+                .andDo(print());
+
+        verify(svc).getItemListPage(any(PageParams.class));
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
     public void shouldReturnMember() throws Exception {
         // setup
         var id = 12;
@@ -50,6 +82,22 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
                 .andExpect(jsonPath("$.suffix").value(member.getSuffix()))
                 .andExpect(jsonPath("$.birth-date").value(member.getBirthDate().toString()))
                 .andExpect(jsonPath("$.joined-date").value(member.getJoinedDate().toString()))
+                .andDo(print());
+
+        verify(svc).getItem(id);
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
+    public void shouldReturnNotFound_when_memberId_does_not_exist() throws Exception {
+        // setup
+        var id = 12;
+        when(svc.getItem(id)).thenReturn(Optional.empty());
+
+        // execute
+        mockMvc.perform(get("/members/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
                 .andDo(print());
 
         verify(svc).getItem(id);
@@ -104,6 +152,25 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
                 .andDo(print());
 
         verify(svc).updateItem(ret.getId(), ret);
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
+    public void update_member_should_return_badRequest() throws Exception {
+        // setup
+        var id = 10;
+        var member = createDataObject(id);
+        when(svc.updateItem(id, member)).thenReturn(Optional.empty());
+
+        // execute and verify
+        mockMvc.perform(put("/member/{id}", member.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(member)))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+        verify(svc).updateItem(member.getId(), member);
         verifyNoMoreInteractions(svc);
     }
 

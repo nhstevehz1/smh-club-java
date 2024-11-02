@@ -48,7 +48,7 @@ public class EmailControllerImpl implements EmailController {
     @PutMapping("{id}")
     public ResponseEntity<Email> updateItem(@PathVariable int id, @RequestBody Email email) {
         var ret = emailSvc.updateItem(id, email);
-        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")

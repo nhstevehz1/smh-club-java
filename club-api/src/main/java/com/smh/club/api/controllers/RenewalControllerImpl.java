@@ -48,7 +48,7 @@ public class RenewalControllerImpl implements RenewalController {
     @PutMapping("{id}")
     public ResponseEntity<Renewal> updateItem(@PathVariable int id, @RequestBody Renewal renewal) {
         var ret = renewSvc.updateItem(id, renewal);
-        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")

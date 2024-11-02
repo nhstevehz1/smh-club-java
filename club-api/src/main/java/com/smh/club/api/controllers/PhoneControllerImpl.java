@@ -48,7 +48,7 @@ public class PhoneControllerImpl implements PhoneController {
     @PutMapping("{id}")
     public ResponseEntity<Phone> updateItem(@PathVariable int id, @RequestBody Phone phone) {
         var ret = phoneSvc.updateItem(id, phone);
-        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")

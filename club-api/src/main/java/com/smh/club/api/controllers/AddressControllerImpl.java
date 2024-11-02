@@ -48,7 +48,7 @@ public class AddressControllerImpl implements AddressController {
     @PutMapping("{id}")
     public ResponseEntity<Address> updateItem(@PathVariable int id, @RequestBody Address address) {
         var ret = addressSvc.updateItem(id, address);
-        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")

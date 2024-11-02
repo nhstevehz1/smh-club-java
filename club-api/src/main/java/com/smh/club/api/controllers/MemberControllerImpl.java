@@ -49,7 +49,7 @@ public class MemberControllerImpl implements MemberController {
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Member> updateItem(@PathVariable int id, @RequestBody Member member) {
         var ret = memberSvc.updateItem(id, member);
-        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
