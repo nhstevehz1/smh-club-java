@@ -2,7 +2,6 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.models.Address;
 import com.smh.club.api.models.Renewal;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -51,7 +50,7 @@ public class RenewalControllerTests extends ControllerTestBase<Renewal> {
         when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
-        var ret = mockMvc.perform(get("/renewals")
+        mockMvc.perform(get("/renewals")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(params)))

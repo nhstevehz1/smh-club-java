@@ -2,7 +2,6 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.models.Address;
 import com.smh.club.api.models.Member;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.PageResponse;
@@ -49,7 +48,7 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
         when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
-        var ret = mockMvc.perform(get("/members")
+        mockMvc.perform(get("/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(params)))

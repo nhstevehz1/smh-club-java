@@ -2,7 +2,6 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.models.Address;
 import com.smh.club.api.models.Email;
 import com.smh.club.api.models.EmailType;
 import com.smh.club.api.request.PageParams;
@@ -51,7 +50,7 @@ public class EmailControllerTests extends ControllerTestBase<Email> {
         when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
-        var ret = mockMvc.perform(get("/emails")
+        mockMvc.perform(get("/emails")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(params)))

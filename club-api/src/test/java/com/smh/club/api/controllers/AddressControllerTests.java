@@ -50,7 +50,7 @@ public class AddressControllerTests extends ControllerTestBase<Address> {
         when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
-        var ret = mockMvc.perform(get("/addresses")
+        mockMvc.perform(get("/addresses")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(params)))
