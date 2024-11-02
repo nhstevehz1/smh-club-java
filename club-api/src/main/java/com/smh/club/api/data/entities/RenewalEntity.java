@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "renewals", schema = "member_mgmt")
+@Table(name = "renewal", schema = "member_mgmt")
 public class RenewalEntity {
 
     @Id
@@ -28,7 +28,7 @@ public class RenewalEntity {
     @JsonIgnore // do not serialize to json
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private MemberEntity member;
 }

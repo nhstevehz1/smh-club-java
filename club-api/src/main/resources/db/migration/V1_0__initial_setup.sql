@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS member_mgmt;
 
-CREATE TABLE member_mgmt.members (
+CREATE TABLE member_mgmt.member (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_number int NOT NULL,
 	lifetime boolean DEFAULt FALSE,
@@ -27,7 +27,7 @@ CREATE TABLE member_mgmt.address (
 	address_type smallint NOT NULL,
 
 	CONSTRAINT pk_address PRIMARY KEY (id),
-	CONSTRAINT fk_address_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_address_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 
 );
 
@@ -38,17 +38,17 @@ CREATE TABLE member_mgmt.email (
 	email_type smallint NOT NULL,
 
 	CONSTRAINT pk_email PRIMARY KEY (id),
-	CONSTRAINT fk_email_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_email_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 );
 
-CREATE TABLE member_mgmt.renewals (
+CREATE TABLE member_mgmt.renewal (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
 	renewal_date DATE NOT NULL,
 	renewal_year char(4) NOT NULL,
 
 	CONSTRAINT pk_renewals PRIMARY KEY (id),
-	CONSTRAINT fk_renewals_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_renewals_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 );
 
 CREATE TABLE member_mgmt.phone (
@@ -58,5 +58,5 @@ CREATE TABLE member_mgmt.phone (
 	phone_type integer,
 
 	CONSTRAINT pk_phone PRIMARY KEY(id),
-	CONSTRAINT fk_phone_members FOREIGN KEY (member_id) REFERENCES member_mgmt.members (id)
+	CONSTRAINT fk_phone_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
 );

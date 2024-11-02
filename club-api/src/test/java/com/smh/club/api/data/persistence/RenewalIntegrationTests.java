@@ -16,8 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @ActiveProfiles("tests")
@@ -105,5 +104,38 @@ public class RenewalIntegrationTests extends PersistenceTestsBase {
 
         // execute and verify
         assertThrows(Exception.class, () -> renewalsRepo.save(renewal));
+    }
+
+    @Test
+    public void findByIdAndMemberId_returns_renewal() {
+        var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
+
+        var entity = createRenewal(0, LocalDate.now());
+        entity.setMember(member);
+
+        var saved = renewalsRepo.save(entity);
+
+        // execute
+        var ret = renewalsRepo.findByIdAndMemberId(saved.getId(), member.getId());
+
+        //verify
+        assertTrue(ret.isPresent());
+        assertEquals(saved.getId(), ret.get().getId());
+        assertEquals(member.getId(), ret.get().getMember().getId());
+    }
+
+    @Test
+    public void findByIdAndMemberId_returns_empty_optional() {
+        var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
+        var entity = createRenewal(0, LocalDate.now());
+        entity.setMember(member);
+
+        var saved = renewalsRepo.save(entity);
+
+        // execute
+        var ret = renewalsRepo.findByIdAndMemberId(saved.getId(),10);
+
+        //verify
+        assertFalse(ret.isPresent());
     }
 }

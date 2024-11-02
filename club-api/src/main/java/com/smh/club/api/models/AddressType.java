@@ -1,5 +1,6 @@
 package com.smh.club.api.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -7,8 +8,13 @@ import java.util.Arrays;
 @Getter
 public enum AddressType {
 
+    @JsonProperty(AddressTypeNames.HOME)
     Home(0, AddressTypeNames.HOME),
+
+    @JsonProperty(AddressTypeNames.WORK)
     Work(1, AddressTypeNames.WORK),
+
+    @JsonProperty(AddressTypeNames.OTHER)
     Other(2,AddressTypeNames.OTHER );
 
     private final int addressId;
