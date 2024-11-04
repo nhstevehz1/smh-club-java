@@ -59,7 +59,7 @@ public class MemberControllerImpl implements MemberController {
     }
 
     @GetMapping("{id}/detail")
-    public ResponseEntity<MemberDto>  getMemberDetail(int id) {
+    public ResponseEntity<MemberDto>  getMemberDetail(@PathVariable int id) {
         var ret = memberSvc.getMemberDetail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
