@@ -29,10 +29,6 @@ public class MemberServiceImpl implements MemberService {
     private final MembersRepo membersRepo;
 
     private final MemberMapper memberMapper;
-    private final AddressMapper addressMapper;
-    private final EmailMapper emailMapper;
-    private final PhoneMapper phoneMapper;
-    private final RenewalMapper renewalMapper;
 
     private final Map<String, String> sortColumnMap = initSortColumnMap();
 

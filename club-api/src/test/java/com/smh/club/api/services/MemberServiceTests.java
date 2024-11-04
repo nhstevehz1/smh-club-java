@@ -282,7 +282,7 @@ public class MemberServiceTests extends CrudServiceTestBase<MemberMinimumDto, Me
         entity.setPhones(List.of(PhoneEntity.builder().build()));
         entity.setRenewals(List.of(RenewalEntity.builder().build()));
 
-        var memberDto = createMemberDto(1);
+        var memberDto = createMemberDto();
 
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
         when(mapperMock.toMemberDto(entity)).thenReturn(memberDto);
@@ -318,16 +318,16 @@ public class MemberServiceTests extends CrudServiceTestBase<MemberMinimumDto, Me
         verifyNoMoreInteractions(mapperMock);
     }
 
-    private MemberDto createMemberDto(int flag) {
+    private MemberDto createMemberDto() {
         var now = LocalDate.now();
         return MemberDto.builder()
-                .id(flag)
-                .memberNumber(flag)
+                .id(1)
+                .memberNumber(1)
                 .firstName("first")
                 .middleName("middle")
                 .lastName("last")
                 .suffix("jr")
-                .birthDate(now.minusYears(flag))
+                .birthDate(now.minusYears(1))
                 .joinedDate(now)
                 .build();
     }
