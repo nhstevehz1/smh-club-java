@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.AddressController;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.models.Address;
+import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -21,7 +21,7 @@ public class AddressControllerImpl implements AddressController {
     private final AddressService addressSvc;
 
     @GetMapping
-    public ResponseEntity<PageResponse<Address>> getItemListPage(@RequestBody PageParams pageParams) {
+    public ResponseEntity<PageResponse<AddressDto>> getItemListPage(@RequestBody PageParams pageParams) {
         if (pageParams == null) {
             pageParams = PageParams.getDefault();
         }
@@ -30,7 +30,7 @@ public class AddressControllerImpl implements AddressController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Address> getItem(@PathVariable int id) {
+    public ResponseEntity<AddressDto> getItem(@PathVariable int id) {
         var ret = addressSvc.getItem(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -41,13 +41,13 @@ public class AddressControllerImpl implements AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<Address> createItem(@RequestBody Address address) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createItem(address));
+    public ResponseEntity<AddressDto> createItem(@RequestBody AddressDto addressDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createItem(addressDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Address> updateItem(@PathVariable int id, @RequestBody Address address) {
-        var ret = addressSvc.updateItem(id, address);
+    public ResponseEntity<AddressDto> updateItem(@PathVariable int id, @RequestBody AddressDto addressDto) {
+        var ret = addressSvc.updateItem(id, addressDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

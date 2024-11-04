@@ -2,11 +2,11 @@ package com.smh.club.api.services;
 
 import com.smh.club.api.Services.RenewalServiceIml;
 import com.smh.club.api.common.mappers.RenewalMapper;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.entities.RenewalEntity;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.RenewalsRepo;
-import com.smh.club.api.models.Renewal;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.domain.entities.RenewalEntity;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.domain.repos.RenewalsRepo;
+import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEntity> {
+public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, RenewalEntity> {
     
     @Mock private MembersRepo memRepoMock;
     @Mock private RenewalsRepo renRepoMock;
@@ -153,7 +153,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         // setup
         var page = createPage(10, pageableMock, 200);
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(renMapMock.toDataObjectList(page.getContent())).thenReturn(createDataObjectList(10));
+        when(renMapMock.toDtoList(page.getContent())).thenReturn(createDataObjectList(10));
 
         // execute
         var pageResponse = svc.getItemListPage(PageParams.getDefault());
@@ -163,7 +163,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         assertEquals(page.getTotalElements(), pageResponse.getTotalCount());
         assertEquals(page.getContent().size(), pageResponse.getItems().size());
         verify(renRepoMock).findAll(any(PageRequest.class));
-        verify(renMapMock).toDataObjectList(page.getContent());
+        verify(renMapMock).toDtoList(page.getContent());
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
@@ -173,7 +173,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         int id = 1;
         var entity = createEntity(id);
         when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(renMapMock.toDataObject(any(RenewalEntity.class))).thenReturn(createDataObject(id));
+        when(renMapMock.toDto(any(RenewalEntity.class))).thenReturn(createDataObject(id));
 
         // execute
         var member = svc.getItem(id);
@@ -181,7 +181,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         // verify
         assertNotNull(member);
         verify(renRepoMock).findById(id);
-        verify(renMapMock).toDataObject(any(RenewalEntity.class));
+        verify(renMapMock).toDto(any(RenewalEntity.class));
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
@@ -213,7 +213,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         var entity = createEntity(1);
         when(renRepoMock.save(entity)).thenReturn(entity);
         when(renMapMock.toEntity(renewal)).thenReturn(entity);
-        when(renMapMock.toDataObject(entity)).thenReturn(renewal);
+        when(renMapMock.toDto(entity)).thenReturn(renewal);
 
         // execute
         var ret = svc.createItem(renewal);
@@ -224,7 +224,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         verify(memRepoMock).getReferenceById(memberId);
         verify(renRepoMock).save(entity);
         verify(renMapMock).toEntity(renewal);
-        verify(renMapMock).toDataObject(entity);
+        verify(renMapMock).toDto(entity);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
@@ -238,7 +238,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         when(renRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
         when(renMapMock.updateEntity(renewal, entity)).thenReturn(entity);
-        when(renMapMock.toDataObject(entity)).thenReturn(renewal);
+        when(renMapMock.toDto(entity)).thenReturn(renewal);
 
         // execute
         var ret = svc.updateItem(id, renewal);
@@ -248,7 +248,7 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
         verify(renRepoMock).findByIdAndMemberId(id, id);
 
         verify(renMapMock).updateEntity(renewal, entity);
-        verify(renMapMock).toDataObject(entity);
+        verify(renMapMock).toDto(entity);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
@@ -278,10 +278,10 @@ public class RenewalServiceTests extends CrudServiceTestBase<Renewal, RenewalEnt
     }
     
     @Override
-    protected Renewal createDataObject(int flag) {
+    protected RenewalDto createDataObject(int flag) {
         var now = LocalDate.now();
         
-        return Renewal.builder()
+        return RenewalDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .renewalDate(now)

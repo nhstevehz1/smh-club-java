@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.RenewalMapper;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.RenewalsRepo;
-import com.smh.club.api.models.Renewal;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.domain.repos.RenewalsRepo;
+import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -33,7 +33,7 @@ public class RenewalServiceIml implements RenewalService {
     private final Map<String, String> sortColumnMap = initSortColumnMap();
     
     @Override
-    public PageResponse<Renewal> getItemListPage(PageParams pageParams) {
+    public PageResponse<RenewalDto> getItemListPage(PageParams pageParams) {
         var pageRequest = PageRequest.of(
                 pageParams.getPageNumber(),
                 pageParams.getPageSize(),
@@ -44,41 +44,41 @@ public class RenewalServiceIml implements RenewalService {
 
         var page = renewalRepo.findAll(pageRequest);
 
-        return PageResponse.<Renewal>builder()
+        return PageResponse.<RenewalDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(renewalMapper.toDataObjectList(page.getContent()))
+                .items(renewalMapper.toDtoList(page.getContent()))
                 .build();
     }
 
     @Override
-    public Optional<Renewal> getItem(int id) {
+    public Optional<RenewalDto> getItem(int id) {
         log.debug("Getting renewal by id: {}", id);
 
-        return renewalRepo.findById(id).map(renewalMapper::toDataObject);
+        return renewalRepo.findById(id).map(renewalMapper::toDto);
     }
 
     @Override
-    public Renewal createItem(Renewal renewal) {
+    public RenewalDto createItem(RenewalDto renewal) {
         log.debug("creating renewal: {}", renewal);
 
         var memberRef = memberRepo.getReferenceById(renewal.getMemberId());
         var addressEntity = renewalMapper.toEntity(renewal);
         addressEntity.setMember(memberRef);
-        return renewalMapper.toDataObject(renewalRepo.save(addressEntity));
+        return renewalMapper.toDto(renewalRepo.save(addressEntity));
     }
 
     @Override
-    public Optional<Renewal> updateItem(int id, Renewal renewal) {
-        log.debug("Updating renewal, id: {}, with data: {}", id, renewal);
+    public Optional<RenewalDto> updateItem(int id, RenewalDto renewalDto) {
+        log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
 
-        if(id != renewal.getId()) {
+        if(id != renewalDto.getId()) {
             throw new IllegalArgumentException();
         }
 
-        return renewalRepo.findByIdAndMemberId(id, renewal.getMemberId())
-                .map(r -> renewalMapper.updateEntity(renewal, r))
-                .map(renewalMapper::toDataObject);
+        return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())
+                .map(r -> renewalMapper.updateEntity(renewalDto, r))
+                .map(renewalMapper::toDto);
     }
 
     @Override

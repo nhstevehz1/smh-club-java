@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.EmailController;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.models.Email;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -21,7 +21,7 @@ public class EmailControllerImpl implements EmailController {
     private final EmailService emailSvc;
 
     @GetMapping
-    public ResponseEntity<PageResponse<Email>> getItemListPage(@RequestBody PageParams pageParams) {
+    public ResponseEntity<PageResponse<EmailDto>> getItemListPage(@RequestBody PageParams pageParams) {
         if (pageParams == null) {
             pageParams = PageParams.getDefault();
         }
@@ -30,7 +30,7 @@ public class EmailControllerImpl implements EmailController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Email> getItem(@PathVariable int id) {
+    public ResponseEntity<EmailDto> getItem(@PathVariable int id) {
         var ret = emailSvc.getItem(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -41,13 +41,13 @@ public class EmailControllerImpl implements EmailController {
     }
 
     @PostMapping
-    public ResponseEntity<Email> createItem(@RequestBody Email email) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createItem(email));
+    public ResponseEntity<EmailDto> createItem(@RequestBody EmailDto emailDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createItem(emailDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Email> updateItem(@PathVariable int id, @RequestBody Email email) {
-        var ret = emailSvc.updateItem(id, email);
+    public ResponseEntity<EmailDto> updateItem(@PathVariable int id, @RequestBody EmailDto emailDto) {
+        var ret = emailSvc.updateItem(id, emailDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

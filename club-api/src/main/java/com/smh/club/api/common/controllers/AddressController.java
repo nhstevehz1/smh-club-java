@@ -1,6 +1,6 @@
 package com.smh.club.api.common.controllers;
 
-import com.smh.club.api.models.Address;
+import com.smh.club.api.dto.AddressDto;
 
-public interface AddressController extends CrudController<Address>{
+public interface AddressController extends CrudController<AddressDto>{
 }

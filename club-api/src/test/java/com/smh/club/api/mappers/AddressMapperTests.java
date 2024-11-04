@@ -1,9 +1,10 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.models.Address;
-import com.smh.club.api.models.AddressType;
+import com.smh.club.api.domain.entities.AddressEntity;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.AddressType;
+import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +23,7 @@ public class AddressMapperTests {
 
     @BeforeEach
     public void initMapper() {
-        this.mapper = new AddressMapperImpl();
+        this.mapper = new AddressMapperImpl(new MapperConfig().createModelMapper());
     }
 
     @Test
@@ -34,6 +35,7 @@ public class AddressMapperTests {
         var entity = mapper.toEntity(dataObject);
 
         // verify
+        assertNull(entity.getMember());
         assertEquals(dataObject.getAddress1(), entity.getAddress1());
         assertEquals(dataObject.getAddress2(), entity.getAddress2());
         assertEquals(dataObject.getCity(), entity.getCity());
@@ -58,7 +60,7 @@ public class AddressMapperTests {
         entity.setMember(member);
 
         // execute
-        var dataObject = mapper.toDataObject(entity);
+        var dataObject = mapper.toDto(entity);
 
         // verify
         assertEquals(entity.getId(), dataObject.getId());
@@ -97,8 +99,8 @@ public class AddressMapperTests {
         entityList.sort(Comparator.comparingInt(AddressEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toDataObjectList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(Address::getId));
+        var dataObjectList = mapper.toDtoList(entityList);
+        dataObjectList.sort(Comparator.comparingInt(AddressDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -129,8 +131,8 @@ public class AddressMapperTests {
                 .build();
     }
 
-    private Address createDataObject() {
-        return Address.builder()
+    private AddressDto createDataObject() {
+        return AddressDto.builder()
                 .address1("ad_address1")
                 .address2("ad_address2")
                 .city("ad_city")

@@ -1,7 +1,7 @@
 package com.smh.club.api.common.mappers;
 
-import com.smh.club.api.data.entities.PhoneEntity;
-import com.smh.club.api.models.Phone;
+import com.smh.club.api.domain.entities.PhoneEntity;
+import com.smh.club.api.dto.PhoneDto;
 
-public interface PhoneMapper extends DataObjectMapper<Phone, PhoneEntity> {
+public interface PhoneMapper extends DataObjectMapper<PhoneDto, PhoneEntity> {
 }

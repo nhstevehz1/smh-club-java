@@ -2,12 +2,12 @@ package com.smh.club.api.services;
 
 import com.smh.club.api.Services.PhoneServiceImpl;
 import com.smh.club.api.common.mappers.PhoneMapper;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.entities.PhoneEntity;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.PhoneRepo;
-import com.smh.club.api.models.Phone;
-import com.smh.club.api.models.PhoneType;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.domain.entities.PhoneEntity;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.PhoneType;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
+public class PhoneServiceTests extends CrudServiceTestBase<PhoneDto, PhoneEntity> {
     
     @Mock private MembersRepo memRepoMock;
     @Mock private PhoneRepo phnRepoMock;
@@ -152,7 +152,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         // setup
         var page = createPage(10, pageableMock, 200);
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(phnMapMock.toDataObjectList(page.getContent())).thenReturn(createDataObjectList(10));
+        when(phnMapMock.toDtoList(page.getContent())).thenReturn(createDataObjectList(10));
 
         // execute
         var pageResponse = svc.getItemListPage(PageParams.getDefault());
@@ -162,7 +162,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         assertEquals(page.getTotalElements(), pageResponse.getTotalCount());
         assertEquals(page.getContent().size(), pageResponse.getItems().size());
         verify(phnRepoMock).findAll(any(PageRequest.class));
-        verify(phnMapMock).toDataObjectList(page.getContent());
+        verify(phnMapMock).toDtoList(page.getContent());
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
@@ -172,7 +172,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         int id = 1;
         var entity = createEntity(id);
         when(phnRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(phnMapMock.toDataObject(entity)).thenReturn(createDataObject(id));
+        when(phnMapMock.toDto(entity)).thenReturn(createDataObject(id));
 
         // execute
         var member = svc.getItem(id);
@@ -180,7 +180,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         // verify
         assertTrue(member.isPresent());
         verify(phnRepoMock).findById(id);
-        verify(phnMapMock).toDataObject(entity);
+        verify(phnMapMock).toDto(entity);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
@@ -212,7 +212,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         var entity = createEntity(1);
         when(phnRepoMock.save(entity)).thenReturn(entity);
         when(phnMapMock.toEntity(address)).thenReturn(entity);
-        when(phnMapMock.toDataObject(entity)).thenReturn(address);
+        when(phnMapMock.toDto(entity)).thenReturn(address);
 
         // execute
         var ret = svc.createItem(address);
@@ -223,7 +223,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         verify(memRepoMock).getReferenceById(memberId);
         verify(phnRepoMock).save(entity);
         verify(phnMapMock).toEntity(address);
-        verify(phnMapMock).toDataObject(entity);
+        verify(phnMapMock).toDto(entity);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
@@ -237,7 +237,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         when(phnRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
         when(phnMapMock.updateEntity(phone, entity)).thenReturn(entity);
-        when(phnMapMock.toDataObject(entity)).thenReturn(phone);
+        when(phnMapMock.toDto(entity)).thenReturn(phone);
 
         // execute
         var ret = svc.updateItem(id, phone);
@@ -247,7 +247,7 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
         verify(phnRepoMock).findByIdAndMemberId(id, id);
 
         verify(phnMapMock).updateEntity(phone, entity);
-        verify(phnMapMock).toDataObject(entity);
+        verify(phnMapMock).toDto(entity);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
@@ -275,8 +275,8 @@ public class PhoneServiceTests extends CrudServiceTestBase<Phone, PhoneEntity> {
     }
 
     @Override
-    protected Phone createDataObject(int flag) {
-        return Phone.builder()
+    protected PhoneDto createDataObject(int flag) {
+        return PhoneDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .phoneNum("phoneNum")

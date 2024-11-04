@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.data.repos.EmailRepo;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.Email;
+import com.smh.club.api.domain.repos.EmailRepo;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -34,7 +34,7 @@ public class EmailServiceImpl implements EmailService {
     private final Map<String, String> sortColumnMap = initSortColumnMap();
 
     @Override
-    public PageResponse<Email> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<EmailDto> getItemListPage(@NonNull PageParams pageParams) {
         log.debug("Getting emil item list page: {}", pageParams);
 
         var pageRequest = PageRequest.of(
@@ -47,41 +47,41 @@ public class EmailServiceImpl implements EmailService {
 
         var page = emailRepo.findAll(pageRequest);
 
-        return PageResponse.<Email>builder()
+        return PageResponse.<EmailDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(emailMapper.toDataObjectList(page.getContent()))
+                .items(emailMapper.toDtoList(page.getContent()))
                 .build();
     }
 
     @Override
-    public Optional<Email> getItem(int id) {
+    public Optional<EmailDto> getItem(int id) {
         log.debug("Getting email by id: {}", id);
 
-        return emailRepo.findById(id).map(emailMapper::toDataObject);
+        return emailRepo.findById(id).map(emailMapper::toDto);
     }
 
     @Override
-    public Email createItem(Email email) {
+    public EmailDto createItem(EmailDto email) {
         log.debug("creating email: {}", email);
 
         var memberRef = memberRepo.getReferenceById(email.getMemberId());
         var addressEntity = emailMapper.toEntity(email);
         addressEntity.setMember(memberRef);
-        return emailMapper.toDataObject(emailRepo.save(addressEntity));
+        return emailMapper.toDto(emailRepo.save(addressEntity));
     }
 
     @Override
-    public Optional<Email> updateItem(int id, Email email) {
-        log.debug("Updating email, id: {}, with data: {}", id, email);
+    public Optional<EmailDto> updateItem(int id, EmailDto emailDto) {
+        log.debug("Updating email, id: {}, with data: {}", id, emailDto);
 
-        if(id != email.getId()) {
+        if(id != emailDto.getId()) {
             throw new IllegalArgumentException();
         }
 
-        return emailRepo.findByIdAndMemberId(id, email.getMemberId())
-                .map(e -> emailMapper.updateEntity(email, e))
-                .map(emailMapper::toDataObject);
+        return emailRepo.findByIdAndMemberId(id, emailDto.getMemberId())
+                .map(e -> emailMapper.updateEntity(emailDto, e))
+                .map(emailMapper::toDto);
     }
 
     @Override

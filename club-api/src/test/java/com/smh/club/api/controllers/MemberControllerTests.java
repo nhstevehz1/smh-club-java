@@ -2,7 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.models.Member;
+import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.dto.MemberMinimumDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberControllerImpl.class)
-public class MemberControllerTests extends ControllerTestBase<Member> {
+public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> {
 
     @MockBean
     private MemberService svc;
@@ -40,7 +41,7 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<Member>builder()
+        var response = PageResponse.<MemberMinimumDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(createDataObjectList(5))
                 .build();
@@ -162,7 +163,7 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
         when(svc.updateItem(id, member)).thenReturn(Optional.empty());
 
         // execute and verify
-        mockMvc.perform(put("/member/{id}", member.getId())
+        mockMvc.perform(put("/members/{id}", member.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(member)))
@@ -183,13 +184,78 @@ public class MemberControllerTests extends ControllerTestBase<Member> {
         mockMvc.perform(delete("/members/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
+
+        verify(svc).deleteItem(id);
+        verifyNoMoreInteractions(svc);
+    }
+
+    @Test
+    public void shouldReturnMemberDetail() throws Exception {
+        // setup
+        var id = 1;
+        var ret = createMemberDto(id);
+
+        when(svc.getMemberDetail(id)).thenReturn(Optional.of(ret));
+
+        // execute and verify
+        mockMvc.perform(get("/members/{id}/detail", ret.getId())
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-number").value(ret.getMemberNumber()))
+                .andExpect(jsonPath("$.first-name").value(ret.getFirstName()))
+                .andExpect(jsonPath("$.middle-name").value(ret.getMiddleName()))
+                .andExpect(jsonPath("$.last-name").value(ret.getLastName()))
+                .andExpect(jsonPath("$.suffix").value(ret.getSuffix()))
+                .andExpect(jsonPath("$.birth-date").value(ret.getBirthDate().toString()))
+                .andExpect(jsonPath("$.joined-date").value(ret.getJoinedDate().toString()))
+                .andExpect(jsonPath("$.addresses.length()").value(ret.getAddresses().size()))
+                .andExpect(jsonPath("$.emails.length()").value(ret.getEmails().size()))
+                .andExpect(jsonPath("$.phones.length()").value(ret.getPhones().size()))
+                .andExpect(jsonPath("$.renewals.length()").value(ret.getRenewals().size()))
+                .andDo(print());
+
+        verify(svc).getMemberDetail(ret.getId());
+        verifyNoMoreInteractions(svc);
+
+    }
+
+    @Test
+    public void shouldReturnEmptyMemberDetails() throws Exception {
+        // setup
+        var id = 1;
+        when(svc.getMemberDetail(id)).thenReturn(Optional.empty());
+
+        // execute and verify
+        mockMvc.perform(get("/members/{id}/detail", id)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+
+        verify(svc).getMemberDetail(id);
+        verifyNoMoreInteractions(svc);
+
+    }
+
+    private MemberDto createMemberDto(int flag) {
+        var now = LocalDate.now();
+
+        return MemberDto.builder().id(flag)
+                .memberNumber(flag + 10)
+                .firstName("first_" + flag)
+                .middleName("middle_" + flag)
+                .lastName("last_" + flag)
+                .suffix("suffix_" + flag)
+                .birthDate(now.minusYears(30))
+                .joinedDate(now.minusYears(2))
+                .build();
     }
 
     @Override
-    protected Member createDataObject(int flag) {
+    protected MemberMinimumDto createDataObject(int flag) {
         var now = LocalDate.now();
 
-        return Member.builder()
+        return MemberMinimumDto.builder()
                 .id(flag)
                 .memberNumber(flag + 10)
                 .firstName("first_" + flag)

@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.data.repos.AddressRepo;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.Address;
+import com.smh.club.api.domain.repos.AddressRepo;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -34,7 +34,7 @@ public class AddressServiceImpl implements AddressService {
     private final Map<String, String> sortColumnMap = initSortColumnMap();
 
     @Override
-    public PageResponse<Address> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<AddressDto> getItemListPage(@NonNull PageParams pageParams) {
         log.debug("Getting address item list page: {}", pageParams);
 
         var pageRequest = PageRequest.of(
@@ -47,41 +47,41 @@ public class AddressServiceImpl implements AddressService {
 
         var page = addressRepo.findAll(pageRequest);
 
-        return PageResponse.<Address>builder()
+        return PageResponse.<AddressDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(addressMapper.toDataObjectList(page.getContent()))
+                .items(addressMapper.toDtoList(page.getContent()))
                 .build();
     }
 
     @Override
-    public Optional<Address> getItem(int id) {
+    public Optional<AddressDto> getItem(int id) {
         log.debug("Getting address by id: {}", id);
 
-        return addressRepo.findById(id).map(addressMapper::toDataObject);
+        return addressRepo.findById(id).map(addressMapper::toDto);
     }
 
     @Override
-    public Address createItem(Address address) {
+    public AddressDto createItem(AddressDto address) {
         log.debug("creating address: {}", address);
 
         var memberRef = memberRepo.getReferenceById(address.getMemberId());
 
         var addressEntity = addressMapper.toEntity(address);
         addressEntity.setMember(memberRef);
-        return addressMapper.toDataObject(addressRepo.save(addressEntity));
+        return addressMapper.toDto(addressRepo.save(addressEntity));
     }
 
     @Override
-    public Optional<Address> updateItem(int id, Address address) {
-        log.debug("Updating address id: {}, with data: {}", id, address);
+    public Optional<AddressDto> updateItem(int id, AddressDto addressDto) {
+        log.debug("Updating address id: {}, with data: {}", id, addressDto);
 
-        if(id != address.getId()) {
+        if(id != addressDto.getId()) {
             throw new IllegalArgumentException();
         }
-        return addressRepo.findByIdAndMemberId(id, address.getMemberId())
-                .map(e -> addressMapper.updateEntity(address, e))
-                .map(addressMapper::toDataObject);
+        return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())
+                .map(e -> addressMapper.updateEntity(addressDto, e))
+                .map(addressMapper::toDto);
 
     }
 

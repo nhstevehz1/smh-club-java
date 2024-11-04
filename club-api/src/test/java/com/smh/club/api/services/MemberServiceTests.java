@@ -1,10 +1,11 @@
 package com.smh.club.api.services;
 
 import com.smh.club.api.Services.MemberServiceImpl;
-import com.smh.club.api.common.mappers.*;
-import com.smh.club.api.data.entities.*;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.models.*;
+import com.smh.club.api.common.mappers.MemberMapper;
+import com.smh.club.api.domain.entities.*;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.dto.MemberMinimumDto;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,14 +28,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity> {
+public class MemberServiceTests extends CrudServiceTestBase<MemberMinimumDto, MemberEntity> {
 
     @Mock private MembersRepo repoMock;
-    @Mock private MemberMapper memMapMock;
-    @Mock private AddressMapper addMapMock;
-    @Mock private EmailMapper emlMapMock;
-    @Mock private PhoneMapper phnMapMock;
-    @Mock private RenewalMapper renMapMock;
+    @Mock private MemberMapper mapperMock;
 
     @InjectMocks MemberServiceImpl svc;
 
@@ -154,7 +151,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         // setup
         var page = createPage(10, pageableMock, 200);
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(memMapMock.toDataObjectList(page.getContent())).thenReturn(createDataObjectList(10));
+        when(mapperMock.toDtoList(page.getContent())).thenReturn(createDataObjectList(10));
 
         // execute
         var pageResponse = svc.getItemListPage(PageParams.getDefault());
@@ -164,8 +161,8 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         assertEquals(page.getTotalElements(), pageResponse.getTotalCount());
         assertEquals(page.getContent().size(), pageResponse.getItems().size());
         verify(repoMock).findAll(any(PageRequest.class));
-        verify(memMapMock).toDataObjectList(page.getContent());
-        verifyNoMoreInteractions(repoMock, memMapMock);
+        verify(mapperMock).toDtoList(page.getContent());
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
     @Test
@@ -174,7 +171,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         int id = 1;
         var entity = createEntity(id);
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(memMapMock.toDataObject(any(MemberEntity.class))).thenReturn(createDataObject(id));
+        when(mapperMock.toDto(any(MemberEntity.class))).thenReturn(createDataObject(id));
 
         // execute
         var ret = svc.getItem(id);
@@ -182,8 +179,8 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         // verify
         assertTrue(ret.isPresent());
         verify(repoMock).findById(id);
-        verify(memMapMock).toDataObject(any(MemberEntity.class));
-        verifyNoMoreInteractions(repoMock, memMapMock);
+        verify(mapperMock).toDto(any(MemberEntity.class));
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
     @Test
@@ -198,7 +195,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         //
         assertFalse(ret.isPresent());
         verify(repoMock).findById(id);
-        verifyNoMoreInteractions(repoMock, memMapMock);
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
     @Test
@@ -207,8 +204,8 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         var m1 = createDataObject(1);
         var entity = createEntity(1);
         when(repoMock.save(entity)).thenReturn(entity);
-        when(memMapMock.toEntity(m1)).thenReturn(entity);
-        when(memMapMock.toDataObject(entity)).thenReturn(m1);
+        when(mapperMock.toEntity(m1)).thenReturn(entity);
+        when(mapperMock.toDto(entity)).thenReturn(m1);
 
         // execute
         var member = svc.createItem(m1);
@@ -217,9 +214,9 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         assertNotNull(member);
         assertEquals(m1, member);
         verify(repoMock).save(entity);
-        verify(memMapMock).toEntity(m1);
-        verify(memMapMock).toDataObject(entity);
-        verifyNoMoreInteractions(repoMock, memMapMock);
+        verify(mapperMock).toEntity(m1);
+        verify(mapperMock).toDto(entity);
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
     @Test
@@ -231,8 +228,8 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
 
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        when(memMapMock.updateEntity(member, entity)).thenReturn(entity);
-        when(memMapMock.toDataObject(entity)).thenReturn(member);
+        when(mapperMock.updateEntity(member, entity)).thenReturn(entity);
+        when(mapperMock.toDto(entity)).thenReturn(member);
 
         // execute
         var ret = svc.updateItem(id, member);
@@ -241,9 +238,9 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         assertTrue(ret.isPresent());
         verify(repoMock).findById(id);
 
-        verify(memMapMock).updateEntity(member, entity);
-        verify(memMapMock).toDataObject(entity);
-        verifyNoMoreInteractions(repoMock, memMapMock);
+        verify(mapperMock).updateEntity(member, entity);
+        verify(mapperMock).toDto(entity);
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
     @Test
@@ -257,7 +254,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
 
         //verify
         verify(repoMock).deleteById(id);
-        verifyNoMoreInteractions(repoMock, memMapMock);
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
     @Test
@@ -272,7 +269,7 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         // verify
         assertEquals(num, response.getCount());
         verify(repoMock).count();
-        verifyNoMoreInteractions(repoMock, memMapMock);
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
     @Test
@@ -284,13 +281,11 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
         entity.setEmails(List.of(EmailEntity.builder().build()));
         entity.setPhones(List.of(PhoneEntity.builder().build()));
         entity.setRenewals(List.of(RenewalEntity.builder().build()));
-        when(repoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        when(memMapMock.toMemberDetail(entity)).thenReturn(MemberDetail.builder().build());
-        when(addMapMock.toDataObjectList(entity.getAddresses())).thenReturn(List.of(Address.builder().build()));
-        when(emlMapMock.toDataObjectList(entity.getEmails())).thenReturn(List.of(Email.builder().build()));
-        when(phnMapMock.toDataObjectList(entity.getPhones())).thenReturn(List.of(Phone.builder().build()));
-        when(renMapMock.toDataObjectList(entity.getRenewals())).thenReturn(List.of(Renewal.builder().build()));
+        var memberDto = createMemberDto();
+
+        when(repoMock.findById(id)).thenReturn(Optional.of(entity));
+        when(mapperMock.toMemberDto(entity)).thenReturn(memberDto);
 
         var ret = svc.getMemberDetail(id);
 
@@ -299,23 +294,13 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
 
         var detail = ret.get();
         assertNotNull(detail.getAddresses());
-        assertEquals(1, detail.getAddresses().size());
         assertNotNull(detail.getEmails());
-        assertEquals(1, detail.getPhones().size());
         assertNotNull(detail.getPhones());
-        assertEquals(1, detail.getPhones().size());
         assertNotNull(detail.getRenewals());
-        assertEquals(1, detail.getRenewals().size());
 
         verify(repoMock).findById(id);
-
-        verify(memMapMock).toMemberDetail(entity);
-        verify(addMapMock).toDataObjectList(entity.getAddresses());
-        verify(emlMapMock).toDataObjectList(entity.getEmails());
-        verify(phnMapMock).toDataObjectList(entity.getPhones());
-        verify(renMapMock).toDataObjectList(entity.getRenewals());
-
-        verifyNoMoreInteractions(renMapMock, memMapMock, addMapMock, phnMapMock, renMapMock);
+        verify(mapperMock).toMemberDto(entity);
+        verifyNoMoreInteractions(mapperMock);
     }
 
     @Test
@@ -329,8 +314,22 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
 
         // verify
         assertFalse(ret.isPresent());
+        verify(repoMock).findById(1);
+        verifyNoMoreInteractions(mapperMock);
+    }
 
-        verifyNoMoreInteractions(renMapMock, memMapMock, addMapMock, phnMapMock, renMapMock);
+    private MemberDto createMemberDto() {
+        var now = LocalDate.now();
+        return MemberDto.builder()
+                .id(1)
+                .memberNumber(1)
+                .firstName("first")
+                .middleName("middle")
+                .lastName("last")
+                .suffix("jr")
+                .birthDate(now.minusYears(1))
+                .joinedDate(now)
+                .build();
     }
 
     protected MemberEntity createEntity(int flag) {
@@ -348,10 +347,10 @@ public class MemberServiceTests extends CrudServiceTestBase<Member, MemberEntity
                 .build();
     }
 
-    protected Member createDataObject(int flag) {
+    protected MemberMinimumDto createDataObject(int flag) {
         var now = LocalDate.now();
 
-        return Member.builder()
+        return MemberMinimumDto.builder()
                 .id(flag)
                 .memberNumber(flag)
                 .firstName("first")

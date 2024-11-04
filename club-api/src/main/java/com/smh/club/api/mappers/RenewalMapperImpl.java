@@ -1,42 +1,51 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.RenewalMapper;
-import com.smh.club.api.data.entities.RenewalEntity;
-import com.smh.club.api.models.Renewal;
-import org.springframework.stereotype.Service;
+import com.smh.club.api.domain.entities.RenewalEntity;
+import com.smh.club.api.dto.RenewalDto;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-public class RenewalMapperImpl implements RenewalMapper {
-    @Override
-    public RenewalEntity toEntity(Renewal dataObject) {
-        return RenewalEntity.builder()
-                .renewalDate(dataObject.getRenewalDate())
-                .renewalYear(dataObject.getRenewalYear())
-                .build();
+@Component
+public class RenewalMapperImpl extends DataObjectMapperBase implements RenewalMapper {
+    
+    public RenewalMapperImpl(ModelMapper mapper) {
+        super(mapper);
+        configureMapper(mapper);
     }
 
     @Override
-    public Renewal toDataObject(RenewalEntity entity) {
-        return Renewal.builder()
-                .id(entity.getId())
-                .memberId(entity.getMember().getId())
-                .renewalDate(entity.getRenewalDate())
-                .renewalYear(entity.getRenewalYear())
-                .build();
+    public RenewalEntity toEntity(RenewalDto dataObject) {
+        return modelMapper.map(dataObject, RenewalEntity.class);
     }
 
     @Override
-    public RenewalEntity updateEntity(Renewal dataObject, RenewalEntity entity) {
-        entity.setRenewalDate(dataObject.getRenewalDate());
-        entity.setRenewalYear((dataObject.getRenewalYear()));
+    public RenewalDto toDto(RenewalEntity entity) {
+        return modelMapper.map(entity, RenewalDto.class);
+    }
+
+    @Override
+    public RenewalEntity updateEntity(RenewalDto dataObject, RenewalEntity entity) {
+        modelMapper.map(dataObject, entity);
         return entity;
     }
 
     @Override
-    public List<Renewal> toDataObjectList(List<RenewalEntity> entityList) {
-        return entityList.stream().map(this::toDataObject).collect(Collectors.toList());
+    public List<RenewalDto> toDtoList(List<RenewalEntity> entityList) {
+        return mapList(entityList, RenewalDto.class);
+    }
+
+    @Override
+    protected void configureMapper(ModelMapper mapper) {
+        TypeMap<RenewalEntity, RenewalDto> dtoTypeMap
+                = this.modelMapper.createTypeMap(RenewalEntity.class, RenewalDto.class);
+        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), RenewalDto::setMemberId));
+
+        TypeMap<RenewalDto, RenewalEntity> entTypeMap
+                = this.modelMapper.createTypeMap(RenewalDto.class, RenewalEntity.class);
+        entTypeMap.addMappings(m -> m.skip(RenewalEntity::setMember));
     }
 }

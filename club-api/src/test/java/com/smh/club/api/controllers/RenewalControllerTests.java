@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.models.Renewal;
+import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @WebMvcTest(RenewalControllerImpl.class)
-public class RenewalControllerTests extends ControllerTestBase<Renewal> {
+public class RenewalControllerTests extends ControllerTestBase<RenewalDto> {
 
     @MockBean
     private RenewalService svc;
@@ -42,7 +42,7 @@ public class RenewalControllerTests extends ControllerTestBase<Renewal> {
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<Renewal>builder()
+        var response = PageResponse.<RenewalDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(createDataObjectList(5))
                 .build();
@@ -198,8 +198,8 @@ public class RenewalControllerTests extends ControllerTestBase<Renewal> {
     }
     
     @Override
-    protected Renewal createDataObject(int flag) {
-        return Renewal.builder()
+    protected RenewalDto createDataObject(int flag) {
+        return RenewalDto.builder()
                 .id(flag)
                 .memberId(flag)
                 .renewalYear("2024")

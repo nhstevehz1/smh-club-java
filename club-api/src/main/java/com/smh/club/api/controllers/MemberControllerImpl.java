@@ -2,8 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.MemberController;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.models.Member;
-import com.smh.club.api.models.MemberDetail;
+import com.smh.club.api.dto.MemberMinimumDto;
+import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -22,7 +22,7 @@ public class MemberControllerImpl implements MemberController {
     private final MemberService memberSvc;
 
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PageResponse<Member>> getItemListPage(@RequestBody PageParams pageParams ) {
+    public ResponseEntity<PageResponse<MemberMinimumDto>> getItemListPage(@RequestBody PageParams pageParams ) {
         if (pageParams == null) {
            pageParams = PageParams.getDefault();
         }
@@ -31,7 +31,7 @@ public class MemberControllerImpl implements MemberController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Member> getItem(@PathVariable int id) {
+    public ResponseEntity<MemberMinimumDto> getItem(@PathVariable int id) {
         var ret = memberSvc.getItem(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -42,13 +42,13 @@ public class MemberControllerImpl implements MemberController {
     }
 
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Member> createItem(@RequestBody Member member) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createItem(member));
+    public ResponseEntity<MemberMinimumDto> createItem(@RequestBody MemberMinimumDto memberMinimumDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createItem(memberMinimumDto));
     }
 
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Member> updateItem(@PathVariable int id, @RequestBody Member member) {
-        var ret = memberSvc.updateItem(id, member);
+    public ResponseEntity<MemberMinimumDto> updateItem(@PathVariable int id, @RequestBody MemberMinimumDto memberMinimumDto) {
+        var ret = memberSvc.updateItem(id, memberMinimumDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
@@ -59,7 +59,7 @@ public class MemberControllerImpl implements MemberController {
     }
 
     @GetMapping("{id}/detail")
-    public ResponseEntity<MemberDetail>  getMemberDetail(int id) {
+    public ResponseEntity<MemberDto>  getMemberDetail(@PathVariable int id) {
         var ret = memberSvc.getMemberDetail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

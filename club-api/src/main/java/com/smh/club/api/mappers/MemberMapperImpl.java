@@ -1,70 +1,53 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.MemberMapper;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.models.Member;
-import com.smh.club.api.models.MemberDetail;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.dto.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class MemberMapperImpl implements MemberMapper {
-    public MemberEntity toEntity(Member dataObject) {
-        return MemberEntity.builder()
-                .memberNumber(dataObject.getMemberNumber())
-                .firstName(dataObject.getFirstName())
-                .middleName(dataObject.getMiddleName())
-                .lastName(dataObject.getLastName())
-                .suffix(dataObject.getSuffix())
-                .birthDate(dataObject.getBirthDate())
-                .joinedDate(dataObject.getJoinedDate())
-                .build();
+public class MemberMapperImpl extends DataObjectMapperBase implements MemberMapper {
+    public MemberMapperImpl(ModelMapper mapper) {
+        super(mapper);
+        configureMapper(mapper);
     }
 
     @Override
-    public Member toDataObject(MemberEntity entity) {
-        return Member.builder()
-                .id(entity.getId())
-                .memberNumber(entity.getMemberNumber())
-                .firstName(entity.getFirstName())
-                .middleName(entity.getMiddleName())
-                .lastName(entity.getLastName())
-                .suffix(entity.getSuffix())
-                .birthDate(entity.getBirthDate())
-                .joinedDate(entity.getJoinedDate())
-                .build();
+    public MemberEntity toEntity(MemberMinimumDto dataObject) {
+        return modelMapper.map(dataObject, MemberEntity.class);
     }
 
     @Override
-    public List<Member> toDataObjectList(List<MemberEntity> entityList) {
-        return entityList.stream().map(this::toDataObject).collect(Collectors.toList());
+    public MemberDto toDto(MemberEntity entity) {
+        return modelMapper.map(entity, MemberDto.class);
     }
 
     @Override
-    public MemberEntity updateEntity(Member dataObject, MemberEntity entity) {
-        entity.setMemberNumber(dataObject.getMemberNumber());
-        entity.setFirstName(dataObject.getFirstName());
-        entity.setMiddleName(dataObject.getMiddleName());
-        entity.setLastName(dataObject.getLastName());
-        entity.setSuffix(dataObject.getSuffix());
-        entity.setBirthDate(dataObject.getBirthDate());
-        entity.setJoinedDate(dataObject.getJoinedDate());
+    public MemberEntity updateEntity(MemberMinimumDto dataObject, MemberEntity entity) {
+        modelMapper.map(dataObject, entity);
         return entity;
     }
 
     @Override
-    public MemberDetail toMemberDetail(MemberEntity entity) {
-        return MemberDetail.builder()
-                .id(entity.getId())
-                .memberNumber(entity.getMemberNumber())
-                .firstName(entity.getFirstName())
-                .middleName(entity.getMiddleName())
-                .lastName(entity.getLastName())
-                .suffix(entity.getSuffix())
-                .birthDate(entity.getBirthDate())
-                .joinedDate(entity.getJoinedDate())
-                .build();
+    public List<MemberMinimumDto> toDtoList(List<MemberEntity> entityList) {
+        return mapList(entityList, MemberMinimumDto.class);
+    }
+
+    @Override
+    public MemberDto toMemberDto(MemberEntity entity) {
+        var dto = modelMapper.map(entity, MemberDto.class);
+        dto.setAddresses(mapList(entity.getAddresses(), AddressDto.class));
+        dto.setEmails(mapList(entity.getEmails(), EmailDto.class));
+        dto.setPhones(mapList(entity.getPhones(), PhoneDto.class));
+        dto.setRenewals(mapList(entity.getRenewals(), RenewalDto.class));
+        return dto;
+    }
+
+    @Override
+    protected void configureMapper(ModelMapper mapper) {
+
     }
 }

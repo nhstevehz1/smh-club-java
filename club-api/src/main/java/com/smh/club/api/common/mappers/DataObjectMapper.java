@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface DataObjectMapper<T, E> {
     E toEntity(T dataObject);
-    T toDataObject(E entity);
+    T toDto(E entity);
     E updateEntity(T dataObject, E entity);
-    List<T> toDataObjectList(List<E> entityList);
+    List<T> toDtoList(List<E> entityList);
 }

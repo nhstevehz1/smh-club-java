@@ -1,9 +1,10 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.entities.PhoneEntity;
-import com.smh.club.api.models.Phone;
-import com.smh.club.api.models.PhoneType;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.domain.entities.PhoneEntity;
+import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.PhoneType;
+import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +23,7 @@ public class PhoneMapperTests {
 
     @BeforeEach
     public void initMapper() {
-        this.mapper = new PhoneMapperImpl();
+        this.mapper = new PhoneMapperImpl(new MapperConfig().createModelMapper());
     }
 
     @Test
@@ -34,6 +35,7 @@ public class PhoneMapperTests {
         var entity = mapper.toEntity(dataObject);
 
         // verify
+        assertNull(entity.getMember());
         assertEquals(dataObject.getPhoneNum(), entity.getPhoneNum());
         assertEquals(dataObject.getPhoneType(), entity.getPhoneType());
 
@@ -54,7 +56,7 @@ public class PhoneMapperTests {
         entity.setMember(member);
 
         // execute
-        var dataObject = mapper.toDataObject(entity);
+        var dataObject = mapper.toDto(entity);
 
         // verify
         assertEquals(entity.getId(), dataObject.getId());
@@ -85,8 +87,8 @@ public class PhoneMapperTests {
         entityList.sort(Comparator.comparingInt(PhoneEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toDataObjectList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(Phone::getId));
+        var dataObjectList = mapper.toDtoList(entityList);
+        dataObjectList.sort(Comparator.comparingInt(PhoneDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -108,8 +110,8 @@ public class PhoneMapperTests {
                 .build();
     }
 
-    private Phone createDataObject() {
-        return Phone.builder()
+    private PhoneDto createDataObject() {
+        return PhoneDto.builder()
                 .phoneNum("Phone_do")
                 .phoneType(PhoneType.Other)
                 .build();
