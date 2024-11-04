@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.PhoneController;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

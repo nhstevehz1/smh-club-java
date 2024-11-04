@@ -1,7 +1,8 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.dto.MemberMinimumDto;
+import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +21,7 @@ public class MemberMapperTests {
 
     @BeforeEach
     public void initMapper() {
-        this.mapper = new MemberMapperImpl();
+        this.mapper = new MemberMapperImpl(new MapperConfig().createModelMapper());
     }
 
     @Test
@@ -52,7 +53,7 @@ public class MemberMapperTests {
         var entity = createEntity();
 
         // execute
-        var dataObject = mapper.toDataObject(entity);
+        var dataObject = mapper.toDto(entity);
 
         // verify
         assertEquals(entity.getId(), dataObject.getId());
@@ -73,15 +74,15 @@ public class MemberMapperTests {
         dataObject.setMemberNumber(200);
 
         var entity = createEntity();
-        entity.setId(300);
+        entity.setId(100);
         entity.setMemberNumber(100);
 
         // execute
         mapper.updateEntity(dataObject, entity);
 
         // verify
-        assertEquals(300, entity.getId());
-        assertEquals(200, entity.getMemberNumber());
+        assertEquals(dataObject.getId(), entity.getId());
+        assertEquals(dataObject.getMemberNumber(), entity.getMemberNumber());
         assertEquals(dataObject.getFirstName(), entity.getFirstName());
         assertEquals(dataObject.getMiddleName(), entity.getMiddleName());
         assertEquals(dataObject.getLastName(), entity.getLastName());
@@ -98,8 +99,8 @@ public class MemberMapperTests {
         entityList.sort(Comparator.comparingInt(MemberEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toDataObjectList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(MemberDto::getId));
+        var dataObjectList = mapper.toDtoList(entityList);
+        dataObjectList.sort(Comparator.comparingInt(MemberMinimumDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -120,12 +121,12 @@ public class MemberMapperTests {
     }
 
     @Test
-    public void mapper_toMemberDetail() {
+    public void mapper_toMemberMinimum() {
         // setup
         var entity = createEntity();
 
         // execute
-        var detail = mapper.toMemberDetail(entity);
+        var detail = mapper.toMemberDto(entity);
 
         // verify
         assertEquals(entity.getId(), detail.getId());
@@ -150,8 +151,8 @@ public class MemberMapperTests {
                 .build();
     }
 
-    private MemberDto createDataObject() {
-        return MemberDto.builder()
+    private MemberMinimumDto createDataObject() {
+        return MemberMinimumDto.builder()
                 .memberNumber(50)
                 .firstName("m_firstName")
                 .middleName("m_middleName")

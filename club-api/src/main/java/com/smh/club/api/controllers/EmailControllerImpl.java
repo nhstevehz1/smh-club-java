@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.EmailController;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

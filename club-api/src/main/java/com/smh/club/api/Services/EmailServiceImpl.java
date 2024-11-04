@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.data.repos.EmailRepo;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.domain.repos.EmailRepo;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -50,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
         return PageResponse.<EmailDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(emailMapper.toDataObjectList(page.getContent()))
+                .items(emailMapper.toDtoList(page.getContent()))
                 .build();
     }
 
@@ -58,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
     public Optional<EmailDto> getItem(int id) {
         log.debug("Getting email by id: {}", id);
 
-        return emailRepo.findById(id).map(emailMapper::toDataObject);
+        return emailRepo.findById(id).map(emailMapper::toDto);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class EmailServiceImpl implements EmailService {
         var memberRef = memberRepo.getReferenceById(email.getMemberId());
         var addressEntity = emailMapper.toEntity(email);
         addressEntity.setMember(memberRef);
-        return emailMapper.toDataObject(emailRepo.save(addressEntity));
+        return emailMapper.toDto(emailRepo.save(addressEntity));
     }
 
     @Override
@@ -81,7 +81,7 @@ public class EmailServiceImpl implements EmailService {
 
         return emailRepo.findByIdAndMemberId(id, emailDto.getMemberId())
                 .map(e -> emailMapper.updateEntity(emailDto, e))
-                .map(emailMapper::toDataObject);
+                .map(emailMapper::toDto);
     }
 
     @Override

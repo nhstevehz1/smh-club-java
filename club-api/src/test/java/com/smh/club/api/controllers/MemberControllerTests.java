@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.dto.MemberMinimumDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberControllerImpl.class)
-public class MemberControllerTests extends ControllerTestBase<MemberDto> {
+public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> {
 
     @MockBean
     private MemberService svc;
@@ -40,7 +40,7 @@ public class MemberControllerTests extends ControllerTestBase<MemberDto> {
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<MemberDto>builder()
+        var response = PageResponse.<MemberMinimumDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(createDataObjectList(5))
                 .build();
@@ -162,7 +162,7 @@ public class MemberControllerTests extends ControllerTestBase<MemberDto> {
         when(svc.updateItem(id, member)).thenReturn(Optional.empty());
 
         // execute and verify
-        mockMvc.perform(put("/member/{id}", member.getId())
+        mockMvc.perform(put("/members/{id}", member.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(member)))
@@ -186,10 +186,10 @@ public class MemberControllerTests extends ControllerTestBase<MemberDto> {
     }
 
     @Override
-    protected MemberDto createDataObject(int flag) {
+    protected MemberMinimumDto createDataObject(int flag) {
         var now = LocalDate.now();
 
-        return MemberDto.builder()
+        return MemberMinimumDto.builder()
                 .id(flag)
                 .memberNumber(flag + 10)
                 .firstName("first_" + flag)

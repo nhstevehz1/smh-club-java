@@ -1,42 +1,52 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.EmailMapper;
-import com.smh.club.api.data.entities.EmailEntity;
-import com.smh.club.api.data.dto.EmailDto;
-import org.springframework.stereotype.Service;
+import com.smh.club.api.domain.entities.EmailEntity;
+import com.smh.club.api.dto.EmailDto;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-public class EmailMapperImpl implements EmailMapper {
-    @Override
-    public EmailEntity toEntity(EmailDto dataObject) {
-        return EmailEntity.builder()
-                .email(dataObject.getEmail())
-                .emailType(dataObject.getEmailType())
-                .build();
+
+@Component
+public class EmailMapperImpl extends DataObjectMapperBase implements EmailMapper {
+
+    public EmailMapperImpl(ModelMapper mapper) {
+        super(mapper);
+        configureMapper(mapper);
     }
 
     @Override
-    public EmailDto toDataObject(EmailEntity entity) {
-        return EmailDto.builder()
-                .id(entity.getId())
-                .memberId(entity.getMember().getId())
-                .email(entity.getEmail())
-                .emailType(entity.getEmailType())
-                .build();
+    public EmailEntity toEntity(EmailDto dataObject) {
+        return modelMapper.map(dataObject, EmailEntity.class);
+    }
+
+    @Override
+    public EmailDto toDto(EmailEntity entity) {
+        return modelMapper.map(entity, EmailDto.class);
     }
 
     @Override
     public EmailEntity updateEntity(EmailDto dataObject, EmailEntity entity) {
-        entity.setEmail(dataObject.getEmail());
-        entity.setEmailType(dataObject.getEmailType());
+        modelMapper.map(dataObject, entity);
         return entity;
     }
 
     @Override
-    public List<EmailDto> toDataObjectList(List<EmailEntity> entityList) {
-        return entityList.stream().map(this::toDataObject).collect(Collectors.toList());
+    public List<EmailDto> toDtoList(List<EmailEntity> entityList) {
+        return mapList(entityList, EmailDto.class);
+    }
+
+    @Override
+    protected void configureMapper(ModelMapper mapper) {
+        TypeMap<EmailEntity, EmailDto> dtoTypeMap
+                = this.modelMapper.createTypeMap(EmailEntity.class, EmailDto.class);
+        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), EmailDto::setMemberId));
+
+        TypeMap<EmailDto, EmailEntity> entTypeMap
+                = this.modelMapper.createTypeMap(EmailDto.class, EmailEntity.class);
+        entTypeMap.addMappings(m -> m.skip(EmailEntity::setMember));
     }
 }

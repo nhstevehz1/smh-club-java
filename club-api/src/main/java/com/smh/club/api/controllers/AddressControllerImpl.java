@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.AddressController;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

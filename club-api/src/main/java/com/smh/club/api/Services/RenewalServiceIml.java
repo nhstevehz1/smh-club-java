@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.RenewalMapper;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.RenewalsRepo;
-import com.smh.club.api.data.dto.RenewalDto;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.domain.repos.RenewalsRepo;
+import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -47,7 +47,7 @@ public class RenewalServiceIml implements RenewalService {
         return PageResponse.<RenewalDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(renewalMapper.toDataObjectList(page.getContent()))
+                .items(renewalMapper.toDtoList(page.getContent()))
                 .build();
     }
 
@@ -55,7 +55,7 @@ public class RenewalServiceIml implements RenewalService {
     public Optional<RenewalDto> getItem(int id) {
         log.debug("Getting renewal by id: {}", id);
 
-        return renewalRepo.findById(id).map(renewalMapper::toDataObject);
+        return renewalRepo.findById(id).map(renewalMapper::toDto);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class RenewalServiceIml implements RenewalService {
         var memberRef = memberRepo.getReferenceById(renewal.getMemberId());
         var addressEntity = renewalMapper.toEntity(renewal);
         addressEntity.setMember(memberRef);
-        return renewalMapper.toDataObject(renewalRepo.save(addressEntity));
+        return renewalMapper.toDto(renewalRepo.save(addressEntity));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class RenewalServiceIml implements RenewalService {
 
         return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())
                 .map(r -> renewalMapper.updateEntity(renewalDto, r))
-                .map(renewalMapper::toDataObject);
+                .map(renewalMapper::toDto);
     }
 
     @Override

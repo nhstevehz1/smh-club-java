@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.*;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.dto.MemberDto;
-import com.smh.club.api.data.dto.MemberDetailDto;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.MemberMinimumDto;
+import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -38,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public PageResponse<MemberDto> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<MemberMinimumDto> getItemListPage(@NonNull PageParams pageParams) {
         log.debug("Getting member item list page: {}", pageParams);
 
         var pageRequest = PageRequest.of(
@@ -51,39 +51,40 @@ public class MemberServiceImpl implements MemberService {
 
         var page = membersRepo.findAll(pageRequest);
 
-        return PageResponse.<MemberDto>builder()
+        return PageResponse.<MemberMinimumDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(memberMapper.toDataObjectList(page.getContent()))
+                .items(memberMapper.toDtoList(page.getContent()))
                 .build();
     }
 
     @Override
-    public Optional<MemberDto> getItem(int id) {
+    public Optional<MemberMinimumDto> getItem(int id) {
         log.debug("Getting member by id: {}", id);
 
-        return membersRepo.findById(id).map(memberMapper::toDataObject);
+        return membersRepo.findById(id).map(memberMapper::toDto);
     }
 
     @Override
-    public MemberDto createItem(MemberDto member) {
+    public MemberMinimumDto createItem(MemberMinimumDto member) {
         log.debug("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);
-        return memberMapper.toDataObject(membersRepo.save(memberEntity));
+        return memberMapper.toDto(membersRepo.save(memberEntity));
     }
 
-    @Override
-    public Optional<MemberDto> updateItem(int id, MemberDto memberDto) {
-        log.debug("Updating member id: {}, with data: {}", id, memberDto);
 
-        if(id != memberDto.getId()) {
+    @Override
+    public Optional<MemberMinimumDto> updateItem(int id, MemberMinimumDto memberMinimumDto) {
+        log.debug("Updating member id: {}, with data: {}", id, memberMinimumDto);
+
+        if(id != memberMinimumDto.getId()) {
             throw new IllegalArgumentException();
         }
 
         return membersRepo.findById(id)
-                .map(e -> memberMapper.updateEntity(memberDto, e))
-                .map(memberMapper::toDataObject);
+                .map(e -> memberMapper.updateEntity(memberMinimumDto, e))
+                .map(memberMapper::toDto);
     }
 
     @Override
@@ -99,22 +100,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<MemberDetailDto> getMemberDetail(int id) {
+    public Optional<MemberDto> getMemberDetail(int id) {
         log.debug("Getting member detail by id: {}", id);
 
-        var ret = membersRepo.findById(id);
-        
-        if (ret.isPresent()) {
-            var entity = ret.get();
-            var detail = memberMapper.toMemberDetail(entity);
-            detail.setAddresses(addressMapper.toDataObjectList(entity.getAddresses()));
-            detail.setEmails(emailMapper.toDataObjectList(entity.getEmails()));
-            detail.setPhones(phoneMapper.toDataObjectList(entity.getPhones()));
-            detail.setRenewals(renewalMapper.toDataObjectList(entity.getRenewals()));
-            return Optional.of(detail);
-        } else {
-            return Optional.empty();
-        }
+        return membersRepo.findById(id)
+                .map(memberMapper::toMemberDto);
     }
 
     private Map<String,String> initSortColumnMap() {

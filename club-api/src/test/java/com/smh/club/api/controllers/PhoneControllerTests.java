@@ -2,8 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.data.dto.PhoneDto;
-import com.smh.club.api.data.dto.PhoneType;
+import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.PhoneType;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -76,7 +76,7 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(phone.getId()))
-                .andExpect(jsonPath("$.phone-id").value(phone.getMemberId()))
+                .andExpect(jsonPath("$.member-id").value(phone.getMemberId()))
                 .andExpect(jsonPath("$.phone-number").value(phone.getPhoneNum()))
                 .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneName()))
                 .andDo(print());
@@ -115,7 +115,7 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
                         .content(mapper.writeValueAsString(phone)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(phone.getId()))
-                .andExpect(jsonPath("$.phone-id").value(phone.getMemberId()))
+                .andExpect(jsonPath("$.member-id").value(phone.getMemberId()))
                 .andExpect(jsonPath("$.phone-number").value(phone.getPhoneNum()))
                 .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneName()))
                 .andDo(print());
@@ -139,7 +139,7 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
                         .content(mapper.writeValueAsString(phone)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(phone.getId()))
-                .andExpect(jsonPath("$.phone-id").value(phone.getMemberId()))
+                .andExpect(jsonPath("$.member-id").value(phone.getMemberId()))
                 .andExpect(jsonPath("$.phone-number").value(phone.getPhoneNum()))
                 .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneName()))
                 .andDo(print());

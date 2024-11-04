@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.PhoneMapper;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.PhoneRepo;
-import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -51,7 +51,7 @@ public class PhoneServiceImpl implements PhoneService {
         return PageResponse.<PhoneDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(phoneMapper.toDataObjectList(page.getContent()))
+                .items(phoneMapper.toDtoList(page.getContent()))
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class PhoneServiceImpl implements PhoneService {
     public Optional<PhoneDto> getItem(int id) {
         log.debug("Getting phone by id: {}", id);
 
-        return phoneRepo.findById(id).map(phoneMapper::toDataObject);
+        return phoneRepo.findById(id).map(phoneMapper::toDto);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class PhoneServiceImpl implements PhoneService {
         var memberRef = memberRepo.getReferenceById(phone.getMemberId());
         var phoneEntity = phoneMapper.toEntity(phone);
         phoneEntity.setMember(memberRef);
-        return phoneMapper.toDataObject(phoneRepo.save(phoneEntity));
+        return phoneMapper.toDto(phoneRepo.save(phoneEntity));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class PhoneServiceImpl implements PhoneService {
 
         return phoneRepo.findByIdAndMemberId(id, phoneDto.getMemberId())
                 .map(e -> phoneMapper.updateEntity(phoneDto, e))
-                .map(phoneMapper::toDataObject);
+                .map(phoneMapper::toDto);
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.data.dto.AddressDto;
-import com.smh.club.api.data.dto.AddressType;
+import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.AddressType;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -137,7 +137,7 @@ public class AddressControllerTests extends ControllerTestBase<AddressDto> {
         // setup
         var id = 10;
         var address = createDataObject(id);
-        when(svc.updateItem(id, address)).thenReturn(Optional.empty());
+        when(svc.updateItem(id, address)).thenReturn(Optional.of(address));
 
         // execute and verify
         mockMvc.perform(put("/addresses/{id}", address.getId())

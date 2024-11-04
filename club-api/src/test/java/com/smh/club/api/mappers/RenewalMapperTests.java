@@ -1,8 +1,9 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.entities.RenewalEntity;
-import com.smh.club.api.data.dto.RenewalDto;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.domain.entities.RenewalEntity;
+import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +23,7 @@ public class RenewalMapperTests {
 
     @BeforeEach
     public void initMapper() {
-        this.mapper = new RenewalMapperImpl();
+        this.mapper = new RenewalMapperImpl(new MapperConfig().createModelMapper());
     }
 
     @Test
@@ -34,6 +35,7 @@ public class RenewalMapperTests {
         var entity = mapper.toEntity(dataObject);
 
         // verify
+        assertNull(entity.getMember());
         assertEquals(dataObject.getRenewalDate(), entity.getRenewalDate());
         assertEquals(dataObject.getRenewalYear(), entity.getRenewalYear());
 
@@ -54,7 +56,7 @@ public class RenewalMapperTests {
         entity.setMember(member);
 
         // execute
-        var dataObject = mapper.toDataObject(entity);
+        var dataObject = mapper.toDto(entity);
 
         // verify
         assertEquals(entity.getId(), dataObject.getId());
@@ -85,7 +87,7 @@ public class RenewalMapperTests {
         entityList.sort(Comparator.comparingInt(RenewalEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toDataObjectList(entityList);
+        var dataObjectList = mapper.toDtoList(entityList);
         dataObjectList.sort(Comparator.comparingInt(RenewalDto::getId));
 
         // verify

@@ -2,9 +2,9 @@ package com.smh.club.api.Services;
 
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.data.repos.AddressRepo;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.domain.repos.AddressRepo;
+import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -50,7 +50,7 @@ public class AddressServiceImpl implements AddressService {
         return PageResponse.<AddressDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(addressMapper.toDataObjectList(page.getContent()))
+                .items(addressMapper.toDtoList(page.getContent()))
                 .build();
     }
 
@@ -58,7 +58,7 @@ public class AddressServiceImpl implements AddressService {
     public Optional<AddressDto> getItem(int id) {
         log.debug("Getting address by id: {}", id);
 
-        return addressRepo.findById(id).map(addressMapper::toDataObject);
+        return addressRepo.findById(id).map(addressMapper::toDto);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class AddressServiceImpl implements AddressService {
 
         var addressEntity = addressMapper.toEntity(address);
         addressEntity.setMember(memberRef);
-        return addressMapper.toDataObject(addressRepo.save(addressEntity));
+        return addressMapper.toDto(addressRepo.save(addressEntity));
     }
 
     @Override
@@ -81,7 +81,7 @@ public class AddressServiceImpl implements AddressService {
         }
         return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())
                 .map(e -> addressMapper.updateEntity(addressDto, e))
-                .map(addressMapper::toDataObject);
+                .map(addressMapper::toDto);
 
     }
 
