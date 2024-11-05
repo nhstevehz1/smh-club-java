@@ -6,8 +6,7 @@ import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.AddressType;
+import com.smh.club.api.helpers.datacreators.AddressCreators;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AddressServiceTests extends CrudServiceTestBase<AddressDto, AddressEntity> {
+public class AddressServiceTests extends TempCrudServiceBase {
     @Mock private MembersRepo memRepoMock;
     @Mock private AddressRepo addRepoMock;
     @Mock private AddressMapper addMapMock;
@@ -41,13 +40,13 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
     @Test
-    public void getItemListPage_with_defaultPageParams() {
+    public void getAddressListPage_with_defaultPageParams() {
         // setup
         var params = PageParams.getDefault();
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getAddressListPage(params);
 
         // verify
         verify(addRepoMock).findAll(acPageRequest.capture());
@@ -66,13 +65,13 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
     }
 
     @Test
-    public void getItemListPage_with_nonDefault_pageParams() {
+    public void getAddressListPage_with_nonDefault_pageParams() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, "address1");
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getAddressListPage(params);
 
         // verify
         verify(addRepoMock).findAll(acPageRequest.capture());
@@ -90,13 +89,13 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
     }
 
     @Test
-    public void getItemListPage_unknown_sortColumn_uses_default() {
+    public void getAddressListPage_unknown_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, "thisIsNotAColumn");
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getAddressListPage(params);
 
         // verify
         verify(addRepoMock).findAll(acPageRequest.capture());
@@ -114,13 +113,13 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
     }
 
     @Test
-    public void getItemListPage_null_sortColumn_uses_default() {
+    public void getAddressListPage_null_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, null);
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getAddressListPage(params);
 
         // verify
         verify(addRepoMock).findAll(acPageRequest.capture());
@@ -138,31 +137,33 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
     }
 
     @Test
-    public void getItemListPage_null_sortDirection_throwsException() {
+    public void getAddressListPage_null_sortDirection_throwsException() {
         // setup
         var params = createPageParam(5,100, null, "address1");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getAddressListPage(params));
         verifyNoInteractions(addRepoMock);
     }
 
     @Test
-    public void getItemListPage_returnsAddressList() {
+    public void getAddressListPage_returnsAddressList() {
         // setup
-        var page = createPage(10, pageableMock, 200);
+        var entityList = AddressCreators.createEntityList(10);
+        var page = createEntityPage(entityList, pageableMock, 200);
+
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(addMapMock.toDtoList(page.getContent())).thenReturn(createDataObjectList(10));
+        when(addMapMock.toAddressDtoList(page.getContent())).thenReturn(AddressCreators.createAddressDtoList(10));
 
         // execute
-        var pageResponse = svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getAddressListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
         assertEquals(page.getTotalElements(), pageResponse.getTotalCount());
         assertEquals(page.getContent().size(), pageResponse.getItems().size());
         verify(addRepoMock).findAll(any(PageRequest.class));
-        verify(addMapMock).toDtoList(page.getContent());
+        verify(addMapMock).toAddressDtoList(page.getContent());
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
@@ -170,18 +171,18 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
     public void getItem_returns_address() {
         // setup
         int id = 1;
-        var entity = createEntity(id);
-        var address = createDataObject(id);
+        var entity = AddressCreators.createEntity(id);
+        var address = AddressCreators.createAddressDto(id);
         when(addRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(addMapMock.toDto(entity)).thenReturn(address);
+        when(addMapMock.toAddressDto(entity)).thenReturn(address);
 
         // execute
-        var ret = svc.getItem(id);
+        var ret = svc.getAddress(id);
 
         // verify
         assertTrue(ret.isPresent());
         verify(addRepoMock).findById(id);
-        verify(addMapMock).toDto(entity);
+        verify(addMapMock).toAddressDto(entity);
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
@@ -192,7 +193,7 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
         when(addRepoMock.findById(id)).thenReturn(Optional.empty());
 
         // execute
-        var ret = svc.getItem(id);
+        var ret = svc.getAddress(id);
 
         // execute and verify
         assertFalse(ret.isPresent());
@@ -201,54 +202,56 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
     }
 
     @Test
-    public void createItem_returns_address() {
+    public void createAddress_returns_addressDto() {
         // setup
         var memberId = 10;
         var member = MemberEntity.builder().id(memberId).build();
         when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var address = createDataObject(1);
+        var create = AddressCreators.createAddressCreateDto(memberId);
+        var address = AddressCreators.createAddressDto(1);
         address.setMemberId(memberId);
 
-        var entity = createEntity(1);
+        var entity = AddressCreators.createEntity(1);
         when(addRepoMock.save(entity)).thenReturn(entity);
-        when(addMapMock.toEntity(address)).thenReturn(entity);
-        when(addMapMock.toDto(entity)).thenReturn(address);
+        when(addMapMock.toAddressEntity(create)).thenReturn(entity);
+        when(addMapMock.toAddressDto(entity)).thenReturn(address);
 
         // execute
-        var ret = svc.createItem(address);
+        var ret = svc.createAddress(create);
 
         // verify
         assertNotNull(address);
         assertEquals(ret, address);
-        verify(memRepoMock).getReferenceById(memberId);
+        verify(memRepoMock).getReferenceById(member.getId());
         verify(addRepoMock).save(entity);
-        verify(addMapMock).toEntity(address);
-        verify(addMapMock).toDto(entity);
+        verify(addMapMock).toAddressEntity(create);
+        verify(addMapMock).toAddressDto(entity);
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
     @Test
-    public void updateItem_returns_address() {
+    public void updateAddress_returns_address() {
         // setup
         int id = 1;
-        var entity = createEntity(id);
-        var address= createDataObject(id);
+        var entity = AddressCreators.createEntity(id);
+        var update = AddressCreators.createAddressCreateDto(id);
+        var address = AddressCreators.createAddressDto(id);
 
         when(addRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
-        when(addMapMock.updateEntity(address, entity)).thenReturn(entity);
-        when(addMapMock.toDto(entity)).thenReturn(address);
+        when(addMapMock.updateAddressEntity(update, entity)).thenReturn(entity);
+        when(addMapMock.toAddressDto(entity)).thenReturn(address);
 
         // execute
-        var ret = svc.updateItem(id, address);
+        var ret = svc.updateAddress(id, update);
 
         // verify
         assertTrue(ret.isPresent());
         verify(addRepoMock).findByIdAndMemberId(id, id);
 
-        verify(addMapMock).updateEntity(address, entity);
-        verify(addMapMock).toDto(entity);
+        verify(addMapMock).updateAddressEntity(update, entity);
+        verify(addMapMock).toAddressDto(entity);
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
@@ -259,7 +262,7 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
         doNothing().when(addRepoMock).deleteById(id);
 
         // execute
-        svc.deleteItem(id);
+        svc.deleteAddress(id);
 
         //verify
         verify(addRepoMock).deleteById(id);
@@ -273,7 +276,7 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
         when(addRepoMock.count()).thenReturn(num);
 
         // execute
-        var response = svc.getItemCount();
+        var response = svc.getAddressCount();
 
         // verify
         assertEquals(num, response.getCount());
@@ -281,30 +284,5 @@ public class AddressServiceTests extends CrudServiceTestBase<AddressDto, Address
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
-    @Override
-    protected AddressEntity createEntity(int flag) {
-        return AddressEntity.builder()
-                .id(flag)
-                .address1("e_address1_" + flag)
-                .address2("e_address2_" + flag)
-                .city("e_city_" + flag)
-                .state("e_state_" + flag)
-                .zip("e_zip_" + flag)
-                .addressType(AddressType.Home)
-                .build();
-    }
 
-    @Override
-    protected AddressDto createDataObject(int flag) {
-        return AddressDto.builder()
-                .id(flag)
-                .memberId(flag)
-                .address1("a_address1_" + flag)
-                .address2("address2_" + flag)
-                .city("city_" + flag)
-                .state("state_" + flag)
-                .zip("zip_" + flag)
-                .addressType(AddressType.Home)
-                .build();
-    }
 }

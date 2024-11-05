@@ -24,10 +24,15 @@ public class PageParams {
     String sortColumn = "default";
 
     @Builder.Default
-    @JsonProperty("order")
+    @JsonProperty("sortDir")
     public Sort.Direction sortDirection = Sort.Direction.ASC;
 
     public static PageParams getDefault() {
         return new PageParams();
     }
+
+    public static String PAGE_PARAM = "page";
+    public static String SIZE_PARAM = "size";
+    public static String DIRECTION_PARAM = "sortDir";
+    public static String COLUMN_PARAM = "sort";
 }

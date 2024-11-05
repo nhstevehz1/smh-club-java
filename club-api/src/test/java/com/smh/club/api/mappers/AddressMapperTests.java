@@ -4,6 +4,7 @@ import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.dto.AddressType;
+import com.smh.club.api.helpers.datacreators.AddressCreators;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,21 +28,21 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void mapper_toEntity() {
+    public void from_addressEntity_to_addressCreateDto() {
         // setup
-        var dataObject = createDataObject();
+        var address = AddressCreators.createAddressCreateDto(1);
 
         // execute
-        var entity = mapper.toEntity(dataObject);
+        var entity = mapper.toAddressEntity(address);
 
         // verify
         assertNull(entity.getMember());
-        assertEquals(dataObject.getAddress1(), entity.getAddress1());
-        assertEquals(dataObject.getAddress2(), entity.getAddress2());
-        assertEquals(dataObject.getCity(), entity.getCity());
-        assertEquals(dataObject.getState(), entity.getState());
-        assertEquals(dataObject.getZip(), entity.getZip());
-        assertEquals(dataObject.getAddressType(), entity.getAddressType());
+        assertEquals(address.getAddress1(), entity.getAddress1());
+        assertEquals(address.getAddress2(), entity.getAddress2());
+        assertEquals(address.getCity(), entity.getCity());
+        assertEquals(address.getState(), entity.getState());
+        assertEquals(address.getZip(), entity.getZip());
+        assertEquals(address.getAddressType(), entity.getAddressType());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -60,7 +61,7 @@ public class AddressMapperTests {
         entity.setMember(member);
 
         // execute
-        var dataObject = mapper.toDto(entity);
+        var dataObject = mapper.toAddressDto(entity);
 
         // verify
         assertEquals(entity.getId(), dataObject.getId());
@@ -74,21 +75,21 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void mapper_updateEntity() {
+    public void update_addressEntity_from_createDto() {
         // setup
-        var dataObject = createDataObject();
+        var address = AddressCreators.createAddressCreateDto(1);
         var entity = createEntity();
 
         // execute
-        mapper.updateEntity(dataObject, entity);
+        mapper.updateAddressEntity(address, entity);
 
         // verify
-        assertEquals(entity.getAddress1(), dataObject.getAddress1());
-        assertEquals(entity.getAddress2(), dataObject.getAddress2());
-        assertEquals(entity.getCity(), dataObject.getCity());
-        assertEquals(entity.getState(), dataObject.getState());
-        assertEquals(entity.getZip(), dataObject.getZip());
-        assertEquals(entity.getAddressType(), dataObject.getAddressType());
+        assertEquals(entity.getAddress1(), address.getAddress1());
+        assertEquals(entity.getAddress2(), address.getAddress2());
+        assertEquals(entity.getCity(), address.getCity());
+        assertEquals(entity.getState(), address.getState());
+        assertEquals(entity.getZip(), address.getZip());
+        assertEquals(entity.getAddressType(), address.getAddressType());
     }
 
     @ParameterizedTest
@@ -99,7 +100,7 @@ public class AddressMapperTests {
         entityList.sort(Comparator.comparingInt(AddressEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toDtoList(entityList);
+        var dataObjectList = mapper.toAddressDtoList(entityList);
         dataObjectList.sort(Comparator.comparingInt(AddressDto::getId));
 
         // verify

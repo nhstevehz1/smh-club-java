@@ -1,15 +1,13 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.request.PageParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CrudServiceTestBase<D, E> {
+public abstract class CrudServiceTestBase<D, E> extends TempCrudServiceBase{
 
     protected abstract E createEntity(int flag);
 
@@ -35,14 +33,7 @@ public abstract class CrudServiceTestBase<D, E> {
         return new PageImpl<>(createEntityList(size), pageable, total);
     }
 
-    protected PageParams createPageParam(int pageNumber, int pageSize, Sort.Direction direction, String column) {
-        return PageParams.builder()
-                .pageSize(pageSize)
-                .pageNumber(pageNumber)
-                .sortDirection(direction)
-                .sortColumn(column)
-                .build();
-    }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.domain.entities.AddressEntity;
+import com.smh.club.api.dto.AddressCreateDto;
 import com.smh.club.api.dto.AddressDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -18,23 +19,23 @@ public class AddressMapperImpl extends DataObjectMapperBase implements AddressMa
     }
 
     @Override
-    public AddressEntity toEntity(AddressDto dto) {
-        return modelMapper.map(dto, AddressEntity.class);
+    public AddressEntity toAddressEntity(AddressCreateDto addressCreateDto) {
+        return modelMapper.map(addressCreateDto, AddressEntity.class);
     }
 
     @Override
-    public AddressDto toDto(AddressEntity entity) {
+    public AddressDto toAddressDto(AddressEntity entity) {
         return modelMapper.map(entity, AddressDto.class);
     }
 
     @Override
-    public AddressEntity updateEntity(AddressDto dataObject, AddressEntity entity) {
+    public AddressEntity updateAddressEntity(AddressCreateDto dataObject, AddressEntity entity) {
         modelMapper.map(dataObject, entity);
         return entity;
     }
 
     @Override
-    public List<AddressDto> toDtoList(List<AddressEntity> source) {
+    public List<AddressDto> toAddressDtoList(List<AddressEntity> source) {
         return mapList(source, AddressDto.class);
     }
 
