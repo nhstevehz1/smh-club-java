@@ -6,11 +6,11 @@ import com.smh.club.api.response.PageResponse;
 
 import java.io.IOException;
 
-public abstract class ControllerIntegrationTestsBase {
+public abstract class IntegrationTestsBase {
 
     protected ObjectMapper mapper;
 
-    public ControllerIntegrationTestsBase(ObjectMapper mapper) {
+    public IntegrationTestsBase(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 

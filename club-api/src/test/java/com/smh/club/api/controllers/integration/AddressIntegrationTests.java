@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AddressIntegrationTests extends ControllerIntegrationTestsBase {
+public class AddressIntegrationTests extends IntegrationTestsBase {
 
     @Autowired
     private MockMvc mockMvc;
