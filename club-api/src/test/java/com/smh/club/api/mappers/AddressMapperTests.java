@@ -6,7 +6,6 @@ import com.smh.club.api.helpers.datacreators.AddressCreators;
 import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
