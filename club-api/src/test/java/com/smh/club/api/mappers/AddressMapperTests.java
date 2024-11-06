@@ -1,28 +1,28 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.AddressEntity;
-import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.AddressType;
 import com.smh.club.api.helpers.datacreators.AddressCreators;
+import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.mappers.config.MapperConfig;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AddressMapperTests {
 
     private AddressMapperImpl mapper;
 
-    @BeforeEach
+    @BeforeAll
     public void initMapper() {
         this.mapper = new AddressMapperImpl(new MapperConfig().createModelMapper());
     }
@@ -52,13 +52,10 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void mapper_toDataObject() {
+    public void from_entity_to_addressDto() {
         // setup
-        var entity = createEntity();
-        var member = new MemberEntity();
-        member.setId(10);
-        entity.setId(5);
-        entity.setMember(member);
+        var member = MemberCreators.createMemberEntity(10);
+        var entity = AddressCreators.createEntity(5, member);
 
         // execute
         var dataObject = mapper.toAddressDto(entity);
@@ -75,10 +72,10 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void update_addressEntity_from_createDto() {
+    public void update_addressEntity_from_createAddressDto() {
         // setup
         var address = AddressCreators.createAddressCreateDto(1);
-        var entity = createEntity();
+        var entity = AddressCreators.createEntity(1);
 
         // execute
         mapper.updateAddressEntity(address, entity);
@@ -94,9 +91,10 @@ public class AddressMapperTests {
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
-    public void mapper_toDataObjectList(int size) {
+    public void to_addressDtoList_from_entityList(int size) {
         // setup
-        var entityList = createEntityList(size);
+        var member = MemberCreators.createMemberEntity(1);
+        var entityList = AddressCreators.createEntityList(size, member);
         entityList.sort(Comparator.comparingInt(AddressEntity::getId));
 
         // execute
@@ -119,41 +117,6 @@ public class AddressMapperTests {
             assertEquals(entity.getAddressType(), dataObject.getAddressType());
 
         }
-    }
-
-    private AddressEntity createEntity() {
-        return AddressEntity.builder()
-                .address1("ent_address1")
-                .address2("ent_address2")
-                .city("ent_city")
-                .state("ent_state")
-                .zip("ent_zip")
-                .addressType(AddressType.Home)
-                .build();
-    }
-
-    private AddressDto createDataObject() {
-        return AddressDto.builder()
-                .address1("ad_address1")
-                .address2("ad_address2")
-                .city("ad_city")
-                .state("ad_state")
-                .addressType(AddressType.Work)
-                .build();
-    }
-
-    private List<AddressEntity> createEntityList(int size) {
-        List<AddressEntity> entityList = new ArrayList<>();
-        for (int ii = 0; ii < size; ii++ ) {
-            MemberEntity member = new MemberEntity();
-            member.setId(ii + 10);
-            var entity = createEntity();
-            entity.setId(ii);
-            entity.setMember(member);
-            entityList.add(entity);
-        }
-
-        return entityList;
     }
 
 }

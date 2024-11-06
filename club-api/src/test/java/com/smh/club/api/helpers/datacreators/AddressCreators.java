@@ -1,6 +1,7 @@
 package com.smh.club.api.helpers.datacreators;
 
 import com.smh.club.api.domain.entities.AddressEntity;
+import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.AddressCreateDto;
 import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.dto.AddressType;
@@ -13,13 +14,12 @@ public class AddressCreators {
     private AddressCreators() {}
 
     public static AddressEntity createEntity(int flag) {
-        return AddressEntity.builder()
-                .address1("e_address1_" + flag)
-                .address2("e_address2_" + flag)
-                .city("e_city_" + flag)
-                .state("e_state_" + flag)
-                .zip("e_zip_" + flag)
-                .addressType(AddressType.Home)
+        return createAddressEntity(flag).build();
+    }
+
+    public static AddressEntity createEntity(int flag, MemberEntity memberEntity) {
+        return createAddressEntity(flag)
+                .member(memberEntity)
                 .build();
     }
 
@@ -56,6 +56,12 @@ public class AddressCreators {
         return list;
     }
 
+    public static List<AddressEntity> createEntityList(int size, MemberEntity member) {
+        var list = createEntityList(size);
+        list.forEach(e -> e.setMember(member));
+        return list;
+    }
+
     public static List<AddressEntity> createEntityList(int size, int startFlag) {
         List<AddressEntity> list = new ArrayList<>(size);
         for (int ii = 0; ii < size; ii++) {
@@ -70,6 +76,17 @@ public class AddressCreators {
          list.add(createAddressDto(ii)) ;
         }
         return list;
+    }
+
+    private static AddressEntity.AddressEntityBuilder createAddressEntity(int flag) {
+        return AddressEntity.builder()
+                .id(flag)
+                .address1("e_address1_" + flag)
+                .address2("e_address2_" + flag)
+                .city("e_city_" + flag)
+                .state("e_state_" + flag)
+                .zip("e_zip_" + flag)
+                .addressType(AddressType.Home);
     }
 
 }
