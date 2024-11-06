@@ -80,7 +80,6 @@ public class AddressCreators {
 
     private static AddressEntity.AddressEntityBuilder createAddressEntity(int flag) {
         return AddressEntity.builder()
-                .id(flag)
                 .address1("e_address1_" + flag)
                 .address2("e_address2_" + flag)
                 .city("e_city_" + flag)

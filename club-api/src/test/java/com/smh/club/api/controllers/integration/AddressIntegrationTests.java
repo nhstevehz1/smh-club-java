@@ -63,7 +63,7 @@ public class AddressIntegrationTests {
     @Autowired
     private AddressRepo addressRepo;
 
-    private static List<MemberEntity> members = new ArrayList<>();
+    private List<MemberEntity> members;
 
     @BeforeAll
     public void initMembers() {
@@ -212,8 +212,8 @@ public class AddressIntegrationTests {
                 .sortColumn("id")
                 .sortDirection(Sort.Direction.ASC).build();
 
-        var sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparing(AddressEntity::getId)).toList();
+        var sorted = addressRepo.findAll();
+        sorted.sort(Comparator.comparingInt(AddressEntity::getId));
 
         var pageSize = params.getPageSize();
         var count = sorted.size();
