@@ -1,6 +1,5 @@
 package com.smh.club.api.controllers.integration;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
@@ -12,7 +11,6 @@ import com.smh.club.api.dto.AddressType;
 import com.smh.club.api.helpers.datacreators.AddressCreators;
 import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PageParams;
-import com.smh.club.api.response.PageResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,8 +26,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -49,13 +45,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AddressIntegrationTests {
+public class AddressIntegrationTests extends ControllerIntegrationTestsBase {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper mapper;
 
     @Autowired
     private MembersRepo memberRepo;
@@ -64,6 +57,11 @@ public class AddressIntegrationTests {
     private AddressRepo addressRepo;
 
     private List<MemberEntity> members;
+
+    @Autowired
+    public AddressIntegrationTests(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     @BeforeAll
     public void initMembers() {
@@ -404,10 +402,4 @@ public class AddressIntegrationTests {
             verify(e, found.get());
         });
     }
-
-    private <T> PageResponse<T> readPageResponse(String json, Class<T> contentClass) throws IOException {
-        JavaType type = mapper.getTypeFactory().constructParametricType(PageResponse.class, contentClass);
-        return mapper.readValue(json, type);
-    }
-
 }
