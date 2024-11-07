@@ -6,9 +6,6 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.EmailType;
-import com.smh.club.api.helpers.datacreators.EmailCreators;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -174,7 +171,7 @@ public class EmailServiceTests extends ServiceTests {
     public void getItem_returns_email() {
         // setup
         int id = 1;
-        var entity = createEmailEntity(id);
+        var entity = genEmailEntity(id);
         when(emailRepoMock.findById(id)).thenReturn(Optional.of(entity));
         when(emlMapMock.toDto(any(EmailEntity.class))).thenReturn(createEmailDto(id));
 
@@ -210,11 +207,11 @@ public class EmailServiceTests extends ServiceTests {
         var member = MemberEntity.builder().id(memberId).build();
         when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var create = createEmailCreateDto(1);
+        var create = genCreateEmailDto(1);
         var email = createEmailDto(1);
         email.setMemberId(memberId);
 
-        var entity = createEmailEntity(1);
+        var entity = genEmailEntity(1);
 
         when(emailRepoMock.save(entity)).thenReturn(entity);
         when(emlMapMock.toEntity(create)).thenReturn(entity);
@@ -237,8 +234,8 @@ public class EmailServiceTests extends ServiceTests {
     public void updateItem_returns_email() {
         // setup
         int id = 1;
-        var entity = createEmailEntity(id);
-        var update = createEmailCreateDto(id);
+        var entity = genEmailEntity(id);
+        var update = genUpdateEmailDto(id);
         var email = createEmailDto(id);
 
         when(emailRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));

@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Comparator;
 
-import static com.smh.club.api.helpers.datacreators.AddressCreators.createAddressEntity;
 import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
 import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +27,7 @@ public class EmailMapperTests {
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var create = createEmailCreateDto(0);
+        var create = genCreateEmailDto(0);
 
         // execute
         var entity = mapper.toEntity(create);
@@ -48,8 +47,9 @@ public class EmailMapperTests {
     @Test
     public void from_entity_to_dto() {
         // setup
-        var entity = createEmailEntity(5);
         var member = createMemberEntity(10);
+        var entity = genEmailEntity(5, member);
+
         entity.setMember(member);
 
         // execute
@@ -65,8 +65,8 @@ public class EmailMapperTests {
     @Test
     public void update_entity_from_createDto() {
         // setup
-        var update = createEmailCreateDto(10);
-        var entity = createEmailEntity(5);
+        var update = genUpdateEmailDto(10);
+        var entity = genEmailEntity(5);
 
         // execute
         mapper.updateEntity(update, entity);

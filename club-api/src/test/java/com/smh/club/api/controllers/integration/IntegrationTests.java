@@ -17,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public abstract class IntegrationTests {
 
-    protected ObjectMapper mapper;
-    protected MockMvc mockMvc;
-    protected String path;
+    protected final ObjectMapper mapper;
+    protected final MockMvc mockMvc;
+    protected final String path;
 
 
     public IntegrationTests(MockMvc mockMvc, ObjectMapper mapper, String path) {

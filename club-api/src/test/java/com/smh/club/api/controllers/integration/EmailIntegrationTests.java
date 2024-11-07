@@ -5,9 +5,9 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.EmailCreateDto;
 import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.dto.EmailType;
+import com.smh.club.api.dto.create.CreateEmailDto;
 import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -32,8 +32,8 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.smh.club.api.helpers.datacreators.EmailCreators.createEmailCreateDto;
 import static com.smh.club.api.helpers.datacreators.EmailCreators.createEmailEntityList;
+import static com.smh.club.api.helpers.datacreators.EmailCreators.genCreateEmailDto;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -177,11 +177,11 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @Test
     public void getListPage_sortColumn() throws Exception {
-        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(4), 40);
         addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+        addEntitiesToDb(members.get(3), 30);
+        addEntitiesToDb(members.get(2), 20);
+        addEntitiesToDb(members.get(1), 10);
 
         // sort by id
         var sorted = repo.findAll().stream()
@@ -232,7 +232,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_address_status_created() throws Exception {
         // create addresses
-        var create = createEmailCreateDto(0);
+        var create = genCreateEmailDto(0);
         create.setMemberId(members.get(0).getId());
 
         // perform POST
@@ -272,7 +272,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void update_returns_dto_status_ok() throws Exception {
         // create several addresses
         var entities = addEntitiesToDb(members.get(1), 0);
-        var update = createEmailCreateDto(members.get(1).getId());
+        var update = genCreateEmailDto(members.get(1).getId());
         var id = entities.get(1).getId();
 
         // perform PUT
@@ -299,7 +299,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(EmailCreateDto expected, EmailEntity actual) {
+    private void verify(CreateEmailDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType(), actual.getEmailType());

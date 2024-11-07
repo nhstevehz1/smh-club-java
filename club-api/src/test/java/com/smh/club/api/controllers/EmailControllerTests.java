@@ -2,9 +2,9 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.dto.EmailCreateDto;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.helpers.datacreators.EmailCreators;
+import com.smh.club.api.dto.create.CreateEmailDto;
+import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.EmailCreators.createEmailDto;
-import static com.smh.club.api.helpers.datacreators.EmailCreators.createEmailDtoList;
+import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -111,7 +110,7 @@ public class EmailControllerTests extends ControllerTests {
         // setup
         var id = 12;
         var ret = createEmailDto(id);
-        var create = modelMapper.map(ret, EmailCreateDto.class);
+        var create = modelMapper.map(ret, CreateEmailDto.class);
         when(svc.createItem(create)).thenReturn(ret);
 
         // execute and verify
@@ -135,7 +134,7 @@ public class EmailControllerTests extends ControllerTests {
         // setup
         var id = 12;
         var ret = createEmailDto(id);
-        var update = modelMapper.map(ret, EmailCreateDto.class);
+        var update = modelMapper.map(ret, UpdateEmailDto.class);
         when(svc.updateItem(id, update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -158,7 +157,7 @@ public class EmailControllerTests extends ControllerTests {
     public void update_email_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = EmailCreators.createEmailCreateDto(id);
+        var update = genUpdateEmailDto(id);
         when(svc.updateItem(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

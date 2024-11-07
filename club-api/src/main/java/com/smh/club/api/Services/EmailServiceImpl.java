@@ -4,8 +4,9 @@ import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.common.services.EmailService;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.EmailCreateDto;
 import com.smh.club.api.dto.EmailDto;
+import com.smh.club.api.dto.create.CreateEmailDto;
+import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -61,21 +62,21 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public EmailDto createItem(EmailCreateDto email) {
-        log.debug("creating email: {}", email);
+    public EmailDto createItem(CreateEmailDto createDto) {
+        log.debug("creating email: {}", createDto);
 
-        var memberRef = memberRepo.getReferenceById(email.getMemberId());
-        var emailEntity = emailMapper.toEntity(email);
+        var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
+        var emailEntity = emailMapper.toEntity(createDto);
         emailEntity.setMember(memberRef);
         return emailMapper.toDto(emailRepo.save(emailEntity));
     }
 
     @Override
-    public Optional<EmailDto> updateItem(int id, EmailCreateDto emailCreateDto) {
-        log.debug("Updating email, id: {}, with data: {}", id, emailCreateDto);
+    public Optional<EmailDto> updateItem(int id, UpdateEmailDto updateDto) {
+        log.debug("Updating email, id: {}, with data: {}", id, updateDto);
 
-        return emailRepo.findByIdAndMemberId(id, emailCreateDto.getMemberId())
-                .map(e -> emailMapper.updateEntity(emailCreateDto, e))
+        return emailRepo.findByIdAndMemberId(id, updateDto.getMemberId())
+                .map(e -> emailMapper.updateEntity(updateDto, e))
                 .map(emailMapper::toDto);
     }
 
