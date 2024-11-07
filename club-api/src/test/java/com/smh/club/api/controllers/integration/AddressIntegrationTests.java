@@ -1,6 +1,7 @@
 package com.smh.club.api.controllers.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.controllers.config.PagingConfig;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
@@ -16,8 +17,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
@@ -25,6 +29,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Comparator;
 import java.util.List;
@@ -47,8 +54,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AddressIntegrationTests extends IntegrationTestsBase {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Value("${request.paging.size}")
+    private int defaultPageSize;
 
     @Autowired
     private MembersRepo memberRepo;
@@ -59,8 +66,8 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     private List<MemberEntity> members;
 
     @Autowired
-    public AddressIntegrationTests(ObjectMapper mapper) {
-        super(mapper);
+    public AddressIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
+        super(mockMvc, mapper);
     }
 
     @BeforeAll
@@ -76,87 +83,56 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     }
 
     @Test
-    public void getAddressListPage_no_default_sort() throws Exception {
+    public void getAddressListPage_no_params() throws Exception {
         // populate address table
         addAddressesToDb(members.get(4), 4);
         addAddressesToDb(members.get(0), 0);
         addAddressesToDb(members.get(3), 5);
         addAddressesToDb(members.get(2), 2);
         addAddressesToDb(members.get(1), 1);
-
-        var params = PageParams.builder()
-                .pageNumber(0)
-                .pageSize(10).build();
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
-        var pageSize = params.getPageSize();
-        var count = addressRepo.count();
-        var pages = count / pageSize +  (count % pageSize == 0 ? 0 : 1);
-        var length = count < pageSize ? count : pageSize;
+        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
+        var actual = executeGetListPage(AddressDto.class, "/addresses",
+                valueMap, sorted.size(), defaultPageSize);
 
-        // perform get
-        var ret = mockMvc.perform(get("/addresses")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total-pages").value(pages))
-                .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
-                .andDo(print()).andReturn();
-
-        var actual = readPageResponse(ret.getResponse().getContentAsString(), AddressDto.class).getItems();
         assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
 
-        var skip = params.getPageSize() * params.getPageNumber();
-        var expected = sorted.stream().skip(skip).limit(length).toList();
+        var expected = sorted.stream().limit(defaultPageSize).toList();
 
         verify(expected, actual);
     }
 
     @Test
-    public void getAddressListPage_sort_default_desc() throws Exception {
+    public void getListPage_sortDir_desc() throws Exception {
         // populate address table
         addAddressesToDb(members.get(4), 4);
         addAddressesToDb(members.get(0), 0);
         addAddressesToDb(members.get(3), 5);
         addAddressesToDb(members.get(2), 2);
         addAddressesToDb(members.get(1), 1);
-
-        var params = PageParams.builder()
-                .pageSize(10)
-                .sortDirection(Sort.Direction.DESC).build();
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId).reversed()).toList();
 
-        var pageSize = params.getPageSize();
-        var count = sorted.size();
-        var pages = count / pageSize +  (count % pageSize == 0 ? 0 : 1);
-        var length = Math.min(count, pageSize);
+        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sortDirName, Sort.Direction.DESC.toString());
 
-        // perform get
-        var ret = mockMvc.perform(get("/addresses")
-                        .param(PageParams.DIRECTION_PARAM, String.valueOf(params.getSortDirection()))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total-pages").value(pages))
-                .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
-                .andDo(print()).andReturn();
+        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
 
-        var actual = readPageResponse(ret.getResponse().getContentAsString(), AddressDto.class).getItems();
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressDto::getId).reversed()).toList(), actual);
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparingInt(AddressDto::getId).reversed()).toList(), actual);
 
-        var skip = params.getPageSize() * params.getPageNumber();
-        var expected = sorted.stream().skip(skip).limit(length).toList();
+        var expected = sorted.stream().limit(defaultPageSize).toList();
 
         verify(expected, actual);
     }
 
-    @Test
-    public void getAddressListPage_sort_state_asc() throws Exception {
-        // populate address table
+    @ParameterizedTest
+    @ValueSource(ints = {2,5,8,10})
+    public void getListPage_pageSize(int pageSize) throws Exception {
         addAddressesToDb(members.get(4), 4);
         addAddressesToDb(members.get(0), 0);
         addAddressesToDb(members.get(3), 5);
@@ -164,128 +140,146 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
         addAddressesToDb(members.get(1), 1);
 
         var sorted = addressRepo.findAll().stream()
+                .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
+
+        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sizeName, String.valueOf(pageSize));
+
+        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), pageSize);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
+
+        var expected = sorted.stream().limit(pageSize).toList();
+
+        verify(expected, actual);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 5, 8, 10})
+    public void getListPage_page(int page) throws Exception {
+        for (int ii = 0; ii < 10; ii++) {
+            addAddressesToDb(members.get(4), ii + 40);
+            addAddressesToDb(members.get(0), ii + 60);
+            addAddressesToDb(members.get(3), ii + 50);
+            addAddressesToDb(members.get(2), ii + 20);
+            addAddressesToDb(members.get(1), ii + 11);
+        }
+
+
+        var sorted = addressRepo.findAll().stream()
+                .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
+
+        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.pageName, String.valueOf(page));
+
+        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
+
+        var skip = defaultPageSize * page;
+        var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
+
+        verify(expected, actual);
+    }
+
+    @Test
+    public void getListPage_sortColumn() throws Exception {
+        addAddressesToDb(members.get(4), 4);
+        addAddressesToDb(members.get(0), 0);
+        addAddressesToDb(members.get(3), 5);
+        addAddressesToDb(members.get(2), 2);
+        addAddressesToDb(members.get(1), 1);
+
+        // sort by id
+        var sorted = addressRepo.findAll().stream()
+                .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
+
+        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sortName, "id");
+
+        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
+
+        var expected = sorted.stream().limit(defaultPageSize).toList();
+        verify(expected, actual);
+
+        // sort by address1
+        sorted = addressRepo.findAll().stream()
+                .sorted(Comparator.comparing(AddressEntity::getAddress1)).toList();
+
+        valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sortName, "address1");
+
+        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparing(AddressDto::getAddress1)).toList(), actual);
+
+        expected = sorted.stream().limit(defaultPageSize).toList();
+        verify(expected, actual);
+
+        // sort by address2
+        sorted = addressRepo.findAll().stream()
+                .sorted(Comparator.comparing(AddressEntity::getAddress1)).toList();
+
+        valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sortName, "address2");
+
+        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparing(AddressDto::getAddress2)).toList(), actual);
+
+        expected = sorted.stream().limit(defaultPageSize).toList();
+        verify(expected, actual);
+
+        // sort by city
+        sorted = addressRepo.findAll().stream()
+                .sorted(Comparator.comparing(AddressEntity::getCity)).toList();
+
+        valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sortName, "city");
+
+        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparing(AddressDto::getCity)).toList(), actual);
+
+        expected = sorted.stream().limit(defaultPageSize).toList();
+        verify(expected, actual);
+
+        // sort by state
+        sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparing(AddressEntity::getState)).toList();
 
-        var pageSize = 10;
-        var count = addressRepo.count();
-        var pages = count / pageSize +  (count % pageSize == 0 ? 0 : 1);
-        var length = count < pageSize ? count : pageSize;
-        PageParams params = PageParams.builder()
-                .sortColumn("state")
-                .sortDirection(Sort.Direction.ASC).build();
+        valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sortName, "state");
 
-
-        // perform get
-        var ret = mockMvc.perform(get("/addresses")
-                        .param(PageParams.DIRECTION_PARAM, String.valueOf(params.getSortDirection()))
-                        .param(PageParams.COLUMN_PARAM, "state")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total-pages").value(pages))
-                .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
-                .andDo(print()).andReturn();
-
-        var actual = readPageResponse(ret.getResponse().getContentAsString(), AddressDto.class).getItems();
+        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getState)).toList(), actual);
 
-        var expected = sorted.stream().limit(length).toList();
+        expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
-    }
 
-    @Test
-    public void getAddressListPage_sort_id_asc_page_2() throws Exception {
-        // populate address table
-        addAddressesToDb(members.get(4), 4);
-        addAddressesToDb(members.get(0), 0);
-        addAddressesToDb(members.get(3), 5);
-        addAddressesToDb(members.get(2), 2);
-        addAddressesToDb(members.get(1), 1);
+        // sort by zip
+        sorted = addressRepo.findAll().stream()
+                .sorted(Comparator.comparing(AddressEntity::getZip)).toList();
 
-        PageParams params = PageParams.builder()
-                .pageSize(5)
-                .pageNumber(2)
-                .sortColumn("id")
-                .sortDirection(Sort.Direction.ASC).build();
+        valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.sortName, "zip");
 
-        var sorted = addressRepo.findAll();
-        sorted.sort(Comparator.comparingInt(AddressEntity::getId));
-
-        var pageSize = params.getPageSize();
-        var count = sorted.size();
-        var pages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
-        var length = count < pageSize ? count : pageSize;
-
-        // perform get
-        var ret = mockMvc.perform(get("/addresses")
-                        .param(PageParams.PAGE_PARAM, String.valueOf(params.getPageNumber()))
-                        .param(PageParams.SIZE_PARAM, String.valueOf(params.getPageSize()))
-                        .param(PageParams.DIRECTION_PARAM, String.valueOf(params.getSortDirection()))
-                        .param(PageParams.COLUMN_PARAM, params.getSortColumn())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total-pages").value(pages))
-                .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
-                .andDo(print()).andReturn();
-
-        var actual = readPageResponse(ret.getResponse().getContentAsString(), AddressDto.class).getItems();
+        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getId)).toList(), actual);
+                .sorted(Comparator.comparing(AddressDto::getZip)).toList(), actual);
 
-        var skip = params.getPageSize() * params.getPageNumber();
-        var expected = sorted.stream().skip(skip).limit(length).toList();
-
-        verify(expected, actual);
-    }
-
-    @Test
-    public void getAddressListPage_sort_state_desc_page_1() throws Exception {
-        // populate address table
-        addAddressesToDb(members.get(4), 4);
-        addAddressesToDb(members.get(0), 0);
-        addAddressesToDb(members.get(3), 5);
-        addAddressesToDb(members.get(2), 2);
-        addAddressesToDb(members.get(1), 1);
-
-        PageParams params = PageParams.builder()
-                .pageSize(5)
-                .pageNumber(1)
-                .sortColumn("state")
-                .sortDirection(Sort.Direction.DESC).build();
-
-        var sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparing(AddressEntity::getState).reversed()).toList();
-
-        var pageSize = params.getPageSize();
-        var count = sorted.size();
-        var pages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
-        var length = count < pageSize ? count : pageSize;
-
-        // perform get
-        var ret = mockMvc.perform(get("/addresses")
-                        .param(PageParams.PAGE_PARAM, String.valueOf(params.getPageNumber()))
-                        .param(PageParams.SIZE_PARAM, String.valueOf(params.getPageSize()))
-                        .param(PageParams.DIRECTION_PARAM, String.valueOf(params.getSortDirection()))
-                        .param(PageParams.COLUMN_PARAM, params.getSortColumn())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total-pages").value(pages))
-                .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
-                .andDo(print()).andReturn();
-
-        var actual = readPageResponse(ret.getResponse().getContentAsString(), AddressDto.class).getItems();
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getState).reversed()).toList(), actual);
-
-        var skip = params.getPageSize() * params.getPageNumber();
-        var expected = sorted.stream().skip(skip).limit(length).toList();
-
+        expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
     }
 
@@ -301,13 +295,6 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                     .accept(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(create)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.member-id").value(create.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(create.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(create.getAddress2()))
-                .andExpect(jsonPath("$.city").value(create.getCity()))
-                .andExpect(jsonPath("$.state").value(create.getState()))
-                .andExpect(jsonPath("$.zip").value(create.getZip()))
-                .andExpect(jsonPath("$.address-type").value(create.getAddressType().getAddressName()))
                 .andDo(print())
                 .andReturn();
 
@@ -348,15 +335,6 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.member-id").value(update.getMemberId()))
-                .andExpect(jsonPath("$.member-id").value(update.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(update.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(update.getAddress2()))
-                .andExpect(jsonPath("$.city").value(update.getCity()))
-                .andExpect(jsonPath("$.state").value(update.getState()))
-                .andExpect(jsonPath("$.zip").value(update.getZip()))
-                .andExpect(jsonPath("$.address-type").value(update.getAddressType().getAddressName()))
                 .andDo(print());
 
         // verify

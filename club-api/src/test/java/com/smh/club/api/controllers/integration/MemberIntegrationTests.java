@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
@@ -32,7 +33,6 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
@@ -45,15 +45,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class MemberIntegrationTests extends IntegrationTestsBase {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Value("${request.paging.size}")
+    private int defaultPageSize;
 
     @Autowired
     private MembersRepo memberRepo;
 
     @Autowired
-    public MemberIntegrationTests(ObjectMapper mapper) {
-        super(mapper);
+    public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
+        super(mockMvc,mapper);
     }
 
     @ParameterizedTest
@@ -66,12 +66,12 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         assertEquals(entitySize, sorted.size());
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGeListPage(valueMap, sorted.size(), 10);
+        var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
 
-        var expected = sorted.stream().limit(10).toList();
+        var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
     }
 
@@ -83,15 +83,16 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         var sorted = memberRepo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
         assertEquals(entitySize, sorted.size());
+
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortDirName, Sort.Direction.DESC.toString());
 
-        var actual = executeGeListPage(valueMap, sorted.size(), 10);
+        var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber).reversed()).toList(), actual);
 
-        var expected = sorted.stream().limit(10).toList();
+        var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
     }
 
@@ -107,7 +108,8 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sizeName, pageSize);
 
-        var actual = executeGeListPage(valueMap, sorted.size(), Integer.parseInt(pageSize));
+        var actual = executeGetListPage(MemberDto.class, "/members",
+                valueMap, sorted.size(), Integer.parseInt(pageSize));
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
@@ -116,10 +118,33 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         verify(expected, actual);
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {2,4,5,8})
+    public void getListPage_page(int page) throws Exception {
+        var entitySize = 100;
+        addEntitiesToDb(entitySize);
+
+        var sorted = memberRepo.findAll()
+                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
+        assertEquals(entitySize, sorted.size());
+        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
+        valueMap.add(PagingConfig.pageName, String.valueOf(page));
+
+        var actual = executeGetListPage(MemberDto.class, "/members",
+                valueMap, sorted.size(), defaultPageSize);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
+
+        var skip = page * defaultPageSize;
+        var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
+        verify(expected, actual);
+    }
+
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_page_sortColumn() throws Exception {
+    public void getListPage_sortColumn() throws Exception {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
 
@@ -130,12 +155,12 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortName, "id");
 
-        var actual = executeGeListPage(valueMap, sorted.size(), 10);
+        var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getId)).toList(), actual);
 
-        var expected = sorted.stream().limit(10).toList();
+        var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
 
         // sort by member-number
@@ -146,12 +171,12 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortName, "member-number");
 
-        actual = executeGeListPage(valueMap, sorted.size(), 10);
+        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
 
-        expected = sorted.stream().limit(10).toList();
+        expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
 
         // sort by first-name
@@ -162,23 +187,23 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortName, "first-name");
 
-        actual = executeGeListPage(valueMap, sorted.size(), 10);
+        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getFirstName)).toList(), actual);
 
-        expected = sorted.stream().limit(10).toList();
+        expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
 
         //sort by last-name
         sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getLastName)).toList();;
+                .stream().sorted(Comparator.comparing(MemberEntity::getLastName)).toList();
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortName, "last-name");
 
-        actual = executeGeListPage(valueMap, sorted.size(), 10);
+        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getLastName)).toList(), actual);
@@ -186,15 +211,15 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         expected = sorted.stream().limit(10).toList();
         verify(expected, actual);
 
-        //sort by birth-date
+        //sort by birthdate
         sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getBirthDate)).toList();;
+                .stream().sorted(Comparator.comparing(MemberEntity::getBirthDate)).toList();
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortName, "birth-date");
 
-        actual = executeGeListPage(valueMap, sorted.size(), 10);
+        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getBirthDate)).toList(), actual);
@@ -210,19 +235,19 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortName, "joined-date");
 
-        actual = executeGeListPage(valueMap, sorted.size(), 10);
+        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getJoinedDate)).toList(), actual);
 
-        expected = sorted.stream().limit(10).toList();
+        expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
 
     }
 
     @Test
-    public void createAddresses_returns_addressDto_status_created() throws Exception {
-        // Populate the database
+    public void createMember_returns_memberDto_status_created() throws Exception {
+        // create member
         var create = MemberCreators.createMemberCreateDto(100);
 
         // perform POST
@@ -258,7 +283,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
     }
 
     @Test
-    public void update_returns_member_status_ok() throws Exception{
+    public void update_returns_memberDto_status_ok() throws Exception{
         // create several members
         var entities = addEntitiesToDb(10);
         var update = MemberCreators.createMemberCreateDto(100);
@@ -274,24 +299,6 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         var member = memberRepo.findById(id);
         assertTrue(member.isPresent());
         verify(update, member.get());
-    }
-
-    private List<MemberDto> executeGeListPage(MultiValueMap<String, String> valueMap, int count, int pageSize) throws Exception {
-
-        var pages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
-        var length = Math.min(count, pageSize);
-
-        // perform get
-        var ret = mockMvc.perform(get("/members")
-                        .params(valueMap)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total-pages").value(pages))
-                .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
-                .andDo(print()).andReturn();
-
-        return readPageResponse(ret.getResponse().getContentAsString(), MemberDto.class).getItems();
     }
 
     private List<MemberEntity> addEntitiesToDb(int size) {
