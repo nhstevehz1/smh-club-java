@@ -1,7 +1,7 @@
 package com.smh.club.api.controllers.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.controllers.config.PagingConfig;
+import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AddressIntegrationTests extends IntegrationTestsBase {
+public class AddressIntegrationTests extends IntegrationTests {
 
     @Value("${request.paging.size}")
     private int defaultPageSize;
@@ -64,7 +64,7 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
 
     @Autowired
     public AddressIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc, mapper);
+        super(mockMvc, mapper, "/addresses");
     }
 
     @BeforeAll
@@ -80,19 +80,19 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     }
 
     @Test
-    public void getAddressListPage_no_params() throws Exception {
+    public void getListPage_no_params() throws Exception {
         // populate address table
-        addAddressesToDb(members.get(4), 4);
-        addAddressesToDb(members.get(0), 0);
-        addAddressesToDb(members.get(3), 5);
-        addAddressesToDb(members.get(2), 2);
-        addAddressesToDb(members.get(1), 1);
+        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(0), 0);
+        addEntitiesToDb(members.get(3), 5);
+        addEntitiesToDb(members.get(2), 2);
+        addEntitiesToDb(members.get(1), 1);
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPage(AddressDto.class, "/addresses",
+        var actual = executeGetListPage(AddressDto.class, path,
                 valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
@@ -105,19 +105,19 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     @Test
     public void getListPage_sortDir_desc() throws Exception {
         // populate address table
-        addAddressesToDb(members.get(4), 4);
-        addAddressesToDb(members.get(0), 0);
-        addAddressesToDb(members.get(3), 5);
-        addAddressesToDb(members.get(2), 2);
-        addAddressesToDb(members.get(1), 1);
+        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(0), 0);
+        addEntitiesToDb(members.get(3), 5);
+        addEntitiesToDb(members.get(2), 2);
+        addEntitiesToDb(members.get(1), 1);
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId).reversed()).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortDirName, Sort.Direction.DESC.toString());
+        valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
 
-        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(AddressDto::getId).reversed()).toList(), actual);
@@ -130,19 +130,19 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
     public void getListPage_pageSize(int pageSize) throws Exception {
-        addAddressesToDb(members.get(4), 4);
-        addAddressesToDb(members.get(0), 0);
-        addAddressesToDb(members.get(3), 5);
-        addAddressesToDb(members.get(2), 2);
-        addAddressesToDb(members.get(1), 1);
+        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(0), 0);
+        addEntitiesToDb(members.get(3), 5);
+        addEntitiesToDb(members.get(2), 2);
+        addEntitiesToDb(members.get(1), 1);
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sizeName, String.valueOf(pageSize));
+        valueMap.add(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
 
-        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), pageSize);
+        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), pageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
@@ -156,11 +156,11 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     @ValueSource(ints = {1, 5, 8, 10})
     public void getListPage_page(int page) throws Exception {
         for (int ii = 0; ii < 10; ii++) {
-            addAddressesToDb(members.get(4), ii + 40);
-            addAddressesToDb(members.get(0), ii + 60);
-            addAddressesToDb(members.get(3), ii + 50);
-            addAddressesToDb(members.get(2), ii + 20);
-            addAddressesToDb(members.get(1), ii + 11);
+            addEntitiesToDb(members.get(4), ii + 40);
+            addEntitiesToDb(members.get(0), ii + 60);
+            addEntitiesToDb(members.get(3), ii + 50);
+            addEntitiesToDb(members.get(2), ii + 20);
+            addEntitiesToDb(members.get(1), ii + 11);
         }
 
 
@@ -168,9 +168,9 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.pageName, String.valueOf(page));
+        valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
 
-        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
@@ -183,20 +183,20 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
 
     @Test
     public void getListPage_sortColumn() throws Exception {
-        addAddressesToDb(members.get(4), 4);
-        addAddressesToDb(members.get(0), 0);
-        addAddressesToDb(members.get(3), 5);
-        addAddressesToDb(members.get(2), 2);
-        addAddressesToDb(members.get(1), 1);
+        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(0), 0);
+        addEntitiesToDb(members.get(3), 5);
+        addEntitiesToDb(members.get(2), 2);
+        addEntitiesToDb(members.get(1), 1);
 
         // sort by id
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "id");
+        valueMap.add(PagingConfig.SORT_NAME, "id");
 
-        var actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
@@ -209,9 +209,9 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                 .sorted(Comparator.comparing(AddressEntity::getAddress1)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "address1");
+        valueMap.add(PagingConfig.SORT_NAME, "address1");
 
-        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getAddress1)).toList(), actual);
@@ -224,9 +224,9 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                 .sorted(Comparator.comparing(AddressEntity::getAddress1)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "address2");
+        valueMap.add(PagingConfig.SORT_NAME, "address2");
 
-        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getAddress2)).toList(), actual);
@@ -239,9 +239,9 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                 .sorted(Comparator.comparing(AddressEntity::getCity)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "city");
+        valueMap.add(PagingConfig.SORT_NAME, "city");
 
-        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getCity)).toList(), actual);
@@ -254,9 +254,9 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                 .sorted(Comparator.comparing(AddressEntity::getState)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "state");
+        valueMap.add(PagingConfig.SORT_NAME, "state");
 
-        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getState)).toList(), actual);
@@ -269,9 +269,9 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
                 .sorted(Comparator.comparing(AddressEntity::getZip)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "zip");
+        valueMap.add(PagingConfig.SORT_NAME, "zip");
 
-        actual = executeGetListPage(AddressDto.class, "/addresses", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getZip)).toList(), actual);
@@ -287,7 +287,7 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
         create.setMemberId(members.get(0).getId());
 
         // perform POST
-        var ret = mockMvc.perform(post("/addresses")
+        var ret = mockMvc.perform(post(path)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(create)))
@@ -306,7 +306,7 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     @Test
     public void deleteAddress_status_noContent() throws Exception {
         // create several addresses
-        var entities = addAddressesToDb(members.get(1), 0);
+        var entities = addEntitiesToDb(members.get(1), 0);
         var id = entities.get(0).getId();
 
         // perform DELETE
@@ -322,7 +322,7 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
     @Test
     public void update_returns_addressDto_status_ok() throws Exception {
         // create several addresses
-        var entities = addAddressesToDb(members.get(1), 0);
+        var entities = addEntitiesToDb(members.get(1), 0);
         var update = AddressCreators.createAddressCreateDto(members.get(1).getId());
         var id = entities.get(1).getId();
 
@@ -341,8 +341,8 @@ public class AddressIntegrationTests extends IntegrationTestsBase {
         verify(update, entity.get());
     }
 
-    private List<AddressEntity> addAddressesToDb(MemberEntity member, int startFlag) {
-        var entities = AddressCreators.createEntityList(3, startFlag);
+    private List<AddressEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
+        var entities = AddressCreators.createAddressEntityList(3, startFlag);
         entities.forEach(e -> e.setMember(member));
         entities.get(0).setAddressType(AddressType.Home);
         entities.get(1).setAddressType(AddressType.Work);

@@ -22,12 +22,14 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
+import static com.smh.club.api.helpers.datacreators.AddressCreators.createAddressDtoList;
+import static com.smh.club.api.helpers.datacreators.AddressCreators.createAddressEntityList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AddressServiceTests extends TempCrudServiceBase {
+public class AddressServiceTests extends ServiceTests {
     @Mock private MembersRepo memRepoMock;
     @Mock private AddressRepo addRepoMock;
     @Mock private AddressMapper addMapMock;
@@ -149,11 +151,11 @@ public class AddressServiceTests extends TempCrudServiceBase {
     @Test
     public void getAddressListPage_returnsAddressList() {
         // setup
-        var entityList = AddressCreators.createEntityList(10);
+        var entityList = createAddressEntityList(10);
         var page = createEntityPage(entityList, pageableMock, 200);
 
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(addMapMock.toAddressDtoList(page.getContent())).thenReturn(AddressCreators.createAddressDtoList(10));
+        when(addMapMock.toDtoList(page.getContent())).thenReturn(createAddressDtoList(10));
 
         // execute
         var pageResponse = svc.getAddressListPage(PageParams.getDefault());
@@ -163,7 +165,7 @@ public class AddressServiceTests extends TempCrudServiceBase {
         assertEquals(page.getTotalElements(), pageResponse.getTotalCount());
         assertEquals(page.getContent().size(), pageResponse.getItems().size());
         verify(addRepoMock).findAll(any(PageRequest.class));
-        verify(addMapMock).toAddressDtoList(page.getContent());
+        verify(addMapMock).toDtoList(page.getContent());
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
@@ -171,10 +173,10 @@ public class AddressServiceTests extends TempCrudServiceBase {
     public void getItem_returns_address() {
         // setup
         int id = 1;
-        var entity = AddressCreators.createEntity(id);
+        var entity = AddressCreators.createAddressEntity(id);
         var address = AddressCreators.createAddressDto(id);
         when(addRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(addMapMock.toAddressDto(entity)).thenReturn(address);
+        when(addMapMock.toDto(entity)).thenReturn(address);
 
         // execute
         var ret = svc.getAddress(id);
@@ -182,7 +184,7 @@ public class AddressServiceTests extends TempCrudServiceBase {
         // verify
         assertTrue(ret.isPresent());
         verify(addRepoMock).findById(id);
-        verify(addMapMock).toAddressDto(entity);
+        verify(addMapMock).toDto(entity);
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
@@ -212,10 +214,10 @@ public class AddressServiceTests extends TempCrudServiceBase {
         var address = AddressCreators.createAddressDto(1);
         address.setMemberId(memberId);
 
-        var entity = AddressCreators.createEntity(1);
+        var entity = AddressCreators.createAddressEntity(1);
         when(addRepoMock.save(entity)).thenReturn(entity);
-        when(addMapMock.toAddressEntity(create)).thenReturn(entity);
-        when(addMapMock.toAddressDto(entity)).thenReturn(address);
+        when(addMapMock.toEntity(create)).thenReturn(entity);
+        when(addMapMock.toDto(entity)).thenReturn(address);
 
         // execute
         var ret = svc.createAddress(create);
@@ -225,8 +227,8 @@ public class AddressServiceTests extends TempCrudServiceBase {
         assertEquals(ret, address);
         verify(memRepoMock).getReferenceById(member.getId());
         verify(addRepoMock).save(entity);
-        verify(addMapMock).toAddressEntity(create);
-        verify(addMapMock).toAddressDto(entity);
+        verify(addMapMock).toEntity(create);
+        verify(addMapMock).toDto(entity);
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 
@@ -234,14 +236,14 @@ public class AddressServiceTests extends TempCrudServiceBase {
     public void updateAddress_returns_address() {
         // setup
         int id = 1;
-        var entity = AddressCreators.createEntity(id);
+        var entity = AddressCreators.createAddressEntity(id);
         var update = AddressCreators.createAddressCreateDto(id);
         var address = AddressCreators.createAddressDto(id);
 
         when(addRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
-        when(addMapMock.updateAddressEntity(update, entity)).thenReturn(entity);
-        when(addMapMock.toAddressDto(entity)).thenReturn(address);
+        when(addMapMock.updateEntity(update, entity)).thenReturn(entity);
+        when(addMapMock.toDto(entity)).thenReturn(address);
 
         // execute
         var ret = svc.updateAddress(id, update);
@@ -250,8 +252,8 @@ public class AddressServiceTests extends TempCrudServiceBase {
         assertTrue(ret.isPresent());
         verify(addRepoMock).findByIdAndMemberId(id, id);
 
-        verify(addMapMock).updateAddressEntity(update, entity);
-        verify(addMapMock).toAddressDto(entity);
+        verify(addMapMock).updateEntity(update, entity);
+        verify(addMapMock).toDto(entity);
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 

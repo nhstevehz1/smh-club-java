@@ -27,12 +27,12 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void from_addressEntity_to_addressCreateDto() {
+    public void from_createDto_to_entity() {
         // setup
         var address = AddressCreators.createAddressCreateDto(1);
 
         // execute
-        var entity = mapper.toAddressEntity(address);
+        var entity = mapper.toEntity(address);
 
         // verify
         assertNull(entity.getMember());
@@ -51,13 +51,13 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void from_entity_to_addressDto() {
+    public void from_entity_to_dto() {
         // setup
         var member = MemberCreators.createMemberEntity(10);
-        var entity = AddressCreators.createEntity(5, member);
+        var entity = AddressCreators.createAddressEntity(5, member);
 
         // execute
-        var dataObject = mapper.toAddressDto(entity);
+        var dataObject = mapper.toDto(entity);
 
         // verify
         assertEquals(entity.getId(), dataObject.getId());
@@ -71,13 +71,13 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void update_addressEntity_from_createAddressDto() {
+    public void update_entity_from_createDto() {
         // setup
         var address = AddressCreators.createAddressCreateDto(1);
-        var entity = AddressCreators.createEntity(1);
+        var entity = AddressCreators.createAddressEntity(1);
 
         // execute
-        mapper.updateAddressEntity(address, entity);
+        mapper.updateEntity(address, entity);
 
         // verify
         assertEquals(entity.getAddress1(), address.getAddress1());
@@ -90,14 +90,14 @@ public class AddressMapperTests {
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
-    public void to_addressDtoList_from_entityList(int size) {
+    public void to_dtoList_from_entityList(int size) {
         // setup
         var member = MemberCreators.createMemberEntity(1);
-        var entityList = AddressCreators.createEntityList(size, member);
+        var entityList = AddressCreators.createAddressEntityList(size, member);
         entityList.sort(Comparator.comparingInt(AddressEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toAddressDtoList(entityList);
+        var dataObjectList = mapper.toDtoList(entityList);
         dataObjectList.sort(Comparator.comparingInt(AddressDto::getId));
 
         // verify

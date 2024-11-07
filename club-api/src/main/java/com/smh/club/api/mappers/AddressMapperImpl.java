@@ -19,23 +19,23 @@ public class AddressMapperImpl extends DataObjectMapperBase implements AddressMa
     }
 
     @Override
-    public AddressEntity toAddressEntity(AddressCreateDto addressCreateDto) {
-        return modelMapper.map(addressCreateDto, AddressEntity.class);
+    public AddressEntity toEntity(AddressCreateDto createDto) {
+        return modelMapper.map(createDto, AddressEntity.class);
     }
 
     @Override
-    public AddressDto toAddressDto(AddressEntity entity) {
+    public AddressDto toDto(AddressEntity entity) {
         return modelMapper.map(entity, AddressDto.class);
     }
 
     @Override
-    public AddressEntity updateAddressEntity(AddressCreateDto dataObject, AddressEntity entity) {
+    public AddressEntity updateEntity(AddressCreateDto dataObject, AddressEntity entity) {
         modelMapper.map(dataObject, entity);
         return entity;
     }
 
     @Override
-    public List<AddressDto> toAddressDtoList(List<AddressEntity> source) {
+    public List<AddressDto> toDtoList(List<AddressEntity> source) {
         return mapList(source, AddressDto.class);
     }
 
@@ -49,6 +49,5 @@ public class AddressMapperImpl extends DataObjectMapperBase implements AddressMa
         TypeMap<AddressDto, AddressEntity> entTypeMap
                 = this.modelMapper.createTypeMap(AddressDto.class, AddressEntity.class);
         entTypeMap.addMappings(m -> m.skip(AddressEntity::setMember));
-
     }
 }

@@ -8,8 +8,8 @@ import com.smh.club.api.dto.AddressDto;
 import java.util.List;
 
 public interface AddressMapper {
-    AddressEntity toAddressEntity(AddressCreateDto addressCreateDto);
-    AddressDto toAddressDto(AddressEntity addressEntity);
-    AddressEntity updateAddressEntity(AddressCreateDto addressCreateDto, AddressEntity entity);
-    List<AddressDto> toAddressDtoList(List<AddressEntity> addressEntityList);
+    AddressEntity toEntity(AddressCreateDto createDto);
+    AddressDto toDto(AddressEntity entity);
+    AddressEntity updateEntity(AddressCreateDto updateDto, AddressEntity entity);
+    List<AddressDto> toDtoList(List<AddressEntity> entityList);
 }

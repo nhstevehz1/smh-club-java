@@ -51,7 +51,7 @@ public class AddressServiceImpl implements AddressService {
         return PageResponse.<AddressDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(addressMapper.toAddressDtoList(page.getContent()))
+                .items(addressMapper.toDtoList(page.getContent()))
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class AddressServiceImpl implements AddressService {
     public Optional<AddressDto> getAddress(int id) {
         log.debug("Getting address by id: {}", id);
 
-        return addressRepo.findById(id).map(addressMapper::toAddressDto);
+        return addressRepo.findById(id).map(addressMapper::toDto);
     }
 
     @Override
@@ -68,9 +68,9 @@ public class AddressServiceImpl implements AddressService {
 
         var memberRef = memberRepo.getReferenceById(address.getMemberId());
 
-        var addressEntity = addressMapper.toAddressEntity(address);
+        var addressEntity = addressMapper.toEntity(address);
         addressEntity.setMember(memberRef);
-        return addressMapper.toAddressDto(addressRepo.save(addressEntity));
+        return addressMapper.toDto(addressRepo.save(addressEntity));
     }
 
     @Override
@@ -78,8 +78,8 @@ public class AddressServiceImpl implements AddressService {
         log.debug("Updating address id: {}, with data: {}", id, addressDto);
 
         return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())
-                .map(e -> addressMapper.updateAddressEntity(addressDto, e))
-                .map(addressMapper::toAddressDto);
+                .map(e -> addressMapper.updateEntity(addressDto, e))
+                .map(addressMapper::toDto);
 
     }
 

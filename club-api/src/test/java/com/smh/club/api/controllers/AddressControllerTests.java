@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.AddressService;
 import com.smh.club.api.dto.AddressCreateDto;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.AddressType;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,10 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import static com.smh.club.api.helpers.datacreators.AddressCreators.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -29,34 +28,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @WebMvcTest(AddressControllerImpl.class)
-public class AddressControllerTests {
+public class AddressControllerTests extends ControllerTests {
     @MockBean
     private AddressService svc;
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper mapper;
-
+    protected AddressControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
+        super(mockMvc, objMapper, new ModelMapper(),"/addresses");
+    }
+    
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
+        var ret = createAddressDtoList(5);
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
         var response = PageResponse.<AddressDto>builder()
                 .totalPages(100).totalCount(20)
-                .items(createAddressDtoList(5))
+                .items(ret)
                 .build();
 
         when(svc.getAddressListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
-        mockMvc.perform(get("/addresses")
+        mockMvc.perform(get(path)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(params)))
+                    .content(objMapper.writeValueAsString(params)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total-pages").value(response.getTotalPages()))
                 .andExpect(jsonPath("$.total-count").value(response.getTotalCount()))
@@ -71,21 +70,21 @@ public class AddressControllerTests {
     public void shouldReturnAddress() throws Exception {
         // setup
         var id = 12;
-        var address = createAddressDto(id);
-        when(svc.getAddress(id)).thenReturn(Optional.of(address));
+        var ret = createAddressDto(id);
+        when(svc.getAddress(id)).thenReturn(Optional.of(ret));
 
         // execute
-        mockMvc.perform(get("/addresses/{id}", id)
+        mockMvc.perform(get(path + "/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(address.getId()))
-                .andExpect(jsonPath("$.member-id").value(address.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(address.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(address.getAddress2()))
-                .andExpect(jsonPath("$.city").value(address.getCity()))
-                .andExpect(jsonPath("$.state").value(address.getState()))
-                .andExpect(jsonPath("$.zip").value(address.getZip()))
-                .andExpect(jsonPath("$.address-type").value(address.getAddressType().getAddressName()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.address1").value(ret.getAddress1()))
+                .andExpect(jsonPath("$.address2").value(ret.getAddress2()))
+                .andExpect(jsonPath("$.city").value(ret.getCity()))
+                .andExpect(jsonPath("$.state").value(ret.getState()))
+                .andExpect(jsonPath("$.zip").value(ret.getZip()))
+                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressName()))
                 .andDo(print());
 
         verify(svc).getAddress(id);
@@ -99,7 +98,7 @@ public class AddressControllerTests {
         when(svc.getAddress(id)).thenReturn(Optional.empty());
 
         // execute
-        mockMvc.perform(get("/addresses/{id}", id)
+        mockMvc.perform(get(path + "/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -112,27 +111,27 @@ public class AddressControllerTests {
     public void shouldCreateAddress() throws Exception {
         // setup
         var id = 12;
-        var addressCreateDto = createdAddressCreateDto(id);
-        var addressDto = createAddressDto(id);
-        when(svc.createAddress(addressCreateDto)).thenReturn(addressDto);
+        var ret = createAddressDto(id);
+        var create = modelMapper.map(ret, AddressCreateDto.class);
+        when(svc.createAddress(create)).thenReturn(ret);
 
         // execute and verify
-        mockMvc.perform(post("/addresses")
+        mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(addressCreateDto)))
+                        .content(objMapper.writeValueAsString(create)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.member-id").value(addressDto.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(addressDto.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(addressDto.getAddress2()))
-                .andExpect(jsonPath("$.city").value(addressDto.getCity()))
-                .andExpect(jsonPath("$.state").value(addressDto.getState()))
-                .andExpect(jsonPath("$.zip").value(addressDto.getZip()))
-                .andExpect(jsonPath("$.address-type").value(addressDto.getAddressType().getAddressName()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.address1").value(ret.getAddress1()))
+                .andExpect(jsonPath("$.address2").value(ret.getAddress2()))
+                .andExpect(jsonPath("$.city").value(ret.getCity()))
+                .andExpect(jsonPath("$.state").value(ret.getState()))
+                .andExpect(jsonPath("$.zip").value(ret.getZip()))
+                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressName()))
                 .andDo(print());
 
-        verify(svc).createAddress(addressCreateDto);
+        verify(svc).createAddress(create);
         verifyNoMoreInteractions(svc);
     }
 
@@ -140,26 +139,26 @@ public class AddressControllerTests {
     public void shouldUpdateAddress() throws Exception {
         // setup
         var id = 10;
-        var updateDto = createdAddressCreateDto(id);
-        var addressDto = createAddressDto(10);
-        when(svc.updateAddress(id, updateDto)).thenReturn(Optional.of(addressDto));
+        var update = createAddressCreateDto(10);
+        var ret = modelMapper.map(update, AddressDto.class);
+        when(svc.updateAddress(id, update)).thenReturn(Optional.of(ret));
 
         // execute and verify
         mockMvc.perform(put("/addresses/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(addressDto))).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(addressDto.getId()))
-                .andExpect(jsonPath("$.member-id").value(addressDto.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(addressDto.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(addressDto.getAddress2()))
-                .andExpect(jsonPath("$.city").value(addressDto.getCity()))
-                .andExpect(jsonPath("$.state").value(addressDto.getState()))
-                .andExpect(jsonPath("$.zip").value(addressDto.getZip()))
-                .andExpect(jsonPath("$.address-type").value(addressDto.getAddressType().getAddressName()))
+                        .content(objMapper.writeValueAsString(update))).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.address1").value(ret.getAddress1()))
+                .andExpect(jsonPath("$.address2").value(ret.getAddress2()))
+                .andExpect(jsonPath("$.city").value(ret.getCity()))
+                .andExpect(jsonPath("$.state").value(ret.getState()))
+                .andExpect(jsonPath("$.zip").value(ret.getZip()))
+                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressName()))
                 .andDo(print());
 
-        verify(svc).updateAddress(id, updateDto);
+        verify(svc).updateAddress(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -167,18 +166,18 @@ public class AddressControllerTests {
     public void update_address_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var address = createdAddressCreateDto(id);
-        when(svc.updateAddress(id, address)).thenReturn(Optional.empty());
+        var update = createAddressCreateDto(id);
+        when(svc.updateAddress(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
-        mockMvc.perform(put("/addresses/{id}", id)
+        mockMvc.perform(put(path + "/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(address)))
+                        .content(objMapper.writeValueAsString(update)))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateAddress(id, address);
+        verify(svc).updateAddress(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -189,7 +188,7 @@ public class AddressControllerTests {
         doNothing().when(svc).deleteAddress(id);
 
         // execute and verify
-        mockMvc.perform(delete("/addresses/{id}", id))
+        mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
     }
@@ -201,46 +200,10 @@ public class AddressControllerTests {
         when(svc.getAddressCount()).thenReturn(CountResponse.of(count));
 
         // execute and verify
-        mockMvc.perform(get("/addresses/count"))
+        mockMvc.perform(get(path + "/count"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.count").value(20))
                 .andDo(print());
 
-    }
-
-
-    private AddressDto createAddressDto(int flag) {
-        return AddressDto.builder()
-                .id(flag)
-                .memberId(flag)
-                .address1("address1_" + flag)
-                .address2("address2_" + flag)
-                .city("city_" + flag)
-                .state("state_" + flag)
-                .zip("zip_" + flag)
-                .addressType(AddressType.Other)
-                .build();
-    }
-
-    private List<AddressDto> createAddressDtoList(int size) {
-        List<AddressDto> list = new ArrayList<>(size);
-
-        for (int ii = 0; ii < size; ii++) {
-            list.add(createAddressDto(ii));
-        }
-
-        return list;
-    }
-
-    private AddressCreateDto createdAddressCreateDto(int flag) {
-        return AddressCreateDto.builder()
-                .memberId(flag)
-                .address1("address1_" + flag)
-                .address2("address2_" + flag)
-                .city("city_" + flag)
-                .state("state_" + flag)
-                .zip("zip_" + flag)
-                .addressType(AddressType.Other)
-                .build();
     }
 }
