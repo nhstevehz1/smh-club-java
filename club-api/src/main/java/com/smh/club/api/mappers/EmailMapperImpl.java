@@ -2,6 +2,7 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.domain.entities.EmailEntity;
+import com.smh.club.api.dto.EmailCreateDto;
 import com.smh.club.api.dto.EmailDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -19,8 +20,8 @@ public class EmailMapperImpl extends DataObjectMapperBase implements EmailMapper
     }
 
     @Override
-    public EmailEntity toEntity(EmailDto dataObject) {
-        return modelMapper.map(dataObject, EmailEntity.class);
+    public EmailEntity toEntity(EmailCreateDto cemailCreateDto) {
+        return modelMapper.map(cemailCreateDto, EmailEntity.class);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class EmailMapperImpl extends DataObjectMapperBase implements EmailMapper
     }
 
     @Override
-    public EmailEntity updateEntity(EmailDto dataObject, EmailEntity entity) {
+    public EmailEntity updateEntity(EmailCreateDto dataObject, EmailEntity entity) {
         modelMapper.map(dataObject, entity);
         return entity;
     }

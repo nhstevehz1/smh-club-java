@@ -2,12 +2,14 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.EmailService;
+import com.smh.club.api.dto.EmailCreateDto;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.EmailType;
+import com.smh.club.api.helpers.datacreators.EmailCreators;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static com.smh.club.api.helpers.datacreators.EmailCreators.createEmailDto;
+import static com.smh.club.api.helpers.datacreators.EmailCreators.createEmailDtoList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,34 +30,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @WebMvcTest(EmailControllerImpl.class)
-public class EmailControllerTests extends ControllerTestBase<EmailDto> {
+public class EmailControllerTests extends ControllerTests {
+
     @MockBean
     private EmailService svc;
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper mapper;
+    EmailControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
+        super(mockMvc, objMapper,new ModelMapper(), "/emails");
+    }
 
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
+        var ret = createEmailDtoList(5);
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
         var response = PageResponse.<EmailDto>builder()
                 .totalPages(100).totalCount(20)
-                .items(createDataObjectList(5))
+                .items(ret)
                 .build();
 
         when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
-        mockMvc.perform(get("/emails")
+        mockMvc.perform(get(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(params)))
+                        .content(objMapper.writeValueAsString(params)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total-pages").value(response.getTotalPages()))
                 .andExpect(jsonPath("$.total-count").value(response.getTotalCount()))
@@ -68,17 +73,17 @@ public class EmailControllerTests extends ControllerTestBase<EmailDto> {
     public void shouldReturnEmail() throws Exception {
         // setup
         var id = 12;
-        var email = createDataObject(id);
-        when(svc.getItem(id)).thenReturn(Optional.of(email));
+        var ret = createEmailDto(id);
+        when(svc.getItem(id)).thenReturn(Optional.of(ret));
 
         // execute
-        mockMvc.perform(get("/emails/{id}", id)
+        mockMvc.perform(get(path + "/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(email.getId()))
-                .andExpect(jsonPath("$.member-id").value(email.getMemberId()))
-                .andExpect(jsonPath("$.email").value(email.getEmail()))
-                .andExpect(jsonPath("$.email-type").value(email.getEmailType().getEmailName()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.email").value(ret.getEmail()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailName()))
                 .andDo(print());
 
         verify(svc).getItem(id);
@@ -92,7 +97,7 @@ public class EmailControllerTests extends ControllerTestBase<EmailDto> {
         when(svc.getItem(id)).thenReturn(Optional.empty());
 
         // execute
-        mockMvc.perform(get("/emails/{id}", id)
+        mockMvc.perform(get(path + "/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -105,22 +110,22 @@ public class EmailControllerTests extends ControllerTestBase<EmailDto> {
     public void shouldCreateEmail() throws Exception {
         // setup
         var id = 12;
-        var email = createDataObject(id);
-        when(svc.createItem(email)).thenReturn(email);
+        var ret = createEmailDto(id);
+        var create = modelMapper.map(ret, EmailCreateDto.class);
+        when(svc.createItem(create)).thenReturn(ret);
 
         // execute and verify
-        mockMvc.perform(post("/emails")
+        mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(email)))
+                .content(objMapper.writeValueAsString(create)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(email.getId()))
-                .andExpect(jsonPath("$.member-id").value(email.getMemberId()))
-                .andExpect(jsonPath("$.email").value(email.getEmail()))
-                .andExpect(jsonPath("$.email-type").value(email.getEmailType().getEmailName()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.email").value(ret.getEmail()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailName()))
                 .andDo(print());
 
-        verify(svc).createItem(email);
+        verify(svc).createItem(create);
         verifyNoMoreInteractions(svc);
     }
 
@@ -129,22 +134,23 @@ public class EmailControllerTests extends ControllerTestBase<EmailDto> {
     public void shouldUpdateEmail() throws Exception {
         // setup
         var id = 12;
-        var email = createDataObject(id);
-        when(svc.updateItem(id, email)).thenReturn(Optional.of(email));
+        var ret = createEmailDto(id);
+        var update = modelMapper.map(ret, EmailCreateDto.class);
+        when(svc.updateItem(id, update)).thenReturn(Optional.of(ret));
 
         // execute and verify
-        mockMvc.perform(put("/emails/{id}", id)
+        mockMvc.perform(put(path + "/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(email)))
+                .content(objMapper.writeValueAsString(ret)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(email.getId()))
-                .andExpect(jsonPath("$.member-id").value(email.getMemberId()))
-                .andExpect(jsonPath("$.email").value(email.getEmail()))
-                .andExpect(jsonPath("$.email-type").value(email.getEmailType().getEmailName()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.email").value(ret.getEmail()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailName()))
                 .andDo(print());
 
-        verify(svc).updateItem(id, email);
+        verify(svc).updateItem(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -152,18 +158,18 @@ public class EmailControllerTests extends ControllerTestBase<EmailDto> {
     public void update_email_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var email = createDataObject(id);
-        when(svc.updateItem(id, email)).thenReturn(Optional.empty());
+        var update = EmailCreators.createEmailCreateDto(id);
+        when(svc.updateItem(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
-        mockMvc.perform(put("/emails/{id}", email.getId())
+        mockMvc.perform(put(path + "/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(email)))
+                        .content(objMapper.writeValueAsString(update)))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateItem(email.getId(), email);
+        verify(svc).updateItem(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -174,7 +180,7 @@ public class EmailControllerTests extends ControllerTestBase<EmailDto> {
         doNothing().when(svc).deleteItem(id);
 
         // execute and verify
-        mockMvc.perform(delete("/emails/{id}", id))
+        mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
@@ -190,22 +196,12 @@ public class EmailControllerTests extends ControllerTestBase<EmailDto> {
         when(svc.getItemCount()).thenReturn(CountResponse.of(count));
 
         // execute and verify
-        mockMvc.perform(get("/emails/count"))
+        mockMvc.perform(get(path + "/count"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.count").value(20))
                 .andDo(print());
 
         verify(svc).getItemCount();
         verifyNoMoreInteractions(svc);
-    }
-
-    @Override
-    protected EmailDto createDataObject(int flag) {
-        return EmailDto.builder()
-                .id(flag)
-                .memberId(flag)
-                .email("something@test.com")
-                .emailType(EmailType.Work)
-                .build();
     }
 }

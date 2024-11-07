@@ -4,6 +4,7 @@ import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.common.services.EmailService;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.EmailCreateDto;
 import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -28,9 +29,7 @@ public class EmailServiceImpl implements EmailService {
     
     private final EmailRepo emailRepo;
     private final MembersRepo memberRepo;
-    
     private final EmailMapper emailMapper;
-    
     private final Map<String, String> sortColumnMap = initSortColumnMap();
 
     @Override
@@ -62,25 +61,21 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public EmailDto createItem(EmailDto email) {
+    public EmailDto createItem(EmailCreateDto email) {
         log.debug("creating email: {}", email);
 
         var memberRef = memberRepo.getReferenceById(email.getMemberId());
-        var addressEntity = emailMapper.toEntity(email);
-        addressEntity.setMember(memberRef);
-        return emailMapper.toDto(emailRepo.save(addressEntity));
+        var emailEntity = emailMapper.toEntity(email);
+        emailEntity.setMember(memberRef);
+        return emailMapper.toDto(emailRepo.save(emailEntity));
     }
 
     @Override
-    public Optional<EmailDto> updateItem(int id, EmailDto emailDto) {
-        log.debug("Updating email, id: {}, with data: {}", id, emailDto);
+    public Optional<EmailDto> updateItem(int id, EmailCreateDto emailCreateDto) {
+        log.debug("Updating email, id: {}, with data: {}", id, emailCreateDto);
 
-        if(id != emailDto.getId()) {
-            throw new IllegalArgumentException();
-        }
-
-        return emailRepo.findByIdAndMemberId(id, emailDto.getMemberId())
-                .map(e -> emailMapper.updateEntity(emailDto, e))
+        return emailRepo.findByIdAndMemberId(id, emailCreateDto.getMemberId())
+                .map(e -> emailMapper.updateEntity(emailCreateDto, e))
                 .map(emailMapper::toDto);
     }
 
