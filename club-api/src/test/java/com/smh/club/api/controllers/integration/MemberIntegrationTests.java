@@ -81,7 +81,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         addEntitiesToDb(entitySize);
 
         var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();;
+                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
         assertEquals(entitySize, sorted.size());
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortDirName, Sort.Direction.DESC.toString());
@@ -102,7 +102,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         addEntitiesToDb(entitySize);
 
         var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();;
+                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sizeName, pageSize);
@@ -125,7 +125,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
 
         // sort by id
         var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getId)).toList();;
+                .stream().sorted(Comparator.comparingInt(MemberEntity::getId)).toList();
         assertEquals(entitySize, sorted.size());
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.sortName, "id");
@@ -140,7 +140,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
 
         // sort by member-number
         sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();;
+                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
@@ -156,7 +156,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
 
         // sort by first-name
         sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getFirstName)).toList();;
+                .stream().sorted(Comparator.comparing(MemberEntity::getFirstName)).toList();
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
@@ -204,7 +204,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
 
         //sort by joined-date
         sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getJoinedDate)).toList();;
+                .stream().sorted(Comparator.comparing(MemberEntity::getJoinedDate)).toList();
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
