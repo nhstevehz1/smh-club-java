@@ -15,19 +15,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public abstract class IntegrationTestsBase {
+public abstract class IntegrationTests {
 
     protected ObjectMapper mapper;
     protected MockMvc mockMvc;
+    protected String path;
 
-    public IntegrationTestsBase(MockMvc mockMvc, ObjectMapper mapper) {
+
+    public IntegrationTests(MockMvc mockMvc, ObjectMapper mapper, String path) {
         this.mockMvc = mockMvc;
         this.mapper = mapper;
+        this.path = path;
     }
 
     protected <T> List<T> executeGetListPage(
             Class<T> clazz, String path, MultiValueMap<String,
             String> valueMap, int count, int pageSize) throws Exception {
+
         var pages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
         var length = Math.min(count, pageSize);
 

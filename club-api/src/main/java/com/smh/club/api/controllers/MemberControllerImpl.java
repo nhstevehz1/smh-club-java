@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.MemberController;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.controllers.config.PagingConfig;
+import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.dto.MemberCreateDto;
 import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
@@ -30,13 +30,13 @@ public class MemberControllerImpl implements MemberController {
     @GetMapping
     @Override
     public ResponseEntity<PageResponse<MemberDto>> getMemberListPage(
-            @RequestParam(value = PagingConfig.pageName,
+            @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
-            @RequestParam(value = PagingConfig.sizeName,
+            @RequestParam(value = PagingConfig.SIZE_NAME,
                     defaultValue = "${request.paging.size}") int size,
-            @RequestParam(value = PagingConfig.sortDirName,
+            @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.sortName,
+            @RequestParam(value = PagingConfig.SORT_NAME,
                     defaultValue = "default") String sort) {
 
         var pageParams = PageParams.builder()

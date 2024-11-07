@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class MemberServiceTests extends TempCrudServiceBase {
+public class MemberServiceTests extends ServiceTests {
 
     @Mock private MembersRepo repoMock;
     @Mock private MemberMapper mapperMock;

@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-public class TempCrudServiceBase {
+public class ServiceTests {
 
     protected <T> Page<T> createEntityPage(List<T> list, Pageable pageable, int total) {
         return new PageImpl<>(list, pageable, total);

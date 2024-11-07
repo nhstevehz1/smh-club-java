@@ -1,7 +1,7 @@
 package com.smh.club.api.controllers.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.controllers.config.PagingConfig;
+import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class MemberIntegrationTests extends IntegrationTestsBase {
+public class MemberIntegrationTests extends IntegrationTests {
 
     @Value("${request.paging.size}")
     private int defaultPageSize;
@@ -53,7 +53,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
 
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc,mapper);
+        super(mockMvc,mapper, "/members");
     }
 
     @ParameterizedTest
@@ -85,7 +85,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         assertEquals(entitySize, sorted.size());
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortDirName, Sort.Direction.DESC.toString());
+        valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
 
         var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
@@ -106,7 +106,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sizeName, pageSize);
+        valueMap.add(PagingConfig.SIZE_NAME, pageSize);
 
         var actual = executeGetListPage(MemberDto.class, "/members",
                 valueMap, sorted.size(), Integer.parseInt(pageSize));
@@ -128,7 +128,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.pageName, String.valueOf(page));
+        valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
 
         var actual = executeGetListPage(MemberDto.class, "/members",
                 valueMap, sorted.size(), defaultPageSize);
@@ -153,7 +153,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getId)).toList();
         assertEquals(entitySize, sorted.size());
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "id");
+        valueMap.add(PagingConfig.SORT_NAME, "id");
 
         var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
@@ -169,7 +169,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "member-number");
+        valueMap.add(PagingConfig.SORT_NAME, "member-number");
 
         actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
@@ -185,7 +185,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "first-name");
+        valueMap.add(PagingConfig.SORT_NAME, "first-name");
 
         actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
@@ -201,7 +201,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "last-name");
+        valueMap.add(PagingConfig.SORT_NAME, "last-name");
 
         actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
@@ -217,7 +217,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "birth-date");
+        valueMap.add(PagingConfig.SORT_NAME, "birth-date");
 
         actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
@@ -233,7 +233,7 @@ public class MemberIntegrationTests extends IntegrationTestsBase {
         assertEquals(entitySize, sorted.size());
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.sortName, "joined-date");
+        valueMap.add(PagingConfig.SORT_NAME, "joined-date");
 
         actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
 
