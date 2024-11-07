@@ -2,18 +2,24 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.MemberController;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.dto.MemberMinimumDto;
+import com.smh.club.api.controllers.config.PagingConfig;
+import com.smh.club.api.dto.MemberCreateDto;
 import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @RequestMapping(value = "members", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -21,45 +27,65 @@ public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberSvc;
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PageResponse<MemberMinimumDto>> getItemListPage(@RequestBody PageParams pageParams ) {
-        if (pageParams == null) {
-           pageParams = PageParams.getDefault();
-        }
 
-        return ResponseEntity.ok(memberSvc.getItemListPage(pageParams));
+    @GetMapping
+    @Override
+    public ResponseEntity<PageResponse<MemberDto>> getMemberListPage(
+            @RequestParam(value = PagingConfig.pageName,
+                    defaultValue = "${request.paging.page}") int page,
+            @RequestParam(value = PagingConfig.sizeName,
+                    defaultValue = "${request.paging.size}") int size,
+            @RequestParam(value = PagingConfig.sortDirName,
+                    defaultValue = "${request.paging.direction}") String sortDir,
+            @RequestParam(value = PagingConfig.sortName,
+                    defaultValue = "default") String sort) {
+
+        var pageParams = PageParams.builder()
+                .pageNumber(page)
+                .pageSize(size)
+                .sortDirection(Sort.Direction.fromString(sortDir))
+                .sortColumn(sort)
+                .build();
+
+        return ResponseEntity.ok(memberSvc.getMemberListPage(pageParams));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<MemberMinimumDto> getItem(@PathVariable int id) {
-        var ret = memberSvc.getItem(id);
+    @Override
+    public ResponseEntity<MemberDto> getMember(@PathVariable int id) {
+        var ret = memberSvc.getMember(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
+    @Override
     public ResponseEntity<CountResponse> getCount() {
-        return ResponseEntity.ok(memberSvc.getItemCount());
+        return ResponseEntity.ok(memberSvc.getMemberCount());
     }
 
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MemberMinimumDto> createItem(@RequestBody MemberMinimumDto memberMinimumDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createItem(memberMinimumDto));
+    @Override
+    public ResponseEntity<MemberDto> createMember(@RequestBody MemberCreateDto member) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MemberMinimumDto> updateItem(@PathVariable int id, @RequestBody MemberMinimumDto memberMinimumDto) {
-        var ret = memberSvc.updateItem(id, memberMinimumDto);
+    @Override
+    public ResponseEntity<MemberDto> updateMember(@PathVariable int id, @RequestBody MemberCreateDto member) {
+        var ret = memberSvc.updateMember(id,  member);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @Override
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable int id) {
-        memberSvc.deleteItem(id);
+    public ResponseEntity<Void> deleteMember(@PathVariable int id) {
+        memberSvc.deleteMember(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{id}/detail")
-    public ResponseEntity<MemberDto>  getMemberDetail(@PathVariable int id) {
+    @Override
+    public ResponseEntity<MemberDetailDto>  getMemberDetail(@PathVariable int id) {
         var ret = memberSvc.getMemberDetail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

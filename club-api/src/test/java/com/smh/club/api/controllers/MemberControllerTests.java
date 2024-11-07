@@ -2,8 +2,9 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.MemberService;
+import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
-import com.smh.club.api.dto.MemberMinimumDto;
+import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberControllerImpl.class)
-public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> {
+public class MemberControllerTests {
 
     @MockBean
     private MemberService svc;
@@ -41,12 +42,12 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<MemberMinimumDto>builder()
+        var response = PageResponse.<MemberDto>builder()
                 .totalPages(100).totalCount(20)
-                .items(createDataObjectList(5))
+                .items(MemberCreators.createMemberDtoList(5))
                 .build();
 
-        when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
+        when(svc.getMemberListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
         mockMvc.perform(get("/members")
@@ -59,7 +60,7 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
                 .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
                 .andDo(print());
 
-        verify(svc).getItemListPage(any(PageParams.class));
+        verify(svc).getMemberListPage(any(PageParams.class));
         verifyNoMoreInteractions(svc);
     }
 
@@ -67,8 +68,8 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
     public void shouldReturnMember() throws Exception {
         // setup
         var id = 12;
-        var member = createDataObject(id);
-        when(svc.getItem(id)).thenReturn(Optional.of(member));
+        var member = MemberCreators.createMemberDto(id);
+        when(svc.getMember(id)).thenReturn(Optional.of(member));
 
         // execute
         mockMvc.perform(get("/members/{id}", id)
@@ -84,7 +85,7 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
                 .andExpect(jsonPath("$.joined-date").value(member.getJoinedDate().toString()))
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getMember(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -92,7 +93,7 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
     public void shouldReturnNotFound_when_memberId_does_not_exist() throws Exception {
         // setup
         var id = 12;
-        when(svc.getItem(id)).thenReturn(Optional.empty());
+        when(svc.getMember(id)).thenReturn(Optional.empty());
 
         // execute
         mockMvc.perform(get("/members/{id}", id)
@@ -100,15 +101,16 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
                 .andExpect(status().isNotFound())
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getMember(id);
         verifyNoMoreInteractions(svc);
     }
 
     @Test
     public void shouldCreateMember() throws Exception {
         // setup
-        var ret = createDataObject(0);
-        when(svc.createItem(ret)).thenReturn(ret);
+        var ret = MemberCreators.createMemberDto(0);
+        var create = MemberCreators.createMemberCreateDto(0);
+        when(svc.createMember(create)).thenReturn(ret);
 
         // execute and verify
         mockMvc.perform(post("/members")
@@ -125,7 +127,7 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
                 .andExpect(jsonPath("$.joined-date").value(ret.getJoinedDate().toString()))
                 .andDo(print());
 
-        verify(svc).createItem(ret);
+        verify(svc).createMember(create);
         verifyNoMoreInteractions(svc);
     }
 
@@ -133,8 +135,9 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
     public void shouldUpdateMember() throws Exception {
         // setup
         var id = 10;
-        var ret = createDataObject(10);
-        when(svc.updateItem(id, ret)).thenReturn(Optional.of(ret));
+        var ret = MemberCreators.createMemberDto(10);
+        var update = MemberCreators.createMemberCreateDto(10);
+        when(svc.updateMember(id, update)).thenReturn(Optional.of(ret));
 
         // execute and verify
         mockMvc.perform(put("/members/{id}", ret.getId())
@@ -151,7 +154,7 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
                 .andExpect(jsonPath("$.joined-date").value(ret.getJoinedDate().toString()))
                 .andDo(print());
 
-        verify(svc).updateItem(ret.getId(), ret);
+        verify(svc).updateMember(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -159,18 +162,18 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
     public void update_member_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var member = createDataObject(id);
-        when(svc.updateItem(id, member)).thenReturn(Optional.empty());
+        var update = MemberCreators.createMemberCreateDto(id);
+        when(svc.updateMember(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
-        mockMvc.perform(put("/members/{id}", member.getId())
+        mockMvc.perform(put("/members/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(member)))
+                        .content(mapper.writeValueAsString(update)))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateItem(member.getId(), member);
+        verify(svc).updateMember(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -178,14 +181,14 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
     public void shouldDeleteMember() throws Exception {
         // setup
         var id = 1;
-        doNothing().when(svc).deleteItem(id);
+        doNothing().when(svc).deleteMember(id);
 
         // execute and verify
         mockMvc.perform(delete("/members/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
-        verify(svc).deleteItem(id);
+        verify(svc).deleteMember(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -237,10 +240,10 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
 
     }
 
-    private MemberDto createMemberDto(int flag) {
+    private MemberDetailDto createMemberDto(int flag) {
         var now = LocalDate.now();
 
-        return MemberDto.builder().id(flag)
+        return MemberDetailDto.builder().id(flag)
                 .memberNumber(flag + 10)
                 .firstName("first_" + flag)
                 .middleName("middle_" + flag)
@@ -251,19 +254,5 @@ public class MemberControllerTests extends ControllerTestBase<MemberMinimumDto> 
                 .build();
     }
 
-    @Override
-    protected MemberMinimumDto createDataObject(int flag) {
-        var now = LocalDate.now();
 
-        return MemberMinimumDto.builder()
-                .id(flag)
-                .memberNumber(flag + 10)
-                .firstName("first_" + flag)
-                .middleName("middle_" + flag)
-                .lastName("last_" + flag)
-                .suffix("suffix_" + flag)
-                .birthDate(now.minusYears(30))
-                .joinedDate(now.minusYears(2))
-                .build();
-    }
 }

@@ -1,17 +1,15 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.dto.MemberMinimumDto;
+import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,12 +23,12 @@ public class MemberMapperTests {
     }
 
     @Test
-    public void mapper_toEntity() {
+    public void mapper_toMemberEntity() {
         // setup
-        var dataObject = createDataObject();
+        var dataObject = MemberCreators.createMemberCreateDto(30);
 
         // execute
-        var entity = mapper.toEntity(dataObject);
+        var entity = mapper.toMemberEntity(dataObject);
 
         // verify
         assertEquals(dataObject.getFirstName(), entity.getFirstName());
@@ -50,10 +48,10 @@ public class MemberMapperTests {
     @Test
     public void mapper_toDataObject() {
         // setup
-        var entity = createEntity();
+        var entity = MemberCreators.createMemberEntity(150);
 
         // execute
-        var dataObject = mapper.toDto(entity);
+        var dataObject = mapper.toMemberDetailDto(entity);
 
         // verify
         assertEquals(entity.getId(), dataObject.getId());
@@ -69,19 +67,14 @@ public class MemberMapperTests {
     @Test
     public void mapper_updateEntity() {
         // setup
-        var dataObject = createDataObject();
-        dataObject.setId(100);
-        dataObject.setMemberNumber(200);
+        var dataObject = MemberCreators.createMemberCreateDto(200);
+        var entity = MemberCreators.createMemberEntity(100);
 
-        var entity = createEntity();
-        entity.setId(100);
-        entity.setMemberNumber(100);
 
         // execute
-        mapper.updateEntity(dataObject, entity);
+        mapper.updateMemberEntity(dataObject, entity);
 
         // verify
-        assertEquals(dataObject.getId(), entity.getId());
         assertEquals(dataObject.getMemberNumber(), entity.getMemberNumber());
         assertEquals(dataObject.getFirstName(), entity.getFirstName());
         assertEquals(dataObject.getMiddleName(), entity.getMiddleName());
@@ -95,12 +88,12 @@ public class MemberMapperTests {
     @ValueSource(ints = {5, 10, 20})
     public void mapper_toDataObjectList(int size) {
         // setup
-        var entityList = createEntityList(size);
+        var entityList = MemberCreators.createMemeberEntityList(size);
         entityList.sort(Comparator.comparingInt(MemberEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toDtoList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(MemberMinimumDto::getId));
+        var dataObjectList = mapper.toMemberDtoList(entityList);
+        dataObjectList.sort(Comparator.comparingInt(MemberDto::getId));
 
         // verify
         assertEquals(entityList.size(), dataObjectList.size());
@@ -123,10 +116,10 @@ public class MemberMapperTests {
     @Test
     public void mapper_toMemberMinimum() {
         // setup
-        var entity = createEntity();
+        var entity = MemberCreators.createMemberEntity(20);
 
         // execute
-        var detail = mapper.toMemberDto(entity);
+        var detail = mapper.toMemberDetailDto(entity);
 
         // verify
         assertEquals(entity.getId(), detail.getId());
@@ -137,41 +130,5 @@ public class MemberMapperTests {
         assertEquals(entity.getSuffix(), detail.getSuffix());
         assertEquals(entity.getBirthDate(), detail.getBirthDate());
         assertEquals(entity.getJoinedDate(), detail.getJoinedDate());
-    }
-
-    private MemberEntity createEntity() {
-        return MemberEntity.builder()
-                .memberNumber(10)
-                .firstName("ent_firstName")
-                .middleName("ent_middleName")
-                .lastName("ent_lastName")
-                .suffix("ent_suffix")
-                .birthDate(LocalDate.now())
-                .joinedDate(LocalDate.now().minusYears(15))
-                .build();
-    }
-
-    private MemberMinimumDto createDataObject() {
-        return MemberMinimumDto.builder()
-                .memberNumber(50)
-                .firstName("m_firstName")
-                .middleName("m_middleName")
-                .lastName("m_lastName")
-                .suffix("m_suffix")
-                .birthDate(LocalDate.now())
-                .joinedDate(LocalDate.now().minusYears(10))
-                .build();
-    }
-
-    private List<MemberEntity> createEntityList(int size) {
-        List<MemberEntity> entityList = new ArrayList<>();
-        for (int ii = 0; ii < size; ii++ ) {
-            var entity = createEntity();
-            entity.setId(ii);
-            entity.setMemberNumber(ii + 50);
-            entityList.add(entity);
-        }
-
-        return entityList;
     }
 }

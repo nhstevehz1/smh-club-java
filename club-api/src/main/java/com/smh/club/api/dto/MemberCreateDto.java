@@ -1,20 +1,18 @@
 package com.smh.club.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDto {
-    @JsonProperty("id")
-    private int id;
+public class MemberCreateDto {
 
     @JsonProperty("member-number")
     private int memberNumber;
@@ -36,5 +34,4 @@ public class MemberDto {
 
     @JsonProperty("joined-date")
     private LocalDate joinedDate;
-
 }
