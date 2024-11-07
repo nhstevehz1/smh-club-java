@@ -34,6 +34,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.smh.club.api.helpers.datacreators.AddressCreators.genAddressEntityList;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -342,7 +343,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     private List<AddressEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
-        var entities = AddressCreators.genAddressEntityList(3, startFlag);
+        var entities = genAddressEntityList(3, startFlag);
         entities.forEach(e -> e.setMember(member));
         entities.get(0).setAddressType(AddressType.Home);
         entities.get(1).setAddressType(AddressType.Work);
