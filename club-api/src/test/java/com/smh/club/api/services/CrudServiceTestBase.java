@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CrudServiceTestBase<D, E> extends TempCrudServiceBase{
+public abstract class CrudServiceTestBase<D, E> extends ServiceTests {
 
     protected abstract E createEntity(int flag);
 
