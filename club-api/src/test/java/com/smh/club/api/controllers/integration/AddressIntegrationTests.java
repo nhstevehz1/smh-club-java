@@ -1,16 +1,16 @@
 package com.smh.club.api.controllers.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.AddressCreateDto;
 import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.dto.AddressType;
+import com.smh.club.api.dto.create.CreateAddressDto;
 import com.smh.club.api.helpers.datacreators.AddressCreators;
 import com.smh.club.api.helpers.datacreators.MemberCreators;
+import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -283,7 +283,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Test
     public void createAddresses_returns_addressDto_status_created() throws Exception {
         // create addresses
-        var create = AddressCreators.createAddressCreateDto(0);
+        var create = AddressCreators.genCreateAddressDto(0);
         create.setMemberId(members.get(0).getId());
 
         // perform POST
@@ -310,7 +310,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         var id = entities.get(0).getId();
 
         // perform DELETE
-        mockMvc.perform(delete("/addresses/{id}", id))
+        mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
@@ -323,7 +323,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void update_returns_addressDto_status_ok() throws Exception {
         // create several addresses
         var entities = addEntitiesToDb(members.get(1), 0);
-        var update = AddressCreators.createAddressCreateDto(members.get(1).getId());
+        var update = AddressCreators.genCreateAddressDto(members.get(1).getId());
         var id = entities.get(1).getId();
 
         // perform PUT
@@ -342,7 +342,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     private List<AddressEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
-        var entities = AddressCreators.createAddressEntityList(3, startFlag);
+        var entities = AddressCreators.genAddressEntityList(3, startFlag);
         entities.forEach(e -> e.setMember(member));
         entities.get(0).setAddressType(AddressType.Home);
         entities.get(1).setAddressType(AddressType.Work);
@@ -350,7 +350,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         return addressRepo.saveAllAndFlush(entities);
     }
 
-    private void verify(AddressCreateDto expected, AddressEntity actual) {
+    private void verify(CreateAddressDto expected, AddressEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getAddress1(), actual.getAddress1());
         assertEquals(expected.getAddress2(), actual.getAddress2());

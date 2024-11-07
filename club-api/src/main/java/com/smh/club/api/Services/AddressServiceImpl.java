@@ -4,8 +4,9 @@ import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.common.services.AddressService;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.AddressCreateDto;
+import com.smh.club.api.dto.create.CreateAddressDto;
 import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.update.UpdateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -63,7 +64,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDto createAddress(AddressCreateDto address) {
+    public AddressDto createAddress(CreateAddressDto address) {
         log.debug("creating address: {}", address);
 
         var memberRef = memberRepo.getReferenceById(address.getMemberId());
@@ -74,7 +75,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public Optional<AddressDto> updateAddress(int id, AddressCreateDto addressDto) {
+    public Optional<AddressDto> updateAddress(int id, UpdateAddressDto addressDto) {
         log.debug("Updating address id: {}, with data: {}", id, addressDto);
 
         return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())

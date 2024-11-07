@@ -2,10 +2,11 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.AddressController;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.request.PagingConfig;
-import com.smh.club.api.dto.AddressCreateDto;
 import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.create.CreateAddressDto;
+import com.smh.club.api.dto.update.UpdateAddressDto;
 import com.smh.club.api.request.PageParams;
+import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,6 @@ public class AddressControllerImpl implements AddressController {
 
     private final AddressService addressSvc;
 
-    @Override
     @GetMapping
     public ResponseEntity<PageResponse<AddressDto>> getAddressListPage(
             @RequestParam(value = PagingConfig.PAGE_NAME,
@@ -45,7 +45,6 @@ public class AddressControllerImpl implements AddressController {
         return ResponseEntity.ok(addressSvc.getAddressListPage(pageParams));
     }
 
-    @Override
     @GetMapping("{id}")
     public ResponseEntity<AddressDto> getAddress(@PathVariable int id) {
         var ret = addressSvc.getAddress(id);
@@ -57,24 +56,20 @@ public class AddressControllerImpl implements AddressController {
         return ResponseEntity.ok(addressSvc.getAddressCount());
     }
 
-    @Override
     @PostMapping
-    public ResponseEntity<AddressDto> createAddress(@RequestBody AddressCreateDto address) {
+    public ResponseEntity<AddressDto> createAddress(@RequestBody CreateAddressDto address) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createAddress(address));
     }
 
-    @Override
     @PutMapping("{id}")
-    public ResponseEntity<AddressDto> updateAddress(@PathVariable int id, @RequestBody AddressCreateDto address) {
+    public ResponseEntity<AddressDto> updateAddress(@PathVariable int id, @RequestBody UpdateAddressDto address) {
         var ret = addressSvc.updateAddress(id, address);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @Override
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable int id) {
         addressSvc.deleteAddress(id);
         return ResponseEntity.noContent().build();
     }
-
 }

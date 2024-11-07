@@ -1,6 +1,7 @@
-package com.smh.club.api.dto;
+package com.smh.club.api.dto.create;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.dto.AddressType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddressCreateDto {
+public class CreateAddressDto {
     @JsonProperty("member-id")
     private int memberId;
 

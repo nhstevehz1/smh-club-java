@@ -2,8 +2,6 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.helpers.datacreators.AddressCreators;
-import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,6 +11,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Comparator;
 
+import static com.smh.club.api.helpers.datacreators.AddressCreators.*;
+import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -29,7 +29,7 @@ public class AddressMapperTests {
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var address = AddressCreators.createAddressCreateDto(1);
+        var address = genCreateAddressDto(1);
 
         // execute
         var entity = mapper.toEntity(address);
@@ -53,8 +53,8 @@ public class AddressMapperTests {
     @Test
     public void from_entity_to_dto() {
         // setup
-        var member = MemberCreators.createMemberEntity(10);
-        var entity = AddressCreators.createAddressEntity(5, member);
+        var member = createMemberEntity(10);
+        var entity = genAddressEntity(5, member);
 
         // execute
         var dataObject = mapper.toDto(entity);
@@ -73,8 +73,8 @@ public class AddressMapperTests {
     @Test
     public void update_entity_from_createDto() {
         // setup
-        var address = AddressCreators.createAddressCreateDto(1);
-        var entity = AddressCreators.createAddressEntity(1);
+        var address = genUpdateAddressDto(1);
+        var entity = genAddressEntity(1);
 
         // execute
         mapper.updateEntity(address, entity);
@@ -92,8 +92,8 @@ public class AddressMapperTests {
     @ValueSource(ints = {5, 10, 20})
     public void to_dtoList_from_entityList(int size) {
         // setup
-        var member = MemberCreators.createMemberEntity(1);
-        var entityList = AddressCreators.createAddressEntityList(size, member);
+        var member = createMemberEntity(1);
+        var entityList = genAddressEntityList(size, member);
         entityList.sort(Comparator.comparingInt(AddressEntity::getId));
 
         // execute

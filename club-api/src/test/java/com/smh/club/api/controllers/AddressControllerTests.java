@@ -2,8 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.dto.AddressCreateDto;
 import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.create.CreateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -40,7 +40,7 @@ public class AddressControllerTests extends ControllerTests {
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
-        var ret = createAddressDtoList(5);
+        var ret = genAddressDtoList(5);
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
@@ -70,7 +70,7 @@ public class AddressControllerTests extends ControllerTests {
     public void shouldReturnAddress() throws Exception {
         // setup
         var id = 12;
-        var ret = createAddressDto(id);
+        var ret = genAddressDto(id);
         when(svc.getAddress(id)).thenReturn(Optional.of(ret));
 
         // execute
@@ -111,8 +111,8 @@ public class AddressControllerTests extends ControllerTests {
     public void shouldCreateAddress() throws Exception {
         // setup
         var id = 12;
-        var ret = createAddressDto(id);
-        var create = modelMapper.map(ret, AddressCreateDto.class);
+        var ret = genAddressDto(id);
+        var create = modelMapper.map(ret, CreateAddressDto.class);
         when(svc.createAddress(create)).thenReturn(ret);
 
         // execute and verify
@@ -139,7 +139,7 @@ public class AddressControllerTests extends ControllerTests {
     public void shouldUpdateAddress() throws Exception {
         // setup
         var id = 10;
-        var update = createAddressCreateDto(10);
+        var update = genUpdateAddressDto(10);
         var ret = modelMapper.map(update, AddressDto.class);
         when(svc.updateAddress(id, update)).thenReturn(Optional.of(ret));
 
@@ -166,7 +166,7 @@ public class AddressControllerTests extends ControllerTests {
     public void update_address_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = createAddressCreateDto(id);
+        var update = genUpdateAddressDto(id);
         when(svc.updateAddress(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

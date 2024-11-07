@@ -2,8 +2,9 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.domain.entities.AddressEntity;
-import com.smh.club.api.dto.AddressCreateDto;
+import com.smh.club.api.dto.create.CreateAddressDto;
 import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.update.UpdateAddressDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class AddressMapperImpl extends DataObjectMapperBase implements AddressMa
     }
 
     @Override
-    public AddressEntity toEntity(AddressCreateDto createDto) {
+    public AddressEntity toEntity(CreateAddressDto createDto) {
         return modelMapper.map(createDto, AddressEntity.class);
     }
 
@@ -29,7 +30,7 @@ public class AddressMapperImpl extends DataObjectMapperBase implements AddressMa
     }
 
     @Override
-    public AddressEntity updateEntity(AddressCreateDto dataObject, AddressEntity entity) {
+    public AddressEntity updateEntity(UpdateAddressDto dataObject, AddressEntity entity) {
         modelMapper.map(dataObject, entity);
         return entity;
     }

@@ -6,7 +6,6 @@ import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.helpers.datacreators.AddressCreators;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +21,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.AddressCreators.createAddressDtoList;
-import static com.smh.club.api.helpers.datacreators.AddressCreators.createAddressEntityList;
+import static com.smh.club.api.helpers.datacreators.AddressCreators.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -151,11 +149,11 @@ public class AddressServiceTests extends ServiceTests {
     @Test
     public void getAddressListPage_returnsAddressList() {
         // setup
-        var entityList = createAddressEntityList(10);
+        var entityList = genAddressEntityList(10);
         var page = createEntityPage(entityList, pageableMock, 200);
 
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(addMapMock.toDtoList(page.getContent())).thenReturn(createAddressDtoList(10));
+        when(addMapMock.toDtoList(page.getContent())).thenReturn(genAddressDtoList(10));
 
         // execute
         var pageResponse = svc.getAddressListPage(PageParams.getDefault());
@@ -173,8 +171,8 @@ public class AddressServiceTests extends ServiceTests {
     public void getItem_returns_address() {
         // setup
         int id = 1;
-        var entity = AddressCreators.createAddressEntity(id);
-        var address = AddressCreators.createAddressDto(id);
+        var entity = genAddressEntity(id);
+        var address = genAddressDto(id);
         when(addRepoMock.findById(id)).thenReturn(Optional.of(entity));
         when(addMapMock.toDto(entity)).thenReturn(address);
 
@@ -210,11 +208,11 @@ public class AddressServiceTests extends ServiceTests {
         var member = MemberEntity.builder().id(memberId).build();
         when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var create = AddressCreators.createAddressCreateDto(memberId);
-        var address = AddressCreators.createAddressDto(1);
+        var create = genCreateAddressDto(memberId);
+        var address = genAddressDto(1);
         address.setMemberId(memberId);
 
-        var entity = AddressCreators.createAddressEntity(1);
+        var entity = genAddressEntity(1);
         when(addRepoMock.save(entity)).thenReturn(entity);
         when(addMapMock.toEntity(create)).thenReturn(entity);
         when(addMapMock.toDto(entity)).thenReturn(address);
@@ -236,9 +234,9 @@ public class AddressServiceTests extends ServiceTests {
     public void updateAddress_returns_address() {
         // setup
         int id = 1;
-        var entity = AddressCreators.createAddressEntity(id);
-        var update = AddressCreators.createAddressCreateDto(id);
-        var address = AddressCreators.createAddressDto(id);
+        var entity = genAddressEntity(id);
+        var update = genUpdateAddressDto(id);
+        var address = genAddressDto(id);
 
         when(addRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
@@ -285,6 +283,4 @@ public class AddressServiceTests extends ServiceTests {
         verify(addRepoMock).count();
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
-
-
 }
