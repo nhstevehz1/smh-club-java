@@ -36,6 +36,7 @@ import java.util.List;
 
 import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemeberEntityList;
 import static com.smh.club.api.helpers.datacreators.RenewalCreators.genCreateRenewalDto;
+import static com.smh.club.api.helpers.datacreators.RenewalCreators.genUpdateRenewalDto;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -282,7 +283,7 @@ public class RenewalIntegrationTests extends IntegrationTests{
     @Test
     public void update_returns_dto_status_ok() throws Exception {
         var entities = addEntitiesToDb(members.get(1), 0);
-        var update = genCreateRenewalDto(members.get(1).getId());
+        var update = genUpdateRenewalDto(members.get(1).getId());
         var id = entities.get(1).getId();
 
         // perform PUT
