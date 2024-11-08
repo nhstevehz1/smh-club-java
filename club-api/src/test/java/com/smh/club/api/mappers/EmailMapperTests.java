@@ -80,7 +80,8 @@ public class EmailMapperTests {
     @ValueSource(ints = {5, 10, 20})
     public void emailMapper_toDataObjectList(int size) {
         // setup
-        var entityList = createEmailEntityList(size);
+        var member = createMemberEntity(1);
+        var entityList = createEmailEntityList(size, member);
         entityList.sort(Comparator.comparingInt(EmailEntity::getId));
 
         // execute

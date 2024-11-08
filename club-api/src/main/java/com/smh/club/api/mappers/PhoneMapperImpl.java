@@ -3,6 +3,8 @@ package com.smh.club.api.mappers;
 import com.smh.club.api.common.mappers.PhoneMapper;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.create.CreatePhoneDto;
+import com.smh.club.api.dto.update.UpdatePhoneDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Component;
@@ -17,8 +19,8 @@ public class PhoneMapperImpl extends DataObjectMapperBase implements PhoneMapper
     }
 
     @Override
-    public PhoneEntity toEntity(PhoneDto dataObject) {
-        return modelMapper.map(dataObject, PhoneEntity.class);
+    public PhoneEntity toEntity(CreatePhoneDto createPhoneDto) {
+        return modelMapper.map(createPhoneDto, PhoneEntity.class);
     }
 
     @Override
@@ -26,9 +28,8 @@ public class PhoneMapperImpl extends DataObjectMapperBase implements PhoneMapper
         return modelMapper.map(entity, PhoneDto.class);
     }
 
-    @Override
-    public PhoneEntity updateEntity(PhoneDto dataObject, PhoneEntity entity) {
-        modelMapper.map(dataObject, entity);
+    public PhoneEntity updateEntity(UpdatePhoneDto updatePhoneDto, PhoneEntity entity) {
+        modelMapper.map(updatePhoneDto, entity);
         return entity;
     }
 
