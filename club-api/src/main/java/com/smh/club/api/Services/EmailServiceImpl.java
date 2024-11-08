@@ -5,6 +5,8 @@ import com.smh.club.api.common.services.EmailService;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.EmailDto;
+import com.smh.club.api.dto.create.CreateEmailDto;
+import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -28,9 +30,7 @@ public class EmailServiceImpl implements EmailService {
     
     private final EmailRepo emailRepo;
     private final MembersRepo memberRepo;
-    
     private final EmailMapper emailMapper;
-    
     private final Map<String, String> sortColumnMap = initSortColumnMap();
 
     @Override
@@ -62,25 +62,21 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public EmailDto createItem(EmailDto email) {
-        log.debug("creating email: {}", email);
+    public EmailDto createItem(CreateEmailDto createDto) {
+        log.debug("creating email: {}", createDto);
 
-        var memberRef = memberRepo.getReferenceById(email.getMemberId());
-        var addressEntity = emailMapper.toEntity(email);
-        addressEntity.setMember(memberRef);
-        return emailMapper.toDto(emailRepo.save(addressEntity));
+        var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
+        var emailEntity = emailMapper.toEntity(createDto);
+        emailEntity.setMember(memberRef);
+        return emailMapper.toDto(emailRepo.save(emailEntity));
     }
 
     @Override
-    public Optional<EmailDto> updateItem(int id, EmailDto emailDto) {
-        log.debug("Updating email, id: {}, with data: {}", id, emailDto);
+    public Optional<EmailDto> updateItem(int id, UpdateEmailDto updateDto) {
+        log.debug("Updating email, id: {}, with data: {}", id, updateDto);
 
-        if(id != emailDto.getId()) {
-            throw new IllegalArgumentException();
-        }
-
-        return emailRepo.findByIdAndMemberId(id, emailDto.getMemberId())
-                .map(e -> emailMapper.updateEntity(emailDto, e))
+        return emailRepo.findByIdAndMemberId(id, updateDto.getMemberId())
+                .map(e -> emailMapper.updateEntity(updateDto, e))
                 .map(emailMapper::toDto);
     }
 

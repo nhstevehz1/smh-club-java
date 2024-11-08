@@ -6,8 +6,6 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.EmailType;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +21,13 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
+import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class EmailServiceTests extends CrudServiceTestBase<EmailDto, EmailEntity> {
+public class EmailServiceTests extends ServiceTests {
 
     @Mock private MembersRepo memRepoMock;
     @Mock private EmailRepo emailRepoMock;
@@ -150,9 +149,11 @@ public class EmailServiceTests extends CrudServiceTestBase<EmailDto, EmailEntity
     @Test
     public void getItemListPage_returns_emailList() {
         // setup
-        var page = createPage(10, pageableMock, 200);
+        var entityList = createEmailEntityList(40);
+        var page = createEntityPage(entityList, pageableMock, 200);
+
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(emlMapMock.toDtoList(page.getContent())).thenReturn(createDataObjectList(10));
+        when(emlMapMock.toDtoList(page.getContent())).thenReturn(createEmailDtoList(40));
 
         // execute
         var pageResponse = svc.getItemListPage(PageParams.getDefault());
@@ -170,9 +171,9 @@ public class EmailServiceTests extends CrudServiceTestBase<EmailDto, EmailEntity
     public void getItem_returns_email() {
         // setup
         int id = 1;
-        var entity = createEntity(id);
+        var entity = genEmailEntity(id);
         when(emailRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(emlMapMock.toDto(any(EmailEntity.class))).thenReturn(createDataObject(id));
+        when(emlMapMock.toDto(any(EmailEntity.class))).thenReturn(createEmailDto(id));
 
         // execute
         var ret = svc.getItem(id);
@@ -200,29 +201,31 @@ public class EmailServiceTests extends CrudServiceTestBase<EmailDto, EmailEntity
     }
 
     @Test
-    public void createItem_returns_email() {
+    public void create_email_returns_emailDto() {
         // setup
-        var memberId = 10;
+        var memberId = 1;
         var member = MemberEntity.builder().id(memberId).build();
         when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var email = createDataObject(1);
+        var create = genCreateEmailDto(1);
+        var email = createEmailDto(1);
         email.setMemberId(memberId);
 
-        var entity = createEntity(1);
+        var entity = genEmailEntity(1);
+
         when(emailRepoMock.save(entity)).thenReturn(entity);
-        when(emlMapMock.toEntity(email)).thenReturn(entity);
+        when(emlMapMock.toEntity(create)).thenReturn(entity);
         when(emlMapMock.toDto(entity)).thenReturn(email);
 
         // execute
-        var ret = svc.createItem(email);
+        var ret = svc.createItem(create);
 
         // verify
         assertNotNull(email);
         assertEquals(email, ret);
         verify(memRepoMock).getReferenceById(memberId);
         verify(emailRepoMock).save(entity);
-        verify(emlMapMock).toEntity(email);
+        verify(emlMapMock).toEntity(create);
         verify(emlMapMock).toDto(entity);
         verifyNoMoreInteractions(emailRepoMock, emlMapMock, memRepoMock);
     }
@@ -231,22 +234,23 @@ public class EmailServiceTests extends CrudServiceTestBase<EmailDto, EmailEntity
     public void updateItem_returns_email() {
         // setup
         int id = 1;
-        var entity = createEntity(id);
-        var email = createDataObject(id);
+        var entity = genEmailEntity(id);
+        var update = genUpdateEmailDto(id);
+        var email = createEmailDto(id);
 
         when(emailRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
-        when(emlMapMock.updateEntity(email, entity)).thenReturn(entity);
+        when(emlMapMock.updateEntity(update, entity)).thenReturn(entity);
         when(emlMapMock.toDto(entity)).thenReturn(email);
 
         // execute
-        var ret = svc.updateItem(id, email);
+        var ret = svc.updateItem(id, update);
 
         // verify
         assertTrue(ret.isPresent());
         verify(emailRepoMock).findByIdAndMemberId(id, id);
 
-        verify(emlMapMock).updateEntity(email, entity);
+        verify(emlMapMock).updateEntity(update, entity);
         verify(emlMapMock).toDto(entity);
         verifyNoMoreInteractions(emailRepoMock, emlMapMock, memRepoMock);
     }
@@ -263,24 +267,5 @@ public class EmailServiceTests extends CrudServiceTestBase<EmailDto, EmailEntity
         //verify
         verify(emailRepoMock).deleteById(id);
         verifyNoMoreInteractions(emailRepoMock, emlMapMock, memRepoMock);
-    }
-    
-    @Override
-    protected EmailEntity createEntity(int flag) {
-        return EmailEntity.builder()
-                .id(flag)
-                .email("email@emal.com")
-                .emailType(EmailType.Home)
-                .build();
-    }
-
-    @Override
-    protected EmailDto createDataObject(int flag) {
-        return EmailDto.builder()
-                .id(flag)
-                .memberId(flag)
-                .email("email@emal.com")
-                .emailType(EmailType.Home)
-                .build();
     }
 }

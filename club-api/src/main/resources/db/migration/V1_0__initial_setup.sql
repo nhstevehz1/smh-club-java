@@ -3,7 +3,6 @@ CREATE SCHEMA IF NOT EXISTS member_mgmt;
 CREATE TABLE member_mgmt.member (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_number int NOT NULL,
-	lifetime boolean DEFAULt FALSE,
 	first_name varchar(40) NOT NULL,
     middle_name varchar(40),
     last_name varchar(40) NOT NULL,
@@ -12,7 +11,7 @@ CREATE TABLE member_mgmt.member (
 	birth_date DATE NOT NULL,
 	active boolean DEFAULT FALSE,
 
-	CONSTRAINT pk_members PRIMARY KEY (id),
+	CONSTRAINT pk_member PRIMARY KEY (id),
 	CONSTRAINT u_mem_num__members UNIQUE (member_number)
 );
 
@@ -54,7 +53,7 @@ CREATE TABLE member_mgmt.renewal (
 CREATE TABLE member_mgmt.phone (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
-	phone varchar(10),
+	phone_number varchar(10),
 	phone_type integer,
 
 	CONSTRAINT pk_phone PRIMARY KEY(id),

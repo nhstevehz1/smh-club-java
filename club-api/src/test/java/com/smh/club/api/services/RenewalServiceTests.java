@@ -6,7 +6,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,15 +19,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
+import static com.smh.club.api.helpers.datacreators.RenewalCreators.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, RenewalEntity> {
+public class RenewalServiceTests extends ServiceTests {
     
     @Mock private MembersRepo memRepoMock;
     @Mock private RenewalsRepo renRepoMock;
@@ -151,9 +150,11 @@ public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, Renewal
     @Test
     public void getItemListPage_returns_renewalList() {
         // setup
-        var page = createPage(10, pageableMock, 200);
+        var entityList = genRenewalEntityList(10);
+        var page = createEntityPage(entityList, pageableMock, 200);
+
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(renMapMock.toDtoList(page.getContent())).thenReturn(createDataObjectList(10));
+        when(renMapMock.toDtoList(page.getContent())).thenReturn(genRenewalDtoList(10));
 
         // execute
         var pageResponse = svc.getItemListPage(PageParams.getDefault());
@@ -171,9 +172,9 @@ public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, Renewal
     public void getItem_returns_renewal() {
         // setup
         int id = 1;
-        var entity = createEntity(id);
+        var entity = genRenewalEntity(id);
         when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(renMapMock.toDto(any(RenewalEntity.class))).thenReturn(createDataObject(id));
+        when(renMapMock.toDto(any(RenewalEntity.class))).thenReturn(genRenewalDto(id));
 
         // execute
         var member = svc.getItem(id);
@@ -207,23 +208,25 @@ public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, Renewal
         var member = MemberEntity.builder().id(memberId).build();
         when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
 
-        var renewal = createDataObject(1);
-        renewal.setMemberId(memberId);
+        var create = genCreateRenewalDto(1);
+        create.setMemberId(memberId);
+        var renewal = genRenewalDto(1);
 
-        var entity = createEntity(1);
+        var entity = genRenewalEntity(1);
+
         when(renRepoMock.save(entity)).thenReturn(entity);
-        when(renMapMock.toEntity(renewal)).thenReturn(entity);
+        when(renMapMock.toEntity(create)).thenReturn(entity);
         when(renMapMock.toDto(entity)).thenReturn(renewal);
 
         // execute
-        var ret = svc.createItem(renewal);
+        var ret = svc.createItem(create);
 
         // verify
-        assertNotNull(renewal);
+        assertNotNull(ret);
         assertEquals(renewal, ret);
         verify(memRepoMock).getReferenceById(memberId);
         verify(renRepoMock).save(entity);
-        verify(renMapMock).toEntity(renewal);
+        verify(renMapMock).toEntity(create);
         verify(renMapMock).toDto(entity);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
@@ -232,22 +235,22 @@ public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, Renewal
     public void updateItem_returns_renewal() {
         // setup
         int id = 1;
-        var entity = createEntity(id);
-        var renewal = createDataObject(id);
+        var entity = genRenewalEntity(id);
+        var update = genUpdateRenewalDto(id);
+        var renewal = genRenewalDto(id);
         
         when(renRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
-
-        when(renMapMock.updateEntity(renewal, entity)).thenReturn(entity);
+        when(renMapMock.updateEntity(update, entity)).thenReturn(entity);
         when(renMapMock.toDto(entity)).thenReturn(renewal);
 
         // execute
-        var ret = svc.updateItem(id, renewal);
+        var ret = svc.updateItem(id, update);
 
         // verify
         assertTrue(ret.isPresent());
         verify(renRepoMock).findByIdAndMemberId(id, id);
 
-        verify(renMapMock).updateEntity(renewal, entity);
+        verify(renMapMock).updateEntity(update, entity);
         verify(renMapMock).toDto(entity);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
@@ -264,28 +267,5 @@ public class RenewalServiceTests extends CrudServiceTestBase<RenewalDto, Renewal
         //verify
         verify(renRepoMock).deleteById(id);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
-    }
-    
-    @Override
-    protected RenewalEntity createEntity(int flag) {
-        var now = LocalDate.now();
-        
-        return RenewalEntity.builder()
-                .id(flag)
-                .renewalDate(now)
-                .renewalYear(Integer.toString(now.getYear()))
-                .build();
-    }
-    
-    @Override
-    protected RenewalDto createDataObject(int flag) {
-        var now = LocalDate.now();
-        
-        return RenewalDto.builder()
-                .id(flag)
-                .memberId(flag)
-                .renewalDate(now)
-                .renewalYear(Integer.toString(now.getYear()))
-                .build();
     }
 }

@@ -1,19 +1,17 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.PhoneType;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
+import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberEntity;
+import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -27,17 +25,17 @@ public class PhoneMapperTests {
     }
 
     @Test
-    public void mapper_toEntity() {
+    public void from_createDto_to_entity() {
         // setup
-        var dataObject = createDataObject();
+        var create = genCreatePhoneDto(0);
 
         // execute
-        var entity = mapper.toEntity(dataObject);
+        var entity = mapper.toEntity(create);
 
         // verify
         assertNull(entity.getMember());
-        assertEquals(dataObject.getPhoneNum(), entity.getPhoneNum());
-        assertEquals(dataObject.getPhoneType(), entity.getPhoneType());
+        assertEquals(create.getPhoneNum(), entity.getPhoneNum());
+        assertEquals(create.getPhoneType(), entity.getPhoneType());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -47,54 +45,52 @@ public class PhoneMapperTests {
     }
 
     @Test
-    public void mapper_toDataObject() {
+    public void from_entity_to_dto() {
         // setup
-        var entity = createEntity();
-        var member = new MemberEntity();
-        member.setId(10);
-        entity.setId(5);
-        entity.setMember(member);
+        var member = createMemberEntity(10);
+        var entity = genPhoneEntity(5, member);
 
         // execute
-        var dataObject = mapper.toDto(entity);
+        var ret = mapper.toDto(entity);
 
         // verify
-        assertEquals(entity.getId(), dataObject.getId());
-        assertEquals(entity.getMember().getId(), dataObject.getMemberId());
-        assertEquals(entity.getPhoneNum(), dataObject.getPhoneNum());
-        assertEquals(entity.getPhoneType(), dataObject.getPhoneType());
+        assertEquals(entity.getId(), ret.getId());
+        assertEquals(entity.getMember().getId(), ret.getMemberId());
+        assertEquals(entity.getPhoneNum(), ret.getPhoneNum());
+        assertEquals(entity.getPhoneType(), ret.getPhoneType());
     }
 
     @Test
-    public void mapper_updateEntity() {
+    public void update_entity_from_createDto() {
         // setup
-        var dataObject = createDataObject();
-        var entity = createEntity();
+        var update = genUpdatePhoneDto(10);
+        var entity = genPhoneEntity(5);
 
         // execute
-        mapper.updateEntity(dataObject, entity);
+        mapper.updateEntity(update, entity);
 
         // verify
-        assertEquals(entity.getPhoneNum(), dataObject.getPhoneNum());
-        assertEquals(entity.getPhoneType(), dataObject.getPhoneType());
+        assertEquals(update.getPhoneNum(), entity.getPhoneNum());
+        assertEquals(update.getPhoneType(), entity.getPhoneType());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
-    public void mapper_toDataObjectList(int size) {
+    public void from_entityList_to_dtoList(int size) {
         // setup
-        var entityList = createEntityList(size);
+        var member = createMemberEntity(1);
+        var entityList = genPhoneEntityList(size, member);
         entityList.sort(Comparator.comparingInt(PhoneEntity::getId));
 
         // execute
-        var dataObjectList = mapper.toDtoList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(PhoneDto::getId));
+        var phoneDtoList = mapper.toDtoList(entityList);
+        phoneDtoList.sort(Comparator.comparingInt(PhoneDto::getId));
 
         // verify
-        assertEquals(entityList.size(), dataObjectList.size());
-        for (int ii = 0; ii < dataObjectList.size(); ii++) {
+        assertEquals(entityList.size(), phoneDtoList.size());
+        for (int ii = 0; ii < phoneDtoList.size(); ii++) {
             var entity = entityList.get(ii);
-            var dataObject = dataObjectList.get(ii);
+            var dataObject = phoneDtoList.get(ii);
 
             assertEquals(entity.getId(), dataObject.getId());
             assertEquals(entity.getMember().getId(), dataObject.getMemberId());
@@ -103,31 +99,4 @@ public class PhoneMapperTests {
         }
     }
 
-    private PhoneEntity createEntity() {
-        return PhoneEntity.builder()
-                .phoneNum("Phone_ent")
-                .phoneType(PhoneType.Other)
-                .build();
-    }
-
-    private PhoneDto createDataObject() {
-        return PhoneDto.builder()
-                .phoneNum("Phone_do")
-                .phoneType(PhoneType.Other)
-                .build();
-    }
-
-    private List<PhoneEntity> createEntityList(int size) {
-        List<PhoneEntity> entityList = new ArrayList<>();
-        for (int ii = 0; ii < size; ii++) {
-            MemberEntity member = new MemberEntity();
-            member.setId(ii + 10);
-            var entity = createEntity();
-            entity.setId(ii);
-            entity.setMember(member);
-            entityList.add(entity);
-        }
-
-        return entityList;
-    }
 }

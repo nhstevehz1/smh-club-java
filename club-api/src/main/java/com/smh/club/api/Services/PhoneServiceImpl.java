@@ -5,6 +5,8 @@ import com.smh.club.api.common.services.PhoneService;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
 import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.create.CreatePhoneDto;
+import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -63,25 +65,21 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public PhoneDto createItem(PhoneDto phone) {
-        log.debug("creating phone: {}", phone);
+    public PhoneDto createItem(CreatePhoneDto createDto) {
+        log.debug("creating phone: {}", createDto);
 
-        var memberRef = memberRepo.getReferenceById(phone.getMemberId());
-        var phoneEntity = phoneMapper.toEntity(phone);
+        var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
+        var phoneEntity = phoneMapper.toEntity(createDto);
         phoneEntity.setMember(memberRef);
         return phoneMapper.toDto(phoneRepo.save(phoneEntity));
     }
 
     @Override
-    public Optional<PhoneDto> updateItem(int id, PhoneDto phoneDto) {
-        log.debug("Updating phone, id: {}, with data: {}", id, phoneDto);
+    public Optional<PhoneDto> updateItem(int id, UpdatePhoneDto updateDto) {
+        log.debug("Updating phone, id: {}, with data: {}", id, updateDto);
 
-        if(id != phoneDto.getId()) {
-            throw new IllegalArgumentException();
-        }
-
-        return phoneRepo.findByIdAndMemberId(id, phoneDto.getMemberId())
-                .map(e -> phoneMapper.updateEntity(phoneDto, e))
+        return phoneRepo.findByIdAndMemberId(id, updateDto.getMemberId())
+                .map(e -> phoneMapper.updateEntity(updateDto, e))
                 .map(phoneMapper::toDto);
     }
 
@@ -100,9 +98,8 @@ public class PhoneServiceImpl implements PhoneService {
     private Map<String,String> initSortColumnMap() {
         Map<String, String> map = new HashMap<>();
         map.put("default", "id");
-        map.put("phone-num", "phoneNum");
+        map.put("phone-number", "phoneNum");
         map.put("phone-type", "phoneType");
-
         return map;
     }
 }

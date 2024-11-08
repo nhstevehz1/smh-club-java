@@ -1,34 +1,40 @@
 package com.smh.club.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@SuperBuilder // listed as experimental on lombok site
-public class MemberDto extends MemberMinimumDto {
+@AllArgsConstructor
+@Builder
+public class MemberDto {
+    @JsonProperty("id")
+    private int id;
 
-    @Builder.Default
-    @JsonProperty("addresses")
-    private List<AddressDto> addresses = new ArrayList<>();
+    @JsonProperty("member-number")
+    private int memberNumber;
 
-    @Builder.Default
-    @JsonProperty("emails")
-    private List<EmailDto> emails = new ArrayList<>();
+    @JsonProperty("first-name")
+    private String firstName;
 
-    @Builder.Default
-    @JsonProperty("phones")
-    private List<PhoneDto> phones = new ArrayList<>();
+    @JsonProperty("middle-name")
+    private String middleName;
 
-    @Builder.Default
-    @JsonProperty("renewals")
-    private List<RenewalDto> renewals = new ArrayList<>();
+    @JsonProperty("last-name")
+    private String lastName;
+
+    @JsonProperty("suffix")
+    private String suffix;
+
+    @JsonProperty("birth-date")
+    private LocalDate birthDate;
+
+    @JsonProperty("joined-date")
+    private LocalDate joinedDate;
+
 }

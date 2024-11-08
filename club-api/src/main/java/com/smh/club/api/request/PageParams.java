@@ -24,7 +24,7 @@ public class PageParams {
     String sortColumn = "default";
 
     @Builder.Default
-    @JsonProperty("order")
+    @JsonProperty("sortDir")
     public Sort.Direction sortDirection = Sort.Direction.ASC;
 
     public static PageParams getDefault() {

@@ -1,6 +1,5 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.mappers.config.MapperConfig;
@@ -9,11 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
+import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberEntity;
+import static com.smh.club.api.helpers.datacreators.RenewalCreators.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -27,17 +25,17 @@ public class RenewalMapperTests {
     }
 
     @Test
-    public void mapper_toEntity() {
+    public void from_createDto_to_entity() {
         // setup
-        var dataObject = createDataObject();
+        var create = genCreateRenewalDto(5);
 
         // execute
-        var entity = mapper.toEntity(dataObject);
+        var entity = mapper.toEntity(create);
 
         // verify
         assertNull(entity.getMember());
-        assertEquals(dataObject.getRenewalDate(), entity.getRenewalDate());
-        assertEquals(dataObject.getRenewalYear(), entity.getRenewalYear());
+        assertEquals(create.getRenewalDate(), entity.getRenewalDate());
+        assertEquals(create.getRenewalYear(), entity.getRenewalYear());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -47,43 +45,42 @@ public class RenewalMapperTests {
     }
 
     @Test
-    public void mapper_toDataObject() {
+    public void from_entity_to_dto() {
         // setup
-        var entity = createEntity();
-        var member = new MemberEntity();
-        member.setId(10);
-        entity.setId(5);
-        entity.setMember(member);
+        var member = createMemberEntity(2);
+        var entity = genRenewalEntity(12, member);
+
 
         // execute
-        var dataObject = mapper.toDto(entity);
+        var ret = mapper.toDto(entity);
 
         // verify
-        assertEquals(entity.getId(), dataObject.getId());
-        assertEquals(entity.getMember().getId(), dataObject.getMemberId());
-        assertEquals(entity.getRenewalDate(), dataObject.getRenewalDate());
-        assertEquals(entity.getRenewalYear(), dataObject.getRenewalYear());
+        assertEquals(entity.getId(), ret.getId());
+        assertEquals(entity.getMember().getId(), ret.getMemberId());
+        assertEquals(entity.getRenewalDate(), ret.getRenewalDate());
+        assertEquals(entity.getRenewalYear(), ret.getRenewalYear());
     }
 
     @Test
-    public void mapper_updateEntity() {
+    public void update_entity_from_createDto() {
         // setup
-        var dataObject = createDataObject();
-        var entity = createEntity();
+        var update = genUpdateRenewalDto(6);
+        var entity = genRenewalEntity(6);
 
         // execute
-        mapper.updateEntity(dataObject, entity);
+        var ret = mapper.updateEntity(update, entity);
 
         // verify
-        assertEquals(entity.getRenewalDate(), dataObject.getRenewalDate());
-        assertEquals(entity.getRenewalYear(), dataObject.getRenewalYear());
+        assertEquals(entity.getRenewalDate(), ret.getRenewalDate());
+        assertEquals(entity.getRenewalYear(), ret.getRenewalYear());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
-    public void mapper_toDataObjectList(int size) {
+    public void from_entityList_to_dtoList(int size) {
         // setup
-        var entityList = createEntityList(size);
+        var member = createMemberEntity(5);
+        var entityList = genRenewalEntityList(size, member);
         entityList.sort(Comparator.comparingInt(RenewalEntity::getId));
 
         // execute
@@ -101,35 +98,5 @@ public class RenewalMapperTests {
             assertEquals(entity.getRenewalDate(), dataObject.getRenewalDate());
             assertEquals(entity.getRenewalYear(), dataObject.getRenewalYear());
         }
-    }
-
-    private RenewalEntity createEntity() {
-        var date = LocalDate.now();
-        return RenewalEntity.builder()
-                .renewalDate(date)
-                .renewalYear(String.valueOf(date.getYear()))
-                .build();
-    }
-
-    private RenewalDto createDataObject() {
-        var date = LocalDate.now();
-        return RenewalDto.builder()
-                .renewalDate(date)
-                .renewalYear(String.valueOf(date.getYear()))
-                .build();
-    }
-
-    private List<RenewalEntity> createEntityList(int size) {
-        List<RenewalEntity> entityList = new ArrayList<>();
-        for (int ii = 0; ii < size; ii++) {
-            MemberEntity member = new MemberEntity();
-            member.setId(ii + 10);
-            var entity = createEntity();
-            entity.setId(ii);
-            entity.setMember(member);
-            entityList.add(entity);
-        }
-
-        return entityList;
     }
 }

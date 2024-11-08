@@ -2,5 +2,9 @@ spring:
   application:
     name: club-api
 
-
-
+request:
+  paging:
+    size: 10
+    page: 0
+    direction: ASC
+    sort: default

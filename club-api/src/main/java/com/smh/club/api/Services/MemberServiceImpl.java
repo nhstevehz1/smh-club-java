@@ -3,8 +3,9 @@ package com.smh.club.api.Services;
 import com.smh.club.api.common.mappers.*;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.MemberMinimumDto;
+import com.smh.club.api.dto.MemberCreateDto;
 import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -34,8 +35,14 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public PageResponse<MemberMinimumDto> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<MemberDto> getMemberListPage(@NonNull PageParams pageParams) {
         log.debug("Getting member item list page: {}", pageParams);
+
+        if (initSortColumnMap().containsKey(pageParams.getSortColumn())) {
+            log.debug("Sort column in map");
+        } else {
+            log.warn("Sort column not found in map. Using default");
+        }
 
         var pageRequest = PageRequest.of(
                 pageParams.getPageNumber(),
@@ -47,65 +54,62 @@ public class MemberServiceImpl implements MemberService {
 
         var page = membersRepo.findAll(pageRequest);
 
-        return PageResponse.<MemberMinimumDto>builder()
+        return PageResponse.<MemberDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(memberMapper.toDtoList(page.getContent()))
+                .items(memberMapper.toMemberDtoList(page.getContent()))
                 .build();
     }
 
     @Override
-    public Optional<MemberMinimumDto> getItem(int id) {
+    public Optional<MemberDto> getMember(int id) {
         log.debug("Getting member by id: {}", id);
 
-        return membersRepo.findById(id).map(memberMapper::toDto);
+        return membersRepo.findById(id).map(memberMapper::toMemberDto);
     }
 
     @Override
-    public MemberMinimumDto createItem(MemberMinimumDto member) {
+    public MemberDto createMember(MemberCreateDto member) {
         log.debug("creating member: {}", member);
 
-        var memberEntity = memberMapper.toEntity(member);
-        return memberMapper.toDto(membersRepo.save(memberEntity));
+        var memberEntity = memberMapper.toMemberEntity(member);
+        return memberMapper.toMemberDto(membersRepo.save(memberEntity));
     }
 
 
     @Override
-    public Optional<MemberMinimumDto> updateItem(int id, MemberMinimumDto memberMinimumDto) {
-        log.debug("Updating member id: {}, with data: {}", id, memberMinimumDto);
-
-        if(id != memberMinimumDto.getId()) {
-            throw new IllegalArgumentException();
-        }
+    public Optional<MemberDto> updateMember(int id, MemberCreateDto member) {
+        log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)
-                .map(e -> memberMapper.updateEntity(memberMinimumDto, e))
-                .map(memberMapper::toDto);
+                .map(e -> memberMapper.updateMemberEntity(member, e))
+                .map(memberMapper::toMemberDto);
     }
 
     @Override
-    public void deleteItem(int id) {
+    public void deleteMember(int id) {
         log.debug("Deleting member id: {}", id);
         membersRepo.deleteById(id);
     }
 
     @Override
-    public CountResponse getItemCount() {
+    public CountResponse getMemberCount() {
         log.debug("Getting member count");
         return CountResponse.of(membersRepo.count());
     }
 
     @Override
-    public Optional<MemberDto> getMemberDetail(int id) {
+    public Optional<MemberDetailDto> getMemberDetail(int id) {
         log.debug("Getting member detail by id: {}", id);
 
         return membersRepo.findById(id)
-                .map(memberMapper::toMemberDto);
+                .map(memberMapper::toMemberDetailDto);
     }
 
     private Map<String,String> initSortColumnMap() {
         Map<String, String> map = new HashMap<>();
         map.put("default", "memberNumber");
+        map.put("id", "id");
         map.put("member-number", "memberNumber");
         map.put("first-name", "firstName");
         map.put("middle-name", "middleName");

@@ -1,19 +1,17 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.EmailEntity;
-import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.EmailType;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
+import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
+import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -27,17 +25,17 @@ public class EmailMapperTests {
     }
 
     @Test
-    public void mapper_toEntity() {
+    public void from_createDto_to_entity() {
         // setup
-        var dataObject = createDataObject();
+        var create = genCreateEmailDto(0);
 
         // execute
-        var entity = mapper.toEntity(dataObject);
+        var entity = mapper.toEntity(create);
 
         // verify
         assertNull(entity.getMember());
-        assertEquals(dataObject.getEmail(), entity.getEmail());
-        assertEquals(dataObject.getEmailType(), entity.getEmailType());
+        assertEquals(create.getEmail(), entity.getEmail());
+        assertEquals(create.getEmailType(), entity.getEmailType());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -47,12 +45,11 @@ public class EmailMapperTests {
     }
 
     @Test
-    public void emailMapper_toDataObject() {
+    public void from_entity_to_dto() {
         // setup
-        var entity = createEntity();
-        var member = new MemberEntity();
-        member.setId(10);
-        entity.setId(5);
+        var member = createMemberEntity(10);
+        var entity = genEmailEntity(5, member);
+
         entity.setMember(member);
 
         // execute
@@ -66,24 +63,25 @@ public class EmailMapperTests {
     }
 
     @Test
-    public void emailMapper_updateEntity() {
+    public void update_entity_from_createDto() {
         // setup
-        var dataObject = createDataObject();
-        var entity = createEntity();
+        var update = genUpdateEmailDto(10);
+        var entity = genEmailEntity(5);
 
         // execute
-        mapper.updateEntity(dataObject, entity);
+        mapper.updateEntity(update, entity);
 
         // verify
-        assertEquals(entity.getEmail(), dataObject.getEmail());
-        assertEquals(entity.getEmailType(), dataObject.getEmailType());
+        assertEquals(entity.getEmail(), update.getEmail());
+        assertEquals(entity.getEmailType(), update.getEmailType());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
     public void emailMapper_toDataObjectList(int size) {
         // setup
-        var entityList = createEntityList(size);
+        var member = createMemberEntity(1);
+        var entityList = createEmailEntityList(size, member);
         entityList.sort(Comparator.comparingInt(EmailEntity::getId));
 
         // execute
@@ -101,33 +99,5 @@ public class EmailMapperTests {
             assertEquals(entity.getEmail(), dataObject.getEmail());
             assertEquals(entity.getEmailType(), dataObject.getEmailType());
         }
-    }
-
-    private EmailEntity createEntity() {
-        return EmailEntity.builder()
-                .email("test-ent@test.com")
-                .emailType(EmailType.Home)
-                .build();
-    }
-
-    private EmailDto createDataObject() {
-        return EmailDto.builder()
-                .email("test-add#test.com")
-                .emailType(EmailType.Other)
-                .build();
-    }
-
-    private List<EmailEntity> createEntityList(int size) {
-        List<EmailEntity> entityList = new ArrayList<>();
-        for (int ii = 0; ii < size; ii++ ) {
-            MemberEntity member = new MemberEntity();
-            member.setId(ii + 10);
-            var entity = createEntity();
-            entity.setId(ii);
-            entity.setMember(member);
-            entityList.add(entity);
-        }
-
-        return entityList;
     }
 }

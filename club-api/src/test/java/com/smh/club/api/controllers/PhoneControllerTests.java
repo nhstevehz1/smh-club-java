@@ -3,11 +3,11 @@ package com.smh.club.api.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.PhoneService;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.PhoneType;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,34 +27,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @WebMvcTest(PhoneControllerImpl.class)
-public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
+public class PhoneControllerTests extends ControllerTests {
     @MockBean
     private PhoneService svc;
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper mapper;
+    protected PhoneControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
+        super(mockMvc, objMapper, new ModelMapper(), "/phones");
+    }
 
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
+        var ret = genPhoneDtoList(5);
+
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
         var response = PageResponse.<PhoneDto>builder()
                 .totalPages(100).totalCount(20)
-                .items(createDataObjectList(5))
+                .items(ret)
                 .build();
 
         when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
-        mockMvc.perform(get("/phones")
+        mockMvc.perform(get(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(params)))
+                        .content(objMapper.writeValueAsString(params)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total-pages").value(response.getTotalPages()))
                 .andExpect(jsonPath("$.total-count").value(response.getTotalCount()))
@@ -68,11 +70,11 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
     public void shouldReturnPhone() throws Exception {
         // setup
         var id = 12;
-        var phone = createDataObject(id);
+        var phone = genPhoneDto(id);
         when(svc.getItem(id)).thenReturn(Optional.of(phone));
 
         // execute
-        mockMvc.perform(get("/phones/{id}", id)
+        mockMvc.perform(get( path + "/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(phone.getId()))
@@ -92,7 +94,7 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
         when(svc.getItem(id)).thenReturn(Optional.empty());
 
         // execute
-        mockMvc.perform(get("/phones/{id}", id)
+        mockMvc.perform(get(path + "/{id}", id)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -105,22 +107,23 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
     public void shouldCreatePhone() throws Exception {
         // setup
         var id = 12;
-        var phone = createDataObject(id);
-        when(svc.createItem(phone)).thenReturn(phone);
+        var create  = genCreatePhoneDto(id);
+        var ret = genPhoneDto(id);
+        when(svc.createItem(create)).thenReturn(ret);
 
         // execute and verify
         mockMvc.perform(post("/phones")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(phone)))
+                        .content(objMapper.writeValueAsString(create)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(phone.getId()))
-                .andExpect(jsonPath("$.member-id").value(phone.getMemberId()))
-                .andExpect(jsonPath("$.phone-number").value(phone.getPhoneNum()))
-                .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneName()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
+                .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneName()))
                 .andDo(print());
 
-        verify(svc).createItem(phone);
+        verify(svc).createItem(create);
         verifyNoMoreInteractions(svc);
     }
 
@@ -129,22 +132,23 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
     public void shouldUpdatePhone() throws Exception {
     // setup
         var id = 12;
-        var phone = createDataObject(id);
-        when(svc.updateItem(id, phone)).thenReturn(Optional.of(phone));
+        var ret = genPhoneDto(id);
+        var update = genUpdatePhoneDto(id);
+        when(svc.updateItem(id, update)).thenReturn(Optional.of(ret));
 
         // execute and verify
         mockMvc.perform(put("/phones/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(phone)))
+                        .content(objMapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(phone.getId()))
-                .andExpect(jsonPath("$.member-id").value(phone.getMemberId()))
-                .andExpect(jsonPath("$.phone-number").value(phone.getPhoneNum()))
-                .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneName()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
+                .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneName()))
                 .andDo(print());
 
-        verify(svc).updateItem(id, phone);
+        verify(svc).updateItem(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -152,18 +156,18 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
     public void update_phone_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var phone = createDataObject(id);
-        when(svc.updateItem(id, phone)).thenReturn(Optional.empty());
+        var update = genUpdatePhoneDto(id);
+        when(svc.updateItem(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
-        mockMvc.perform(put("/phones/{id}", phone.getId())
+        mockMvc.perform(put(path + "/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(phone)))
+                        .content(objMapper.writeValueAsString(update)))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateItem(phone.getId(), phone);
+        verify(svc).updateItem(id, update);
         verifyNoMoreInteractions(svc);
     }
     
@@ -196,15 +200,5 @@ public class PhoneControllerTests extends ControllerTestBase<PhoneDto> {
 
         verify(svc).getItemCount();
         verifyNoMoreInteractions(svc);
-    }
-
-    @Override
-    protected PhoneDto createDataObject(int flag) {
-        return PhoneDto.builder()
-                .id(flag)
-                .memberId(flag)
-                .phoneNum("5555555555"+flag)
-                .phoneType(PhoneType.Other)
-                .build();
     }
 }
