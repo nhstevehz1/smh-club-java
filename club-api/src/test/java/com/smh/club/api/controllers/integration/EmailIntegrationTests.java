@@ -8,6 +8,7 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.dto.EmailType;
 import com.smh.club.api.dto.create.CreateEmailDto;
+import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -33,8 +34,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.smh.club.api.helpers.datacreators.EmailCreators.createEmailEntityList;
-import static com.smh.club.api.helpers.datacreators.EmailCreators.genCreateEmailDto;
+import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -82,7 +82,6 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @Test
     public void getListPage_no_params() throws Exception {
-        // populate address table
         addEntitiesToDb(members.get(4), 4);
         addEntitiesToDb(members.get(0), 0);
         addEntitiesToDb(members.get(3), 5);
@@ -105,7 +104,6 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @Test
     public void getListPage_sortDir_desc() throws Exception {
-        // populate address table
         addEntitiesToDb(members.get(4), 4);
         addEntitiesToDb(members.get(0), 0);
         addEntitiesToDb(members.get(3), 5);
@@ -237,8 +235,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void create_returns_address_status_created() throws Exception {
-        // create addresses
+    public void create_returns_dto_status_created() throws Exception {
         var create = genCreateEmailDto(0);
         create.setMemberId(members.get(0).getId());
 
@@ -261,7 +258,6 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @Test
     public void delete_status_noContent() throws Exception {
-        // create several addresses
         var entities = addEntitiesToDb(members.get(1), 0);
         var id = entities.get(0).getId();
 
@@ -271,15 +267,14 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .andDo(print());
 
         // verify
-        var address = repo.findById(id);
-        assertFalse(address.isPresent());
+        var email = repo.findById(id);
+        assertFalse(email.isPresent());
     }
 
     @Test
     public void update_returns_dto_status_ok() throws Exception {
-        // create several addresses
         var entities = addEntitiesToDb(members.get(1), 0);
-        var update = genCreateEmailDto(members.get(1).getId());
+        var update = genUpdateEmailDto(members.get(1).getId());
         var id = entities.get(1).getId();
 
         // perform PUT
@@ -307,6 +302,12 @@ public class EmailIntegrationTests extends IntegrationTests {
     }
 
     private void verify(CreateEmailDto expected, EmailEntity actual) {
+        assertEquals(expected.getMemberId(), actual.getMember().getId());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getEmailType(), actual.getEmailType());
+    }
+
+    private void verify(UpdateEmailDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType(), actual.getEmailType());

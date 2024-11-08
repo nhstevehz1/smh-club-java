@@ -71,7 +71,7 @@ public class AddressMapperTests {
     }
 
     @Test
-    public void update_entity_from_createDto() {
+    public void update_entity_from_updateDto() {
         // setup
         var address = genUpdateAddressDto(1);
         var entity = genAddressEntity(1);
@@ -90,7 +90,7 @@ public class AddressMapperTests {
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
-    public void to_dtoList_from_entityList(int size) {
+    public void from_entityList_to_dtoList(int size) {
         // setup
         var member = createMemberEntity(1);
         var entityList = genAddressEntityList(size, member);
