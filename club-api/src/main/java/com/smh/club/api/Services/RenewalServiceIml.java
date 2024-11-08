@@ -5,6 +5,8 @@ import com.smh.club.api.common.services.RenewalService;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
 import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.api.dto.create.CreateRenewalDto;
+import com.smh.club.api.dto.update.UpdateRenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -59,7 +61,7 @@ public class RenewalServiceIml implements RenewalService {
     }
 
     @Override
-    public RenewalDto createItem(RenewalDto renewal) {
+    public RenewalDto createItem(CreateRenewalDto renewal) {
         log.debug("creating renewal: {}", renewal);
 
         var memberRef = memberRepo.getReferenceById(renewal.getMemberId());
@@ -69,12 +71,8 @@ public class RenewalServiceIml implements RenewalService {
     }
 
     @Override
-    public Optional<RenewalDto> updateItem(int id, RenewalDto renewalDto) {
+    public Optional<RenewalDto> updateItem(int id, UpdateRenewalDto renewalDto) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
-
-        if(id != renewalDto.getId()) {
-            throw new IllegalArgumentException();
-        }
 
         return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())
                 .map(r -> renewalMapper.updateEntity(renewalDto, r))
@@ -96,7 +94,7 @@ public class RenewalServiceIml implements RenewalService {
     private Map<String,String> initSortColumnMap() {
         Map<String, String> map = new HashMap<>();
         map.put("default", "id");
-        map.put("renewal-Date", "renewalDate");
+        map.put("renewal-date", "renewalDate");
         map.put("renewal-year", "renewalYear");
 
         return map;

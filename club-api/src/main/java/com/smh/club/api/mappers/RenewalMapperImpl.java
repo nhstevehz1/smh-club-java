@@ -3,6 +3,8 @@ package com.smh.club.api.mappers;
 import com.smh.club.api.common.mappers.RenewalMapper;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.api.dto.create.CreateRenewalDto;
+import com.smh.club.api.dto.update.UpdateRenewalDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Component;
@@ -18,8 +20,8 @@ public class RenewalMapperImpl extends DataObjectMapperBase implements RenewalMa
     }
 
     @Override
-    public RenewalEntity toEntity(RenewalDto dataObject) {
-        return modelMapper.map(dataObject, RenewalEntity.class);
+    public RenewalEntity toEntity(CreateRenewalDto createDto) {
+        return modelMapper.map(createDto, RenewalEntity.class);
     }
 
     @Override
@@ -28,8 +30,8 @@ public class RenewalMapperImpl extends DataObjectMapperBase implements RenewalMa
     }
 
     @Override
-    public RenewalEntity updateEntity(RenewalDto dataObject, RenewalEntity entity) {
-        modelMapper.map(dataObject, entity);
+    public RenewalEntity updateEntity(UpdateRenewalDto updateDto, RenewalEntity entity) {
+        modelMapper.map(updateDto, entity);
         return entity;
     }
 
