@@ -11,6 +11,7 @@ import com.smh.club.api.dto.create.CreateEmailDto;
 import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -71,6 +72,12 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void initMembers() {
         var entities = MemberCreators.createMemeberEntityList(5);
         members = memberRepo.saveAllAndFlush(entities);
+    }
+
+    @AfterEach
+    public void clearEmailTable() {
+        repo.deleteAll();
+        repo.flush();
     }
 
     @Test
