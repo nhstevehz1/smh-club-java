@@ -34,9 +34,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.smh.club.api.helpers.datacreators.EmailCreators.genUpdateEmailDto;
 import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemeberEntityList;
-import static com.smh.club.api.helpers.datacreators.PhoneCreators.genCreatePhoneDto;
 import static com.smh.club.api.helpers.datacreators.RenewalCreators.genCreateRenewalDto;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;

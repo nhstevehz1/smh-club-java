@@ -6,7 +6,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
 import static com.smh.club.api.helpers.datacreators.RenewalCreators.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
