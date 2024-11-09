@@ -10,15 +10,15 @@ import com.smh.club.api.response.PageResponse;
 import java.util.Optional;
 
 public interface PhoneService {
-    PageResponse<PhoneDto> getItemListPage(PageParams pageParams);
+    PageResponse<PhoneDto> getPhoneListPage(PageParams pageParams);
 
-    Optional<PhoneDto> getItem(int id);
+    Optional<PhoneDto> getPhone(int id);
 
-    PhoneDto createItem(CreatePhoneDto createDto);
+    PhoneDto createPhone(CreatePhoneDto createDto);
 
-    Optional<PhoneDto> updateItem(int id, UpdatePhoneDto updateDto);
+    Optional<PhoneDto> updatePhone(int id, UpdatePhoneDto updateDto);
 
-    void deleteItem(int id);
+    void deletePhone(int id);
 
-    CountResponse getItemCount();
+    CountResponse getPhoneCount();
 }

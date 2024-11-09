@@ -52,7 +52,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .items(ret)
                 .build();
 
-        when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
+        when(svc.getRenewalListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
         mockMvc.perform(get(path)
@@ -65,7 +65,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
                 .andDo(print());
 
-        verify(svc).getItemListPage(any(PageParams.class));
+        verify(svc).getRenewalListPage(any(PageParams.class));
         verifyNoMoreInteractions(svc);
     }
 
@@ -74,7 +74,7 @@ public class RenewalControllerTests extends ControllerTests {
         // setup
         var id = 12;
         var renewal = genRenewalDto(id);
-        when(svc.getItem(id)).thenReturn(Optional.of(renewal));
+        when(svc.getRenewal(id)).thenReturn(Optional.of(renewal));
 
         // execute
         mockMvc.perform(get(path + "/{id}", id)
@@ -86,7 +86,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.renewal-year").value(renewal.getRenewalYear()))
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getRenewal(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -94,7 +94,7 @@ public class RenewalControllerTests extends ControllerTests {
     public void shouldReturnNotFound_when_renewalId_does_not_exist() throws Exception {
         // setup
         var id = 12;
-        when(svc.getItem(id)).thenReturn(Optional.empty());
+        when(svc.getRenewal(id)).thenReturn(Optional.empty());
 
         // execute
         mockMvc.perform(get(path + "/{id}", id)
@@ -102,7 +102,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .andExpect(status().isNotFound())
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getRenewal(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -112,7 +112,7 @@ public class RenewalControllerTests extends ControllerTests {
         var id = 12;
         var renewal = genRenewalDto(12);
         var create = modelMapper.map(renewal, CreateRenewalDto.class);
-        when(svc.createItem(create)).thenReturn(renewal);
+        when(svc.createRenewal(create)).thenReturn(renewal);
 
         // execute and verify
         mockMvc.perform(post("/renewals")
@@ -126,7 +126,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.renewal-year").value(renewal.getRenewalYear()))
                 .andDo(print());
 
-        verify(svc).createItem(create);
+        verify(svc).createRenewal(create);
         verifyNoMoreInteractions(svc);
     }
 
@@ -136,7 +136,7 @@ public class RenewalControllerTests extends ControllerTests {
         var id = 12;
         var renewal = genRenewalDto(id);
         var update = modelMapper.map(renewal, UpdateRenewalDto.class);
-        when(svc.updateItem(id, update)).thenReturn(Optional.of(renewal));
+        when(svc.updateRenewal(id, update)).thenReturn(Optional.of(renewal));
 
         // execute and verify
         mockMvc.perform(put(path + "/{id}", id)
@@ -150,7 +150,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.renewal-year").value(renewal.getRenewalYear()))
                 .andDo(print());
 
-        verify(svc).updateItem(id, update);
+        verify(svc).updateRenewal(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -159,7 +159,7 @@ public class RenewalControllerTests extends ControllerTests {
         // setup
         var id = 10;
         var update = genUpdateRenewalDto(id);
-        when(svc.updateItem(id, update)).thenReturn(Optional.empty());
+        when(svc.updateRenewal(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
         mockMvc.perform(put(path + "/{id}", id)
@@ -169,7 +169,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateItem(id, update);
+        verify(svc).updateRenewal(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -177,14 +177,14 @@ public class RenewalControllerTests extends ControllerTests {
     public void shouldDeleteRenewal()  throws Exception {
         // setup
         var id = 1;
-        doNothing().when(svc).deleteItem(id);
+        doNothing().when(svc).deleteRenewal(id);
 
         // execute and verify
         mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
-        verify(svc).deleteItem(id);
+        verify(svc).deleteRenewal(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -192,7 +192,7 @@ public class RenewalControllerTests extends ControllerTests {
     public void shouldReturnRenewalCount() throws Exception {
         // setup
         var count = 20;
-        when(svc.getItemCount()).thenReturn(CountResponse.of(count));
+        when(svc.getRenewalCount()).thenReturn(CountResponse.of(count));
 
         // execute and verify
         mockMvc.perform(get(path + "/count"))
@@ -200,7 +200,7 @@ public class RenewalControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.count").value(20))
                 .andDo(print());
 
-        verify(svc).getItemCount();
+        verify(svc).getRenewalCount();
         verifyNoMoreInteractions(svc);
     }
 }

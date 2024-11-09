@@ -1,14 +1,15 @@
-package com.smh.club.api.controllers.integration;
+package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.entities.PhoneEntity;
+import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.domain.repos.RenewalsRepo;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.PhoneType;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
+import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.api.dto.create.CreateRenewalDto;
+import com.smh.club.api.dto.update.UpdateRenewalDto;
+import com.smh.club.api.helpers.datacreators.RenewalCreators;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +35,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemeberEntityList;
-import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
+import static com.smh.club.api.helpers.datacreators.RenewalCreators.genCreateRenewalDto;
+import static com.smh.club.api.helpers.datacreators.RenewalCreators.genUpdateRenewalDto;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,22 +52,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PhoneIntegrationTests extends IntegrationTests {
-
+public class RenewalIntegrationTests extends IntegrationTests{
+    
     @Value("${request.paging.size}")
     private int defaultPageSize;
 
     @Autowired
     private MembersRepo memberRepo;
-
+    
     @Autowired
-    private PhoneRepo repo;
+    private RenewalsRepo repo;
 
     private List<MemberEntity> members;
-
+    
     @Autowired
-    public PhoneIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc, mapper, "/phones");
+    public RenewalIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
+        super(mockMvc, mapper, "/renewals");
     }
 
     @BeforeAll
@@ -73,9 +75,9 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var entities = createMemeberEntityList(5);
         members = memberRepo.saveAllAndFlush(entities);
     }
-    
+
     @AfterEach
-    public void clearPhoneTable() {
+    public void clearRenewalsTable() {
         repo.deleteAll();
         memberRepo.flush();
     }
@@ -89,17 +91,25 @@ public class PhoneIntegrationTests extends IntegrationTests {
         addEntitiesToDb(members.get(1), 11);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPage(PhoneDto.class, path,
+        var actual = executeGetListPage(RenewalDto.class, path,
                 valueMap, sorted.size(), defaultPageSize);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(RenewalDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
         verify(expected, actual);
+    }
+    
+    
+    
+    private List<RenewalEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
+        var entities = RenewalCreators.genRenewalEntityList(3, startFlag);
+        entities.forEach(e -> e.setMember(member));
+        return repo.saveAllAndFlush(entities);
     }
 
     @Test
@@ -111,15 +121,15 @@ public class PhoneIntegrationTests extends IntegrationTests {
         addEntitiesToDb(members.get(1), 11);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId).reversed()).toList();
+                .sorted(Comparator.comparingInt(RenewalEntity::getId).reversed()).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(RenewalDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(RenewalDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -136,15 +146,15 @@ public class PhoneIntegrationTests extends IntegrationTests {
         addEntitiesToDb(members.get(1), 10);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), pageSize);
+        var actual = executeGetListPage(RenewalDto.class, path, valueMap, sorted.size(), pageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(RenewalDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -163,15 +173,15 @@ public class PhoneIntegrationTests extends IntegrationTests {
         }
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(RenewalDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(RenewalDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -189,45 +199,45 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
         // sort by id
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "id");
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(RenewalDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(RenewalDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
 
-        // sort by phone number
+        // sort by renewal-date
         sorted = repo.findAll().stream()
-                .sorted(Comparator.comparing(PhoneEntity::getPhoneNum)).toList();
+                .sorted(Comparator.comparing(RenewalEntity::getRenewalDate)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "phone-number");
+        valueMap.add(PagingConfig.SORT_NAME, "renewal-date");
 
-        actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(RenewalDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparing(PhoneDto::getPhoneNum)).toList(), actual);
+                .sorted(Comparator.comparing(RenewalDto::getRenewalDate)).toList(), actual);
 
         expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
 
-        // sort by phone-type
+        // sort by renewal-year
         sorted = repo.findAll().stream()
-                .sorted(Comparator.comparing(PhoneEntity::getPhoneType)).toList();
+                .sorted(Comparator.comparing(RenewalEntity::getRenewalYear)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "phone-type");
+        valueMap.add(PagingConfig.SORT_NAME, "renewal-year");
 
-        actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(RenewalDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparing(PhoneDto::getPhoneType)).toList(), actual);
+                .sorted(Comparator.comparing(RenewalDto::getRenewalYear)).toList(), actual);
 
         expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
@@ -235,7 +245,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
     @Test
     public void create_returns_dto_status_created() throws Exception {
-        var create = genCreatePhoneDto(4);
+        var create = genCreateRenewalDto(4);
         create.setMemberId(members.get(0).getId());
 
         // perform POST
@@ -273,7 +283,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Test
     public void update_returns_dto_status_ok() throws Exception {
         var entities = addEntitiesToDb(members.get(1), 0);
-        var update = genUpdatePhoneDto(members.get(1).getId());
+        var update = genUpdateRenewalDto(members.get(1).getId());
         var id = entities.get(1).getId();
 
         // perform PUT
@@ -291,34 +301,25 @@ public class PhoneIntegrationTests extends IntegrationTests {
         verify(update, entity.get());
     }
     
-    private List<PhoneEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
-        var entities = genPhoneEntityList(3, startFlag);
-        entities.forEach(e -> e.setMember(member));
-        entities.get(0).setPhoneType(PhoneType.Home);
-        entities.get(1).setPhoneType(PhoneType.Work);
-        entities.get(2).setPhoneType(PhoneType.Other);
-        return repo.saveAllAndFlush(entities);
-    }
-
-    private void verify(CreatePhoneDto expected, PhoneEntity actual) {
+    private void verify(CreateRenewalDto expected, RenewalEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
+        assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
     }
 
-    private void verify(UpdatePhoneDto expected, PhoneEntity actual) {
+    private void verify(UpdateRenewalDto expected, RenewalEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
+        assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
     }
 
-    private void verify(PhoneEntity expected, PhoneDto actual) {
+    private void verify(RenewalEntity expected, RenewalDto actual) {
         assertEquals(expected.getMember().getId(), actual.getMemberId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
+        assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
     }
 
-    private void verify(List<PhoneEntity> expected, List<PhoneDto> actual) {
+    private void verify(List<RenewalEntity> expected, List<RenewalDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());

@@ -34,7 +34,7 @@ public class EmailServiceImpl implements EmailService {
     private final Map<String, String> sortColumnMap = initSortColumnMap();
 
     @Override
-    public PageResponse<EmailDto> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<EmailDto> getEmailListPage(@NonNull PageParams pageParams) {
         log.debug("Getting emil item list page: {}", pageParams);
 
         var pageRequest = PageRequest.of(
@@ -55,14 +55,14 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Optional<EmailDto> getItem(int id) {
+    public Optional<EmailDto> getEmail(int id) {
         log.debug("Getting email by id: {}", id);
 
         return emailRepo.findById(id).map(emailMapper::toDto);
     }
 
     @Override
-    public EmailDto createItem(CreateEmailDto createDto) {
+    public EmailDto createEmail(CreateEmailDto createDto) {
         log.debug("creating email: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -72,7 +72,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Optional<EmailDto> updateItem(int id, UpdateEmailDto updateDto) {
+    public Optional<EmailDto> updateEmail(int id, UpdateEmailDto updateDto) {
         log.debug("Updating email, id: {}, with data: {}", id, updateDto);
 
         return emailRepo.findByIdAndMemberId(id, updateDto.getMemberId())
@@ -81,13 +81,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void deleteItem(int id) {
+    public void deleteEmail(int id) {
         log.debug("Deleting address, id: {}", id);
         emailRepo.deleteById(id);
     }
 
     @Override
-    public CountResponse getItemCount() {
+    public CountResponse getEmailCount() {
         log.debug("Getting member count");
         return CountResponse.of(emailRepo.count());
     }

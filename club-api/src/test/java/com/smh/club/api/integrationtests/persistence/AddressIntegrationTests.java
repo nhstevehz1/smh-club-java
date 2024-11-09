@@ -1,4 +1,4 @@
-package com.smh.club.api.domain.persistence;
+package com.smh.club.api.integrationtests.persistence;
 
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
@@ -37,10 +37,10 @@ class AddressIntegrationTests extends PersistenceTestsBase {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
-    public void saveAddress_Success(int addressTypeInt) {
+    public void saveAddress_Success(int addressCode) {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var addressType = AddressType.getAddressType(addressTypeInt);
+        var addressType = AddressType.of(addressCode);
         var a1 = createAddress(0, addressType);
         a1.setMember(member);
 

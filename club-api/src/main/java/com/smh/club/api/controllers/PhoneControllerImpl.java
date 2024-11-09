@@ -26,7 +26,7 @@ public class PhoneControllerImpl implements PhoneController {
 
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<PhoneDto>> getItemListPage(
+    public ResponseEntity<PageResponse<PhoneDto>> getPhoneListPage (
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -43,34 +43,34 @@ public class PhoneControllerImpl implements PhoneController {
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(phoneSvc.getItemListPage(pageParams));
+        return ResponseEntity.ok(phoneSvc.getPhoneListPage(pageParams));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<PhoneDto> getItem(@PathVariable int id) {
-        var ret = phoneSvc.getItem(id);
+    public ResponseEntity<PhoneDto> getPhone(@PathVariable int id) {
+        var ret = phoneSvc.getPhone(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
     public ResponseEntity<CountResponse> getCount() {
-        return ResponseEntity.ok(phoneSvc.getItemCount());
+        return ResponseEntity.ok(phoneSvc.getPhoneCount());
     }
 
     @PostMapping
-    public ResponseEntity<PhoneDto> createItem(@RequestBody CreatePhoneDto createDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createItem(createDto));
+    public ResponseEntity<PhoneDto> createPhone(@RequestBody CreatePhoneDto createDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(createDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PhoneDto> updateItem(@PathVariable int id, @RequestBody UpdatePhoneDto updateDto) {
-        var ret = phoneSvc.updateItem(id, updateDto);
+    public ResponseEntity<PhoneDto> updatePhone(@PathVariable int id, @RequestBody UpdatePhoneDto updateDto) {
+        var ret = phoneSvc.updatePhone(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable int id) {
-        phoneSvc.deleteItem(id);
+    public ResponseEntity<Void> deletePhone(@PathVariable int id) {
+        phoneSvc.deletePhone(id);
         return ResponseEntity.noContent().build();
     }
 }

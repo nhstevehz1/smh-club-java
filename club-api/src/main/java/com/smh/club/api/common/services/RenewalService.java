@@ -10,15 +10,15 @@ import com.smh.club.api.response.PageResponse;
 import java.util.Optional;
 
 public interface RenewalService {
-    PageResponse<RenewalDto> getItemListPage(PageParams pageParams);
+    PageResponse<RenewalDto> getRenewalListPage(PageParams pageParams);
 
-    Optional<RenewalDto> getItem(int id);
+    Optional<RenewalDto> getRenewal(int id);
 
-    RenewalDto createItem(CreateRenewalDto renewal);
+    RenewalDto createRenewal(CreateRenewalDto renewal);
 
-    Optional<RenewalDto> updateItem(int id, UpdateRenewalDto renewalDto);
+    Optional<RenewalDto> updateRenewal(int id, UpdateRenewalDto renewalDto);
 
-    void deleteItem(int id);
+    void deleteRenewal(int id);
 
-    CountResponse getItemCount();
+    CountResponse getRenewalCount();
 }

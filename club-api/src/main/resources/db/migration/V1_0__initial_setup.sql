@@ -33,7 +33,7 @@ CREATE TABLE member_mgmt.address (
 CREATE TABLE member_mgmt.email (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
-	email varchar(100),
+	email varchar(100) NOT NULL,
 	email_type smallint NOT NULL,
 
 	CONSTRAINT pk_email PRIMARY KEY (id),
@@ -53,8 +53,8 @@ CREATE TABLE member_mgmt.renewal (
 CREATE TABLE member_mgmt.phone (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
-	phone_number varchar(10),
-	phone_type integer,
+	phone_number varchar(10) NOT NULL,
+	phone_type smallint NOT NULL,
 
 	CONSTRAINT pk_phone PRIMARY KEY(id),
 	CONSTRAINT fk_phone_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)

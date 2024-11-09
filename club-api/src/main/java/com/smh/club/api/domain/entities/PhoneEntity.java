@@ -1,7 +1,6 @@
 package com.smh.club.api.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.smh.club.api.domain.converters.PhoneTypeConverter;
 import com.smh.club.api.dto.PhoneType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +23,6 @@ public class PhoneEntity {
 
     @Builder.Default
     @Column(name = "phone_type", nullable = false)
-    @Convert(converter = PhoneTypeConverter.class)
     private PhoneType phoneType = PhoneType.Home;
 
     @JsonIgnore // Nasty stack overflow when serializing to JSON.

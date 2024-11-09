@@ -1,7 +1,6 @@
 package com.smh.club.api.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.smh.club.api.domain.converters.EmailTypeConverter;
 import com.smh.club.api.dto.EmailType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +23,6 @@ public class EmailEntity {
 
     @Builder.Default
     @Column(name = "email_type", nullable = false)
-    @Convert(converter = EmailTypeConverter.class)
     private EmailType emailType = EmailType.Home;
 
     @JsonIgnore // Nasty stack overflow when serializing to JSON.

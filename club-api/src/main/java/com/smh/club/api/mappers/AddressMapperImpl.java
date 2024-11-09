@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class AddressMapperImpl extends DataObjectMapperBase implements AddressMapper  {
+public class AddressMapperImpl extends DomainDataMapper implements AddressMapper  {
 
     public AddressMapperImpl(ModelMapper mapper) {
         super(mapper);

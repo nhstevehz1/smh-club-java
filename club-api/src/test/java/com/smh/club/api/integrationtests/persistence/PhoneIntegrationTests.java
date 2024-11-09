@@ -1,7 +1,8 @@
-package com.smh.club.api.domain.persistence;
+package com.smh.club.api.integrationtests.persistence;
 
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.RenewalsRepo;
+import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.PhoneType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,97 +27,85 @@ import static org.junit.jupiter.api.Assertions.*;
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.BEFORE_CLASS)
-public class RenewalIntegrationTests extends PersistenceTestsBase {
+public class PhoneIntegrationTests extends PersistenceTestsBase {
 
     @SuppressWarnings("unused")
     @Autowired
-    private RenewalsRepo renewalsRepo;
+    private PhoneRepo phoneRepo;
 
     @SuppressWarnings("unused")
     @Autowired
     private MembersRepo membersRepo;
 
-    @Test
-    public void saveRenewal_Success() {
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2})
+    public void savePhone_Success(int phoneTypeCode) {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var localDate = LocalDate.now();
-        var r1 = createRenewal(0, localDate);
-        r1.setMember(member);
+        var phoneType = PhoneType.of(phoneTypeCode);
+        var e1 = createPhone(0, phoneType);
+        e1.setMember(member);
 
         // execute
-        var renewal = this.renewalsRepo.save(r1);
+        var phone = this.phoneRepo.save(e1);
 
         // verify
-        verifyRenewal(0, renewal, localDate, member.getId());
+        verifyPhone(0, phone, phoneType, member.getId());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5,10, 15, 20})
-    public void saveRenewals_Success(int size) {
+    public void savePhones_Success(int size) {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var localDate = LocalDate.now();
-        var renewalList = createRenewals(size, localDate);
-        for (var renewal : renewalList) {
-            renewal.setMember(member);
+        var phoneList = createPhones(size);
+        for (var phone : phoneList) {
+            phone.setMember(member);
         }
 
         // execute
-        renewalsRepo.saveAll(renewalList);
-        var sortedRenewals = renewalsRepo.findAll(Sort.by("id").ascending());
+        phoneRepo.saveAll(phoneList);
+        var sortedPhones = phoneRepo.findAll(Sort.by("id").ascending());
 
         // verify
-        assertEquals(size, sortedRenewals.size(), "Renewal size doesn't match");
+        assertEquals(size, sortedPhones.size(), "Phone list size does not match");
         for (int ii = 0; ii < size; ii++) {
-            verifyRenewal(ii, sortedRenewals.get(ii), localDate, member.getId());
+            verifyPhone(ii, sortedPhones.get(ii), PhoneType.Home, member.getId());
         }
     }
 
     @Test
-    public void saveRenewal_RenewalDateIsNullThrowsException() {
+    public void savePhone_PhoneNumberIsNullThrowsException() {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var renewal = createRenewal(0,LocalDate.now());
-        renewal.setMember(member);
-        renewal.setRenewalDate(null);
+        var phone = createPhone(0, PhoneType.Work);
+        phone.setMember(member);
+        phone.setPhoneNum(null);
 
         //execute and verify
-        assertThrows(Exception.class, () -> renewalsRepo.save(renewal));
+        assertThrows(Exception.class, () -> phoneRepo.save(phone));
     }
 
     @Test
-    public void saveRenewal_RenewalYearIsNullThrowsException() {
+    public void savePhone_MemberIsNullThrowsException() {
         // setup
-        var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var renewal = createRenewal(0, LocalDate.now());
-        renewal.setRenewalYear(null);
-        renewal.setMember(member);
+        var phone = createPhone(0, PhoneType.Home);
 
         // execute and verify
-        assertThrows(Exception.class, () -> renewalsRepo.save(renewal));
+        assertThrows(Exception.class, () -> phoneRepo.save(phone));
     }
 
     @Test
-    public void saveRenewal_MemberIsNullThrowsException() {
-        // setup
-        var renewal = createRenewal(0, LocalDate.now());
-
-        // execute and verify
-        assertThrows(Exception.class, () -> renewalsRepo.save(renewal));
-    }
-
-    @Test
-    public void findByIdAndMemberId_returns_renewal() {
+    public void findByIdAndMemberId_returns_email() {
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
 
-        var entity = createRenewal(0, LocalDate.now());
+        var entity = createPhone(0, PhoneType.Mobile);
         entity.setMember(member);
 
-        var saved = renewalsRepo.save(entity);
+        var saved = phoneRepo.save(entity);
 
         // execute
-        var ret = renewalsRepo.findByIdAndMemberId(saved.getId(), member.getId());
+        var ret = phoneRepo.findByIdAndMemberId(saved.getId(), member.getId());
 
         //verify
         assertTrue(ret.isPresent());
@@ -127,15 +116,16 @@ public class RenewalIntegrationTests extends PersistenceTestsBase {
     @Test
     public void findByIdAndMemberId_returns_empty_optional() {
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var entity = createRenewal(0, LocalDate.now());
+        var entity = createPhone(0, PhoneType.Mobile);
         entity.setMember(member);
 
-        var saved = renewalsRepo.save(entity);
+        var saved = phoneRepo.save(entity);
 
         // execute
-        var ret = renewalsRepo.findByIdAndMemberId(saved.getId(),10);
+        var ret = phoneRepo.findByIdAndMemberId(saved.getId(),10);
 
         //verify
         assertFalse(ret.isPresent());
     }
+
 }

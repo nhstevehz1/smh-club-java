@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MemberMapperImpl extends DataObjectMapperBase implements MemberMapper {
+public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
     public MemberMapperImpl(ModelMapper mapper) {
         super(mapper);
         configureMapper(mapper);

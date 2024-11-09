@@ -26,14 +26,14 @@ public class PhoneCreators {
     public static PhoneDto genPhoneDto(int flag) {
         return PhoneDto.builder()
                 .phoneNum("e_phone_" + flag)
-                .phoneType(PhoneType.Other)
+                .phoneType(PhoneType.Mobile)
                 .build();
     }
 
     public static CreatePhoneDto genCreatePhoneDto(int flag) {
         return CreatePhoneDto.builder()
                 .phoneNum("c_pn" + flag)
-                .phoneType(PhoneType.Other)
+                .phoneType(PhoneType.Mobile)
                 .build();
     }
 
@@ -41,7 +41,7 @@ public class PhoneCreators {
         return UpdatePhoneDto.builder()
                 .memberId(flag)
                 .phoneNum("u_pn" + flag)
-                .phoneType(PhoneType.Other)
+                .phoneType(PhoneType.Mobile)
                 .build();
     }
 
@@ -78,7 +78,7 @@ public class PhoneCreators {
     private static PhoneEntity.PhoneEntityBuilder createEntityBuilder(int flag) {
         return PhoneEntity.builder()
                 .phoneNum("e_phone_" + flag)
-                .phoneType(PhoneType.Other);
+                .phoneType(PhoneType.Mobile);
     }
     
 }

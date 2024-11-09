@@ -5,11 +5,11 @@ import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class DataObjectMapperBase {
+public abstract class DomainDataMapper {
 
     protected final ModelMapper modelMapper;
 
-    public DataObjectMapperBase(ModelMapper modelMapper) {
+    public DomainDataMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 

@@ -9,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 
 public interface PhoneController {
 
-    ResponseEntity<PageResponse<PhoneDto>> getItemListPage(int page, int size, String sortDir, String sort);
+    ResponseEntity<PageResponse<PhoneDto>> getPhoneListPage(int page, int size, String sortDir, String sort);
 
-    ResponseEntity<PhoneDto> getItem(int id);
+    ResponseEntity<PhoneDto> getPhone(int id);
 
     ResponseEntity<CountResponse> getCount();
 
-    ResponseEntity<PhoneDto> createItem(CreatePhoneDto createDto);
+    ResponseEntity<PhoneDto> createPhone(CreatePhoneDto createDto);
 
-    ResponseEntity<PhoneDto> updateItem(int id, UpdatePhoneDto updateDto);
+    ResponseEntity<PhoneDto> updatePhone(int id, UpdatePhoneDto updateDto);
 
-    ResponseEntity<Void> deleteItem(int id);
+    ResponseEntity<Void> deletePhone(int id);
 }
