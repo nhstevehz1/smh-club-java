@@ -1,6 +1,13 @@
+server:
+  port: ${CLUB_API_PORT}
+
 spring:
   application:
     name: club-api
+  datasource:
+    url: ${CLUB_API_DB_URL}
+    username: ${CLUB_API_DB_USER}
+    password: ${CLUB_API_DB_PASSWORD}
 
 request:
   paging:
