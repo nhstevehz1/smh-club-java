@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Component
-public class EmailMapperImpl extends DataObjectMapperBase implements EmailMapper {
+public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
 
     public EmailMapperImpl(ModelMapper mapper) {
         super(mapper);

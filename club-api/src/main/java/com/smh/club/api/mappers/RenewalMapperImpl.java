@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class RenewalMapperImpl extends DataObjectMapperBase implements RenewalMapper {
+public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper {
     
     public RenewalMapperImpl(ModelMapper mapper) {
         super(mapper);
