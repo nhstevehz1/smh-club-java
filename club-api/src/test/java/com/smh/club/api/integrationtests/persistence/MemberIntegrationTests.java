@@ -1,4 +1,4 @@
-package com.smh.club.api.domain.persistence;
+package com.smh.club.api.integrationtests.persistence;
 
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.*;

@@ -1,4 +1,4 @@
-package com.smh.club.api.domain.persistence;
+package com.smh.club.api.integrationtests.persistence;
 
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;

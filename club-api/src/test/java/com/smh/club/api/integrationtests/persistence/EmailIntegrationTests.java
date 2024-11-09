@@ -1,8 +1,8 @@
-package com.smh.club.api.domain.persistence;
+package com.smh.club.api.integrationtests.persistence;
 
+import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.PhoneType;
+import com.smh.club.api.dto.EmailType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,12 +26,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureEmbeddedDatabase (
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
-        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.BEFORE_CLASS)
-public class PhoneIntegrationTests extends PersistenceTestsBase {
+        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
+public class EmailIntegrationTests extends PersistenceTestsBase {
 
     @SuppressWarnings("unused")
     @Autowired
-    private PhoneRepo phoneRepo;
+    private EmailRepo emailRepo;
 
     @SuppressWarnings("unused")
     @Autowired
@@ -39,73 +39,64 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
-    public void savePhone_Success(int phoneTypeInt) {
+    public void saveEmail_Success(int emailTypeInt) {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var phoneType = PhoneType.getPhoneType(phoneTypeInt);
-        var e1 = createPhone(0, phoneType);
+        var emailType = EmailType.getEmailType(emailTypeInt);
+        var e1 = createEmail(0, emailType);
         e1.setMember(member);
 
         // execute
-        var phone = this.phoneRepo.save(e1);
+        var email = this.emailRepo.save(e1);
 
         // verify
-        verifyPhone(0, phone, phoneType, member.getId());
+        verifyEmail(0, email, emailType, member.getId());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5,10, 15, 20})
-    public void savePhones_Success(int size) {
+    public void saveEmails_Success(int size) {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var phoneList = createPhones(size);
-        for (var phone : phoneList) {
-            phone.setMember(member);
+        var emailList = createEmails(size);
+        for (var email : emailList) {
+            email.setMember(member);
         }
 
         // execute
-        phoneRepo.saveAll(phoneList);
-        var sortedPhones = phoneRepo.findAll(Sort.by("id").ascending());
+        emailRepo.saveAll(emailList);
+        var sortedEmails = emailRepo.findAll(Sort.by("id").ascending());
 
         // verify
-        assertEquals(size, sortedPhones.size(), "Phone list size does not match");
+        assertEquals(size, sortedEmails.size(), "Email list size doesn't match");
         for (int ii = 0; ii < size; ii++) {
-            verifyPhone(ii, sortedPhones.get(ii), PhoneType.Home, member.getId());
+            verifyEmail(ii, sortedEmails.get(ii), EmailType.Home, member.getId());
         }
     }
 
     @Test
-    public void savePhone_PhoneNumberIsNullThrowsException() {
+    public void saveEmail_EmailIsNullThrowsException() {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var phone = createPhone(0, PhoneType.Work);
-        phone.setMember(member);
-        phone.setPhoneNum(null);
+        var email = createEmail(0, EmailType.Work);
+        email.setMember(member);
+        email.setEmail(null);
 
         //execute and verify
-        assertThrows(Exception.class, () -> phoneRepo.save(phone));
-    }
-
-    @Test
-    public void savePhone_MemberIsNullThrowsException() {
-        // setup
-        var phone = createPhone(0, PhoneType.Home);
-
-        // execute and verify
-        assertThrows(Exception.class, () -> phoneRepo.save(phone));
+        assertThrows(Exception.class, () -> emailRepo.save(email));
     }
 
     @Test
     public void findByIdAndMemberId_returns_email() {
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
 
-        var entity = createPhone(0, PhoneType.Other);
+        var entity = createEmail(0, EmailType.Other);
         entity.setMember(member);
 
-        var saved = phoneRepo.save(entity);
+        var saved = emailRepo.save(entity);
 
         // execute
-        var ret = phoneRepo.findByIdAndMemberId(saved.getId(), member.getId());
+        var ret = emailRepo.findByIdAndMemberId(saved.getId(), member.getId());
 
         //verify
         assertTrue(ret.isPresent());
@@ -116,13 +107,13 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
     @Test
     public void findByIdAndMemberId_returns_empty_optional() {
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var entity = createPhone(0, PhoneType.Other);
+        var entity = createEmail(0, EmailType.Home);
         entity.setMember(member);
 
-        var saved = phoneRepo.save(entity);
+        var saved = emailRepo.save(entity);
 
         // execute
-        var ret = phoneRepo.findByIdAndMemberId(saved.getId(),10);
+        var ret = emailRepo.findByIdAndMemberId(saved.getId(),10);
 
         //verify
         assertFalse(ret.isPresent());

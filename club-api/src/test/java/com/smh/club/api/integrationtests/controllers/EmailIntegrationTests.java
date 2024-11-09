@@ -1,14 +1,15 @@
-package com.smh.club.api.controllers.integration;
+package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.entities.PhoneEntity;
+import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.PhoneType;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
+import com.smh.club.api.dto.EmailDto;
+import com.smh.club.api.dto.EmailType;
+import com.smh.club.api.dto.create.CreateEmailDto;
+import com.smh.club.api.dto.update.UpdateEmailDto;
+import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.AfterEach;
@@ -33,8 +34,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemeberEntityList;
-import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
+import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PhoneIntegrationTests extends IntegrationTests {
+public class EmailIntegrationTests extends IntegrationTests {
 
     @Value("${request.paging.size}")
     private int defaultPageSize;
@@ -59,43 +59,43 @@ public class PhoneIntegrationTests extends IntegrationTests {
     private MembersRepo memberRepo;
 
     @Autowired
-    private PhoneRepo repo;
+    private EmailRepo repo;
 
     private List<MemberEntity> members;
 
     @Autowired
-    public PhoneIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc, mapper, "/phones");
+    public EmailIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
+        super(mockMvc, mapper, "/emails");
     }
 
     @BeforeAll
     public void initMembers() {
-        var entities = createMemeberEntityList(5);
+        var entities = MemberCreators.createMemeberEntityList(5);
         members = memberRepo.saveAllAndFlush(entities);
     }
-    
+
     @AfterEach
-    public void clearPhoneTable() {
+    public void clearEmailTable() {
         repo.deleteAll();
-        memberRepo.flush();
+        repo.flush();
     }
 
     @Test
     public void getListPage_no_params() throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 11);
-        addEntitiesToDb(members.get(3), 50);
-        addEntitiesToDb(members.get(2), 20);
-        addEntitiesToDb(members.get(1), 11);
+        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(0), 0);
+        addEntitiesToDb(members.get(3), 5);
+        addEntitiesToDb(members.get(2), 2);
+        addEntitiesToDb(members.get(1), 1);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPage(PhoneDto.class, path,
+        var actual = executeGetListPage(EmailDto.class, path,
                 valueMap, sorted.size(), defaultPageSize);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(EmailDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -104,22 +104,22 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
     @Test
     public void getListPage_sortDir_desc() throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 11);
-        addEntitiesToDb(members.get(3), 50);
-        addEntitiesToDb(members.get(2), 20);
-        addEntitiesToDb(members.get(1), 11);
+        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(0), 0);
+        addEntitiesToDb(members.get(3), 5);
+        addEntitiesToDb(members.get(2), 2);
+        addEntitiesToDb(members.get(1), 1);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId).reversed()).toList();
+                .sorted(Comparator.comparingInt(EmailEntity::getId).reversed()).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(EmailDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(EmailDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -129,22 +129,22 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
     public void getListPage_pageSize(int pageSize) throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 11);
-        addEntitiesToDb(members.get(3), 50);
-        addEntitiesToDb(members.get(2), 60);
-        addEntitiesToDb(members.get(1), 10);
+        addEntitiesToDb(members.get(4), 4);
+        addEntitiesToDb(members.get(0), 0);
+        addEntitiesToDb(members.get(3), 5);
+        addEntitiesToDb(members.get(2), 2);
+        addEntitiesToDb(members.get(1), 1);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), pageSize);
+        var actual = executeGetListPage(EmailDto.class, path, valueMap, sorted.size(), pageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(EmailDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -162,16 +162,17 @@ public class PhoneIntegrationTests extends IntegrationTests {
             addEntitiesToDb(members.get(1), ii + 11);
         }
 
+
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(EmailDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(EmailDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -189,45 +190,45 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
         // sort by id
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "id");
 
-        var actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(EmailDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(EmailDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
-
-        // sort by phone number
+        
+        // sort by email
         sorted = repo.findAll().stream()
-                .sorted(Comparator.comparing(PhoneEntity::getPhoneNum)).toList();
+                .sorted(Comparator.comparing(EmailEntity::getEmail)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "phone-number");
+        valueMap.add(PagingConfig.SORT_NAME, "email");
 
-        actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(EmailDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparing(PhoneDto::getPhoneNum)).toList(), actual);
+                .sorted(Comparator.comparing(EmailDto::getEmail)).toList(), actual);
 
         expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
 
-        // sort by phone-type
+        // sort by email-type
         sorted = repo.findAll().stream()
-                .sorted(Comparator.comparing(PhoneEntity::getPhoneType)).toList();
+                .sorted(Comparator.comparing(EmailEntity::getEmailType)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "phone-type");
+        valueMap.add(PagingConfig.SORT_NAME, "email-type");
 
-        actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(EmailDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparing(PhoneDto::getPhoneType)).toList(), actual);
+                .sorted(Comparator.comparing(EmailDto::getEmailType)).toList(), actual);
 
         expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
@@ -235,7 +236,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
     @Test
     public void create_returns_dto_status_created() throws Exception {
-        var create = genCreatePhoneDto(4);
+        var create = genCreateEmailDto(0);
         create.setMemberId(members.get(0).getId());
 
         // perform POST
@@ -248,7 +249,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
                 .andReturn();
 
         // verify
-        var dto = mapper.readValue(ret.getResponse().getContentAsString(), PhoneDto.class);
+        var dto = mapper.readValue(ret.getResponse().getContentAsString(), EmailDto.class);
         var entity =  repo.findById(dto.getId());
 
         assertTrue(entity.isPresent());
@@ -266,14 +267,14 @@ public class PhoneIntegrationTests extends IntegrationTests {
                 .andDo(print());
 
         // verify
-        var address = repo.findById(id);
-        assertFalse(address.isPresent());
+        var email = repo.findById(id);
+        assertFalse(email.isPresent());
     }
 
     @Test
     public void update_returns_dto_status_ok() throws Exception {
         var entities = addEntitiesToDb(members.get(1), 0);
-        var update = genUpdatePhoneDto(members.get(1).getId());
+        var update = genUpdateEmailDto(members.get(1).getId());
         var id = entities.get(1).getId();
 
         // perform PUT
@@ -291,38 +292,39 @@ public class PhoneIntegrationTests extends IntegrationTests {
         verify(update, entity.get());
     }
     
-    private List<PhoneEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
-        var entities = genPhoneEntityList(3, startFlag);
+    private List<EmailEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
+        var entities = createEmailEntityList(3, startFlag);
         entities.forEach(e -> e.setMember(member));
-        entities.get(0).setPhoneType(PhoneType.Home);
-        entities.get(1).setPhoneType(PhoneType.Work);
-        entities.get(2).setPhoneType(PhoneType.Other);
+        entities.get(0).setEmailType(EmailType.Home);
+        entities.get(1).setEmailType(EmailType.Work);
+        entities.get(2).setEmailType(EmailType.Other);
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(CreatePhoneDto expected, PhoneEntity actual) {
+    private void verify(CreateEmailDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getEmailType(), actual.getEmailType());
     }
 
-    private void verify(UpdatePhoneDto expected, PhoneEntity actual) {
+    private void verify(UpdateEmailDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getEmailType(), actual.getEmailType());
     }
 
-    private void verify(PhoneEntity expected, PhoneDto actual) {
+    private void verify(EmailEntity expected, EmailDto actual) {
         assertEquals(expected.getMember().getId(), actual.getMemberId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getEmailType(), actual.getEmailType());
     }
 
-    private void verify(List<PhoneEntity> expected, List<PhoneDto> actual) {
+    private void verify(List<EmailEntity> expected, List<EmailDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
             verify(e, found.get());
         });
     }
+
 }

@@ -1,4 +1,4 @@
-package com.smh.club.api.controllers.integration;
+package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
