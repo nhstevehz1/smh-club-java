@@ -51,7 +51,7 @@ public class EmailControllerTests extends ControllerTests {
                 .items(ret)
                 .build();
 
-        when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
+        when(svc.getEmailListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
         mockMvc.perform(get(path)
@@ -64,7 +64,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
                 .andDo(print());
 
-        verify(svc).getItemListPage(any(PageParams.class));
+        verify(svc).getEmailListPage(any(PageParams.class));
         verifyNoMoreInteractions(svc);
     }
 
@@ -73,7 +73,7 @@ public class EmailControllerTests extends ControllerTests {
         // setup
         var id = 12;
         var ret = createEmailDto(id);
-        when(svc.getItem(id)).thenReturn(Optional.of(ret));
+        when(svc.getEmail(id)).thenReturn(Optional.of(ret));
 
         // execute
         mockMvc.perform(get(path + "/{id}", id)
@@ -85,7 +85,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getEmail(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -93,7 +93,7 @@ public class EmailControllerTests extends ControllerTests {
     public void shouldReturnNotFound_when_emailId_does_not_exist() throws Exception {
         // setup
         var id = 12;
-        when(svc.getItem(id)).thenReturn(Optional.empty());
+        when(svc.getEmail(id)).thenReturn(Optional.empty());
 
         // execute
         mockMvc.perform(get(path + "/{id}", id)
@@ -101,7 +101,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(status().isNotFound())
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getEmail(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -111,7 +111,7 @@ public class EmailControllerTests extends ControllerTests {
         var id = 12;
         var ret = createEmailDto(id);
         var create = modelMapper.map(ret, CreateEmailDto.class);
-        when(svc.createItem(create)).thenReturn(ret);
+        when(svc.createEmail(create)).thenReturn(ret);
 
         // execute and verify
         mockMvc.perform(post(path)
@@ -124,7 +124,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).createItem(create);
+        verify(svc).createEmail(create);
         verifyNoMoreInteractions(svc);
     }
 
@@ -135,7 +135,7 @@ public class EmailControllerTests extends ControllerTests {
         var id = 12;
         var ret = createEmailDto(id);
         var update = modelMapper.map(ret, UpdateEmailDto.class);
-        when(svc.updateItem(id, update)).thenReturn(Optional.of(ret));
+        when(svc.updateEmail(id, update)).thenReturn(Optional.of(ret));
 
         // execute and verify
         mockMvc.perform(put(path + "/{id}", id)
@@ -149,7 +149,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).updateItem(id, update);
+        verify(svc).updateEmail(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -158,7 +158,7 @@ public class EmailControllerTests extends ControllerTests {
         // setup
         var id = 10;
         var update = genUpdateEmailDto(id);
-        when(svc.updateItem(id, update)).thenReturn(Optional.empty());
+        when(svc.updateEmail(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
         mockMvc.perform(put(path + "/{id}", id)
@@ -168,7 +168,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateItem(id, update);
+        verify(svc).updateEmail(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -176,14 +176,14 @@ public class EmailControllerTests extends ControllerTests {
     public void shouldDeleteEmail() throws Exception {
         // setup
         var id = 1;
-        doNothing().when(svc).deleteItem(id);
+        doNothing().when(svc).deleteEmail(id);
 
         // execute and verify
         mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
-        verify(svc).deleteItem(id);
+        verify(svc).deleteEmail(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -192,7 +192,7 @@ public class EmailControllerTests extends ControllerTests {
     public void shouldReturnEmailCount() throws Exception {
         // setup
         var count = 20;
-        when(svc.getItemCount()).thenReturn(CountResponse.of(count));
+        when(svc.getEmailCount()).thenReturn(CountResponse.of(count));
 
         // execute and verify
         mockMvc.perform(get(path + "/count"))
@@ -200,7 +200,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.count").value(20))
                 .andDo(print());
 
-        verify(svc).getItemCount();
+        verify(svc).getEmailCount();
         verifyNoMoreInteractions(svc);
     }
 }

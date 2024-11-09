@@ -48,7 +48,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getRenewalListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -72,7 +72,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getRenewalListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -96,7 +96,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getRenewalListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -120,7 +120,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getRenewalListPage(params);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -143,7 +143,7 @@ public class RenewalServiceTests extends ServiceTests {
         var params = createPageParam(5,100, null, "renewal-year");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getRenewalListPage(params));
         verifyNoInteractions(renRepoMock);
     }
 
@@ -157,7 +157,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renMapMock.toDtoList(page.getContent())).thenReturn(genRenewalDtoList(10));
 
         // execute
-        var pageResponse = svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getRenewalListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
@@ -177,7 +177,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renMapMock.toDto(any(RenewalEntity.class))).thenReturn(genRenewalDto(id));
 
         // execute
-        var member = svc.getItem(id);
+        var member = svc.getRenewal(id);
 
         // verify
         assertNotNull(member);
@@ -193,7 +193,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renRepoMock.findById(id)).thenReturn(Optional.empty());
 
         // execute
-        var ret = svc.getItem(id);
+        var ret = svc.getRenewal(id);
 
         //verify
         assertFalse(ret.isPresent());
@@ -219,7 +219,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renMapMock.toDto(entity)).thenReturn(renewal);
 
         // execute
-        var ret = svc.createItem(create);
+        var ret = svc.createRenewal(create);
 
         // verify
         assertNotNull(ret);
@@ -244,7 +244,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(renMapMock.toDto(entity)).thenReturn(renewal);
 
         // execute
-        var ret = svc.updateItem(id, update);
+        var ret = svc.updateRenewal(id, update);
 
         // verify
         assertTrue(ret.isPresent());
@@ -262,7 +262,7 @@ public class RenewalServiceTests extends ServiceTests {
         doNothing().when(renRepoMock).deleteById(id);
 
         // execute
-        svc.deleteItem(id);
+        svc.deleteRenewal(id);
 
         //verify
         verify(renRepoMock).deleteById(id);

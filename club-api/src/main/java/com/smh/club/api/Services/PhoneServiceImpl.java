@@ -36,7 +36,7 @@ public class PhoneServiceImpl implements PhoneService {
     private final Map<String, String> sortColumnMap = initSortColumnMap();
     
     @Override
-    public PageResponse<PhoneDto> getItemListPage(@NonNull PageParams pageParams) {
+    public PageResponse<PhoneDto> getPhoneListPage(@NonNull PageParams pageParams) {
         log.debug("Getting phone item list page: {}", pageParams);
 
         var pageRequest = PageRequest.of(
@@ -58,14 +58,14 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public Optional<PhoneDto> getItem(int id) {
+    public Optional<PhoneDto> getPhone(int id) {
         log.debug("Getting phone by id: {}", id);
 
         return phoneRepo.findById(id).map(phoneMapper::toDto);
     }
 
     @Override
-    public PhoneDto createItem(CreatePhoneDto createDto) {
+    public PhoneDto createPhone(CreatePhoneDto createDto) {
         log.debug("creating phone: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -75,7 +75,7 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public Optional<PhoneDto> updateItem(int id, UpdatePhoneDto updateDto) {
+    public Optional<PhoneDto> updatePhone(int id, UpdatePhoneDto updateDto) {
         log.debug("Updating phone, id: {}, with data: {}", id, updateDto);
 
         return phoneRepo.findByIdAndMemberId(id, updateDto.getMemberId())
@@ -84,13 +84,13 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public void deleteItem(int id) {
+    public void deletePhone(int id) {
         log.debug("Deleting address, id: {}", id);
         phoneRepo.deleteById(id);
     }
 
     @Override
-    public CountResponse getItemCount() {
+    public CountResponse getPhoneCount() {
         log.debug("Getting member count");
         return CountResponse.of(phoneRepo.count());
     }

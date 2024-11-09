@@ -47,7 +47,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getEmailListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -71,7 +71,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getEmailListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -95,7 +95,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getEmailListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -119,7 +119,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getEmailListPage(params);
 
         // verify
         verify(emailRepoMock).findAll(acPageRequest.capture());
@@ -142,7 +142,7 @@ public class EmailServiceTests extends ServiceTests {
         var params = createPageParam(5,100, null, "email");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getEmailListPage(params));
         verifyNoInteractions(emailRepoMock);
     }
 
@@ -156,7 +156,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emlMapMock.toDtoList(page.getContent())).thenReturn(createEmailDtoList(40));
 
         // execute
-        var pageResponse = svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getEmailListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
@@ -176,7 +176,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emlMapMock.toDto(any(EmailEntity.class))).thenReturn(createEmailDto(id));
 
         // execute
-        var ret = svc.getItem(id);
+        var ret = svc.getEmail(id);
 
         // verify
         assertTrue(ret.isPresent());
@@ -192,7 +192,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emailRepoMock.findById(id)).thenReturn(Optional.empty());
 
         // execute
-        var ret = svc.getItem(id);
+        var ret = svc.getEmail(id);
 
         // verify
         assertFalse(ret.isPresent());
@@ -218,7 +218,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emlMapMock.toDto(entity)).thenReturn(email);
 
         // execute
-        var ret = svc.createItem(create);
+        var ret = svc.createEmail(create);
 
         // verify
         assertNotNull(email);
@@ -244,7 +244,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emlMapMock.toDto(entity)).thenReturn(email);
 
         // execute
-        var ret = svc.updateItem(id, update);
+        var ret = svc.updateEmail(id, update);
 
         // verify
         assertTrue(ret.isPresent());
@@ -262,7 +262,7 @@ public class EmailServiceTests extends ServiceTests {
         doNothing().when(emailRepoMock).deleteById(id);
 
         // execute
-        svc.deleteItem(id);
+        svc.deleteEmail(id);
 
         //verify
         verify(emailRepoMock).deleteById(id);

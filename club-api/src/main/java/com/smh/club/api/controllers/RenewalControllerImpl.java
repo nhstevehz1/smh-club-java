@@ -25,7 +25,7 @@ public class RenewalControllerImpl implements com.smh.club.api.common.controller
     
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<RenewalDto>> getItemListPage(
+    public ResponseEntity<PageResponse<RenewalDto>> getRenewalListPage(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -42,39 +42,39 @@ public class RenewalControllerImpl implements com.smh.club.api.common.controller
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(renewSvc.getItemListPage(pageParams));
+        return ResponseEntity.ok(renewSvc.getRenewalListPage(pageParams));
     }
 
     @GetMapping("{id}")
     @Override
-    public ResponseEntity<RenewalDto> getItem(@PathVariable int id) {
-        var ret = renewSvc.getItem(id);
+    public ResponseEntity<RenewalDto> getRenewal(@PathVariable int id) {
+        var ret = renewSvc.getRenewal(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
     @Override
     public ResponseEntity<CountResponse> getCount() {
-        return ResponseEntity.ok(renewSvc.getItemCount());
+        return ResponseEntity.ok(renewSvc.getRenewalCount());
     }
 
     @PostMapping
     @Override
-    public ResponseEntity<RenewalDto> createItem(@RequestBody CreateRenewalDto createDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createItem(createDto));
+    public ResponseEntity<RenewalDto> createRenewal(@RequestBody CreateRenewalDto createDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(createDto));
     }
 
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<RenewalDto> updateItem(@PathVariable int id, @RequestBody UpdateRenewalDto updateDto) {
-        var ret = renewSvc.updateItem(id, updateDto);
+    public ResponseEntity<RenewalDto> updateRenewal(@PathVariable int id, @RequestBody UpdateRenewalDto updateDto) {
+        var ret = renewSvc.updateRenewal(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
     @Override
-    public ResponseEntity<Void> deleteItem(@PathVariable int id) {
-        renewSvc.deleteItem(id);
+    public ResponseEntity<Void> deleteRenewal(@PathVariable int id) {
+        renewSvc.deleteRenewal(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -35,7 +35,7 @@ public class RenewalServiceIml implements RenewalService {
     private final Map<String, String> sortColumnMap = initSortColumnMap();
     
     @Override
-    public PageResponse<RenewalDto> getItemListPage(PageParams pageParams) {
+    public PageResponse<RenewalDto> getRenewalListPage(PageParams pageParams) {
         var pageRequest = PageRequest.of(
                 pageParams.getPageNumber(),
                 pageParams.getPageSize(),
@@ -54,14 +54,14 @@ public class RenewalServiceIml implements RenewalService {
     }
 
     @Override
-    public Optional<RenewalDto> getItem(int id) {
+    public Optional<RenewalDto> getRenewal(int id) {
         log.debug("Getting renewal by id: {}", id);
 
         return renewalRepo.findById(id).map(renewalMapper::toDto);
     }
 
     @Override
-    public RenewalDto createItem(CreateRenewalDto renewal) {
+    public RenewalDto createRenewal(CreateRenewalDto renewal) {
         log.debug("creating renewal: {}", renewal);
 
         var memberRef = memberRepo.getReferenceById(renewal.getMemberId());
@@ -71,7 +71,7 @@ public class RenewalServiceIml implements RenewalService {
     }
 
     @Override
-    public Optional<RenewalDto> updateItem(int id, UpdateRenewalDto renewalDto) {
+    public Optional<RenewalDto> updateRenewal(int id, UpdateRenewalDto renewalDto) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
 
         return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())
@@ -80,13 +80,13 @@ public class RenewalServiceIml implements RenewalService {
     }
 
     @Override
-    public void deleteItem(int id) {
+    public void deleteRenewal(int id) {
         log.debug("Deleting address, id: {}", id);
         renewalRepo.deleteById(id);
     }
 
     @Override
-    public CountResponse getItemCount() {
+    public CountResponse getRenewalCount() {
         log.debug("Getting member count");
         return CountResponse.of(renewalRepo.count());
     }

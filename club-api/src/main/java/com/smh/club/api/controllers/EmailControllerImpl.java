@@ -26,7 +26,7 @@ public class EmailControllerImpl implements EmailController {
 
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<EmailDto>> getItemListPage(
+    public ResponseEntity<PageResponse<EmailDto>> getEmailListPage(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -43,39 +43,39 @@ public class EmailControllerImpl implements EmailController {
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(emailSvc.getItemListPage(pageParams));
+        return ResponseEntity.ok(emailSvc.getEmailListPage(pageParams));
     }
 
     @GetMapping("{id}")
     @Override
     public ResponseEntity<EmailDto> getItem(@PathVariable int id) {
-        var ret = emailSvc.getItem(id);
+        var ret = emailSvc.getEmail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
     @Override
     public ResponseEntity<CountResponse> getCount() {
-        return ResponseEntity.ok(emailSvc.getItemCount());
+        return ResponseEntity.ok(emailSvc.getEmailCount());
     }
 
     @PostMapping
     @Override
-    public ResponseEntity<EmailDto> createItem(@RequestBody CreateEmailDto emailDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createItem(emailDto));
+    public ResponseEntity<EmailDto> createEmail(@RequestBody CreateEmailDto emailDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(emailDto));
     }
 
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<EmailDto> updateItem(@PathVariable int id, @RequestBody UpdateEmailDto emailDto) {
-        var ret = emailSvc.updateItem(id, emailDto);
+    public ResponseEntity<EmailDto> updateEmail(@PathVariable int id, @RequestBody UpdateEmailDto emailDto) {
+        var ret = emailSvc.updateEmail(id, emailDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
     @Override
-    public ResponseEntity<Void> deleteItem(@PathVariable int id) {
-        emailSvc.deleteItem(id);
+    public ResponseEntity<Void> deleteEmail(@PathVariable int id) {
+        emailSvc.deleteEmail(id);
         return ResponseEntity.noContent().build();
     }
 }

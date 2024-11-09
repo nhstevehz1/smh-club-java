@@ -47,7 +47,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getPhoneListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -71,7 +71,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getPhoneListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -95,7 +95,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getPhoneListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -119,7 +119,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
-        svc.getItemListPage(params);
+        svc.getPhoneListPage(params);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -142,7 +142,7 @@ public class PhoneServiceTests extends ServiceTests {
         var params = createPageParam(5,100, null, "phoneNum");
 
         // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> svc.getItemListPage(params));
+        assertThrows(IllegalArgumentException.class, () -> svc.getPhoneListPage(params));
         verifyNoInteractions(phnRepoMock);
     }
 
@@ -156,7 +156,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnMapMock.toDtoList(page.getContent())).thenReturn(genPhoneDtoList(40));
 
         // execute
-        var pageResponse = svc.getItemListPage(PageParams.getDefault());
+        var pageResponse = svc.getPhoneListPage(PageParams.getDefault());
 
         // verify
         assertEquals(page.getTotalPages(), pageResponse.getTotalPages());
@@ -176,7 +176,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnMapMock.toDto(entity)).thenReturn(genPhoneDto(id));
 
         // execute
-        var member = svc.getItem(id);
+        var member = svc.getPhone(id);
 
         // verify
         assertTrue(member.isPresent());
@@ -192,7 +192,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnRepoMock.findById(id)).thenReturn(Optional.empty());
 
         // execute
-        var ret = svc.getItem(id);
+        var ret = svc.getPhone(id);
 
         // and verify
         assertFalse(ret.isPresent());
@@ -217,7 +217,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnMapMock.toDto(entity)).thenReturn(phone);
 
         // execute
-        var ret = svc.createItem(create);
+        var ret = svc.createPhone(create);
 
         // verify
         assertNotNull(ret);
@@ -243,7 +243,7 @@ public class PhoneServiceTests extends ServiceTests {
         when(phnMapMock.toDto(entity)).thenReturn(phone);
 
         // execute
-        var ret = svc.updateItem(id, update);
+        var ret = svc.updatePhone(id, update);
 
         // verify
         assertTrue(ret.isPresent());
@@ -261,7 +261,7 @@ public class PhoneServiceTests extends ServiceTests {
         doNothing().when(phnRepoMock).deleteById(id);
 
         // execute
-        svc.deleteItem(id);
+        svc.deletePhone(id);
 
         //verify
         verify(phnRepoMock).deleteById(id);

@@ -8,10 +8,10 @@ import com.smh.club.api.response.PageResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface EmailController {
-    ResponseEntity<PageResponse<EmailDto>> getItemListPage(int page, int size, String sortDir, String sort);
+    ResponseEntity<PageResponse<EmailDto>> getEmailListPage(int page, int size, String sortDir, String sort);
     ResponseEntity<EmailDto> getItem(int id);
     ResponseEntity<CountResponse> getCount();
-    ResponseEntity<EmailDto> createItem(CreateEmailDto emailDto);
-    ResponseEntity<EmailDto> updateItem(int id, UpdateEmailDto emailDto);
-    ResponseEntity<Void> deleteItem(int id);
+    ResponseEntity<EmailDto> createEmail(CreateEmailDto emailDto);
+    ResponseEntity<EmailDto> updateEmail(int id, UpdateEmailDto emailDto);
+    ResponseEntity<Void> deleteEmail(int id);
 }

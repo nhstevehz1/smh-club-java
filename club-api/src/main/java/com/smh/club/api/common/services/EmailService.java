@@ -10,10 +10,10 @@ import com.smh.club.api.response.PageResponse;
 import java.util.Optional;
 
 public interface EmailService {
-    PageResponse<EmailDto> getItemListPage(PageParams pageParams);
-    Optional<EmailDto> getItem(int id);
-    EmailDto createItem(CreateEmailDto updateDto);
-    Optional<EmailDto> updateItem(int id, UpdateEmailDto updateDto);
-    void deleteItem(int id);
-    CountResponse getItemCount();
+    PageResponse<EmailDto> getEmailListPage(PageParams pageParams);
+    Optional<EmailDto> getEmail(int id);
+    EmailDto createEmail(CreateEmailDto updateDto);
+    Optional<EmailDto> updateEmail(int id, UpdateEmailDto updateDto);
+    void deleteEmail(int id);
+    CountResponse getEmailCount();
 }

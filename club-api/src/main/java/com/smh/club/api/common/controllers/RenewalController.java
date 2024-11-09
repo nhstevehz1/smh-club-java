@@ -9,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 
 public interface RenewalController {
 
-    ResponseEntity<PageResponse<RenewalDto>> getItemListPage(int page, int size, String sortDir, String sort);
+    ResponseEntity<PageResponse<RenewalDto>> getRenewalListPage(int page, int size, String sortDir, String sort);
 
-    ResponseEntity<RenewalDto> getItem(int id);
+    ResponseEntity<RenewalDto> getRenewal(int id);
 
     ResponseEntity<CountResponse> getCount();
 
-    ResponseEntity<RenewalDto> createItem(CreateRenewalDto createDto);
+    ResponseEntity<RenewalDto> createRenewal(CreateRenewalDto createDto);
 
-    ResponseEntity<RenewalDto> updateItem(int id, UpdateRenewalDto updateDto);
+    ResponseEntity<RenewalDto> updateRenewal(int id, UpdateRenewalDto updateDto);
 
-    ResponseEntity<Void> deleteItem(int id);
+    ResponseEntity<Void> deleteRenewal(int id);
 }

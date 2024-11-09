@@ -49,7 +49,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .items(ret)
                 .build();
 
-        when(svc.getItemListPage(any(PageParams.class))).thenReturn(response);
+        when(svc.getPhoneListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
         mockMvc.perform(get(path)
@@ -62,7 +62,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
                 .andDo(print());
 
-        verify(svc).getItemListPage(any(PageParams.class));
+        verify(svc).getPhoneListPage(any(PageParams.class));
         verifyNoMoreInteractions(svc);
     }
 
@@ -71,7 +71,7 @@ public class PhoneControllerTests extends ControllerTests {
         // setup
         var id = 12;
         var phone = genPhoneDto(id);
-        when(svc.getItem(id)).thenReturn(Optional.of(phone));
+        when(svc.getPhone(id)).thenReturn(Optional.of(phone));
 
         // execute
         mockMvc.perform(get( path + "/{id}", id)
@@ -83,7 +83,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getPhone(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -91,7 +91,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void shouldReturnNotFound_when_phoneId_does_not_exist() throws Exception {
         // setup
         var id = 12;
-        when(svc.getItem(id)).thenReturn(Optional.empty());
+        when(svc.getPhone(id)).thenReturn(Optional.empty());
 
         // execute
         mockMvc.perform(get(path + "/{id}", id)
@@ -99,7 +99,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(status().isNotFound())
                 .andDo(print());
 
-        verify(svc).getItem(id);
+        verify(svc).getPhone(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -109,7 +109,7 @@ public class PhoneControllerTests extends ControllerTests {
         var id = 12;
         var create  = genCreatePhoneDto(id);
         var ret = genPhoneDto(id);
-        when(svc.createItem(create)).thenReturn(ret);
+        when(svc.createPhone(create)).thenReturn(ret);
 
         // execute and verify
         mockMvc.perform(post("/phones")
@@ -123,7 +123,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
-        verify(svc).createItem(create);
+        verify(svc).createPhone(create);
         verifyNoMoreInteractions(svc);
     }
 
@@ -134,7 +134,7 @@ public class PhoneControllerTests extends ControllerTests {
         var id = 12;
         var ret = genPhoneDto(id);
         var update = genUpdatePhoneDto(id);
-        when(svc.updateItem(id, update)).thenReturn(Optional.of(ret));
+        when(svc.updatePhone(id, update)).thenReturn(Optional.of(ret));
 
         // execute and verify
         mockMvc.perform(put("/phones/{id}", id)
@@ -148,7 +148,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
-        verify(svc).updateItem(id, update);
+        verify(svc).updatePhone(id, update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -157,7 +157,7 @@ public class PhoneControllerTests extends ControllerTests {
         // setup
         var id = 10;
         var update = genUpdatePhoneDto(id);
-        when(svc.updateItem(id, update)).thenReturn(Optional.empty());
+        when(svc.updatePhone(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
         mockMvc.perform(put(path + "/{id}", id)
@@ -167,7 +167,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateItem(id, update);
+        verify(svc).updatePhone(id, update);
         verifyNoMoreInteractions(svc);
     }
     
@@ -175,14 +175,14 @@ public class PhoneControllerTests extends ControllerTests {
     public void shouldDeletePhone() throws Exception {
         // setup
         var id = 1;
-        doNothing().when(svc).deleteItem(id);
+        doNothing().when(svc).deletePhone(id);
 
         // execute and verify
         mockMvc.perform(delete("/phones/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
-        verify(svc).deleteItem(id);
+        verify(svc).deletePhone(id);
         verifyNoMoreInteractions(svc);
     }
 
@@ -190,7 +190,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void shouldReturnEmailCount() throws Exception {
         // setup
         var count = 20;
-        when(svc.getItemCount()).thenReturn(CountResponse.of(count));
+        when(svc.getPhoneCount()).thenReturn(CountResponse.of(count));
 
         // execute and verify
         mockMvc.perform(get("/phones/count"))
@@ -198,7 +198,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.count").value(20))
                 .andDo(print());
 
-        verify(svc).getItemCount();
+        verify(svc).getPhoneCount();
         verifyNoMoreInteractions(svc);
     }
 }
