@@ -36,7 +36,6 @@ public class AddressEntity {
 
     @Builder.Default
     @Column(name = "address_type", nullable = false)
-    @Convert(converter = AddressTypeConverter.class)
     private AddressType addressType = AddressType.Home;
 
     @JsonIgnore // do not serialize to json

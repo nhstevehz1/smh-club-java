@@ -296,7 +296,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
         entities.forEach(e -> e.setMember(member));
         entities.get(0).setPhoneType(PhoneType.Home);
         entities.get(1).setPhoneType(PhoneType.Work);
-        entities.get(2).setPhoneType(PhoneType.Other);
+        entities.get(2).setPhoneType(PhoneType.Mobile);
         return repo.saveAllAndFlush(entities);
     }
 

@@ -3,35 +3,38 @@ package com.smh.club.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 @Getter
 public enum EmailType {
 
-    @JsonProperty(EmailTypeNames.HOME)
-    Home(0, EmailTypeNames.HOME),
+    @JsonProperty(Names.HOME)
+    Home(0, Names.HOME),
 
-    @JsonProperty(EmailTypeNames.WORK)
-    Work(1, EmailTypeNames.WORK),
+    @JsonProperty(Names.WORK)
+    Work(1, Names.WORK),
 
-    @JsonProperty(EmailTypeNames.OTHER)
-    Other(2, EmailTypeNames.OTHER);
+    @JsonProperty(Names.OTHER)
+    Other(2, Names.OTHER);
 
-    private final int emailId;
-    private final String emailName;
+    private final int code;
+    private final String emailTypeName;
 
-    EmailType(int emailId, String emailName) {
-        this.emailId = emailId;
-        this.emailName = emailName;
+    EmailType(int code, String emailTypeName) {
+        this.code = code;
+        this.emailTypeName = emailTypeName;
     }
 
-    public static EmailType getEmailType(int emailId) {
-        return Arrays.stream(EmailType.values())
-                .filter(v -> v.getEmailId() == emailId)
-                .findFirst().orElseThrow(IllegalArgumentException::new);
+    public static EmailType of (int code) {
+        return Stream.of(EmailType.values())
+                .filter(a -> a.getCode() == code)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static class EmailTypeNames extends TypeNamesBase{
-        // add more email type names if needed
+    private static class Names {
+        public final static String HOME = "Home";
+        public final static String WORK = "Work";
+        public final static String OTHER = "Other";
     }
 }

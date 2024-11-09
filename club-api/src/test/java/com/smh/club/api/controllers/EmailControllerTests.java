@@ -82,7 +82,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
                 .andExpect(jsonPath("$.email").value(ret.getEmail()))
-                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailName()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
         verify(svc).getItem(id);
@@ -121,7 +121,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
                 .andExpect(jsonPath("$.email").value(ret.getEmail()))
-                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailName()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
         verify(svc).createItem(create);
@@ -146,7 +146,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
                 .andExpect(jsonPath("$.email").value(ret.getEmail()))
-                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailName()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
         verify(svc).updateItem(id, update);

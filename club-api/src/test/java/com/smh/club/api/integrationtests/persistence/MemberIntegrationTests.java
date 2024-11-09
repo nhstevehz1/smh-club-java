@@ -262,7 +262,7 @@ public class MemberIntegrationTests extends PersistenceTestsBase {
         var m1 = createMember(0, LocalDate.now(), LocalDate.now());
         m1.addAddress(createAddress(0, AddressType.Work));
         m1.addEmail(createEmail(0, EmailType.Other));
-        m1.addPhone(createPhone(0, PhoneType.Other));
+        m1.addPhone(createPhone(0, PhoneType.Mobile));
         m1.addRenewal(createRenewal(0, LocalDate.now()));
         var id = membersRepo.save(m1).getId();
 

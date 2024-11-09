@@ -39,10 +39,10 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
-    public void savePhone_Success(int phoneTypeInt) {
+    public void savePhone_Success(int phoneTypeCode) {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var phoneType = PhoneType.getPhoneType(phoneTypeInt);
+        var phoneType = PhoneType.of(phoneTypeCode);
         var e1 = createPhone(0, phoneType);
         e1.setMember(member);
 
@@ -99,7 +99,7 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
     public void findByIdAndMemberId_returns_email() {
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
 
-        var entity = createPhone(0, PhoneType.Other);
+        var entity = createPhone(0, PhoneType.Mobile);
         entity.setMember(member);
 
         var saved = phoneRepo.save(entity);
@@ -116,7 +116,7 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
     @Test
     public void findByIdAndMemberId_returns_empty_optional() {
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var entity = createPhone(0, PhoneType.Other);
+        var entity = createPhone(0, PhoneType.Mobile);
         entity.setMember(member);
 
         var saved = phoneRepo.save(entity);

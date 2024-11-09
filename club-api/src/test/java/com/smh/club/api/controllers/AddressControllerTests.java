@@ -84,7 +84,7 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.city").value(ret.getCity()))
                 .andExpect(jsonPath("$.state").value(ret.getState()))
                 .andExpect(jsonPath("$.zip").value(ret.getZip()))
-                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressName()))
+                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
                 .andDo(print());
 
         verify(svc).getAddress(id);
@@ -128,7 +128,7 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.city").value(ret.getCity()))
                 .andExpect(jsonPath("$.state").value(ret.getState()))
                 .andExpect(jsonPath("$.zip").value(ret.getZip()))
-                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressName()))
+                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
                 .andDo(print());
 
         verify(svc).createAddress(create);
@@ -155,7 +155,7 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.city").value(ret.getCity()))
                 .andExpect(jsonPath("$.state").value(ret.getState()))
                 .andExpect(jsonPath("$.zip").value(ret.getZip()))
-                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressName()))
+                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
                 .andDo(print());
 
         verify(svc).updateAddress(id, update);

@@ -39,10 +39,10 @@ public class EmailIntegrationTests extends PersistenceTestsBase {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2})
-    public void saveEmail_Success(int emailTypeInt) {
+    public void saveEmail_Success(int emailTypeCode) {
         // setup
         var member = membersRepo.save(createMember(0, LocalDate.now(), LocalDate.now()));
-        var emailType = EmailType.getEmailType(emailTypeInt);
+        var emailType = EmailType.of(emailTypeCode);
         var e1 = createEmail(0, emailType);
         e1.setMember(member);
 

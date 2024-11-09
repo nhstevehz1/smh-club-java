@@ -80,7 +80,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.id").value(phone.getId()))
                 .andExpect(jsonPath("$.member-id").value(phone.getMemberId()))
                 .andExpect(jsonPath("$.phone-number").value(phone.getPhoneNum()))
-                .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneName()))
+                .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
         verify(svc).getItem(id);
@@ -120,7 +120,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
                 .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
-                .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneName()))
+                .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
         verify(svc).createItem(create);
@@ -145,7 +145,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
                 .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
-                .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneName()))
+                .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
         verify(svc).updateItem(id, update);

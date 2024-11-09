@@ -24,7 +24,6 @@ public class EmailEntity {
 
     @Builder.Default
     @Column(name = "email_type", nullable = false)
-    @Convert(converter = EmailTypeConverter.class)
     private EmailType emailType = EmailType.Home;
 
     @JsonIgnore // Nasty stack overflow when serializing to JSON.

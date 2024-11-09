@@ -3,35 +3,38 @@ package com.smh.club.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 @Getter
 public enum AddressType {
 
-    @JsonProperty(AddressTypeNames.HOME)
-    Home(0, AddressTypeNames.HOME),
+    @JsonProperty(Names.HOME)
+    Home(0, Names.HOME),
 
-    @JsonProperty(AddressTypeNames.WORK)
-    Work(1, AddressTypeNames.WORK),
+    @JsonProperty(Names.WORK)
+    Work(1, Names.WORK),
 
-    @JsonProperty(AddressTypeNames.OTHER)
-    Other(2,AddressTypeNames.OTHER );
+    @JsonProperty(Names.OTHER)
+    Other(2, Names.OTHER);
 
-    private final int addressId;
-    private final String addressName;
+    private final int code;
+    private final String addressTypeName;
 
-    AddressType(int addressId, String addressName) {
-        this.addressId = addressId;
-        this.addressName = addressName;
+    AddressType(int code, String addressTypeName) {
+        this.code = code;
+        this.addressTypeName = addressTypeName;
     }
 
-    public static AddressType getAddressType(int addressId) {
-        return Arrays.stream(AddressType.values())
-                .filter(v -> v.getAddressId() == addressId)
-                .findFirst().orElseThrow(IllegalArgumentException::new);
+    public static AddressType of (int code) {
+        return Stream.of(AddressType.values())
+                .filter(a -> a.getCode() == code)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static class AddressTypeNames extends TypeNamesBase {
-        // add more type names if needed.
+    private static class Names {
+        public final static String HOME = "Home";
+        public final static String WORK = "Work";
+        public final static String OTHER = "Other";
     }
 }

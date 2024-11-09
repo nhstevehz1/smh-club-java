@@ -3,35 +3,38 @@ package com.smh.club.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 @Getter
 public enum PhoneType {
 
-    @JsonProperty(PhoneTypeNames.HOME)
-    Home(0, PhoneTypeNames.HOME),
+    @JsonProperty(Names.HOME)
+    Home(0, Names.HOME),
 
-    @JsonProperty(PhoneTypeNames.WORK)
-    Work(1, PhoneTypeNames.WORK),
+    @JsonProperty(Names.WORK)
+    Work(1, Names.WORK),
 
-    @JsonProperty(PhoneTypeNames.OTHER)
-    Other(2, PhoneTypeNames.OTHER);
+    @JsonProperty(Names.Mobile)
+    Mobile(2, Names.Mobile);
 
-    private final int phoneId;
-    private final String phoneName;
+    private final int code;
+    private final String phoneTypeName;
 
-    PhoneType(int phoneId, String phoneName) {
-        this.phoneId = phoneId;
-        this.phoneName = phoneName;
+    PhoneType(int code, String phoneTypeName) {
+        this.code = code;
+        this.phoneTypeName = phoneTypeName;
     }
 
-    public static PhoneType getPhoneType(int phoneId) {
-        return Arrays.stream(PhoneType.values())
-                .filter(v -> v.getPhoneId() == phoneId)
-                .findFirst().orElseThrow(IllegalArgumentException::new);
+    public static PhoneType of (int code) {
+        return Stream.of(PhoneType.values())
+                .filter(a -> a.getCode() == code)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static class PhoneTypeNames  extends TypeNamesBase {
-        // add phone type names if needed
+    private static class Names {
+        public final static String HOME = "Home";
+        public final static String WORK = "Work";
+        public final static String Mobile = "Mobile";
     }
 }

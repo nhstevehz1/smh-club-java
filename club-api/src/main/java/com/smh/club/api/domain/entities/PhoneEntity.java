@@ -24,7 +24,6 @@ public class PhoneEntity {
 
     @Builder.Default
     @Column(name = "phone_type", nullable = false)
-    @Convert(converter = PhoneTypeConverter.class)
     private PhoneType phoneType = PhoneType.Home;
 
     @JsonIgnore // Nasty stack overflow when serializing to JSON.
