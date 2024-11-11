@@ -1,6 +1,5 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.Services.EmailServiceImpl;
 import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;

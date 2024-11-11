@@ -1,6 +1,7 @@
 package com.smh.club.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.annotations.SortDefault;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class MemberDto {
     @JsonProperty("id")
     private int id;
 
+    @SortDefault
     @JsonProperty("member-number")
     private int memberNumber;
 

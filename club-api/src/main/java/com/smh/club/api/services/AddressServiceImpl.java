@@ -1,11 +1,12 @@
-package com.smh.club.api.Services;
+package com.smh.club.api.services;
 
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.common.services.AddressService;
+import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.create.CreateAddressDto;
 import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.create.CreateAddressDto;
 import com.smh.club.api.dto.update.UpdateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -18,22 +19,17 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
 @Service
-public class AddressServiceImpl implements AddressService {
+public class AddressServiceImpl extends AbstractServiceBase implements AddressService {
 
     private final AddressRepo addressRepo;
     private final MembersRepo memberRepo;
-
     private final AddressMapper addressMapper;
-
-    private final Map<String, String> sortColumnMap = initSortColumnMap();
 
     @Override
     public PageResponse<AddressDto> getAddressListPage(@NonNull PageParams pageParams) {
@@ -43,8 +39,8 @@ public class AddressServiceImpl implements AddressService {
                 pageParams.getPageNumber(),
                 pageParams.getPageSize(),
                 pageParams.getSortDirection(),
-                sortColumnMap.getOrDefault(pageParams.getSortColumn(),
-                        sortColumnMap.get("default")));
+                getSortColumn(pageParams.getSortColumn()));
+
         log.debug("Created pageable: {}", pageRequest);
 
         var page = addressRepo.findAll(pageRequest);
@@ -96,14 +92,12 @@ public class AddressServiceImpl implements AddressService {
         return CountResponse.of(addressRepo.count());
     }
 
-    private Map<String,String> initSortColumnMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("default", "id");
-        map.put("address1", "address1");
-        map.put("address2", "address2");
-        map.put("city", "city");
-        map.put("state", "state");
-        map.put("zip", "zip");
-        return map;
+    protected String getSortColumn(String key) {
+        var source = AddressDto.class;
+        var target = AddressEntity.class;
+
+        return getSort(key, source, target)
+                .orElse(getDefaultSort(source, target)
+                        .orElse("id"));
     }
 }

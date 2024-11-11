@@ -1,7 +1,8 @@
-package com.smh.club.api.Services;
+package com.smh.club.api.services;
 
 import com.smh.club.api.common.mappers.RenewalMapper;
 import com.smh.club.api.common.services.RenewalService;
+import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
 import com.smh.club.api.dto.RenewalDto;
@@ -17,31 +18,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
 @Service
-public class RenewalServiceIml implements RenewalService {
+public class RenewalServiceIml extends AbstractServiceBase implements RenewalService {
 
     private final RenewalsRepo renewalRepo;
     private final MembersRepo memberRepo;
-
     private final RenewalMapper renewalMapper;
 
-    private final Map<String, String> sortColumnMap = initSortColumnMap();
-    
     @Override
     public PageResponse<RenewalDto> getRenewalListPage(PageParams pageParams) {
+
         var pageRequest = PageRequest.of(
                 pageParams.getPageNumber(),
                 pageParams.getPageSize(),
                 pageParams.getSortDirection(),
-                sortColumnMap.getOrDefault(pageParams.getSortColumn(),
-                        sortColumnMap.get("default")));
+                getSortColumn(pageParams.getSortColumn()));
+
         log.debug("Created pageable: {}", pageRequest);
 
         var page = renewalRepo.findAll(pageRequest);
@@ -91,12 +88,12 @@ public class RenewalServiceIml implements RenewalService {
         return CountResponse.of(renewalRepo.count());
     }
 
-    private Map<String,String> initSortColumnMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("default", "id");
-        map.put("renewal-date", "renewalDate");
-        map.put("renewal-year", "renewalYear");
+    protected String getSortColumn(String key) {
+        var source = RenewalDto.class;
+        var target = RenewalEntity.class;
 
-        return map;
+        return getSort(key, source, target)
+                .orElse(getDefaultSort(source, target)
+                        .orElse("id"));
     }
 }

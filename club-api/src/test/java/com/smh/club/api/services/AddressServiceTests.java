@@ -1,6 +1,5 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.Services.AddressServiceImpl;
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
@@ -28,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AddressServiceTests extends ServiceTests {
+
     @Mock private MembersRepo memRepoMock;
     @Mock private AddressRepo addRepoMock;
     @Mock private AddressMapper addMapMock;

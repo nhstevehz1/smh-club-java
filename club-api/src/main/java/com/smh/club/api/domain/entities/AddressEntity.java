@@ -1,6 +1,6 @@
 package com.smh.club.api.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.smh.club.api.annotations.SortExclude;
 import com.smh.club.api.dto.AddressType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,7 +37,7 @@ public class AddressEntity {
     @Column(name = "address_type", nullable = false)
     private AddressType addressType = AddressType.Home;
 
-    @JsonIgnore // do not serialize to json
+    @SortExclude
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
