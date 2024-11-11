@@ -1,12 +1,17 @@
-package com.smh.club.api.Services;
+package com.smh.club.api.services;
 
+import com.smh.club.api.configuration.ColumnSortMap;
 import com.smh.club.api.common.mappers.PhoneMapper;
 import com.smh.club.api.common.services.PhoneService;
+import com.smh.club.api.domain.entities.EmailEntity;
+import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.dto.create.CreatePhoneDto;
 import com.smh.club.api.dto.update.UpdatePhoneDto;
+import com.smh.club.api.factories.SortMapFactory;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -18,23 +23,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
 @Service
-public class PhoneServiceImpl implements PhoneService {
+public class PhoneServiceImpl extends AbstractServiceBase implements PhoneService {
     
     private final PhoneRepo phoneRepo;
     private final MembersRepo memberRepo;
-    
     private final PhoneMapper phoneMapper;
 
-    private final Map<String, String> sortColumnMap = initSortColumnMap();
-    
     @Override
     public PageResponse<PhoneDto> getPhoneListPage(@NonNull PageParams pageParams) {
         log.debug("Getting phone item list page: {}", pageParams);
@@ -43,8 +43,7 @@ public class PhoneServiceImpl implements PhoneService {
                 pageParams.getPageNumber(),
                 pageParams.getPageSize(),
                 pageParams.getSortDirection(),
-                sortColumnMap.getOrDefault(pageParams.getSortColumn(),
-                        sortColumnMap.get("default")));
+                getSortColumn(pageParams.getSortColumn()));
         
         log.debug("Created pageable: {}", pageRequest);
 
@@ -95,11 +94,12 @@ public class PhoneServiceImpl implements PhoneService {
         return CountResponse.of(phoneRepo.count());
     }
 
-    private Map<String,String> initSortColumnMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("default", "id");
-        map.put("phone-number", "phoneNum");
-        map.put("phone-type", "phoneType");
-        return map;
+    protected String getSortColumn(String key) {
+        var source = PhoneDto.class;
+        var target = PhoneEntity.class;
+
+        return getSort(key, source, target)
+                .orElse(getDefaultSort(source, target)
+                        .orElse("id"));
     }
 }

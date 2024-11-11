@@ -1,7 +1,8 @@
-package com.smh.club.api.Services;
+package com.smh.club.api.services;
 
 import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.common.services.EmailService;
+import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.EmailDto;
@@ -18,20 +19,18 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
 @Service
-public class EmailServiceImpl implements EmailService {
+public class EmailServiceImpl extends AbstractServiceBase implements EmailService {
     
     private final EmailRepo emailRepo;
     private final MembersRepo memberRepo;
     private final EmailMapper emailMapper;
-    private final Map<String, String> sortColumnMap = initSortColumnMap();
+
 
     @Override
     public PageResponse<EmailDto> getEmailListPage(@NonNull PageParams pageParams) {
@@ -41,8 +40,8 @@ public class EmailServiceImpl implements EmailService {
                 pageParams.getPageNumber(),
                 pageParams.getPageSize(),
                 pageParams.getSortDirection(),
-                sortColumnMap.getOrDefault(pageParams.getSortColumn(),
-                        sortColumnMap.get("default")));
+                getSortColumn(pageParams.getSortColumn()));
+
         log.debug("Created pageable: {}", pageRequest);
 
         var page = emailRepo.findAll(pageRequest);
@@ -92,12 +91,12 @@ public class EmailServiceImpl implements EmailService {
         return CountResponse.of(emailRepo.count());
     }
 
-    private Map<String,String> initSortColumnMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("default", "id");
-        map.put("email", "email");
-        map.put("email-type", "emailType");
-        
-        return map;
+    protected String getSortColumn(String key) {
+        var source = EmailDto.class;
+        var target = EmailEntity.class;
+
+        return getSort(key, source, target)
+                .orElse(getDefaultSort(source, target)
+                        .orElse("id"));
     }
 }

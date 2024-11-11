@@ -1,6 +1,7 @@
 package com.smh.club.api.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.smh.club.api.annotations.SortExclude;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +26,7 @@ public class RenewalEntity {
     @Column(name = "renewal_year", nullable = false)
     private String renewalYear;
 
-    @JsonIgnore // do not serialize to json
+    @SortExclude
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

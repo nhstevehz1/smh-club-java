@@ -1,11 +1,16 @@
-package com.smh.club.api.Services;
+package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.*;
+import com.smh.club.api.configuration.ColumnSortMap;
+import com.smh.club.api.common.mappers.MemberMapper;
 import com.smh.club.api.common.services.MemberService;
+import com.smh.club.api.domain.entities.EmailEntity;
+import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.dto.MemberCreateDto;
-import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.dto.MemberDetailDto;
+import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.factories.SortMapFactory;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -17,39 +22,27 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
 @Service
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl extends AbstractServiceBase implements MemberService {
 
     private final MembersRepo membersRepo;
-
     private final MemberMapper memberMapper;
-
-    private final Map<String, String> sortColumnMap = initSortColumnMap();
-
 
     @Override
     public PageResponse<MemberDto> getMemberListPage(@NonNull PageParams pageParams) {
         log.debug("Getting member item list page: {}", pageParams);
 
-        if (initSortColumnMap().containsKey(pageParams.getSortColumn())) {
-            log.debug("Sort column in map");
-        } else {
-            log.warn("Sort column not found in map. Using default");
-        }
-
         var pageRequest = PageRequest.of(
                 pageParams.getPageNumber(),
                 pageParams.getPageSize(),
                 pageParams.getSortDirection(),
-                sortColumnMap.getOrDefault(pageParams.getSortColumn(),
-                        sortColumnMap.get("default")));
+                getSortColumn(pageParams.getSortColumn()));
+
         log.debug("Created pageable: {}", pageRequest);
 
         var page = membersRepo.findAll(pageRequest);
@@ -106,17 +99,12 @@ public class MemberServiceImpl implements MemberService {
                 .map(memberMapper::toMemberDetailDto);
     }
 
-    private Map<String,String> initSortColumnMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("default", "memberNumber");
-        map.put("id", "id");
-        map.put("member-number", "memberNumber");
-        map.put("first-name", "firstName");
-        map.put("middle-name", "middleName");
-        map.put("last-name", "lastName");
-        map.put("birth-date", "birthDate");
-        map.put("joined-date", "joinedDate");
+    protected String getSortColumn(String key) {
+        var source = MemberDto.class;
+        var target = MemberEntity.class;
 
-        return map;
+        return getSort(key, source, target)
+                .orElse(getDefaultSort(source, target)
+                        .orElse("memberId"));
     }
 }

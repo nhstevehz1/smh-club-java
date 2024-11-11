@@ -1,1 +1,10 @@
 ## Externalized version of application.yml for production.
+
+server:
+  port: ${CLUB_API_PORT}
+
+spring:
+  datasource:
+    url: ${CLUB_API_DB_URL}
+    username: ${CLUB_API_DB_USER}
+    password: ${CLUB_API_DB_PASSWORD}

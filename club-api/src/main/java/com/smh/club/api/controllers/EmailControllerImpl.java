@@ -33,8 +33,7 @@ public class EmailControllerImpl implements EmailController {
                     defaultValue = "${request.paging.size}") int size,
             @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME,
-                    defaultValue = "default") String sort) {
+            @RequestParam(value = PagingConfig.SORT_NAME, required = false) String sort) {
 
         var pageParams = PageParams.builder()
                 .pageNumber(page)

@@ -1,6 +1,5 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.Services.MemberServiceImpl;
 import com.smh.club.api.common.mappers.MemberMapper;
 import com.smh.club.api.domain.entities.*;
 import com.smh.club.api.domain.repos.MembersRepo;

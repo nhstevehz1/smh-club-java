@@ -1,6 +1,7 @@
 package com.smh.club.api.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.smh.club.api.annotations.SortExclude;
 import com.smh.club.api.dto.PhoneType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,7 +26,7 @@ public class PhoneEntity {
     @Column(name = "phone_type", nullable = false)
     private PhoneType phoneType = PhoneType.Home;
 
-    @JsonIgnore // Nasty stack overflow when serializing to JSON.
+    @SortExclude
     @EqualsAndHashCode.Exclude // prevents stack overflow when calling .equals on MemberEntity
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

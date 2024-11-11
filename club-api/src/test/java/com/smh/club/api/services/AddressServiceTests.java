@@ -1,13 +1,15 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.Services.AddressServiceImpl;
 import com.smh.club.api.common.mappers.AddressMapper;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.factories.SortMapFactory;
 import com.smh.club.api.request.PageParams;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -28,6 +30,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AddressServiceTests extends ServiceTests {
+
     @Mock private MembersRepo memRepoMock;
     @Mock private AddressRepo addRepoMock;
     @Mock private AddressMapper addMapMock;

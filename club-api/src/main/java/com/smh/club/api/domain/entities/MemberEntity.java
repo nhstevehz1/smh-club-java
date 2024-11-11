@@ -1,5 +1,6 @@
 package com.smh.club.api.domain.entities;
 
+import com.smh.club.api.annotations.SortExclude;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,6 +42,7 @@ public class MemberEntity {
     @Column(name = "joined_date")
     private LocalDate joinedDate;
 
+    @SortExclude
     @Getter
     @Builder.Default
     @OneToMany(mappedBy = "member", orphanRemoval = true,
@@ -58,6 +60,7 @@ public class MemberEntity {
         this.addresses.remove(address);
     }
 
+    @SortExclude
     @Getter
     @Builder.Default
     @OneToMany(mappedBy = "member", orphanRemoval = true,
@@ -75,6 +78,7 @@ public class MemberEntity {
         this.emails.remove(email);
     }
 
+    @SortExclude
     @Getter
     @Builder.Default
     @OneToMany(mappedBy = "member", orphanRemoval = true,
@@ -92,6 +96,7 @@ public class MemberEntity {
         this.phones.remove(phone);
     }
 
+    @SortExclude
     @Getter
     @Builder.Default
     @OneToMany( mappedBy = "member", orphanRemoval = true,

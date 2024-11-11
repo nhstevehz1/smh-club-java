@@ -4,3 +4,7 @@ spring:
     properties:
       hibernate:
       format_sql: true
+
+  logging:
+    level:
+      ROOT: DEBUG
