@@ -1,6 +1,5 @@
 package com.smh.club.api.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smh.club.api.annotations.SortExclude;
 import jakarta.persistence.*;
 import lombok.*;

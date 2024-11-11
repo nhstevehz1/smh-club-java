@@ -1,17 +1,13 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.configuration.ColumnSortMap;
 import com.smh.club.api.common.mappers.RenewalMapper;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.dto.create.CreateRenewalDto;
 import com.smh.club.api.dto.update.UpdateRenewalDto;
-import com.smh.club.api.factories.SortMapFactory;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

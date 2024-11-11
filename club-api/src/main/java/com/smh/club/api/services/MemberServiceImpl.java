@@ -1,16 +1,12 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.configuration.ColumnSortMap;
 import com.smh.club.api.common.mappers.MemberMapper;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.dto.MemberCreateDto;
 import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
-import com.smh.club.api.factories.SortMapFactory;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
