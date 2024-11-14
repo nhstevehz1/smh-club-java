@@ -3,8 +3,7 @@ package com.smh.club.api.controllers;
 import com.smh.club.api.common.controllers.AddressController;
 import com.smh.club.api.common.services.AddressService;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.create.CreateAddressDto;
-import com.smh.club.api.dto.update.UpdateAddressDto;
+import com.smh.club.api.dto.CreateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
@@ -61,7 +60,7 @@ public class AddressControllerImpl implements AddressController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<AddressDto> updateAddress(@PathVariable int id, @RequestBody UpdateAddressDto address) {
+    public ResponseEntity<AddressDto> updateAddress(@PathVariable int id, @RequestBody CreateAddressDto address) {
         var ret = addressSvc.updateAddress(id, address);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

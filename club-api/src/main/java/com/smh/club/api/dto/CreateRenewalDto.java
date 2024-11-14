@@ -1,23 +1,25 @@
-package com.smh.club.api.dto.update;
+package com.smh.club.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.dto.PhoneType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdatePhoneDto {
+public class CreateRenewalDto {
+
     @JsonProperty("member-id")
     private int memberId;
 
-    @JsonProperty("phone-number")
-    private String phoneNum;
+    @JsonProperty("renewal-date")
+    private LocalDate renewalDate;
 
-    @JsonProperty("phone-type")
-    private PhoneType phoneType;
+    @JsonProperty("renewal-year")
+    private String renewalYear;
 }

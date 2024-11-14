@@ -2,9 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.EmailService;
+import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.create.CreateEmailDto;
-import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -142,7 +141,7 @@ public class EmailControllerTests extends ControllerTests {
     public void shouldUpdateEmail() throws Exception {
         // setup
         var ret = Instancio.create(EmailDto.class);
-        var update = modelMapper.map(ret, UpdateEmailDto.class);
+        var update = modelMapper.map(ret, CreateEmailDto.class);
         when(svc.updateEmail(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -165,7 +164,7 @@ public class EmailControllerTests extends ControllerTests {
     public void update_email_should_return_badRequest() throws Exception {
         // setup
         var id = 15;
-        var update = Instancio.create(UpdateEmailDto.class);
+        var update = Instancio.create(CreateEmailDto.class);
         when(svc.updateEmail(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

@@ -4,7 +4,7 @@ import com.smh.club.api.common.mappers.MemberMapper;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.MemberCreateDto;
+import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
@@ -58,7 +58,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
     }
 
     @Override
-    public MemberDto createMember(MemberCreateDto member) {
+    public MemberDto createMember(CreateMemberDto member) {
         log.debug("creating member: {}", member);
 
         var memberEntity = memberMapper.toMemberEntity(member);
@@ -67,7 +67,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
 
 
     @Override
-    public Optional<MemberDto> updateMember(int id, MemberCreateDto member) {
+    public Optional<MemberDto> updateMember(int id, CreateMemberDto member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)

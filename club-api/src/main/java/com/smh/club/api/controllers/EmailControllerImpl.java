@@ -2,8 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.EmailController;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.dto.create.CreateEmailDto;
-import com.smh.club.api.dto.update.UpdateEmailDto;
+import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
@@ -66,7 +65,7 @@ public class EmailControllerImpl implements EmailController {
 
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<EmailDto> updateEmail(@PathVariable int id, @RequestBody UpdateEmailDto emailDto) {
+    public ResponseEntity<EmailDto> updateEmail(@PathVariable int id, @RequestBody CreateEmailDto emailDto) {
         var ret = emailSvc.updateEmail(id, emailDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

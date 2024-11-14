@@ -2,9 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.PhoneService;
+import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -144,7 +143,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void shouldUpdatePhone() throws Exception {
     // setup
         var ret = Instancio.create(PhoneDto.class);
-        var update = modelMapper.map(ret, UpdatePhoneDto.class);
+        var update = modelMapper.map(ret, CreatePhoneDto.class);
         when(svc.updatePhone(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -167,7 +166,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void update_phone_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = Instancio.create(UpdatePhoneDto.class);
+        var update = Instancio.create(CreatePhoneDto.class);
         when(svc.updatePhone(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

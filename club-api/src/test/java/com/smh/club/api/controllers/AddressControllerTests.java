@@ -3,8 +3,7 @@ package com.smh.club.api.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.AddressService;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.create.CreateAddressDto;
-import com.smh.club.api.dto.update.UpdateAddressDto;
+import com.smh.club.api.dto.CreateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -151,7 +150,7 @@ public class AddressControllerTests extends ControllerTests {
     public void shouldUpdateAddress() throws Exception {
         // setup
         var ret = Instancio.create(AddressDto.class);
-        var update = modelMapper.map(ret, UpdateAddressDto.class);
+        var update = modelMapper.map(ret, CreateAddressDto.class);
         when(svc.updateAddress(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -177,7 +176,7 @@ public class AddressControllerTests extends ControllerTests {
     public void update_address_should_return_badRequest() throws Exception {
         // setup
         var id = 12;
-        var update = Instancio.create(UpdateAddressDto.class);
+        var update = Instancio.create(CreateAddressDto.class);
         when(svc.updateAddress(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
