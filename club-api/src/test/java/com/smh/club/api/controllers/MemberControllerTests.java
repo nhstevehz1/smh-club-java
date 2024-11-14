@@ -2,49 +2,64 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.MemberService;
+import com.smh.club.api.dto.MemberCreateDto;
+import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
-import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.PageResponse;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberDetailDto;
-import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberDto;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("tests")
+@ExtendWith(InstancioExtension.class)
 @WebMvcTest(MemberControllerImpl.class)
 public class MemberControllerTests extends ControllerTests{
 
     @MockBean
     private MemberService svc;
 
+    @WithSettings
+    private final Settings settings =
+            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                    .set(Keys.JPA_ENABLED, true)
+                    .set(Keys.MAX_DEPTH, 4);
+
     @Autowired
     protected MemberControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper, new ModelMapper(), "/members");
+        super(mockMvc, objMapper, "/members");
     }
 
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
+        var ret = Instancio.createList(MemberDto.class);
+
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
         var response = PageResponse.<MemberDto>builder()
                 .totalPages(100).totalCount(20)
-                .items(MemberCreators.createMemberDtoList(5))
+                .items(ret)
                 .build();
 
         when(svc.getMemberListPage(any(PageParams.class))).thenReturn(response);
@@ -67,15 +82,14 @@ public class MemberControllerTests extends ControllerTests{
     @Test
     public void shouldReturnMember() throws Exception {
         // setup
-        var id = 12;
-        var ret = createMemberDto(id);
-        when(svc.getMember(id)).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(MemberDto.class);
+        when(svc.getMember(ret.getId())).thenReturn(Optional.of(ret));
 
         // execute
-        mockMvc.perform(get(path + "/{id}", id)
+        mockMvc.perform(get(path + "/{id}", ret.getId())
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-number").value(ret.getMemberNumber()))
                 .andExpect(jsonPath("$.first-name").value(ret.getFirstName()))
                 .andExpect(jsonPath("$.middle-name").value(ret.getMiddleName()))
@@ -85,7 +99,7 @@ public class MemberControllerTests extends ControllerTests{
                 .andExpect(jsonPath("$.joined-date").value(ret.getJoinedDate().toString()))
                 .andDo(print());
 
-        verify(svc).getMember(id);
+        verify(svc).getMember(ret.getId());
         verifyNoMoreInteractions(svc);
     }
 
@@ -108,8 +122,8 @@ public class MemberControllerTests extends ControllerTests{
     @Test
     public void shouldCreateMember() throws Exception {
         // setup
-        var ret = createMemberDto(0);
-        var create = MemberCreators.createMemberCreateDto(0);
+        var ret = Instancio.create(MemberDto.class);
+        var create = modelMapper.map(ret, MemberCreateDto.class);
         when(svc.createMember(create)).thenReturn(ret);
 
         // execute and verify
@@ -134,10 +148,9 @@ public class MemberControllerTests extends ControllerTests{
     @Test
     public void shouldUpdateMember() throws Exception {
         // setup
-        var id = 10;
-        var ret = createMemberDto(10);
-        var update = MemberCreators.createMemberCreateDto(10);
-        when(svc.updateMember(id, update)).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(MemberDto.class);
+        var update = modelMapper.map(ret, MemberCreateDto.class);
+        when(svc.updateMember(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
         mockMvc.perform(put(path + "/{id}", ret.getId())
@@ -154,7 +167,7 @@ public class MemberControllerTests extends ControllerTests{
                 .andExpect(jsonPath("$.joined-date").value(ret.getJoinedDate().toString()))
                 .andDo(print());
 
-        verify(svc).updateMember(id, update);
+        verify(svc).updateMember(ret.getId(), update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -162,7 +175,7 @@ public class MemberControllerTests extends ControllerTests{
     public void update_member_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = MemberCreators.createMemberCreateDto(id);
+        var update = Instancio.create(MemberCreateDto.class);
         when(svc.updateMember(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
@@ -195,10 +208,9 @@ public class MemberControllerTests extends ControllerTests{
     @Test
     public void shouldReturnMemberDetail() throws Exception {
         // setup
-        var id = 1;
-        var ret = createMemberDetailDto(id);
+        var ret = Instancio.create(MemberDetailDto.class);
 
-        when(svc.getMemberDetail(id)).thenReturn(Optional.of(ret));
+        when(svc.getMemberDetail(ret.getId())).thenReturn(Optional.of(ret));
 
         // execute and verify
         mockMvc.perform(get(path + "/{id}/detail", ret.getId())

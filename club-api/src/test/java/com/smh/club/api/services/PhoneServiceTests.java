@@ -5,7 +5,15 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.create.CreatePhoneDto;
+import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.request.PageParams;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,12 +28,13 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(InstancioExtension.class)
 public class PhoneServiceTests extends ServiceTests {
     
     @Mock private MembersRepo memRepoMock;
@@ -38,6 +47,12 @@ public class PhoneServiceTests extends ServiceTests {
     @Mock private Page<PhoneEntity> pageMock;
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
+
+    @WithSettings
+    private final Settings settings = Settings.create()
+            .set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Test
     public void getItemListPage_with_default_pageParams() {
@@ -148,11 +163,14 @@ public class PhoneServiceTests extends ServiceTests {
     @Test
     public void getItemListPage_returns_phoneList() {
         // setup
-        var entityList = genPhoneEntityList(40);
+        var size = 10;
+        var entityList = Instancio.ofList(PhoneEntity.class).size(size).create();
+        var dtoList = Instancio.ofList(PhoneDto.class).size(size).create();
+
         var page = createEntityPage(entityList, pageableMock, 200);
 
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(phnMapMock.toDtoList(page.getContent())).thenReturn(genPhoneDtoList(40));
+        when(phnMapMock.toDtoList(page.getContent())).thenReturn(dtoList);
 
         // execute
         var pageResponse = svc.getPhoneListPage(PageParams.getDefault());
@@ -169,10 +187,12 @@ public class PhoneServiceTests extends ServiceTests {
     @Test
     public void getItem_returns_phone() {
         // setup
-        int id = 1;
-        var entity = genPhoneEntity(id);
+        var id = 1;
+        var entity = Instancio.of(PhoneEntity.class).set(field(PhoneEntity::getId), id).create();
+        var phone = Instancio.of(PhoneDto.class).set(field(PhoneDto::getId), id).create();
+
         when(phnRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(phnMapMock.toDto(entity)).thenReturn(genPhoneDto(id));
+        when(phnMapMock.toDto(entity)).thenReturn(phone);
 
         // execute
         var member = svc.getPhone(id);
@@ -202,15 +222,20 @@ public class PhoneServiceTests extends ServiceTests {
     @Test
     public void createItem_returns_phone() {
         // setup
-        var memberId = 10;
-        var member = MemberEntity.builder().id(memberId).build();
-        when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
+        var member = Instancio.create(MemberEntity.class);
+        when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = genCreatePhoneDto(1);
-        create.setMemberId(memberId);
-        var phone = genPhoneDto(1);
+        var create = Instancio.of(CreatePhoneDto.class)
+                .set(field(CreatePhoneDto::getMemberId), member.getId())
+                .create();
+        var phone = Instancio.of(PhoneDto.class)
+                .set(field(PhoneDto::getMemberId), member.getId())
+                .create();
 
-        var entity = genPhoneEntity(1);
+        var entity = Instancio.of(PhoneEntity.class)
+                .set(field(PhoneEntity::getMember), member)
+                .create();
+
         when(phnRepoMock.save(entity)).thenReturn(entity);
         when(phnMapMock.toEntity(create)).thenReturn(entity);
         when(phnMapMock.toDto(entity)).thenReturn(phone);
@@ -221,7 +246,7 @@ public class PhoneServiceTests extends ServiceTests {
         // verify
         assertNotNull(ret);
         assertEquals(phone, ret);
-        verify(memRepoMock).getReferenceById(memberId);
+        verify(memRepoMock).getReferenceById(member.getId());
         verify(phnRepoMock).save(entity);
         verify(phnMapMock).toEntity(create);
         verify(phnMapMock).toDto(entity);
@@ -232,9 +257,11 @@ public class PhoneServiceTests extends ServiceTests {
     public void updateItem_returns_phone() {
         // setup
         int id = 1;
-        var entity = genPhoneEntity(id);
-        var update = genUpdatePhoneDto(id);
-        var phone = genPhoneDto(id);
+        var entity = Instancio.create(PhoneEntity.class);
+        var update = Instancio.of(UpdatePhoneDto.class)
+                .set(field(UpdatePhoneDto::getMemberId), id)
+                .create();
+        var phone = Instancio.create(PhoneDto.class);
 
         when(phnRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
@@ -264,6 +291,21 @@ public class PhoneServiceTests extends ServiceTests {
 
         //verify
         verify(phnRepoMock).deleteById(id);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
+    }
+
+    @Test
+    public void getCount_returns_phone_count() {
+        // setup
+        long count = 5;
+        when(phnRepoMock.count()).thenReturn(count);
+
+        // execute
+        var response = svc.getPhoneCount();
+
+        // verify
+        assertEquals(count, response.getCount());
+        verify(phnRepoMock).count();
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 }

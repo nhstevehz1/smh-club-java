@@ -6,16 +6,15 @@ import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.dto.create.CreatePhoneDto;
 import com.smh.club.api.dto.update.UpdatePhoneDto;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
+
     public PhoneMapperImpl(ModelMapper mapper) {
         super(mapper);
-        configureMapper(mapper);
     }
 
     @Override
@@ -36,16 +35,5 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
     @Override
     public List<PhoneDto> toDtoList(List<PhoneEntity> entityList) {
         return mapList(entityList, PhoneDto.class);
-    }
-
-    @Override
-    protected void configureMapper(ModelMapper mapper) {
-        TypeMap<PhoneEntity, PhoneDto> dtoTypeMap
-                = this.modelMapper.createTypeMap(PhoneEntity.class, PhoneDto.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), PhoneDto::setMemberId));
-
-        TypeMap<PhoneDto, PhoneEntity> entTypeMap
-                = this.modelMapper.createTypeMap(PhoneDto.class, PhoneEntity.class);
-        entTypeMap.addMappings(m -> m.skip(PhoneEntity::setMember));
     }
 }

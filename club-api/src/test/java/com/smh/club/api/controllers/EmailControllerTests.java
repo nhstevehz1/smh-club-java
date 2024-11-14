@@ -8,8 +8,13 @@ import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,21 +32,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
+@ExtendWith(InstancioExtension.class)
 @WebMvcTest(EmailControllerImpl.class)
 public class EmailControllerTests extends ControllerTests {
 
     @MockBean
     private EmailService svc;
 
+    @WithSettings
+    private final Settings settings =
+            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                    .set(Keys.JPA_ENABLED, true)
+                    .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Autowired
     EmailControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper,new ModelMapper(), "/emails");
+        super(mockMvc, objMapper, "/emails");
     }
 
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
-        var ret = createEmailDtoList(5);
+        var ret = Instancio.createList(EmailDto.class);
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
@@ -71,12 +82,11 @@ public class EmailControllerTests extends ControllerTests {
     @Test
     public void shouldReturnEmail() throws Exception {
         // setup
-        var id = 12;
-        var ret = createEmailDto(id);
-        when(svc.getEmail(id)).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(EmailDto.class);
+        when(svc.getEmail(ret.getId())).thenReturn(Optional.of(ret));
 
         // execute
-        mockMvc.perform(get(path + "/{id}", id)
+        mockMvc.perform(get(path + "/{id}", ret.getId())
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ret.getId()))
@@ -85,7 +95,7 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).getEmail(id);
+        verify(svc).getEmail(ret.getId());
         verifyNoMoreInteractions(svc);
     }
 
@@ -108,8 +118,7 @@ public class EmailControllerTests extends ControllerTests {
     @Test
     public void shouldCreateEmail() throws Exception {
         // setup
-        var id = 12;
-        var ret = createEmailDto(id);
+        var ret = Instancio.create(EmailDto.class);
         var create = modelMapper.map(ret, CreateEmailDto.class);
         when(svc.createEmail(create)).thenReturn(ret);
 
@@ -132,13 +141,12 @@ public class EmailControllerTests extends ControllerTests {
     @Test
     public void shouldUpdateEmail() throws Exception {
         // setup
-        var id = 12;
-        var ret = createEmailDto(id);
+        var ret = Instancio.create(EmailDto.class);
         var update = modelMapper.map(ret, UpdateEmailDto.class);
-        when(svc.updateEmail(id, update)).thenReturn(Optional.of(ret));
+        when(svc.updateEmail(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
-        mockMvc.perform(put(path + "/{id}", id)
+        mockMvc.perform(put(path + "/{id}", ret.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objMapper.writeValueAsString(ret)))
@@ -149,15 +157,15 @@ public class EmailControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).updateEmail(id, update);
+        verify(svc).updateEmail(ret.getId(), update);
         verifyNoMoreInteractions(svc);
     }
 
     @Test
     public void update_email_should_return_badRequest() throws Exception {
         // setup
-        var id = 10;
-        var update = genUpdateEmailDto(id);
+        var id = 15;
+        var update = Instancio.create(UpdateEmailDto.class);
         when(svc.updateEmail(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

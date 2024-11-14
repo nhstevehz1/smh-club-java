@@ -6,16 +6,17 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.EmailType;
 import com.smh.club.api.dto.create.CreateEmailDto;
 import com.smh.club.api.dto.update.UpdateEmailDto;
-import com.smh.club.api.helpers.datacreators.MemberCreators;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
@@ -34,8 +35,8 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
+@ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(
@@ -59,9 +61,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     private MembersRepo memberRepo;
 
     @Autowired
-    private EmailRepo repo;
-
-    private List<MemberEntity> members;
+    private EmailRepo emailRepo;
 
     @Autowired
     public EmailIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -70,25 +70,27 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @BeforeAll
     public void initMembers() {
-        var entities = MemberCreators.createMemeberEntityList(5);
-        members = memberRepo.saveAllAndFlush(entities);
+        // there seems to be a bug where @WithSettings is not recognized in before all
+        var members = Instancio.ofList(MemberEntity.class)
+                .size(5)
+                .withSettings(getSettings())
+                .ignore(field(MemberEntity::getId))
+                .withUnique(field(MemberEntity::getMemberNumber))
+                .create();
+        memberRepo.saveAllAndFlush(members);
     }
 
     @AfterEach
     public void clearEmailTable() {
-        repo.deleteAll();
-        repo.flush();
+        emailRepo.deleteAll();
+        emailRepo.flush();
     }
 
     @Test
     public void getListPage_no_params() throws Exception {
-        addEntitiesToDb(members.get(4), 4);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+        addEntitiesToDb(15);
 
-        var sorted = repo.findAll().stream()
+        var sorted = emailRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -104,13 +106,9 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @Test
     public void getListPage_sortDir_desc() throws Exception {
-        addEntitiesToDb(members.get(4), 4);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+        addEntitiesToDb(15);
 
-        var sorted = repo.findAll().stream()
+        var sorted = emailRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(EmailEntity::getId).reversed()).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -129,13 +127,9 @@ public class EmailIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
     public void getListPage_pageSize(int pageSize) throws Exception {
-        addEntitiesToDb(members.get(4), 4);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+        addEntitiesToDb(15);
 
-        var sorted = repo.findAll().stream()
+        var sorted = emailRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -154,16 +148,9 @@ public class EmailIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 8, 10})
     public void getListPage_page(int page) throws Exception {
-        for (int ii = 0; ii < 10; ii++) {
-            addEntitiesToDb(members.get(4), ii + 40);
-            addEntitiesToDb(members.get(0), ii + 60);
-            addEntitiesToDb(members.get(3), ii + 50);
-            addEntitiesToDb(members.get(2), ii + 20);
-            addEntitiesToDb(members.get(1), ii + 11);
-        }
+        addEntitiesToDb(150);
 
-
-        var sorted = repo.findAll().stream()
+        var sorted = emailRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -182,14 +169,10 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @Test
     public void getListPage_sortColumn() throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 30);
-        addEntitiesToDb(members.get(2), 20);
-        addEntitiesToDb(members.get(1), 10);
+        addEntitiesToDb(15);
 
         // sort by id
-        var sorted = repo.findAll().stream()
+        var sorted = emailRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -204,7 +187,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         verify(expected, actual);
         
         // sort by email
-        sorted = repo.findAll().stream()
+        sorted = emailRepo.findAll().stream()
                 .sorted(Comparator.comparing(EmailEntity::getEmail)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
@@ -219,7 +202,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         verify(expected, actual);
 
         // sort by email-type
-        sorted = repo.findAll().stream()
+        sorted = emailRepo.findAll().stream()
                 .sorted(Comparator.comparing(EmailEntity::getEmailType)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
@@ -230,14 +213,15 @@ public class EmailIntegrationTests extends IntegrationTests {
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(EmailDto::getEmailType)).toList(), actual);
 
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
+        // email type is limited to three values. Comparing to a limit on the expected will fail randomly
     }
 
     @Test
     public void create_returns_dto_status_created() throws Exception {
-        var create = genCreateEmailDto(0);
-        create.setMemberId(members.get(0).getId());
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(CreateEmailDto.class)
+                .generate(field(CreateEmailDto::getMemberId), g -> g.oneOf(memberIdList))
+                .create();
 
         // perform POST
         var ret = mockMvc.perform(post(path)
@@ -250,7 +234,7 @@ public class EmailIntegrationTests extends IntegrationTests {
 
         // verify
         var dto = mapper.readValue(ret.getResponse().getContentAsString(), EmailDto.class);
-        var entity =  repo.findById(dto.getId());
+        var entity =  emailRepo.findById(dto.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
@@ -258,8 +242,8 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @Test
     public void delete_status_noContent() throws Exception {
-        var entities = addEntitiesToDb(members.get(1), 0);
-        var id = entities.get(0).getId();
+        var entities = addEntitiesToDb(5);
+        var id = entities.get(2).getId();
 
         // perform DELETE
         mockMvc.perform(delete(path + "/{id}", id))
@@ -267,18 +251,21 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .andDo(print());
 
         // verify
-        var email = repo.findById(id);
+        var email = emailRepo.findById(id);
         assertFalse(email.isPresent());
     }
 
     @Test
     public void update_returns_dto_status_ok() throws Exception {
-        var entities = addEntitiesToDb(members.get(1), 0);
-        var update = genUpdateEmailDto(members.get(1).getId());
-        var id = entities.get(1).getId();
+        // setup
+        var email = addEntitiesToDb(5).get(2);
+        var memberId = email.getMember().getId();
+        var update = Instancio.of(UpdateEmailDto.class)
+                .set(field(UpdateEmailDto::getMemberId), memberId)
+                .create();
 
         // perform PUT
-        mockMvc.perform(put(path + "/{id}", id)
+        mockMvc.perform(put(path + "/{id}", email.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(update)))
@@ -286,19 +273,22 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .andDo(print());
 
         // verify
-        var entity = repo.findById(id);
+        var entity = emailRepo.findById(email.getId());
 
         assertTrue(entity.isPresent());
         verify(update, entity.get());
     }
     
-    private List<EmailEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
-        var entities = createEmailEntityList(3, startFlag);
-        entities.forEach(e -> e.setMember(member));
-        entities.get(0).setEmailType(EmailType.Home);
-        entities.get(1).setEmailType(EmailType.Work);
-        entities.get(2).setEmailType(EmailType.Other);
-        return repo.saveAllAndFlush(entities);
+    private List<EmailEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
+
+        var entities = Instancio.ofList(EmailEntity.class)
+                .size(size) // must be before withSettings
+                .withSettings(getSettings())
+                .generate(field(EmailEntity::getMember), g -> g.oneOf(members))
+                .create();
+
+        return emailRepo.saveAllAndFlush(entities);
     }
 
     private void verify(CreateEmailDto expected, EmailEntity actual) {

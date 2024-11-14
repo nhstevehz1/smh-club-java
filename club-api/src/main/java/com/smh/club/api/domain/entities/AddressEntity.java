@@ -18,19 +18,19 @@ public class AddressEntity {
     @Column(name = "id", nullable = false, updatable = false, unique = true )
     private int id;
 
-    @Column(name = "address1", nullable = false)
+    @Column(name = "address1", nullable = false, length = 100)
     private String address1;
 
-    @Column(name = "address2")
+    @Column(name = "address2", length = 100)
     private String address2;
 
-    @Column(name = "city", nullable = false)
+    @Column(name = "city", nullable = false, length = 30)
     private String city;
 
-    @Column(name = "state", nullable = false)
+    @Column(name = "state", nullable = false, length = 30)
     private String state;
 
-    @Column(name = "zip", nullable = false)
+    @Column(name = "zip", nullable = false, length = 15)
     private String zip;
 
     @Builder.Default

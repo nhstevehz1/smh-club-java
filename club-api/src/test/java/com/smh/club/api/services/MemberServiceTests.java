@@ -1,10 +1,17 @@
 package com.smh.club.api.services;
 
 import com.smh.club.api.common.mappers.MemberMapper;
-import com.smh.club.api.domain.entities.*;
+import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.helpers.datacreators.MemberCreators;
+import com.smh.club.api.dto.MemberCreateDto;
+import com.smh.club.api.dto.MemberDetailDto;
+import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,14 +24,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.List;
 import java.util.Optional;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(InstancioExtension.class)
 public class MemberServiceTests extends ServiceTests {
 
     @Mock private MembersRepo repoMock;
@@ -36,6 +44,12 @@ public class MemberServiceTests extends ServiceTests {
     @Mock private Page<MemberEntity> pageMock;
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
+
+    @WithSettings
+    private final Settings settings = Settings.create()
+            .set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.MAX_DEPTH, 4);
 
     @Test
     public void getItemListPage_with_default_pageParams() {
@@ -146,10 +160,14 @@ public class MemberServiceTests extends ServiceTests {
     @Test
     public void getMemberListPage_returns_memberList() {
         // setup
-        var entities = MemberCreators.createMemeberEntityList(10);
-        var page = createEntityPage(entities, pageableMock, 20);
+        var size = 20;
+        var entityList = Instancio.ofList(MemberEntity.class).size(size).create();
+        var dtoList = Instancio.ofList(MemberDto.class).size(size).create();
+
+        var page = createEntityPage(entityList, pageableMock, 200);
+
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(mapperMock.toMemberDtoList(page.getContent())).thenReturn(MemberCreators.createMemberDtoList(10));
+        when(mapperMock.toMemberDtoList(page.getContent())).thenReturn(dtoList);
 
         // execute
         var pageResponse = svc.getMemberListPage(PageParams.getDefault());
@@ -167,10 +185,11 @@ public class MemberServiceTests extends ServiceTests {
     public void getItem_returns_member() {
         // setup
         int id = 1;
-        var entity = MemberCreators.createMemberEntity(id);
+        var entity = Instancio.of(MemberEntity.class).set(field(MemberEntity::getId), id).create();
+        var member = Instancio.of(MemberDto.class).set(field(MemberDto::getId), id).create();
+
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(mapperMock.toMemberDto(any(MemberEntity.class)))
-                .thenReturn(MemberCreators.createMemberDto(id));
+        when(mapperMock.toMemberDto(any(MemberEntity.class))).thenReturn(member);
 
         // execute
         var ret = svc.getMember(id);
@@ -200,9 +219,10 @@ public class MemberServiceTests extends ServiceTests {
     @Test
     public void createMember_returns_member() {
         // setup
-        var create = MemberCreators.createMemberCreateDto(1);
-        var member = MemberCreators.createMemberDto(1);
-        var entity = MemberCreators.createMemberEntity(1);
+        var create = Instancio.create(MemberCreateDto.class);
+        var member = Instancio.create(MemberDto.class);
+        var entity = Instancio.create(MemberEntity.class);
+
         when(repoMock.save(entity)).thenReturn(entity);
         when(mapperMock.toMemberEntity(create)).thenReturn(entity);
         when(mapperMock.toMemberDto(entity)).thenReturn(member);
@@ -223,9 +243,9 @@ public class MemberServiceTests extends ServiceTests {
     public void updateMember_returns_member() {
         // setup
         int id = 1;
-        var entity = MemberCreators.createMemberEntity(id);
-        var update = MemberCreators.createMemberCreateDto(id);
-        var member = MemberCreators.createMemberDto(id);
+        var update = Instancio.create(MemberCreateDto.class);
+        var member = Instancio.create(MemberDto.class);
+        var entity = Instancio.create(MemberEntity.class);
 
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
 
@@ -277,13 +297,8 @@ public class MemberServiceTests extends ServiceTests {
     public void getMemberDetail_returns_memberDetail() {
         // setup
         int id = 1;
-        var entity = MemberCreators.createMemberEntity(1);
-        entity.setAddresses(List.of(AddressEntity.builder().build()));
-        entity.setEmails(List.of(EmailEntity.builder().build()));
-        entity.setPhones(List.of(PhoneEntity.builder().build()));
-        entity.setRenewals(List.of(RenewalEntity.builder().build()));
-
-        var memberDetail = MemberCreators.createMemberDetailDto(id);
+        var entity = Instancio.create(MemberEntity.class);
+        var memberDetail = Instancio.create(MemberDetailDto.class);
 
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
         when(mapperMock.toMemberDetailDto(entity)).thenReturn(memberDetail);
@@ -294,6 +309,7 @@ public class MemberServiceTests extends ServiceTests {
         assertTrue(ret.isPresent());
 
         var detail = ret.get();
+        assertEquals(memberDetail.getId(), detail.getId());
         assertNotNull(detail.getAddresses());
         assertNotNull(detail.getEmails());
         assertNotNull(detail.getPhones());

@@ -1,35 +1,38 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.AddressEntity;
-import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.create.CreateAddressDto;
+import com.smh.club.api.dto.update.UpdateAddressDto;
 import com.smh.club.api.mappers.config.MapperConfig;
-import org.junit.jupiter.api.BeforeAll;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Comparator;
+import static org.instancio.Select.field;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static com.smh.club.api.helpers.datacreators.AddressCreators.*;
-import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(InstancioExtension.class)
 public class AddressMapperTests {
 
-    private AddressMapperImpl mapper;
+    private final AddressMapperImpl mapper =
+            new AddressMapperImpl(new MapperConfig().createModelMapper());
 
-    @BeforeAll
-    public void initMapper() {
-        this.mapper = new AddressMapperImpl(new MapperConfig().createModelMapper());
-    }
+    @WithSettings
+    private final Settings settings = Settings.create()
+            .set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var address = genCreateAddressDto(1);
+        var address = Instancio.create(CreateAddressDto.class);
 
         // execute
         var entity = mapper.toEntity(address);
@@ -50,36 +53,18 @@ public class AddressMapperTests {
         assertNull(entity.getMember());
     }
 
+
     @Test
     public void from_entity_to_dto() {
         // setup
-        var member = createMemberEntity(10);
-        var entity = genAddressEntity(5, member);
+        var entity = Instancio.create(AddressEntity.class);
 
         // execute
-        var dataObject = mapper.toDto(entity);
+        var address = mapper.toDto(entity);
 
         // verify
-        assertEquals(entity.getId(), dataObject.getId());
-        assertEquals(entity.getMember().getId(), dataObject.getMemberId());
-        assertEquals(entity.getAddress1(), dataObject.getAddress1());
-        assertEquals(entity.getAddress2(), dataObject.getAddress2());
-        assertEquals(entity.getCity(), dataObject.getCity());
-        assertEquals(entity.getState(), dataObject.getState());
-        assertEquals(entity.getZip(), dataObject.getZip());
-        assertEquals(entity.getAddressType(), dataObject.getAddressType());
-    }
-
-    @Test
-    public void update_entity_from_updateDto() {
-        // setup
-        var address = genUpdateAddressDto(1);
-        var entity = genAddressEntity(1);
-
-        // execute
-        mapper.updateEntity(address, entity);
-
-        // verify
+        assertEquals(entity.getId(), address.getId());
+        assertEquals(entity.getMember().getId(), address.getMemberId());
         assertEquals(entity.getAddress1(), address.getAddress1());
         assertEquals(entity.getAddress2(), address.getAddress2());
         assertEquals(entity.getCity(), address.getCity());
@@ -88,33 +73,57 @@ public class AddressMapperTests {
         assertEquals(entity.getAddressType(), address.getAddressType());
     }
 
+    @Test
+    public void update_entity_from_updateDto() {
+        // setup
+        var entity = Instancio.create(AddressEntity.class);
+        var update = Instancio.create(UpdateAddressDto.class);
+
+        // execute
+        var updatedEntity = mapper.updateEntity(update, entity);
+
+        // verify
+        assertEquals(entity.getId(), updatedEntity.getId());
+
+        assertEquals(update.getAddress1(), updatedEntity.getAddress1());
+        assertEquals(update.getAddress2(), updatedEntity.getAddress2());
+        assertEquals(update.getCity(), updatedEntity.getCity());
+        assertEquals(update.getState(), updatedEntity.getState());
+        assertEquals(update.getZip(), updatedEntity.getZip());
+        assertEquals(update.getAddressType(), updatedEntity.getAddressType());
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
     public void from_entityList_to_dtoList(int size) {
         // setup
-        var member = createMemberEntity(1);
-        var entityList = genAddressEntityList(size, member);
-        entityList.sort(Comparator.comparingInt(AddressEntity::getId));
+        var entityList = Instancio.ofList(AddressEntity.class)
+                .size(size)
+                .withUnique(field(AddressEntity::getId))
+                .create();
 
         // execute
-        var dataObjectList = mapper.toDtoList(entityList);
-        dataObjectList.sort(Comparator.comparingInt(AddressDto::getId));
+        var addressList = mapper.toDtoList(entityList);
 
         // verify
-        assertEquals(entityList.size(), dataObjectList.size());
-        for (int ii = 0; ii < dataObjectList.size(); ii++) {
-            var entity = entityList.get(ii);
-            var dataObject = dataObjectList.get(ii);
+        assertEquals(entityList.size(), addressList.size());
 
-            assertEquals(entity.getId(), dataObject.getId());
-            assertEquals(entity.getMember().getId(), dataObject.getMemberId());
-            assertEquals(entity.getAddress1(), dataObject.getAddress1());
-            assertEquals(entity.getAddress2(), dataObject.getAddress2());
-            assertEquals(entity.getCity(), dataObject.getCity());
-            assertEquals(entity.getState(), dataObject.getState());
-            assertEquals(entity.getZip(), dataObject.getZip());
-            assertEquals(entity.getAddressType(), dataObject.getAddressType());
+        for (var address : addressList) {
+            var optional = entityList.stream()
+                    .filter(e -> e.getId() == address.getId()).findFirst();
 
+            assertTrue(optional.isPresent());
+
+            var entity = optional.get();
+
+            assertEquals(entity.getId(), address.getId());
+            assertEquals(entity.getMember().getId(), address.getMemberId());
+            assertEquals(entity.getAddress1(), address.getAddress1());
+            assertEquals(entity.getAddress2(), address.getAddress2());
+            assertEquals(entity.getCity(), address.getCity());
+            assertEquals(entity.getState(), address.getState());
+            assertEquals(entity.getZip(), address.getZip());
+            assertEquals(entity.getAddressType(), address.getAddressType());
         }
     }
 

@@ -3,6 +3,8 @@ package com.smh.club.api.integrationtests.controllers;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.response.PageResponse;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
@@ -26,6 +28,12 @@ public abstract class IntegrationTests {
         this.mockMvc = mockMvc;
         this.mapper = mapper;
         this.path = path;
+    }
+
+    protected Settings getSettings() {
+        return Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                .set(Keys.JPA_ENABLED, true)
+                .set(Keys.COLLECTION_MAX_SIZE, 0);
     }
 
     protected <T> List<T> executeGetListPage(

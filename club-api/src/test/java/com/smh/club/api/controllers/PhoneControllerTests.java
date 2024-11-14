@@ -3,11 +3,18 @@ package com.smh.club.api.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.PhoneService;
 import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.create.CreatePhoneDto;
+import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,20 +32,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
+@ExtendWith(InstancioExtension.class)
 @WebMvcTest(PhoneControllerImpl.class)
 public class PhoneControllerTests extends ControllerTests {
+
     @MockBean
     private PhoneService svc;
 
+    @WithSettings
+    private final Settings settings =
+            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                    .set(Keys.JPA_ENABLED, true)
+                    .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Autowired
     protected PhoneControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper, new ModelMapper(), "/phones");
+        super(mockMvc, objMapper, "/phones");
     }
 
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
-        var ret = genPhoneDtoList(5);
+        var ret = Instancio.createList(PhoneDto.class);
 
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
@@ -69,21 +83,20 @@ public class PhoneControllerTests extends ControllerTests {
     @Test
     public void shouldReturnPhone() throws Exception {
         // setup
-        var id = 12;
-        var phone = genPhoneDto(id);
-        when(svc.getPhone(id)).thenReturn(Optional.of(phone));
+        var ret = Instancio.create(PhoneDto.class);
+        when(svc.getPhone(ret.getId())).thenReturn(Optional.of(ret));
 
         // execute
-        mockMvc.perform(get( path + "/{id}", id)
+        mockMvc.perform(get( path + "/{id}", ret.getId())
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(phone.getId()))
-                .andExpect(jsonPath("$.member-id").value(phone.getMemberId()))
-                .andExpect(jsonPath("$.phone-number").value(phone.getPhoneNum()))
-                .andExpect(jsonPath("$.phone-type").value(phone.getPhoneType().getPhoneTypeName()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
+                .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
-        verify(svc).getPhone(id);
+        verify(svc).getPhone(ret.getId());
         verifyNoMoreInteractions(svc);
     }
 
@@ -106,9 +119,8 @@ public class PhoneControllerTests extends ControllerTests {
     @Test
     public void shouldCreatePhone() throws Exception {
         // setup
-        var id = 12;
-        var create  = genCreatePhoneDto(id);
-        var ret = genPhoneDto(id);
+        var ret  = Instancio.create(PhoneDto.class);
+        var create = modelMapper.map(ret, CreatePhoneDto.class);
         when(svc.createPhone(create)).thenReturn(ret);
 
         // execute and verify
@@ -131,13 +143,12 @@ public class PhoneControllerTests extends ControllerTests {
     @Test
     public void shouldUpdatePhone() throws Exception {
     // setup
-        var id = 12;
-        var ret = genPhoneDto(id);
-        var update = genUpdatePhoneDto(id);
-        when(svc.updatePhone(id, update)).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(PhoneDto.class);
+        var update = modelMapper.map(ret, UpdatePhoneDto.class);
+        when(svc.updatePhone(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
-        mockMvc.perform(put("/phones/{id}", id)
+        mockMvc.perform(put("/phones/{id}", ret.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objMapper.writeValueAsString(update)))
@@ -148,7 +159,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
-        verify(svc).updatePhone(id, update);
+        verify(svc).updatePhone(ret.getId(), update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -156,7 +167,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void update_phone_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = genUpdatePhoneDto(id);
+        var update = Instancio.create(UpdatePhoneDto.class);
         when(svc.updatePhone(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

@@ -4,11 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.AddressService;
 import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.dto.create.CreateAddressDto;
+import com.smh.club.api.dto.update.UpdateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.AddressCreators.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -27,20 +32,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
+@ExtendWith(InstancioExtension.class)
 @WebMvcTest(AddressControllerImpl.class)
 public class AddressControllerTests extends ControllerTests {
+
     @MockBean
     private AddressService svc;
 
+    @WithSettings
+    private final Settings settings =
+            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                .set(Keys.JPA_ENABLED, true)
+                .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Autowired
-    protected AddressControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper, new ModelMapper(),"/addresses");
+    public AddressControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
+        super(mockMvc, objMapper, "/addresses");
     }
     
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
-        var ret = genAddressDtoList(5);
+        var ret = Instancio.createList(AddressDto.class);
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
@@ -69,12 +82,11 @@ public class AddressControllerTests extends ControllerTests {
     @Test
     public void shouldReturnAddress() throws Exception {
         // setup
-        var id = 12;
-        var ret = genAddressDto(id);
-        when(svc.getAddress(id)).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(AddressDto.class);
+        when(svc.getAddress(ret.getId())).thenReturn(Optional.of(ret));
 
         // execute
-        mockMvc.perform(get(path + "/{id}", id)
+        mockMvc.perform(get(path + "/{id}", ret.getId())
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ret.getId()))
@@ -87,7 +99,7 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
                 .andDo(print());
 
-        verify(svc).getAddress(id);
+        verify(svc).getAddress(ret.getId());
         verifyNoMoreInteractions(svc);
     }
 
@@ -110,9 +122,9 @@ public class AddressControllerTests extends ControllerTests {
     @Test
     public void shouldCreateAddress() throws Exception {
         // setup
-        var id = 12;
-        var ret = genAddressDto(id);
+        var ret = Instancio.create(AddressDto.class);
         var create = modelMapper.map(ret, CreateAddressDto.class);
+
         when(svc.createAddress(create)).thenReturn(ret);
 
         // execute and verify
@@ -121,7 +133,7 @@ public class AddressControllerTests extends ControllerTests {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objMapper.writeValueAsString(create)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
                 .andExpect(jsonPath("$.address1").value(ret.getAddress1()))
                 .andExpect(jsonPath("$.address2").value(ret.getAddress2()))
@@ -138,13 +150,12 @@ public class AddressControllerTests extends ControllerTests {
     @Test
     public void shouldUpdateAddress() throws Exception {
         // setup
-        var id = 10;
-        var update = genUpdateAddressDto(10);
-        var ret = modelMapper.map(update, AddressDto.class);
-        when(svc.updateAddress(id, update)).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(AddressDto.class);
+        var update = modelMapper.map(ret, UpdateAddressDto.class);
+        when(svc.updateAddress(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
-        mockMvc.perform(put("/addresses/{id}", id)
+        mockMvc.perform(put("/addresses/{id}", ret.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objMapper.writeValueAsString(update))).andExpect(status().isOk())
@@ -158,15 +169,15 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
                 .andDo(print());
 
-        verify(svc).updateAddress(id, update);
+        verify(svc).updateAddress(ret.getId(), update);
         verifyNoMoreInteractions(svc);
     }
 
     @Test
     public void update_address_should_return_badRequest() throws Exception {
         // setup
-        var id = 10;
-        var update = genUpdateAddressDto(id);
+        var id = 12;
+        var update = Instancio.create(UpdateAddressDto.class);
         when(svc.updateAddress(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

@@ -18,7 +18,7 @@ public class PhoneEntity {
     @Column(name = "id", nullable = false, updatable = false, unique = true )
     private int id;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number", nullable = false, length = 10)
     private String phoneNum;
 
     @Builder.Default
