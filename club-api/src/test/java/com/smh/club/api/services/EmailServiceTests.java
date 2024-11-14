@@ -5,7 +5,15 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.EmailDto;
+import com.smh.club.api.dto.create.CreateEmailDto;
+import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PageParams;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,12 +28,13 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.EmailCreators.*;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(InstancioExtension.class)
 public class EmailServiceTests extends ServiceTests {
 
     @Mock private MembersRepo memRepoMock;
@@ -38,6 +47,12 @@ public class EmailServiceTests extends ServiceTests {
     @Mock private Page<EmailEntity> pageMock;
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
+
+    @WithSettings
+    private final Settings settings = Settings.create()
+            .set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Test
     public void getItemListPage_with_default_pageParams() {
@@ -148,11 +163,14 @@ public class EmailServiceTests extends ServiceTests {
     @Test
     public void getItemListPage_returns_emailList() {
         // setup
-        var entityList = createEmailEntityList(40);
+        var size = 10;
+        var entityList = Instancio.ofList(EmailEntity.class).size(size).create();
+        var dtoList = Instancio.ofList(EmailDto.class).size(size).create();
+
         var page = createEntityPage(entityList, pageableMock, 200);
 
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(emlMapMock.toDtoList(page.getContent())).thenReturn(createEmailDtoList(40));
+        when(emlMapMock.toDtoList(page.getContent())).thenReturn(dtoList);
 
         // execute
         var pageResponse = svc.getEmailListPage(PageParams.getDefault());
@@ -170,9 +188,11 @@ public class EmailServiceTests extends ServiceTests {
     public void getItem_returns_email() {
         // setup
         int id = 1;
-        var entity = genEmailEntity(id);
+        var entity = Instancio.of(EmailEntity.class).set(field(EmailEntity::getId), id).create();
+        var email = Instancio.of(EmailDto.class).set(field(EmailDto::getId), id).create();
+
         when(emailRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(emlMapMock.toDto(any(EmailEntity.class))).thenReturn(createEmailDto(id));
+        when(emlMapMock.toDto(any(EmailEntity.class))).thenReturn(email);
 
         // execute
         var ret = svc.getEmail(id);
@@ -202,15 +222,19 @@ public class EmailServiceTests extends ServiceTests {
     @Test
     public void create_email_returns_emailDto() {
         // setup
-        var memberId = 1;
-        var member = MemberEntity.builder().id(memberId).build();
-        when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
+        var member = Instancio.create(MemberEntity.class);
+        when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = genCreateEmailDto(1);
-        var email = createEmailDto(1);
-        email.setMemberId(memberId);
+        var create = Instancio.of(CreateEmailDto.class)
+                .set(field(CreateEmailDto::getMemberId), member.getId())
+                .create();
+        var email = Instancio.of(EmailDto.class)
+                .set(field(EmailDto::getMemberId), member.getId())
+                .create();
 
-        var entity = genEmailEntity(1);
+        var entity = Instancio.of(EmailEntity.class)
+                .set(field(EmailEntity::getMember), member)
+                .create();
 
         when(emailRepoMock.save(entity)).thenReturn(entity);
         when(emlMapMock.toEntity(create)).thenReturn(entity);
@@ -222,7 +246,7 @@ public class EmailServiceTests extends ServiceTests {
         // verify
         assertNotNull(email);
         assertEquals(email, ret);
-        verify(memRepoMock).getReferenceById(memberId);
+        verify(memRepoMock).getReferenceById(member.getId());
         verify(emailRepoMock).save(entity);
         verify(emlMapMock).toEntity(create);
         verify(emlMapMock).toDto(entity);
@@ -233,9 +257,11 @@ public class EmailServiceTests extends ServiceTests {
     public void updateItem_returns_email() {
         // setup
         int id = 1;
-        var entity = genEmailEntity(id);
-        var update = genUpdateEmailDto(id);
-        var email = createEmailDto(id);
+        var entity = Instancio.create(EmailEntity.class);
+        var update = Instancio.of(UpdateEmailDto.class)
+                .set(field(UpdateEmailDto::getMemberId), id)
+                .create();
+        var email = Instancio.create(EmailDto.class);
 
         when(emailRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 

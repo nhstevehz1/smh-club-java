@@ -1,14 +1,14 @@
 package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.dto.MemberCreateDto;
 import com.smh.club.api.dto.MemberDto;
-import com.smh.club.api.helpers.datacreators.MemberCreators;
+import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -66,7 +67,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(entitySize, sorted.size());
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
@@ -124,13 +125,16 @@ public class MemberIntegrationTests extends IntegrationTests {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
 
+        var count = memberRepo.count();
+
         var sorted = memberRepo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
+
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
 
-        var actual = executeGetListPage(MemberDto.class, "/members",
+        var actual = executeGetListPage(MemberDto.class, path,
                 valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
@@ -248,10 +252,11 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void createMember_returns_memberDto_status_created() throws Exception {
         // create member
-        var create = MemberCreators.createMemberCreateDto(100);
+        var create = Instancio.of(MemberCreateDto.class)
+                .create();
 
         // perform POST
-        var ret = mockMvc.perform(post("/members")
+        var ret = mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(create)))
@@ -285,24 +290,32 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void update_returns_memberDto_status_ok() throws Exception{
         // create several members
-        var entities = addEntitiesToDb(10);
-        var update = MemberCreators.createMemberCreateDto(100);
-        var id = entities.get(5).getId();
+        var member = addEntitiesToDb(10).get(5);
+        var update = Instancio.of(MemberCreateDto.class)
+                .set(field(MemberCreateDto::getMemberNumber), member.getMemberNumber())
+                .create();
 
-        mockMvc.perform(put("/members/{id}", id)
+        mockMvc.perform(put( path + "/{id}", member.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        var member = memberRepo.findById(id);
-        assertTrue(member.isPresent());
-        verify(update, member.get());
+        var entity = memberRepo.findById(member.getId());
+        assertTrue(entity.isPresent());
+        verify(update, entity.get());
     }
 
     private List<MemberEntity> addEntitiesToDb(int size) {
-        return memberRepo.saveAllAndFlush(MemberCreators.createMemeberEntityList(size));
+        var entities = Instancio.ofList(MemberEntity.class)
+                .size(size) // must be before withSettings
+                .withSettings(getSettings())
+                .withUnique(field(MemberEntity::getMemberNumber))
+                .ignore(field(MemberEntity::getId))
+                .create();
+
+        return memberRepo.saveAllAndFlush(entities);
     }
 
     private void verify(MemberCreateDto expected, MemberEntity actual) {

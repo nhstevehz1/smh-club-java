@@ -1,33 +1,38 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.PhoneEntity;
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.dto.create.CreatePhoneDto;
+import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.mappers.config.MapperConfig;
-import org.junit.jupiter.api.BeforeEach;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Comparator;
+import static org.instancio.Select.field;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemberEntity;
-import static com.smh.club.api.helpers.datacreators.PhoneCreators.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
+@ExtendWith(InstancioExtension.class)
 public class PhoneMapperTests {
 
-    private PhoneMapperImpl mapper;
+    private final PhoneMapperImpl mapper
+            = new PhoneMapperImpl(new MapperConfig().createModelMapper());
 
-    @BeforeEach
-    public void initMapper() {
-        this.mapper = new PhoneMapperImpl(new MapperConfig().createModelMapper());
-    }
+    @WithSettings
+    private final Settings settings = Settings.create()
+            .set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var create = genCreatePhoneDto(0);
+        var create = Instancio.create(CreatePhoneDto.class);
 
         // execute
         var entity = mapper.toEntity(create);
@@ -47,8 +52,7 @@ public class PhoneMapperTests {
     @Test
     public void from_entity_to_dto() {
         // setup
-        var member = createMemberEntity(10);
-        var entity = genPhoneEntity(5, member);
+        var entity = Instancio.create(PhoneEntity.class);
 
         // execute
         var ret = mapper.toDto(entity);
@@ -61,15 +65,17 @@ public class PhoneMapperTests {
     }
 
     @Test
-    public void update_entity_from_createDto() {
+    public void update_entity_from_updateDto() {
         // setup
-        var update = genUpdatePhoneDto(10);
-        var entity = genPhoneEntity(5);
+        var update = Instancio.create(UpdatePhoneDto.class);
+        var entity = Instancio.create(PhoneEntity.class);
 
         // execute
-        mapper.updateEntity(update, entity);
+        var updatedEntity = mapper.updateEntity(update, entity);
 
         // verify
+        assertEquals(entity.getId(), updatedEntity.getId());
+        assertEquals(entity.getMember(), updatedEntity.getMember());
         assertEquals(update.getPhoneNum(), entity.getPhoneNum());
         assertEquals(update.getPhoneType(), entity.getPhoneType());
     }
@@ -78,25 +84,29 @@ public class PhoneMapperTests {
     @ValueSource(ints = {5, 10, 20})
     public void from_entityList_to_dtoList(int size) {
         // setup
-        var member = createMemberEntity(1);
-        var entityList = genPhoneEntityList(size, member);
-        entityList.sort(Comparator.comparingInt(PhoneEntity::getId));
+        var entityList = Instancio.ofList(PhoneEntity.class)
+                .size(size)
+                .withUnique(field(PhoneEntity::getId))
+                .create();
 
         // execute
-        var phoneDtoList = mapper.toDtoList(entityList);
-        phoneDtoList.sort(Comparator.comparingInt(PhoneDto::getId));
+        var phoneList = mapper.toDtoList(entityList);
 
         // verify
-        assertEquals(entityList.size(), phoneDtoList.size());
-        for (int ii = 0; ii < phoneDtoList.size(); ii++) {
-            var entity = entityList.get(ii);
-            var dataObject = phoneDtoList.get(ii);
+        assertEquals(entityList.size(), phoneList.size());
 
-            assertEquals(entity.getId(), dataObject.getId());
-            assertEquals(entity.getMember().getId(), dataObject.getMemberId());
-            assertEquals(entity.getPhoneNum(), dataObject.getPhoneNum());
-            assertEquals(entity.getPhoneType(), dataObject.getPhoneType());
+        for (var phone : phoneList) {
+            var optional = entityList.stream()
+                    .filter(e -> e.getId() == phone.getId()).findFirst();
+
+            assertTrue(optional.isPresent());
+
+            var entity = optional.get();
+
+            assertEquals(entity.getId(), phone.getId());
+            assertEquals(entity.getMember().getId(), phone.getMemberId());
+            assertEquals(entity.getPhoneNum(), phone.getPhoneNum());
+            assertEquals(entity.getPhoneType(), phone.getPhoneType());
         }
     }
-
 }

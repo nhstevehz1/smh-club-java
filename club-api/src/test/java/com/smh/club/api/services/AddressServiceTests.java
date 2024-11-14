@@ -5,7 +5,15 @@ import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.create.CreateAddressDto;
+import com.smh.club.api.dto.update.UpdateAddressDto;
 import com.smh.club.api.request.PageParams;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,12 +28,13 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.AddressCreators.*;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(InstancioExtension.class)
 public class AddressServiceTests extends ServiceTests {
 
     @Mock private MembersRepo memRepoMock;
@@ -39,8 +48,14 @@ public class AddressServiceTests extends ServiceTests {
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
+    @WithSettings
+    private final Settings settings = Settings.create()
+            .set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Test
-    public void getAddressListPage_with_defaultPageParams() {
+    public void getAddressListPage_with_default_pageParams() {
         // setup
         var params = PageParams.getDefault();
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
@@ -91,7 +106,7 @@ public class AddressServiceTests extends ServiceTests {
     @Test
     public void getAddressListPage_unknown_sortColumn_uses_default() {
         // setup
-        var params = createPageParam(5, 100, Sort.Direction.DESC, "thisIsNotAColumn");
+        var params = createPageParam(5, 100, Sort.Direction.DESC, "unknownColumn");
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
         // execute
@@ -147,13 +162,16 @@ public class AddressServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getAddressListPage_returnsAddressList() {
+    public void getAddressListPage_returns_AddressList() {
         // setup
-        var entityList = genAddressEntityList(10);
+        var size = 10;
+        var entityList = Instancio.ofList(AddressEntity.class).size(size).create();
+        var dtoList = Instancio.ofList(AddressDto.class).size(size).create();
+
         var page = createEntityPage(entityList, pageableMock, 200);
 
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(addMapMock.toDtoList(page.getContent())).thenReturn(genAddressDtoList(10));
+        when(addMapMock.toDtoList(page.getContent())).thenReturn(dtoList);
 
         // execute
         var pageResponse = svc.getAddressListPage(PageParams.getDefault());
@@ -171,8 +189,9 @@ public class AddressServiceTests extends ServiceTests {
     public void getItem_returns_address() {
         // setup
         int id = 1;
-        var entity = genAddressEntity(id);
-        var address = genAddressDto(id);
+        var entity = Instancio.of(AddressEntity.class).set(field(AddressEntity::getId), id).create();
+        var address = Instancio.of(AddressDto.class).set(field(AddressDto::getId), id).create();
+
         when(addRepoMock.findById(id)).thenReturn(Optional.of(entity));
         when(addMapMock.toDto(entity)).thenReturn(address);
 
@@ -204,15 +223,20 @@ public class AddressServiceTests extends ServiceTests {
     @Test
     public void createAddress_returns_addressDto() {
         // setup
-        var memberId = 10;
-        var member = MemberEntity.builder().id(memberId).build();
-        when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
+        var member = Instancio.create(MemberEntity.class);
+        when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = genCreateAddressDto(memberId);
-        var address = genAddressDto(1);
-        address.setMemberId(memberId);
+        var create = Instancio.of(CreateAddressDto.class)
+                .set(field(CreateAddressDto::getMemberId), member.getId())
+                .create();
+        var address = Instancio.of(AddressDto.class)
+                .set(field(AddressDto::getMemberId), member.getId())
+                .create();
 
-        var entity = genAddressEntity(1);
+        var entity = Instancio.of(AddressEntity.class)
+                .set(field(AddressEntity::getMember), member)
+                .create();
+
         when(addRepoMock.save(entity)).thenReturn(entity);
         when(addMapMock.toEntity(create)).thenReturn(entity);
         when(addMapMock.toDto(entity)).thenReturn(address);
@@ -221,8 +245,8 @@ public class AddressServiceTests extends ServiceTests {
         var ret = svc.createAddress(create);
 
         // verify
-        assertNotNull(address);
-        assertEquals(ret, address);
+        assertNotNull(ret);
+        assertEquals(address, ret);
         verify(memRepoMock).getReferenceById(member.getId());
         verify(addRepoMock).save(entity);
         verify(addMapMock).toEntity(create);
@@ -234,9 +258,11 @@ public class AddressServiceTests extends ServiceTests {
     public void updateAddress_returns_address() {
         // setup
         int id = 1;
-        var entity = genAddressEntity(id);
-        var update = genUpdateAddressDto(id);
-        var address = genAddressDto(id);
+        var entity = Instancio.create(AddressEntity.class);
+        var update = Instancio.of(UpdateAddressDto.class)
+                .set(field(UpdateAddressDto::getMemberId), id)
+                .create();
+        var address = Instancio.create(AddressDto.class);
 
         when(addRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
 
@@ -272,14 +298,14 @@ public class AddressServiceTests extends ServiceTests {
     @Test
     public void getCount_returns_address_count() {
         // setup
-        long num = 5;
-        when(addRepoMock.count()).thenReturn(num);
+        long count = 5;
+        when(addRepoMock.count()).thenReturn(count);
 
         // execute
         var response = svc.getAddressCount();
 
         // verify
-        assertEquals(num, response.getCount());
+        assertEquals(count, response.getCount());
         verify(addRepoMock).count();
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }

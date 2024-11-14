@@ -18,7 +18,7 @@ public class EmailEntity {
     @Column(name = "id", nullable = false, updatable = false, unique = true )
     private int id;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, length = 100)
     private String email;
 
     @Builder.Default

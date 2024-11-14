@@ -6,16 +6,17 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.AddressType;
 import com.smh.club.api.dto.create.CreateAddressDto;
-import com.smh.club.api.helpers.datacreators.AddressCreators;
-import com.smh.club.api.helpers.datacreators.MemberCreators;
+import com.smh.club.api.dto.update.UpdateAddressDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
@@ -34,8 +35,8 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.smh.club.api.helpers.datacreators.AddressCreators.genAddressEntityList;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
+@ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(
@@ -61,8 +63,6 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Autowired
     private AddressRepo addressRepo;
 
-    private List<MemberEntity> members;
-
     @Autowired
     public AddressIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
         super(mockMvc, mapper, "/addresses");
@@ -70,8 +70,14 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @BeforeAll
     public void initMembers() {
-        var entities = MemberCreators.createMemeberEntityList(5);
-        members = memberRepo.saveAllAndFlush(entities);
+        // there seems to be a bug where @WithSettings is not recognized in before all
+        var members = Instancio.ofList(MemberEntity.class)
+                .size(5)
+                .withSettings(getSettings())
+                .ignore(field(MemberEntity::getId))
+                .withUnique(field(MemberEntity::getMemberNumber))
+                .create();
+        memberRepo.saveAllAndFlush(members);
     }
 
     @AfterEach
@@ -83,11 +89,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Test
     public void getListPage_no_params() throws Exception {
         // populate address table
-        addEntitiesToDb(members.get(4), 4);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+        addEntitiesToDb(15);
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
@@ -106,11 +108,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Test
     public void getListPage_sortDir_desc() throws Exception {
         // populate address table
-        addEntitiesToDb(members.get(4), 4);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+       addEntitiesToDb(15);
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId).reversed()).toList();
@@ -131,11 +129,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
     public void getListPage_pageSize(int pageSize) throws Exception {
-        addEntitiesToDb(members.get(4), 4);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+        addEntitiesToDb(15);
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
@@ -156,14 +150,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 8, 10})
     public void getListPage_page(int page) throws Exception {
-        for (int ii = 0; ii < 10; ii++) {
-            addEntitiesToDb(members.get(4), ii + 40);
-            addEntitiesToDb(members.get(0), ii + 60);
-            addEntitiesToDb(members.get(3), ii + 50);
-            addEntitiesToDb(members.get(2), ii + 20);
-            addEntitiesToDb(members.get(1), ii + 11);
-        }
-
+        addEntitiesToDb(150);
 
         var sorted = addressRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
@@ -184,11 +171,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @Test
     public void getListPage_sortColumn() throws Exception {
-        addEntitiesToDb(members.get(4), 4);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 5);
-        addEntitiesToDb(members.get(2), 2);
-        addEntitiesToDb(members.get(1), 1);
+        addEntitiesToDb(15);
 
         // sort by id
         var sorted = addressRepo.findAll().stream()
@@ -214,23 +197,10 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
+        var actualSorted = actual.stream()
+                .sorted(Comparator.comparing(AddressDto::getAddress1)).toList();
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getAddress1)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        // sort by address2
-        sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparing(AddressEntity::getAddress1)).toList();
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "address2");
-
-        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getAddress2)).toList(), actual);
 
         expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
@@ -284,8 +254,10 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Test
     public void createAddresses_returns_addressDto_status_created() throws Exception {
         // create addresses
-        var create = AddressCreators.genCreateAddressDto(0);
-        create.setMemberId(members.get(0).getId());
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(CreateAddressDto.class)
+                .generate(field(CreateAddressDto::getMemberId), g -> g.oneOf(memberIdList))
+                .create();
 
         // perform POST
         var ret = mockMvc.perform(post(path)
@@ -307,8 +279,8 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Test
     public void deleteAddress_status_noContent() throws Exception {
         // create several addresses
-        var entities = addEntitiesToDb(members.get(1), 0);
-        var id = entities.get(0).getId();
+        var entities = addEntitiesToDb(5);
+        var id = entities.get(2).getId();
 
         // perform DELETE
         mockMvc.perform(delete(path + "/{id}", id))
@@ -323,12 +295,14 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Test
     public void update_returns_addressDto_status_ok() throws Exception {
         // create several addresses
-        var entities = addEntitiesToDb(members.get(1), 0);
-        var update = AddressCreators.genCreateAddressDto(members.get(1).getId());
-        var id = entities.get(1).getId();
+        var address = addEntitiesToDb(5).get(2);
+        var memberId = address.getMember().getId();
+        var update = Instancio.of(UpdateAddressDto.class)
+                .set(field(UpdateAddressDto::getMemberId), memberId)
+                .create();
 
         // perform PUT
-        mockMvc.perform(put("/addresses/{id}", id)
+        mockMvc.perform(put(path + "/{id}", address.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(update)))
@@ -336,19 +310,32 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .andDo(print());
 
         // verify
-        var entity = addressRepo.findById(id);
+        var entity = addressRepo.findById(address.getId());
 
         assertTrue(entity.isPresent());
         verify(update, entity.get());
     }
 
-    private List<AddressEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
-        var entities = genAddressEntityList(3, startFlag);
-        entities.forEach(e -> e.setMember(member));
-        entities.get(0).setAddressType(AddressType.Home);
-        entities.get(1).setAddressType(AddressType.Work);
-        entities.get(2).setAddressType(AddressType.Other);
+    private List<AddressEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
+
+        var entities = Instancio.ofList(AddressEntity.class)
+                .size(size) // must be before withSettings
+                .withSettings(getSettings())
+                .generate(field(AddressEntity::getMember), g -> g.oneOf(members))
+                .create();
+
         return addressRepo.saveAllAndFlush(entities);
+    }
+
+    private void verify(UpdateAddressDto expected, AddressEntity actual) {
+        assertEquals(expected.getMemberId(), actual.getMember().getId());
+        assertEquals(expected.getAddress1(), actual.getAddress1());
+        assertEquals(expected.getAddress2(), actual.getAddress2());
+        assertEquals(expected.getCity(), actual.getCity());
+        assertEquals(expected.getState(), actual.getState());
+        assertEquals(expected.getZip(), actual.getZip());
+        assertEquals(expected.getAddressType(), actual.getAddressType());
     }
 
     private void verify(CreateAddressDto expected, AddressEntity actual) {

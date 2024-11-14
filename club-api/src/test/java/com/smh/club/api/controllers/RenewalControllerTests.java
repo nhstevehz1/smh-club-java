@@ -8,8 +8,13 @@ import com.smh.club.api.dto.update.UpdateRenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.RenewalCreators.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,21 +32,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
+@ExtendWith(InstancioExtension.class)
 @WebMvcTest(RenewalControllerImpl.class)
 public class RenewalControllerTests extends ControllerTests {
 
     @MockBean
     private RenewalService svc;
 
+    @WithSettings
+    private final Settings settings =
+            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                    .set(Keys.JPA_ENABLED, true)
+                    .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Autowired
     public RenewalControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper, new ModelMapper(), "/renewals");
+        super(mockMvc, objMapper, "/renewals");
     }
 
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
-        var ret = genRenewalDtoList(5);
+        var ret = Instancio.createList(RenewalDto.class);
 
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
@@ -72,21 +83,20 @@ public class RenewalControllerTests extends ControllerTests {
     @Test
     public void shouldReturnRenewal() throws Exception {
         // setup
-        var id = 12;
-        var renewal = genRenewalDto(id);
-        when(svc.getRenewal(id)).thenReturn(Optional.of(renewal));
+        var ret = Instancio.create(RenewalDto.class);
+        when(svc.getRenewal(ret.getId())).thenReturn(Optional.of(ret));
 
         // execute
-        mockMvc.perform(get(path + "/{id}", id)
+        mockMvc.perform(get(path + "/{id}", ret.getId())
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(renewal.getId()))
-                .andExpect(jsonPath("$.member-id").value(renewal.getMemberId()))
-                .andExpect(jsonPath("$.renewal-date").value(renewal.getRenewalDate().toString()))
-                .andExpect(jsonPath("$.renewal-year").value(renewal.getRenewalYear()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.renewal-date").value(ret.getRenewalDate().toString()))
+                .andExpect(jsonPath("$.renewal-year").value(ret.getRenewalYear()))
                 .andDo(print());
 
-        verify(svc).getRenewal(id);
+        verify(svc).getRenewal(ret.getId());
         verifyNoMoreInteractions(svc);
     }
 
@@ -109,48 +119,46 @@ public class RenewalControllerTests extends ControllerTests {
     @Test
     public void shouldCreateRenewal() throws Exception {
         // setup
-        var id = 12;
-        var renewal = genRenewalDto(12);
-        var create = modelMapper.map(renewal, CreateRenewalDto.class);
-        when(svc.createRenewal(create)).thenReturn(renewal);
+        var ret = Instancio.create(RenewalDto.class);
+        var create = modelMapper.map(ret, CreateRenewalDto.class);
+        when(svc.createRenewal(create)).thenReturn(ret);
 
         // execute and verify
         mockMvc.perform(post("/renewals")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(objMapper.writeValueAsString(renewal)))
+                        .content(objMapper.writeValueAsString(ret)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.member-id").value(renewal.getMemberId()))
-                .andExpect(jsonPath("$.renewal-date").value(renewal.getRenewalDate().toString()))
-                .andExpect(jsonPath("$.renewal-year").value(renewal.getRenewalYear()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.renewal-date").value(ret.getRenewalDate().toString()))
+                .andExpect(jsonPath("$.renewal-year").value(ret.getRenewalYear()))
                 .andDo(print());
 
         verify(svc).createRenewal(create);
         verifyNoMoreInteractions(svc);
     }
 
-
     @Test
     public void shouldUpdateRenewal() throws Exception {
-        var id = 12;
-        var renewal = genRenewalDto(id);
-        var update = modelMapper.map(renewal, UpdateRenewalDto.class);
-        when(svc.updateRenewal(id, update)).thenReturn(Optional.of(renewal));
+        //setup
+        var ret = Instancio.create(RenewalDto.class);
+        var update = modelMapper.map(ret, UpdateRenewalDto.class);
+        when(svc.updateRenewal(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
-        mockMvc.perform(put(path + "/{id}", id)
+        mockMvc.perform(put(path + "/{id}", ret.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(objMapper.writeValueAsString(renewal)))
+                        .content(objMapper.writeValueAsString(ret)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.member-id").value(renewal.getMemberId()))
-                .andExpect(jsonPath("$.renewal-date").value(renewal.getRenewalDate().toString()))
-                .andExpect(jsonPath("$.renewal-year").value(renewal.getRenewalYear()))
+                .andExpect(jsonPath("$.id").value(ret.getId()))
+                .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
+                .andExpect(jsonPath("$.renewal-date").value(ret.getRenewalDate().toString()))
+                .andExpect(jsonPath("$.renewal-year").value(ret.getRenewalYear()))
                 .andDo(print());
 
-        verify(svc).updateRenewal(id, update);
+        verify(svc).updateRenewal(ret.getId(), update);
         verifyNoMoreInteractions(svc);
     }
 
@@ -158,7 +166,7 @@ public class RenewalControllerTests extends ControllerTests {
     public void update_renewal_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = genUpdateRenewalDto(id);
+        var update = Instancio.create(UpdateRenewalDto.class);
         when(svc.updateRenewal(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

@@ -9,9 +9,9 @@ import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.dto.create.CreateRenewalDto;
 import com.smh.club.api.dto.update.UpdateRenewalDto;
-import com.smh.club.api.helpers.datacreators.RenewalCreators;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,10 +34,8 @@ import org.springframework.util.MultiValueMap;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.smh.club.api.helpers.datacreators.MemberCreators.createMemeberEntityList;
-import static com.smh.club.api.helpers.datacreators.RenewalCreators.genCreateRenewalDto;
-import static com.smh.club.api.helpers.datacreators.RenewalCreators.genUpdateRenewalDto;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -61,7 +59,7 @@ public class RenewalIntegrationTests extends IntegrationTests{
     private MembersRepo memberRepo;
     
     @Autowired
-    private RenewalsRepo repo;
+    private RenewalsRepo renewRepo;
 
     private List<MemberEntity> members;
     
@@ -72,25 +70,27 @@ public class RenewalIntegrationTests extends IntegrationTests{
 
     @BeforeAll
     public void initMembers() {
-        var entities = createMemeberEntityList(5);
-        members = memberRepo.saveAllAndFlush(entities);
+        // there seems to be a bug where @WithSettings is not recognized in before all
+        var members = Instancio.ofList(MemberEntity.class)
+                .size(5)
+                .withSettings(getSettings())
+                .ignore(field(MemberEntity::getId))
+                .withUnique(field(MemberEntity::getMemberNumber))
+                .create();
+        memberRepo.saveAllAndFlush(members);
     }
 
     @AfterEach
     public void clearRenewalsTable() {
-        repo.deleteAll();
-        memberRepo.flush();
+        renewRepo.deleteAll();
+        renewRepo.flush();
     }
 
     @Test
     public void getListPage_no_params() throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 11);
-        addEntitiesToDb(members.get(3), 50);
-        addEntitiesToDb(members.get(2), 20);
-        addEntitiesToDb(members.get(1), 11);
+        addEntitiesToDb(15);
 
-        var sorted = repo.findAll().stream()
+        var sorted = renewRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -103,24 +103,13 @@ public class RenewalIntegrationTests extends IntegrationTests{
 
         verify(expected, actual);
     }
-    
-    
-    
-    private List<RenewalEntity> addEntitiesToDb(MemberEntity member, int startFlag) {
-        var entities = RenewalCreators.genRenewalEntityList(3, startFlag);
-        entities.forEach(e -> e.setMember(member));
-        return repo.saveAllAndFlush(entities);
-    }
 
     @Test
     public void getListPage_sortDir_desc() throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 11);
-        addEntitiesToDb(members.get(3), 50);
-        addEntitiesToDb(members.get(2), 20);
-        addEntitiesToDb(members.get(1), 11);
+        addEntitiesToDb(40);
 
-        var sorted = repo.findAll().stream()
+
+        var sorted = renewRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(RenewalEntity::getId).reversed()).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -139,13 +128,9 @@ public class RenewalIntegrationTests extends IntegrationTests{
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
     public void getListPage_pageSize(int pageSize) throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 11);
-        addEntitiesToDb(members.get(3), 50);
-        addEntitiesToDb(members.get(2), 60);
-        addEntitiesToDb(members.get(1), 10);
+        addEntitiesToDb(15);
 
-        var sorted = repo.findAll().stream()
+        var sorted = renewRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -164,15 +149,9 @@ public class RenewalIntegrationTests extends IntegrationTests{
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 8, 10})
     public void getListPage_page(int page) throws Exception {
-        for (int ii = 0; ii < 10; ii++) {
-            addEntitiesToDb(members.get(4), ii + 40);
-            addEntitiesToDb(members.get(0), ii + 60);
-            addEntitiesToDb(members.get(3), ii + 50);
-            addEntitiesToDb(members.get(2), ii + 20);
-            addEntitiesToDb(members.get(1), ii + 11);
-        }
+        addEntitiesToDb(150);
 
-        var sorted = repo.findAll().stream()
+        var sorted = renewRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -191,14 +170,10 @@ public class RenewalIntegrationTests extends IntegrationTests{
 
     @Test
     public void getListPage_sortColumn() throws Exception {
-        addEntitiesToDb(members.get(4), 40);
-        addEntitiesToDb(members.get(0), 0);
-        addEntitiesToDb(members.get(3), 30);
-        addEntitiesToDb(members.get(2), 20);
-        addEntitiesToDb(members.get(1), 10);
+        addEntitiesToDb(15);
 
         // sort by id
-        var sorted = repo.findAll().stream()
+        var sorted = renewRepo.findAll().stream()
                 .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -213,7 +188,7 @@ public class RenewalIntegrationTests extends IntegrationTests{
         verify(expected, actual);
 
         // sort by renewal-date
-        sorted = repo.findAll().stream()
+        sorted = renewRepo.findAll().stream()
                 .sorted(Comparator.comparing(RenewalEntity::getRenewalDate)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
@@ -228,7 +203,7 @@ public class RenewalIntegrationTests extends IntegrationTests{
         verify(expected, actual);
 
         // sort by renewal-year
-        sorted = repo.findAll().stream()
+        sorted = renewRepo.findAll().stream()
                 .sorted(Comparator.comparing(RenewalEntity::getRenewalYear)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
@@ -245,8 +220,12 @@ public class RenewalIntegrationTests extends IntegrationTests{
 
     @Test
     public void create_returns_dto_status_created() throws Exception {
-        var create = genCreateRenewalDto(4);
-        create.setMemberId(members.get(0).getId());
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(CreateRenewalDto.class)
+                .generate(field(CreateRenewalDto::getMemberId), g -> g.oneOf(memberIdList))
+                .generate(field(CreateRenewalDto::getRenewalYear),
+                        g-> g.text().pattern("#d#d#d#d"))
+                .create();
 
         // perform POST
         var ret = mockMvc.perform(post(path)
@@ -259,7 +238,7 @@ public class RenewalIntegrationTests extends IntegrationTests{
 
         // verify
         var dto = mapper.readValue(ret.getResponse().getContentAsString(), PhoneDto.class);
-        var entity =  repo.findById(dto.getId());
+        var entity =  renewRepo.findById(dto.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
@@ -267,7 +246,7 @@ public class RenewalIntegrationTests extends IntegrationTests{
 
     @Test
     public void delete_status_noContent() throws Exception {
-        var entities = addEntitiesToDb(members.get(1), 0);
+        var entities = addEntitiesToDb(1);
         var id = entities.get(0).getId();
 
         // perform DELETE
@@ -276,18 +255,22 @@ public class RenewalIntegrationTests extends IntegrationTests{
                 .andDo(print());
 
         // verify
-        var address = repo.findById(id);
+        var address = renewRepo.findById(id);
         assertFalse(address.isPresent());
     }
 
     @Test
     public void update_returns_dto_status_ok() throws Exception {
-        var entities = addEntitiesToDb(members.get(1), 0);
-        var update = genUpdateRenewalDto(members.get(1).getId());
-        var id = entities.get(1).getId();
+        var renewal = addEntitiesToDb(5).get(2);
+        var memberId = renewal.getMember().getId();
+        var update = Instancio.of(UpdateRenewalDto.class)
+                .set(field(UpdateRenewalDto::getMemberId), memberId)
+                .generate(field(UpdateRenewalDto::getRenewalYear),
+                        g-> g.text().pattern("#d#d#d#d"))
+                .create();
 
         // perform PUT
-        mockMvc.perform(put(path + "/{id}", id)
+        mockMvc.perform(put(path + "/{id}", renewal.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(update)))
@@ -295,12 +278,24 @@ public class RenewalIntegrationTests extends IntegrationTests{
                 .andDo(print());
 
         // verify
-        var entity = repo.findById(id);
+        var entity = renewRepo.findById(renewal.getId());
 
         assertTrue(entity.isPresent());
         verify(update, entity.get());
     }
-    
+
+    private List<RenewalEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
+
+        var entities = Instancio.ofList(RenewalEntity.class)
+                .size(size) // must be before withSettings
+                .withSettings(getSettings())
+                .generate(field(RenewalEntity::getMember), g -> g.oneOf(members))
+                .create();
+
+        return renewRepo.saveAllAndFlush(entities);
+    }
+
     private void verify(CreateRenewalDto expected, RenewalEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getRenewalDate(), actual.getRenewalDate());

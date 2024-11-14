@@ -13,8 +13,6 @@ public abstract class DomainDataMapper {
         this.modelMapper = modelMapper;
     }
 
-    protected abstract void configureMapper(ModelMapper mapper);
-
     protected <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
         return source
                 .stream()

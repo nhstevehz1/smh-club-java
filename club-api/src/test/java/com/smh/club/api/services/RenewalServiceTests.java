@@ -5,7 +5,15 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
+import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.api.dto.create.CreateRenewalDto;
+import com.smh.club.api.dto.update.UpdateRenewalDto;
 import com.smh.club.api.request.PageParams;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,12 +28,13 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
-import static com.smh.club.api.helpers.datacreators.RenewalCreators.*;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(InstancioExtension.class)
 public class RenewalServiceTests extends ServiceTests {
     
     @Mock private MembersRepo memRepoMock;
@@ -40,8 +49,14 @@ public class RenewalServiceTests extends ServiceTests {
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
+    @WithSettings
+    private final Settings settings = Settings.create()
+            .set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Test
-    public void getItemListPage_uses_default_pageParams() {
+    public void getRenewalListPage_with_default_pageParams() {
         // setup
         var params = PageParams.getDefault();
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
@@ -65,7 +80,7 @@ public class RenewalServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getItemListPage_nonDefault_pageParams() {
+    public void getRenewalListPage_nonDefault_pageParams() {
         // setup
         var params = createPageParam(5,100, Sort.Direction.DESC, "renewal-year");
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
@@ -89,7 +104,7 @@ public class RenewalServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getItemListPage_unknown_sortColumn_uses_default() {
+    public void getRenewalListPage_unknown_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, "thisIsNotAColumn");
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
@@ -113,7 +128,7 @@ public class RenewalServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getItemListPage_null_sortColumn_uses_default() {
+    public void getRenewalListPage_null_sortColumn_uses_default() {
         // setup
         var params = createPageParam(5, 100, Sort.Direction.DESC, null);
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
@@ -147,13 +162,16 @@ public class RenewalServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getItemListPage_returns_renewalList() {
+    public void getRenewalListPage_returns_renewalList() {
         // setup
-        var entityList = genRenewalEntityList(10);
+        var size = 10;
+        var entityList = Instancio.ofList(RenewalEntity.class).size(size).create();
+        var dtoList = Instancio.ofList(RenewalDto.class).size(size).create();
+
         var page = createEntityPage(entityList, pageableMock, 200);
 
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(renMapMock.toDtoList(page.getContent())).thenReturn(genRenewalDtoList(10));
+        when(renMapMock.toDtoList(page.getContent())).thenReturn(dtoList);
 
         // execute
         var pageResponse = svc.getRenewalListPage(PageParams.getDefault());
@@ -171,9 +189,11 @@ public class RenewalServiceTests extends ServiceTests {
     public void getItem_returns_renewal() {
         // setup
         int id = 1;
-        var entity = genRenewalEntity(id);
+        var entity = Instancio.of(RenewalEntity.class).set(field(RenewalEntity::getId), id).create();
+        var address = Instancio.of(RenewalDto.class).set(field(RenewalDto::getId), id).create();
+
         when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(renMapMock.toDto(any(RenewalEntity.class))).thenReturn(genRenewalDto(id));
+        when(renMapMock.toDto(entity)).thenReturn(address);
 
         // execute
         var member = svc.getRenewal(id);
@@ -203,15 +223,19 @@ public class RenewalServiceTests extends ServiceTests {
     @Test
     public void createItem_returns_renewal() {
         // setup
-        var memberId = 10;
-        var member = MemberEntity.builder().id(memberId).build();
-        when(memRepoMock.getReferenceById(memberId)).thenReturn(member);
+        var member = Instancio.create(MemberEntity.class);
+        when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = genCreateRenewalDto(1);
-        create.setMemberId(memberId);
-        var renewal = genRenewalDto(1);
+        var create = Instancio.of(CreateRenewalDto.class)
+                .set(field(CreateRenewalDto::getMemberId), member.getId())
+                .create();
+        var renewal = Instancio.of(RenewalDto.class)
+                .set(field(RenewalDto::getMemberId), member.getId())
+                .create();
 
-        var entity = genRenewalEntity(1);
+        var entity = Instancio.of(RenewalEntity.class)
+                .set(field(RenewalEntity::getMember), member)
+                .create();
 
         when(renRepoMock.save(entity)).thenReturn(entity);
         when(renMapMock.toEntity(create)).thenReturn(entity);
@@ -223,7 +247,7 @@ public class RenewalServiceTests extends ServiceTests {
         // verify
         assertNotNull(ret);
         assertEquals(renewal, ret);
-        verify(memRepoMock).getReferenceById(memberId);
+        verify(memRepoMock).getReferenceById(member.getId());
         verify(renRepoMock).save(entity);
         verify(renMapMock).toEntity(create);
         verify(renMapMock).toDto(entity);
@@ -234,9 +258,11 @@ public class RenewalServiceTests extends ServiceTests {
     public void updateItem_returns_renewal() {
         // setup
         int id = 1;
-        var entity = genRenewalEntity(id);
-        var update = genUpdateRenewalDto(id);
-        var renewal = genRenewalDto(id);
+        var entity = Instancio.create(RenewalEntity.class);
+        var update = Instancio.of(UpdateRenewalDto.class)
+                .set(field(UpdateRenewalDto::getMemberId), id)
+                .create();
+        var renewal = Instancio.create(RenewalDto.class);
         
         when(renRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
         when(renMapMock.updateEntity(update, entity)).thenReturn(entity);
