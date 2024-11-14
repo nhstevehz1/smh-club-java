@@ -4,7 +4,6 @@ import com.smh.club.api.common.mappers.MemberMapper;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
@@ -13,6 +12,7 @@ import com.smh.club.api.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
 
         log.debug("Created pageable: {}", pageRequest);
 
-        var page = membersRepo.findAll(pageRequest);
+        Page<MemberEntity> page = membersRepo.findAll(pageRequest);
 
         return PageResponse.<MemberDto>builder()
                 .totalPages(page.getTotalPages())
@@ -58,7 +58,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
     }
 
     @Override
-    public MemberDto createMember(CreateMemberDto member) {
+    public MemberDto createMember(MemberDto member) {
         log.debug("creating member: {}", member);
 
         var memberEntity = memberMapper.toMemberEntity(member);
@@ -67,7 +67,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
 
 
     @Override
-    public Optional<MemberDto> updateMember(int id, CreateMemberDto member) {
+    public Optional<MemberDto> updateMember(int id, MemberDto member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)

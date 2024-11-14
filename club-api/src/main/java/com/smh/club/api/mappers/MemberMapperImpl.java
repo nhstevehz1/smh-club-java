@@ -16,7 +16,7 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
     }
 
     @Override
-    public MemberEntity toMemberEntity(CreateMemberDto createMemberDto)
+    public MemberEntity toMemberEntity(MemberDto createMemberDto)
     {
         return modelMapper.map(createMemberDto, MemberEntity.class);
     }
@@ -27,7 +27,7 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
     }
 
     @Override
-    public MemberEntity updateMemberEntity(CreateMemberDto createMemberDto, MemberEntity memberEntity) {
+    public MemberEntity updateMemberEntity(MemberDto createMemberDto, MemberEntity memberEntity) {
         modelMapper.map(createMemberDto, memberEntity);
         return memberEntity;
     }

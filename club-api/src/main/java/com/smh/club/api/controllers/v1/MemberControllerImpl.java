@@ -3,7 +3,6 @@ package com.smh.club.api.controllers.v1;
 import com.smh.club.api.common.controllers.v1.MemberController;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.request.PagingConfig;
-import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
@@ -62,13 +61,13 @@ public class MemberControllerImpl implements MemberController {
 
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<MemberDto> create(@RequestBody CreateMemberDto member) {
+    public ResponseEntity<MemberDto> create(@RequestBody MemberDto member) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<MemberDto> update(@PathVariable int id, @RequestBody CreateMemberDto member) {
+    public ResponseEntity<MemberDto> update(@PathVariable int id, @RequestBody MemberDto member) {
         var ret = memberSvc.updateMember(id,  member);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

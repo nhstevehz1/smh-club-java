@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.integrationtests.controllers.IntegrationTests;
 import com.smh.club.api.request.PagingConfig;
@@ -251,7 +250,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void createMember_returns_memberDto_status_created() throws Exception {
         // create member
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberDto.class)
                 .create();
 
         // perform POST
@@ -290,8 +289,9 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void update_returns_memberDto_status_ok() throws Exception{
         // create several members
         var member = addEntitiesToDb(10).get(5);
-        var update = Instancio.of(CreateMemberDto.class)
-                .set(field(CreateMemberDto::getMemberNumber), member.getMemberNumber())
+        var update = Instancio.of(MemberDto.class)
+                .set(field(MemberDto::getId), member.getId())
+                .set(field(MemberDto::getMemberNumber), member.getMemberNumber())
                 .create();
 
         mockMvc.perform(put( path + "/{id}", member.getId())
@@ -317,7 +317,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         return memberRepo.saveAllAndFlush(entities);
     }
 
-    private void verify(CreateMemberDto expected, MemberEntity actual) {
+    private void verify(MemberDto expected, MemberEntity actual) {
         assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getMiddleName(), actual.getMiddleName());

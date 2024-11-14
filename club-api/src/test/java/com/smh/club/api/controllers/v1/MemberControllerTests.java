@@ -3,7 +3,6 @@ package com.smh.club.api.controllers.v1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.controllers.ControllerTests;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
@@ -124,7 +123,7 @@ public class MemberControllerTests extends ControllerTests {
     public void shouldCreate() throws Exception {
         // setup
         var ret = Instancio.create(MemberDto.class);
-        var create = modelMapper.map(ret, CreateMemberDto.class);
+        var create = modelMapper.map(ret, MemberDto.class);
         when(svc.createMember(create)).thenReturn(ret);
 
         // execute and verify
@@ -150,7 +149,7 @@ public class MemberControllerTests extends ControllerTests {
     public void shouldUpdate() throws Exception {
         // setup
         var ret = Instancio.create(MemberDto.class);
-        var update = modelMapper.map(ret, CreateMemberDto.class);
+        var update = modelMapper.map(ret, MemberDto.class);
         when(svc.updateMember(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -176,7 +175,7 @@ public class MemberControllerTests extends ControllerTests {
     public void update_member_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = Instancio.create(CreateMemberDto.class);
+        var update = Instancio.create(MemberDto.class);
         when(svc.updateMember(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
