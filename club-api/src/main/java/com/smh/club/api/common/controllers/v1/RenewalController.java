@@ -1,6 +1,5 @@
 package com.smh.club.api.common.controllers.v1;
 
-import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -10,7 +9,7 @@ public interface RenewalController {
     ResponseEntity<PageResponse<RenewalDto>> page(int page, int size, String sortDir, String sort);
     ResponseEntity<RenewalDto> get(int id);
     ResponseEntity<CountResponse> get();
-    ResponseEntity<RenewalDto> create(CreateRenewalDto createDto);
-    ResponseEntity<RenewalDto> update(int id, CreateRenewalDto updateDto);
+    ResponseEntity<RenewalDto> create(RenewalDto createDto);
+    ResponseEntity<RenewalDto> update(int id, RenewalDto updateDto);
     ResponseEntity<Void> delete(int id);
 }

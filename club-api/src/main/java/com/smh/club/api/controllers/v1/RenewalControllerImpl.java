@@ -2,7 +2,6 @@ package com.smh.club.api.controllers.v1;
 
 import com.smh.club.api.common.controllers.v1.RenewalController;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
@@ -59,13 +58,13 @@ public class RenewalControllerImpl implements RenewalController {
 
     @PostMapping
     @Override
-    public ResponseEntity<RenewalDto> create(@RequestBody CreateRenewalDto createDto) {
+    public ResponseEntity<RenewalDto> create(@RequestBody RenewalDto createDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(createDto));
     }
 
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<RenewalDto> update(@PathVariable int id, @RequestBody CreateRenewalDto updateDto) {
+    public ResponseEntity<RenewalDto> update(@PathVariable int id, @RequestBody RenewalDto updateDto) {
         var ret = renewSvc.updateRenewal(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

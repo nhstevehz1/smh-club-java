@@ -3,7 +3,6 @@ package com.smh.club.api.controllers.v1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.controllers.ControllerTests;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -120,7 +119,7 @@ public class RenewalControllerTests extends ControllerTests {
     public void shouldCreate() throws Exception {
         // setup
         var ret = Instancio.create(RenewalDto.class);
-        var create = modelMapper.map(ret, CreateRenewalDto.class);
+        var create = modelMapper.map(ret, RenewalDto.class);
         when(svc.createRenewal(create)).thenReturn(ret);
 
         // execute and verify
@@ -143,7 +142,7 @@ public class RenewalControllerTests extends ControllerTests {
     public void shouldUpdate() throws Exception {
         //setup
         var ret = Instancio.create(RenewalDto.class);
-        var update = modelMapper.map(ret, CreateRenewalDto.class);
+        var update = modelMapper.map(ret, RenewalDto.class);
         when(svc.updateRenewal(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -166,7 +165,7 @@ public class RenewalControllerTests extends ControllerTests {
     public void update_renewal_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = Instancio.create(CreateRenewalDto.class);
+        var update = Instancio.create(RenewalDto.class);
         when(svc.updateRenewal(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

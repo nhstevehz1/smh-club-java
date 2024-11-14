@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.integrationtests.controllers.IntegrationTests;
@@ -219,9 +218,9 @@ public class RenewalIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(CreateRenewalDto.class)
-                .generate(field(CreateRenewalDto::getMemberId), g -> g.oneOf(memberIdList))
-                .generate(field(CreateRenewalDto::getRenewalYear),
+        var create = Instancio.of(RenewalDto.class)
+                .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
+                .generate(field(RenewalDto::getRenewalYear),
                         g-> g.text().pattern("#d#d#d#d"))
                 .create();
 
@@ -261,9 +260,10 @@ public class RenewalIntegrationTests extends IntegrationTests {
     public void update_returns_dto_status_ok() throws Exception {
         var renewal = addEntitiesToDb(5).get(2);
         var memberId = renewal.getMember().getId();
-        var update = Instancio.of(CreateRenewalDto.class)
-                .set(field(CreateRenewalDto::getMemberId), memberId)
-                .generate(field(CreateRenewalDto::getRenewalYear),
+        var update = Instancio.of(RenewalDto.class)
+                .set(field(RenewalDto::getId), renewal.getId())
+                .set(field(RenewalDto::getMemberId), memberId)
+                .generate(field(RenewalDto::getRenewalYear),
                         g-> g.text().pattern("#d#d#d#d"))
                 .create();
 
@@ -294,7 +294,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
         return renewRepo.saveAllAndFlush(entities);
     }
 
-    private void verify(CreateRenewalDto expected, RenewalEntity actual) {
+    private void verify(RenewalDto expected, RenewalEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
         assertEquals(expected.getRenewalYear(), actual.getRenewalYear());

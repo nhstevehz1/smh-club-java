@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
@@ -225,8 +224,8 @@ public class RenewalServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(CreateRenewalDto.class)
-                .set(field(CreateRenewalDto::getMemberId), member.getId())
+        var create = Instancio.of(RenewalDto.class)
+                .set(field(RenewalDto::getMemberId), member.getId())
                 .create();
         var renewal = Instancio.of(RenewalDto.class)
                 .set(field(RenewalDto::getMemberId), member.getId())
@@ -258,8 +257,8 @@ public class RenewalServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(RenewalEntity.class);
-        var update = Instancio.of(CreateRenewalDto.class)
-                .set(field(CreateRenewalDto::getMemberId), id)
+        var update = Instancio.of(RenewalDto.class)
+                .set(field(RenewalDto::getMemberId), id)
                 .create();
         var renewal = Instancio.create(RenewalDto.class);
         
