@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -258,8 +257,8 @@ public class PhoneServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(PhoneEntity.class);
-        var update = Instancio.of(UpdatePhoneDto.class)
-                .set(field(UpdatePhoneDto::getMemberId), id)
+        var update = Instancio.of(CreatePhoneDto.class)
+                .set(field(CreatePhoneDto::getMemberId), id)
                 .create();
         var phone = Instancio.create(PhoneDto.class);
 

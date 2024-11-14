@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.create.CreateEmailDto;
-import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -260,8 +259,8 @@ public class EmailIntegrationTests extends IntegrationTests {
         // setup
         var email = addEntitiesToDb(5).get(2);
         var memberId = email.getMember().getId();
-        var update = Instancio.of(UpdateEmailDto.class)
-                .set(field(UpdateEmailDto::getMemberId), memberId)
+        var update = Instancio.of(CreateEmailDto.class)
+                .set(field(CreateEmailDto::getMemberId), memberId)
                 .create();
 
         // perform PUT
@@ -291,13 +290,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         return emailRepo.saveAllAndFlush(entities);
     }
 
-    private void verify(CreateEmailDto expected, EmailEntity actual) {
-        assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getEmailType(), actual.getEmailType());
-    }
-
-    private void verify(UpdateEmailDto expected, EmailEntity actual) {
+    private void verify(com.smh.club.api.dto.CreateEmailDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType(), actual.getEmailType());

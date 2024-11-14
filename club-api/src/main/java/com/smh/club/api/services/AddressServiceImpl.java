@@ -6,8 +6,7 @@ import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.create.CreateAddressDto;
-import com.smh.club.api.dto.update.UpdateAddressDto;
+import com.smh.club.api.dto.CreateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -71,7 +70,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
     }
 
     @Override
-    public Optional<AddressDto> updateAddress(int id, UpdateAddressDto addressDto) {
+    public Optional<AddressDto> updateAddress(int id, CreateAddressDto addressDto) {
         log.debug("Updating address id: {}, with data: {}", id, addressDto);
 
         return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())

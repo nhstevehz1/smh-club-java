@@ -1,8 +1,7 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.PhoneEntity;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
+import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -67,7 +66,7 @@ public class PhoneMapperTests {
     @Test
     public void update_entity_from_updateDto() {
         // setup
-        var update = Instancio.create(UpdatePhoneDto.class);
+        var update = Instancio.create(CreatePhoneDto.class);
         var entity = Instancio.create(PhoneEntity.class);
 
         // execute

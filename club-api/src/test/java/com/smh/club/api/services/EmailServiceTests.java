@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.dto.create.CreateEmailDto;
-import com.smh.club.api.dto.update.UpdateEmailDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -258,8 +257,8 @@ public class EmailServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(EmailEntity.class);
-        var update = Instancio.of(UpdateEmailDto.class)
-                .set(field(UpdateEmailDto::getMemberId), id)
+        var update = Instancio.of(CreateEmailDto.class)
+                .set(field(CreateEmailDto::getMemberId), id)
                 .create();
         var email = Instancio.create(EmailDto.class);
 

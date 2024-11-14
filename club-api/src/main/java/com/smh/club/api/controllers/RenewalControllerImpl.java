@@ -1,9 +1,8 @@
 package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.services.RenewalService;
+import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.RenewalDto;
-import com.smh.club.api.dto.create.CreateRenewalDto;
-import com.smh.club.api.dto.update.UpdateRenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
@@ -65,7 +64,7 @@ public class RenewalControllerImpl implements com.smh.club.api.common.controller
 
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<RenewalDto> updateRenewal(@PathVariable int id, @RequestBody UpdateRenewalDto updateDto) {
+    public ResponseEntity<RenewalDto> updateRenewal(@PathVariable int id, @RequestBody CreateRenewalDto updateDto) {
         var ret = renewSvc.updateRenewal(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

@@ -1,9 +1,8 @@
 package com.smh.club.api.common.mappers;
 
 import com.smh.club.api.domain.entities.PhoneEntity;
+import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
 
 import java.util.List;
 
@@ -14,5 +13,5 @@ public interface PhoneMapper {
 
     List<PhoneDto> toDtoList(List<PhoneEntity> entityList);
 
-    PhoneEntity updateEntity(UpdatePhoneDto updatePhoneDto, PhoneEntity entity);
+    PhoneEntity updateEntity(CreatePhoneDto updatePhoneDto, PhoneEntity entity);
 }

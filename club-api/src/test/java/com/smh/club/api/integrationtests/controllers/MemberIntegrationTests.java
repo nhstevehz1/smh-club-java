@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.MemberCreateDto;
+import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -250,7 +250,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void createMember_returns_memberDto_status_created() throws Exception {
         // create member
-        var create = Instancio.of(MemberCreateDto.class)
+        var create = Instancio.of(CreateMemberDto.class)
                 .create();
 
         // perform POST
@@ -289,8 +289,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void update_returns_memberDto_status_ok() throws Exception{
         // create several members
         var member = addEntitiesToDb(10).get(5);
-        var update = Instancio.of(MemberCreateDto.class)
-                .set(field(MemberCreateDto::getMemberNumber), member.getMemberNumber())
+        var update = Instancio.of(CreateMemberDto.class)
+                .set(field(CreateMemberDto::getMemberNumber), member.getMemberNumber())
                 .create();
 
         mockMvc.perform(put( path + "/{id}", member.getId())
@@ -316,7 +316,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         return memberRepo.saveAllAndFlush(entities);
     }
 
-    private void verify(MemberCreateDto expected, MemberEntity actual) {
+    private void verify(CreateMemberDto expected, MemberEntity actual) {
         assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getMiddleName(), actual.getMiddleName());

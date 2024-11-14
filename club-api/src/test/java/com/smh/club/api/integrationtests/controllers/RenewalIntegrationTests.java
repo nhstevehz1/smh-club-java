@@ -5,10 +5,9 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
+import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.dto.RenewalDto;
-import com.smh.club.api.dto.create.CreateRenewalDto;
-import com.smh.club.api.dto.update.UpdateRenewalDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -261,9 +260,9 @@ public class RenewalIntegrationTests extends IntegrationTests{
     public void update_returns_dto_status_ok() throws Exception {
         var renewal = addEntitiesToDb(5).get(2);
         var memberId = renewal.getMember().getId();
-        var update = Instancio.of(UpdateRenewalDto.class)
-                .set(field(UpdateRenewalDto::getMemberId), memberId)
-                .generate(field(UpdateRenewalDto::getRenewalYear),
+        var update = Instancio.of(CreateRenewalDto.class)
+                .set(field(CreateRenewalDto::getMemberId), memberId)
+                .generate(field(CreateRenewalDto::getRenewalYear),
                         g-> g.text().pattern("#d#d#d#d"))
                 .create();
 
@@ -295,12 +294,6 @@ public class RenewalIntegrationTests extends IntegrationTests{
     }
 
     private void verify(CreateRenewalDto expected, RenewalEntity actual) {
-        assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
-        assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
-    }
-
-    private void verify(UpdateRenewalDto expected, RenewalEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
         assertEquals(expected.getRenewalYear(), actual.getRenewalYear());

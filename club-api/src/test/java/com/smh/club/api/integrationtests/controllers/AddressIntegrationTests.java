@@ -6,8 +6,7 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.create.CreateAddressDto;
-import com.smh.club.api.dto.update.UpdateAddressDto;
+import com.smh.club.api.dto.CreateAddressDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -295,8 +294,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         // create several addresses
         var address = addEntitiesToDb(5).get(2);
         var memberId = address.getMember().getId();
-        var update = Instancio.of(UpdateAddressDto.class)
-                .set(field(UpdateAddressDto::getMemberId), memberId)
+        var update = Instancio.of(CreateAddressDto.class)
+                .set(field(CreateAddressDto::getMemberId), memberId)
                 .create();
 
         // perform PUT
@@ -324,16 +323,6 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .create();
 
         return addressRepo.saveAllAndFlush(entities);
-    }
-
-    private void verify(UpdateAddressDto expected, AddressEntity actual) {
-        assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getAddress1(), actual.getAddress1());
-        assertEquals(expected.getAddress2(), actual.getAddress2());
-        assertEquals(expected.getCity(), actual.getCity());
-        assertEquals(expected.getState(), actual.getState());
-        assertEquals(expected.getZip(), actual.getZip());
-        assertEquals(expected.getAddressType(), actual.getAddressType());
     }
 
     private void verify(CreateAddressDto expected, AddressEntity actual) {

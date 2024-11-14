@@ -2,9 +2,8 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.PhoneMapper;
 import com.smh.club.api.domain.entities.PhoneEntity;
+import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +26,7 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
         return modelMapper.map(entity, PhoneDto.class);
     }
 
-    public PhoneEntity updateEntity(UpdatePhoneDto updatePhoneDto, PhoneEntity entity) {
+    public PhoneEntity updateEntity(CreatePhoneDto updatePhoneDto, PhoneEntity entity) {
         modelMapper.map(updatePhoneDto, entity);
         return entity;
     }

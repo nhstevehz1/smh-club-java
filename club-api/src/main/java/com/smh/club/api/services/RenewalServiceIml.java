@@ -5,9 +5,8 @@ import com.smh.club.api.common.services.RenewalService;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
+import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.RenewalDto;
-import com.smh.club.api.dto.create.CreateRenewalDto;
-import com.smh.club.api.dto.update.UpdateRenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -68,7 +67,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
     }
 
     @Override
-    public Optional<RenewalDto> updateRenewal(int id, UpdateRenewalDto renewalDto) {
+    public Optional<RenewalDto> updateRenewal(int id, CreateRenewalDto renewalDto) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
 
         return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())

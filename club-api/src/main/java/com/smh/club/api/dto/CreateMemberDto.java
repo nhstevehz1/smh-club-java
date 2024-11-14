@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberCreateDto {
+public class CreateMemberDto {
 
     @JsonProperty("member-number")
     private int memberNumber;

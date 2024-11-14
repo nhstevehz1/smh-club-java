@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -247,8 +246,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void update_returns_dto_status_ok() throws Exception {
         var phone = addEntitiesToDb(5).get(2);
         var memberId = phone.getMember().getId();
-        var update = Instancio.of(UpdatePhoneDto.class)
-                .set(field(UpdatePhoneDto::getMemberId), memberId)
+        var update = Instancio.of(CreatePhoneDto.class)
+                .set(field(CreatePhoneDto::getMemberId), memberId)
                 .create();
 
         // perform PUT
@@ -278,12 +277,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
     }
 
     private void verify(CreatePhoneDto expected, PhoneEntity actual) {
-        assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
-    }
-
-    private void verify(UpdatePhoneDto expected, PhoneEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
         assertEquals(expected.getPhoneType(), actual.getPhoneType());

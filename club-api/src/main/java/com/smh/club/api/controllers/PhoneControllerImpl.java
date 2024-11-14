@@ -2,9 +2,8 @@ package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.PhoneController;
 import com.smh.club.api.common.services.PhoneService;
+import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.create.CreatePhoneDto;
-import com.smh.club.api.dto.update.UpdatePhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
@@ -57,12 +56,12 @@ public class PhoneControllerImpl implements PhoneController {
     }
 
     @PostMapping
-    public ResponseEntity<PhoneDto> createPhone(@RequestBody CreatePhoneDto createDto) {
+    public ResponseEntity<PhoneDto> createPhone(@RequestBody com.smh.club.api.dto.CreatePhoneDto createDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(createDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PhoneDto> updatePhone(@PathVariable int id, @RequestBody UpdatePhoneDto updateDto) {
+    public ResponseEntity<PhoneDto> updatePhone(@PathVariable int id, @RequestBody CreatePhoneDto updateDto) {
         var ret = phoneSvc.updatePhone(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
