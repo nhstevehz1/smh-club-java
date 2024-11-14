@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
@@ -224,8 +223,8 @@ public class PhoneServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(CreatePhoneDto.class)
-                .set(field(CreatePhoneDto::getMemberId), member.getId())
+        var create = Instancio.of(PhoneDto.class)
+                .set(field(PhoneDto::getMemberId), member.getId())
                 .create();
         var phone = Instancio.of(PhoneDto.class)
                 .set(field(PhoneDto::getMemberId), member.getId())
@@ -257,8 +256,8 @@ public class PhoneServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(PhoneEntity.class);
-        var update = Instancio.of(CreatePhoneDto.class)
-                .set(field(CreatePhoneDto::getMemberId), id)
+        var update = Instancio.of(PhoneDto.class)
+                .set(field(PhoneDto::getMemberId), id)
                 .create();
         var phone = Instancio.create(PhoneDto.class);
 

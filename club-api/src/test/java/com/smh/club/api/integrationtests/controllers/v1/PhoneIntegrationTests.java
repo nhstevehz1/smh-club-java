@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.integrationtests.controllers.IntegrationTests;
 import com.smh.club.api.request.PagingConfig;
@@ -207,8 +206,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(CreatePhoneDto.class)
-                .generate(field(CreatePhoneDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(PhoneDto.class)
+                .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
                 .create();
 
         // perform POST
@@ -247,8 +246,9 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void update_returns_dto_status_ok() throws Exception {
         var phone = addEntitiesToDb(5).get(2);
         var memberId = phone.getMember().getId();
-        var update = Instancio.of(CreatePhoneDto.class)
-                .set(field(CreatePhoneDto::getMemberId), memberId)
+        var update = Instancio.of(PhoneDto.class)
+                .set(field(PhoneDto::getId), phone.getId())
+                .set(field(PhoneDto::getMemberId), memberId)
                 .create();
 
         // perform PUT
@@ -277,7 +277,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(CreatePhoneDto expected, PhoneEntity actual) {
+    private void verify(PhoneDto expected, PhoneEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
         assertEquals(expected.getPhoneType(), actual.getPhoneType());

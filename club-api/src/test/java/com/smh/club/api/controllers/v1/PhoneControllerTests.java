@@ -3,7 +3,6 @@ package com.smh.club.api.controllers.v1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.controllers.ControllerTests;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -120,7 +119,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void shouldCreate() throws Exception {
         // setup
         var ret  = Instancio.create(PhoneDto.class);
-        var create = modelMapper.map(ret, CreatePhoneDto.class);
+        var create = modelMapper.map(ret, PhoneDto.class);
         when(svc.createPhone(create)).thenReturn(ret);
 
         // execute and verify
@@ -144,7 +143,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void shouldUpdate() throws Exception {
     // setup
         var ret = Instancio.create(PhoneDto.class);
-        var update = modelMapper.map(ret, CreatePhoneDto.class);
+        var update = modelMapper.map(ret, PhoneDto.class);
         when(svc.updatePhone(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -167,7 +166,7 @@ public class PhoneControllerTests extends ControllerTests {
     public void update_phone_should_return_badRequest() throws Exception {
         // setup
         var id = 10;
-        var update = Instancio.create(CreatePhoneDto.class);
+        var update = Instancio.create(PhoneDto.class);
         when(svc.updatePhone(id, update)).thenReturn(Optional.empty());
 
         // execute and verify

@@ -5,7 +5,6 @@ import com.smh.club.api.common.services.PhoneService;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -59,7 +58,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
     }
 
     @Override
-    public PhoneDto createPhone(CreatePhoneDto createDto) {
+    public PhoneDto createPhone(PhoneDto createDto) {
         log.debug("creating phone: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -69,7 +68,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
     }
 
     @Override
-    public Optional<PhoneDto> updatePhone(int id, CreatePhoneDto updateDto) {
+    public Optional<PhoneDto> updatePhone(int id, PhoneDto updateDto) {
         log.debug("Updating phone, id: {}, with data: {}", id, updateDto);
 
         return phoneRepo.findByIdAndMemberId(id, updateDto.getMemberId())
