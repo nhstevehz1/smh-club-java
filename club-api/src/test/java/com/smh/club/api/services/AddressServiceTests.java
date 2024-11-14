@@ -6,7 +6,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.CreateAddressDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -225,8 +224,8 @@ public class AddressServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(CreateAddressDto.class)
-                .set(field(CreateAddressDto::getMemberId), member.getId())
+        var create = Instancio.of(AddressDto.class)
+                .set(field(AddressDto::getMemberId), member.getId())
                 .create();
         var address = Instancio.of(AddressDto.class)
                 .set(field(AddressDto::getMemberId), member.getId())
@@ -258,8 +257,8 @@ public class AddressServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(AddressEntity.class);
-        var update = Instancio.of(CreateAddressDto.class)
-                .set(field(CreateAddressDto::getMemberId), id)
+        var update = Instancio.of(AddressDto.class)
+                .set(field(AddressDto::getMemberId), id)
                 .create();
         var address = Instancio.create(AddressDto.class);
 

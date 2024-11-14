@@ -6,7 +6,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.CreateAddressDto;
 import com.smh.club.api.integrationtests.controllers.IntegrationTests;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -253,8 +252,9 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void createAddresses_returns_addressDto_status_created() throws Exception {
         // create addresses
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(CreateAddressDto.class)
-                .generate(field(CreateAddressDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(AddressDto.class)
+                .generate(field(AddressDto::getMemberId), g -> g.oneOf(memberIdList))
+                .ignore(field(AddressDto::getId))
                 .create();
 
         // perform POST
@@ -295,8 +295,9 @@ public class AddressIntegrationTests extends IntegrationTests {
         // create several addresses
         var address = addEntitiesToDb(5).get(2);
         var memberId = address.getMember().getId();
-        var update = Instancio.of(CreateAddressDto.class)
-                .set(field(CreateAddressDto::getMemberId), memberId)
+        var update = Instancio.of(AddressDto.class)
+                .set(field(AddressDto::getId), address.getId())
+                .set(field(AddressDto::getMemberId), memberId)
                 .create();
 
         // perform PUT
@@ -326,7 +327,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         return addressRepo.saveAllAndFlush(entities);
     }
 
-    private void verify(CreateAddressDto expected, AddressEntity actual) {
+    private void verify(AddressDto expected, AddressEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getAddress1(), actual.getAddress1());
         assertEquals(expected.getAddress2(), actual.getAddress2());

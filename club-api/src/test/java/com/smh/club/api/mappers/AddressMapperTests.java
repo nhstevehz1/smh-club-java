@@ -1,7 +1,7 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.domain.entities.AddressEntity;
-import com.smh.club.api.dto.CreateAddressDto;
+import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.mappers.config.MapperConfig;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -31,7 +31,7 @@ public class AddressMapperTests {
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var address = Instancio.create(CreateAddressDto.class);
+        var address = Instancio.create(AddressDto.class);
 
         // execute
         var entity = mapper.toEntity(address);
@@ -76,7 +76,7 @@ public class AddressMapperTests {
     public void update_entity_from_updateDto() {
         // setup
         var entity = Instancio.create(AddressEntity.class);
-        var update = Instancio.create(CreateAddressDto.class);
+        var update = Instancio.create(AddressDto.class);
 
         // execute
         var updatedEntity = mapper.updateEntity(update, entity);
