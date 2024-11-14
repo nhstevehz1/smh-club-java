@@ -10,9 +10,9 @@ import java.util.List;
 
 @Service
 public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
+
     public MemberMapperImpl(ModelMapper mapper) {
         super(mapper);
-        configureMapper(mapper);
     }
 
     @Override
@@ -45,10 +45,5 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
         dto.setPhones(mapList(entity.getPhones(), PhoneDto.class));
         dto.setRenewals(mapList(entity.getRenewals(), RenewalDto.class));
         return dto;
-    }
-
-    @Override
-    protected void configureMapper(ModelMapper mapper) {
-
     }
 }

@@ -6,7 +6,6 @@ import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.dto.create.CreateRenewalDto;
 import com.smh.club.api.dto.update.UpdateRenewalDto;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper
     
     public RenewalMapperImpl(ModelMapper mapper) {
         super(mapper);
-        configureMapper(mapper);
     }
 
     @Override
@@ -38,16 +36,5 @@ public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper
     @Override
     public List<RenewalDto> toDtoList(List<RenewalEntity> entityList) {
         return mapList(entityList, RenewalDto.class);
-    }
-
-    @Override
-    protected void configureMapper(ModelMapper mapper) {
-        TypeMap<RenewalEntity, RenewalDto> dtoTypeMap
-                = this.modelMapper.createTypeMap(RenewalEntity.class, RenewalDto.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), RenewalDto::setMemberId));
-
-        TypeMap<RenewalDto, RenewalEntity> entTypeMap
-                = this.modelMapper.createTypeMap(RenewalDto.class, RenewalEntity.class);
-        entTypeMap.addMappings(m -> m.skip(RenewalEntity::setMember));
     }
 }
