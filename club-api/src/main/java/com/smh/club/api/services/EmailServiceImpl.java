@@ -5,7 +5,6 @@ import com.smh.club.api.common.services.EmailService;
 import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -60,7 +59,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
     }
 
     @Override
-    public EmailDto createEmail(CreateEmailDto createDto) {
+    public EmailDto createEmail(EmailDto createDto) {
         log.debug("creating email: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -70,7 +69,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
     }
 
     @Override
-    public Optional<EmailDto> updateEmail(int id, CreateEmailDto updateDto) {
+    public Optional<EmailDto> updateEmail(int id, EmailDto updateDto) {
         log.debug("Updating email, id: {}, with data: {}", id, updateDto);
 
         return emailRepo.findByIdAndMemberId(id, updateDto.getMemberId())

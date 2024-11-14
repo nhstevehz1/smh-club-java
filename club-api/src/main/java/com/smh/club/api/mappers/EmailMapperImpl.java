@@ -2,7 +2,6 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.common.mappers.EmailMapper;
 import com.smh.club.api.domain.entities.EmailEntity;
-import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.dto.EmailDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
     }
 
     @Override
-    public EmailEntity toEntity(CreateEmailDto createEmailDto) {
+    public EmailEntity toEntity(EmailDto createEmailDto) {
         return modelMapper.map(createEmailDto, EmailEntity.class);
     }
 
@@ -28,7 +27,7 @@ public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
     }
 
     @Override
-    public EmailEntity updateEntity(CreateEmailDto updateEmailDto, EmailEntity entity) {
+    public EmailEntity updateEntity(EmailDto updateEmailDto, EmailEntity entity) {
         modelMapper.map(updateEmailDto, entity);
         return entity;
     }

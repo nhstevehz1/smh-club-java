@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.integrationtests.controllers.IntegrationTests;
 import com.smh.club.api.request.PagingConfig;
@@ -219,8 +218,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(CreateEmailDto.class)
-                .generate(field(CreateEmailDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(EmailDto.class)
+                .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
                 .create();
 
         // perform POST
@@ -260,8 +259,9 @@ public class EmailIntegrationTests extends IntegrationTests {
         // setup
         var email = addEntitiesToDb(5).get(2);
         var memberId = email.getMember().getId();
-        var update = Instancio.of(CreateEmailDto.class)
-                .set(field(CreateEmailDto::getMemberId), memberId)
+        var update = Instancio.of(EmailDto.class)
+                .set(field(EmailDto::getId), email.getId())
+                .set(field(EmailDto::getMemberId), memberId)
                 .create();
 
         // perform PUT
@@ -291,7 +291,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         return emailRepo.saveAllAndFlush(entities);
     }
 
-    private void verify(com.smh.club.api.dto.CreateEmailDto expected, EmailEntity actual) {
+    private void verify(EmailDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType(), actual.getEmailType());

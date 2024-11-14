@@ -3,7 +3,6 @@ package com.smh.club.api.controllers.v1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.controllers.ControllerTests;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
@@ -119,7 +118,7 @@ public class EmailControllerTests extends ControllerTests {
     public void shouldCreate() throws Exception {
         // setup
         var ret = Instancio.create(EmailDto.class);
-        var create = modelMapper.map(ret, CreateEmailDto.class);
+        var create = modelMapper.map(ret, EmailDto.class);
         when(svc.createEmail(create)).thenReturn(ret);
 
         // execute and verify
@@ -142,7 +141,7 @@ public class EmailControllerTests extends ControllerTests {
     public void shouldUpdateEmail() throws Exception {
         // setup
         var ret = Instancio.create(EmailDto.class);
-        var update = modelMapper.map(ret, CreateEmailDto.class);
+        var update = modelMapper.map(ret, EmailDto.class);
         when(svc.updateEmail(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
@@ -165,7 +164,7 @@ public class EmailControllerTests extends ControllerTests {
     public void update_email_should_return_badRequest() throws Exception {
         // setup
         var id = 15;
-        var update = Instancio.create(CreateEmailDto.class);
+        var update = Instancio.create(EmailDto.class);
         when(svc.updateEmail(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
