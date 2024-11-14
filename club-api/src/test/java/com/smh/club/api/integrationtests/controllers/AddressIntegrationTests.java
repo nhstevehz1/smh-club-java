@@ -197,8 +197,6 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
-        var actualSorted = actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getAddress1)).toList();
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(AddressDto::getAddress1)).toList(), actual);
 

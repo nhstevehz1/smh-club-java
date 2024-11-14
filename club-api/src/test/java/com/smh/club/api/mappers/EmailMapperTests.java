@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EmailMapperTests {
 
     private final EmailMapperImpl mapper =
-            new EmailMapperImpl(new MapperConfig().createModelMapper());;
+            new EmailMapperImpl(new MapperConfig().createModelMapper());
 
     @WithSettings
     private final Settings settings = Settings.create()

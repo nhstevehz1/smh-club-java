@@ -61,8 +61,6 @@ public class RenewalIntegrationTests extends IntegrationTests{
     @Autowired
     private RenewalsRepo renewRepo;
 
-    private List<MemberEntity> members;
-    
     @Autowired
     public RenewalIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
         super(mockMvc, mapper, "/renewals");

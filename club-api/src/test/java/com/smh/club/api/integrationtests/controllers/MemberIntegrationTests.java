@@ -125,8 +125,6 @@ public class MemberIntegrationTests extends IntegrationTests {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
 
-        var count = memberRepo.count();
-
         var sorted = memberRepo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());

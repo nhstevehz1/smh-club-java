@@ -60,8 +60,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Autowired
     private PhoneRepo repo;
 
-    private List<MemberEntity> members;
-
     @Autowired
     public PhoneIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
         super(mockMvc, mapper, "/phones");
