@@ -1,9 +1,9 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.controllers.v1;
 
-import com.smh.club.api.common.controllers.PhoneController;
-import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.dto.CreatePhoneDto;
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.common.controllers.v1.AddressController;
+import com.smh.club.api.common.services.AddressService;
+import com.smh.club.api.dto.AddressDto;
+import com.smh.club.api.dto.CreateAddressDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
@@ -18,21 +18,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "phones", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PhoneControllerImpl implements PhoneController {
-    
-    private final PhoneService phoneSvc;
+@RequestMapping(value = "/api/v1/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
+public class AddressControllerImpl implements AddressController {
+
+    private final AddressService addressSvc;
 
     @GetMapping
-    @Override
-    public ResponseEntity<PageResponse<PhoneDto>> getPhoneListPage (
+    public ResponseEntity<PageResponse<AddressDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
                     defaultValue = "${request.paging.size}") int size,
             @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME, required = false) String sort) {
+            @RequestParam(value= PagingConfig.SORT_NAME, required = false) String sort) {
 
         var pageParams = PageParams.builder()
                 .pageNumber(page)
@@ -41,34 +40,34 @@ public class PhoneControllerImpl implements PhoneController {
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(phoneSvc.getPhoneListPage(pageParams));
+        return ResponseEntity.ok(addressSvc.getAddressListPage(pageParams));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<PhoneDto> getPhone(@PathVariable int id) {
-        var ret = phoneSvc.getPhone(id);
+    public ResponseEntity<AddressDto> get(@PathVariable int id) {
+        var ret = addressSvc.getAddress(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
-    public ResponseEntity<CountResponse> getCount() {
-        return ResponseEntity.ok(phoneSvc.getPhoneCount());
+    public ResponseEntity<CountResponse> count() {
+        return ResponseEntity.ok(addressSvc.getAddressCount());
     }
 
     @PostMapping
-    public ResponseEntity<PhoneDto> createPhone(@RequestBody com.smh.club.api.dto.CreatePhoneDto createDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(createDto));
+    public ResponseEntity<AddressDto> create(@RequestBody CreateAddressDto address) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createAddress(address));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PhoneDto> updatePhone(@PathVariable int id, @RequestBody CreatePhoneDto updateDto) {
-        var ret = phoneSvc.updatePhone(id, updateDto);
+    public ResponseEntity<AddressDto> update(@PathVariable int id, @RequestBody CreateAddressDto address) {
+        var ret = addressSvc.updateAddress(id, address);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deletePhone(@PathVariable int id) {
-        phoneSvc.deletePhone(id);
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        addressSvc.deleteAddress(id);
         return ResponseEntity.noContent().build();
     }
 }

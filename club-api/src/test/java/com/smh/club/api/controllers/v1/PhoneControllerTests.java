@@ -1,6 +1,7 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.controllers.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.controllers.ControllerTests;
 import com.smh.club.api.common.services.PhoneService;
 import com.smh.club.api.dto.CreatePhoneDto;
 import com.smh.club.api.dto.PhoneDto;
@@ -46,7 +47,7 @@ public class PhoneControllerTests extends ControllerTests {
 
     @Autowired
     protected PhoneControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper, "/phones");
+        super(mockMvc, objMapper, "/api/v1/phones");
     }
 
     @Test
@@ -116,14 +117,14 @@ public class PhoneControllerTests extends ControllerTests {
     }
 
     @Test
-    public void shouldCreatePhone() throws Exception {
+    public void shouldCreate() throws Exception {
         // setup
         var ret  = Instancio.create(PhoneDto.class);
         var create = modelMapper.map(ret, CreatePhoneDto.class);
         when(svc.createPhone(create)).thenReturn(ret);
 
         // execute and verify
-        mockMvc.perform(post("/phones")
+        mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objMapper.writeValueAsString(create)))
@@ -140,14 +141,14 @@ public class PhoneControllerTests extends ControllerTests {
 
 
     @Test
-    public void shouldUpdatePhone() throws Exception {
+    public void shouldUpdate() throws Exception {
     // setup
         var ret = Instancio.create(PhoneDto.class);
         var update = modelMapper.map(ret, CreatePhoneDto.class);
         when(svc.updatePhone(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
-        mockMvc.perform(put("/phones/{id}", ret.getId())
+        mockMvc.perform(put(path + "/{id}", ret.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objMapper.writeValueAsString(update)))
@@ -182,13 +183,13 @@ public class PhoneControllerTests extends ControllerTests {
     }
     
     @Test
-    public void shouldDeletePhone() throws Exception {
+    public void shouldDelete() throws Exception {
         // setup
         var id = 1;
         doNothing().when(svc).deletePhone(id);
 
         // execute and verify
-        mockMvc.perform(delete("/phones/{id}", id))
+        mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
@@ -197,13 +198,13 @@ public class PhoneControllerTests extends ControllerTests {
     }
 
     @Test
-    public void shouldReturnEmailCount() throws Exception {
+    public void shouldReturnCount() throws Exception {
         // setup
         var count = 20;
         when(svc.getPhoneCount()).thenReturn(CountResponse.of(count));
 
         // execute and verify
-        mockMvc.perform(get("/phones/count"))
+        mockMvc.perform(get(path + "/count"))
                 .andExpect((status().isOk()))
                 .andExpect(jsonPath("$.count").value(20))
                 .andDo(print());

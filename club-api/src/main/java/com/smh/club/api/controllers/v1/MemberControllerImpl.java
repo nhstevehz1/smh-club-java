@@ -1,6 +1,6 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.controllers.v1;
 
-import com.smh.club.api.common.controllers.MemberController;
+import com.smh.club.api.common.controllers.v1.MemberController;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.dto.CreateMemberDto;
@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "members", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberSvc;
 
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<MemberDto>> getMemberListPage(
+    public ResponseEntity<PageResponse<MemberDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -49,40 +49,40 @@ public class MemberControllerImpl implements MemberController {
 
     @GetMapping("{id}")
     @Override
-    public ResponseEntity<MemberDto> getMember(@PathVariable int id) {
+    public ResponseEntity<MemberDto> get(@PathVariable int id) {
         var ret = memberSvc.getMember(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
     @Override
-    public ResponseEntity<CountResponse> getCount() {
+    public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(memberSvc.getMemberCount());
     }
 
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<MemberDto> createMember(@RequestBody CreateMemberDto member) {
+    public ResponseEntity<MemberDto> create(@RequestBody CreateMemberDto member) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<MemberDto> updateMember(@PathVariable int id, @RequestBody CreateMemberDto member) {
+    public ResponseEntity<MemberDto> update(@PathVariable int id, @RequestBody CreateMemberDto member) {
         var ret = memberSvc.updateMember(id,  member);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @Override
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         memberSvc.deleteMember(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{id}/detail")
     @Override
-    public ResponseEntity<MemberDetailDto>  getMemberDetail(@PathVariable int id) {
+    public ResponseEntity<MemberDetailDto> detail(@PathVariable int id) {
         var ret = memberSvc.getMemberDetail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

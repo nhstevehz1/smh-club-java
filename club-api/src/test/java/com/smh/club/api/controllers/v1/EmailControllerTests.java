@@ -1,9 +1,10 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.controllers.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.CreateAddressDto;
+import com.smh.club.api.controllers.ControllerTests;
+import com.smh.club.api.common.services.EmailService;
+import com.smh.club.api.dto.CreateEmailDto;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -32,57 +33,57 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @ExtendWith(InstancioExtension.class)
-@WebMvcTest(AddressControllerImpl.class)
-public class AddressControllerTests extends ControllerTests {
+@WebMvcTest(EmailControllerImpl.class)
+public class EmailControllerTests extends ControllerTests {
 
     @MockBean
-    private AddressService svc;
+    private EmailService svc;
 
     @WithSettings
     private final Settings settings =
             Settings.create().set(Keys.SET_BACK_REFERENCES, true)
-                .set(Keys.JPA_ENABLED, true)
-                .set(Keys.COLLECTION_MAX_SIZE, 0);
+                    .set(Keys.JPA_ENABLED, true)
+                    .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Autowired
-    public AddressControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper, "/addresses");
+    EmailControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
+        super(mockMvc, objMapper, "/api/v1/emails");
     }
-    
+
     @Test
     public void shouldReturnPage() throws Exception {
         // setup
-        var ret = Instancio.createList(AddressDto.class);
+        var ret = Instancio.createList(EmailDto.class);
         var params = PageParams.builder().pageNumber(2).pageSize(10).sortColumn("id")
                 .sortDirection(Sort.Direction.DESC).build();
 
-        var response = PageResponse.<AddressDto>builder()
+        var response = PageResponse.<EmailDto>builder()
                 .totalPages(100).totalCount(20)
                 .items(ret)
                 .build();
 
-        when(svc.getAddressListPage(any(PageParams.class))).thenReturn(response);
+        when(svc.getEmailListPage(any(PageParams.class))).thenReturn(response);
 
         // execute and verify
         mockMvc.perform(get(path)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(objMapper.writeValueAsString(params)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objMapper.writeValueAsString(params)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total-pages").value(response.getTotalPages()))
                 .andExpect(jsonPath("$.total-count").value(response.getTotalCount()))
                 .andExpect(jsonPath("$.items.length()").value(response.getItems().size()))
                 .andDo(print());
 
-        verify(svc).getAddressListPage(any(PageParams.class));
+        verify(svc).getEmailListPage(any(PageParams.class));
         verifyNoMoreInteractions(svc);
     }
 
     @Test
-    public void shouldReturnAddress() throws Exception {
+    public void shouldReturnEmail() throws Exception {
         // setup
-        var ret = Instancio.create(AddressDto.class);
-        when(svc.getAddress(ret.getId())).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(EmailDto.class);
+        when(svc.getEmail(ret.getId())).thenReturn(Optional.of(ret));
 
         // execute
         mockMvc.perform(get(path + "/{id}", ret.getId())
@@ -90,23 +91,19 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(ret.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(ret.getAddress2()))
-                .andExpect(jsonPath("$.city").value(ret.getCity()))
-                .andExpect(jsonPath("$.state").value(ret.getState()))
-                .andExpect(jsonPath("$.zip").value(ret.getZip()))
-                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
+                .andExpect(jsonPath("$.email").value(ret.getEmail()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).getAddress(ret.getId());
+        verify(svc).getEmail(ret.getId());
         verifyNoMoreInteractions(svc);
     }
 
     @Test
-    public void shouldReturnNotFound_when_addressId_does_not_exist() throws Exception {
+    public void shouldReturnNotFound_when_emailId_does_not_exist() throws Exception {
         // setup
         var id = 12;
-        when(svc.getAddress(id)).thenReturn(Optional.empty());
+        when(svc.getEmail(id)).thenReturn(Optional.empty());
 
         // execute
         mockMvc.perform(get(path + "/{id}", id)
@@ -114,70 +111,62 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(status().isNotFound())
                 .andDo(print());
 
-        verify(svc).getAddress(id);
+        verify(svc).getEmail(id);
         verifyNoMoreInteractions(svc);
     }
 
     @Test
-    public void shouldCreateAddress() throws Exception {
+    public void shouldCreate() throws Exception {
         // setup
-        var ret = Instancio.create(AddressDto.class);
-        var create = modelMapper.map(ret, CreateAddressDto.class);
-
-        when(svc.createAddress(create)).thenReturn(ret);
+        var ret = Instancio.create(EmailDto.class);
+        var create = modelMapper.map(ret, CreateEmailDto.class);
+        when(svc.createEmail(create)).thenReturn(ret);
 
         // execute and verify
         mockMvc.perform(post(path)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objMapper.writeValueAsString(create)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objMapper.writeValueAsString(create)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(ret.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(ret.getAddress2()))
-                .andExpect(jsonPath("$.city").value(ret.getCity()))
-                .andExpect(jsonPath("$.state").value(ret.getState()))
-                .andExpect(jsonPath("$.zip").value(ret.getZip()))
-                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
+                .andExpect(jsonPath("$.email").value(ret.getEmail()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).createAddress(create);
+        verify(svc).createEmail(create);
         verifyNoMoreInteractions(svc);
     }
 
+
     @Test
-    public void shouldUpdateAddress() throws Exception {
+    public void shouldUpdateEmail() throws Exception {
         // setup
-        var ret = Instancio.create(AddressDto.class);
-        var update = modelMapper.map(ret, CreateAddressDto.class);
-        when(svc.updateAddress(ret.getId(), update)).thenReturn(Optional.of(ret));
+        var ret = Instancio.create(EmailDto.class);
+        var update = modelMapper.map(ret, CreateEmailDto.class);
+        when(svc.updateEmail(ret.getId(), update)).thenReturn(Optional.of(ret));
 
         // execute and verify
-        mockMvc.perform(put("/addresses/{id}", ret.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objMapper.writeValueAsString(update))).andExpect(status().isOk())
+        mockMvc.perform(put(path + "/{id}", ret.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objMapper.writeValueAsString(ret)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
-                .andExpect(jsonPath("$.address1").value(ret.getAddress1()))
-                .andExpect(jsonPath("$.address2").value(ret.getAddress2()))
-                .andExpect(jsonPath("$.city").value(ret.getCity()))
-                .andExpect(jsonPath("$.state").value(ret.getState()))
-                .andExpect(jsonPath("$.zip").value(ret.getZip()))
-                .andExpect(jsonPath("$.address-type").value(ret.getAddressType().getAddressTypeName()))
+                .andExpect(jsonPath("$.email").value(ret.getEmail()))
+                .andExpect(jsonPath("$.email-type").value(ret.getEmailType().getEmailTypeName()))
                 .andDo(print());
 
-        verify(svc).updateAddress(ret.getId(), update);
+        verify(svc).updateEmail(ret.getId(), update);
         verifyNoMoreInteractions(svc);
     }
 
     @Test
-    public void update_address_should_return_badRequest() throws Exception {
+    public void update_email_should_return_badRequest() throws Exception {
         // setup
-        var id = 12;
-        var update = Instancio.create(CreateAddressDto.class);
-        when(svc.updateAddress(id, update)).thenReturn(Optional.empty());
+        var id = 15;
+        var update = Instancio.create(CreateEmailDto.class);
+        when(svc.updateEmail(id, update)).thenReturn(Optional.empty());
 
         // execute and verify
         mockMvc.perform(put(path + "/{id}", id)
@@ -187,27 +176,31 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(status().isBadRequest())
                 .andDo(print());
 
-        verify(svc).updateAddress(id, update);
+        verify(svc).updateEmail(id, update);
         verifyNoMoreInteractions(svc);
     }
 
     @Test
-    public void shouldDeleteAddress() throws Exception {
+    public void shouldDelete() throws Exception {
         // setup
         var id = 1;
-        doNothing().when(svc).deleteAddress(id);
+        doNothing().when(svc).deleteEmail(id);
 
         // execute and verify
         mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
+
+        verify(svc).deleteEmail(id);
+        verifyNoMoreInteractions(svc);
     }
 
+
     @Test
-    public void shouldReturnAddressCount() throws Exception {
+    public void shouldReturnEmailCount() throws Exception {
         // setup
         var count = 20;
-        when(svc.getAddressCount()).thenReturn(CountResponse.of(count));
+        when(svc.getEmailCount()).thenReturn(CountResponse.of(count));
 
         // execute and verify
         mockMvc.perform(get(path + "/count"))
@@ -215,5 +208,7 @@ public class AddressControllerTests extends ControllerTests {
                 .andExpect(jsonPath("$.count").value(20))
                 .andDo(print());
 
+        verify(svc).getEmailCount();
+        verifyNoMoreInteractions(svc);
     }
 }

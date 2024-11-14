@@ -1,5 +1,6 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.controllers.v1;
 
+import com.smh.club.api.common.controllers.v1.RenewalController;
 import com.smh.club.api.common.services.RenewalService;
 import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.RenewalDto;
@@ -17,14 +18,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "renewals", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RenewalControllerImpl implements com.smh.club.api.common.controllers.RenewalController {
+@RequestMapping(value = "/api/v1/renewals", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RenewalControllerImpl implements RenewalController {
     
     private final RenewalService renewSvc;
     
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<RenewalDto>> getRenewalListPage(
+    public ResponseEntity<PageResponse<RenewalDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -45,33 +46,33 @@ public class RenewalControllerImpl implements com.smh.club.api.common.controller
 
     @GetMapping("{id}")
     @Override
-    public ResponseEntity<RenewalDto> getRenewal(@PathVariable int id) {
+    public ResponseEntity<RenewalDto> get(@PathVariable int id) {
         var ret = renewSvc.getRenewal(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
     @Override
-    public ResponseEntity<CountResponse> getCount() {
+    public ResponseEntity<CountResponse> get() {
         return ResponseEntity.ok(renewSvc.getRenewalCount());
     }
 
     @PostMapping
     @Override
-    public ResponseEntity<RenewalDto> createRenewal(@RequestBody CreateRenewalDto createDto) {
+    public ResponseEntity<RenewalDto> create(@RequestBody CreateRenewalDto createDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(createDto));
     }
 
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<RenewalDto> updateRenewal(@PathVariable int id, @RequestBody CreateRenewalDto updateDto) {
+    public ResponseEntity<RenewalDto> update(@PathVariable int id, @RequestBody CreateRenewalDto updateDto) {
         var ret = renewSvc.updateRenewal(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
     @Override
-    public ResponseEntity<Void> deleteRenewal(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         renewSvc.deleteRenewal(id);
         return ResponseEntity.noContent().build();
     }

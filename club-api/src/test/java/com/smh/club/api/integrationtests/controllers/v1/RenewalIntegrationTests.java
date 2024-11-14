@@ -1,4 +1,4 @@
-package com.smh.club.api.integrationtests.controllers;
+package com.smh.club.api.integrationtests.controllers.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
@@ -8,6 +8,7 @@ import com.smh.club.api.domain.repos.RenewalsRepo;
 import com.smh.club.api.dto.CreateRenewalDto;
 import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.api.integrationtests.controllers.IntegrationTests;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -49,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RenewalIntegrationTests extends IntegrationTests{
+public class RenewalIntegrationTests extends IntegrationTests {
     
     @Value("${request.paging.size}")
     private int defaultPageSize;
@@ -62,7 +63,7 @@ public class RenewalIntegrationTests extends IntegrationTests{
 
     @Autowired
     public RenewalIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc, mapper, "/renewals");
+        super(mockMvc, mapper, "/api/v1/renewals");
     }
 
     @BeforeAll

@@ -1,6 +1,7 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.controllers.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.controllers.ControllerTests;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDetailDto;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("tests")
 @ExtendWith(InstancioExtension.class)
 @WebMvcTest(MemberControllerImpl.class)
-public class MemberControllerTests extends ControllerTests{
+public class MemberControllerTests extends ControllerTests {
 
     @MockBean
     private MemberService svc;
@@ -46,7 +47,7 @@ public class MemberControllerTests extends ControllerTests{
 
     @Autowired
     protected MemberControllerTests(MockMvc mockMvc, ObjectMapper objMapper) {
-        super(mockMvc, objMapper, "/members");
+        super(mockMvc, objMapper, "/api/v1/members");
     }
 
     @Test
@@ -120,7 +121,7 @@ public class MemberControllerTests extends ControllerTests{
     }
 
     @Test
-    public void shouldCreateMember() throws Exception {
+    public void shouldCreate() throws Exception {
         // setup
         var ret = Instancio.create(MemberDto.class);
         var create = modelMapper.map(ret, CreateMemberDto.class);
@@ -146,7 +147,7 @@ public class MemberControllerTests extends ControllerTests{
     }
 
     @Test
-    public void shouldUpdateMember() throws Exception {
+    public void shouldUpdate() throws Exception {
         // setup
         var ret = Instancio.create(MemberDto.class);
         var update = modelMapper.map(ret, CreateMemberDto.class);
@@ -191,7 +192,7 @@ public class MemberControllerTests extends ControllerTests{
     }
 
     @Test
-    public void shouldDeleteMember() throws Exception {
+    public void shouldDelete() throws Exception {
         // setup
         var id = 1;
         doNothing().when(svc).deleteMember(id);

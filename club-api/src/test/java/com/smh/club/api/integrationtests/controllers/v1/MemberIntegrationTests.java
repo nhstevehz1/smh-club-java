@@ -1,4 +1,4 @@
-package com.smh.club.api.integrationtests.controllers;
+package com.smh.club.api.integrationtests.controllers.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
@@ -6,6 +6,7 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.AddressDto;
 import com.smh.club.api.dto.CreateMemberDto;
 import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.integrationtests.controllers.IntegrationTests;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -54,7 +55,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc,mapper, "/members");
+        super(mockMvc,mapper, "/api/v1/members");
     }
 
     @ParameterizedTest
@@ -88,7 +89,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
 
-        var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber).reversed()).toList(), actual);
@@ -109,7 +110,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SIZE_NAME, pageSize);
 
-        var actual = executeGetListPage(MemberDto.class, "/members",
+        var actual = executeGetListPage(MemberDto.class, path,
                 valueMap, sorted.size(), Integer.parseInt(pageSize));
 
         assertEquals(actual.stream()
@@ -157,7 +158,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "id");
 
-        var actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getId)).toList(), actual);
@@ -173,7 +174,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "member-number");
 
-        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
@@ -189,7 +190,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "first-name");
 
-        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getFirstName)).toList(), actual);
@@ -205,7 +206,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "last-name");
 
-        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getLastName)).toList(), actual);
@@ -221,7 +222,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "birth-date");
 
-        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getBirthDate)).toList(), actual);
@@ -237,7 +238,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "joined-date");
 
-        actual = executeGetListPage(MemberDto.class, "/members", valueMap, sorted.size(), defaultPageSize);
+        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparing(MemberDto::getJoinedDate)).toList(), actual);
@@ -277,7 +278,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         var id = entities.get(5).getId();
 
         // perform DELETE
-        mockMvc.perform(delete("/members/{id}", id))
+        mockMvc.perform(delete(path + "/{id}", id))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 

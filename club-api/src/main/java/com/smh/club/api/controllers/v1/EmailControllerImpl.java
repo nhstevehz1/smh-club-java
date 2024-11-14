@@ -1,11 +1,11 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.controllers.v1;
 
-import com.smh.club.api.common.controllers.AddressController;
-import com.smh.club.api.common.services.AddressService;
-import com.smh.club.api.dto.AddressDto;
-import com.smh.club.api.dto.CreateAddressDto;
-import com.smh.club.api.request.PageParams;
+import com.smh.club.api.common.controllers.v1.EmailController;
+import com.smh.club.api.common.services.EmailService;
+import com.smh.club.api.dto.CreateEmailDto;
 import com.smh.club.api.request.PagingConfig;
+import com.smh.club.api.dto.EmailDto;
+import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +18,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "addresses", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AddressControllerImpl implements AddressController {
-
-    private final AddressService addressSvc;
+@RequestMapping(value = "/api/v1/emails", produces = MediaType.APPLICATION_JSON_VALUE)
+public class EmailControllerImpl implements EmailController {
+    
+    private final EmailService emailSvc;
 
     @GetMapping
-    public ResponseEntity<PageResponse<AddressDto>> getAddressListPage(
+    @Override
+    public ResponseEntity<PageResponse<EmailDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
                     defaultValue = "${request.paging.size}") int size,
             @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value= PagingConfig.SORT_NAME, required = false) String sort) {
+            @RequestParam(value = PagingConfig.SORT_NAME, required = false) String sort) {
 
         var pageParams = PageParams.builder()
                 .pageNumber(page)
@@ -40,34 +41,39 @@ public class AddressControllerImpl implements AddressController {
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(addressSvc.getAddressListPage(pageParams));
+        return ResponseEntity.ok(emailSvc.getEmailListPage(pageParams));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AddressDto> getAddress(@PathVariable int id) {
-        var ret = addressSvc.getAddress(id);
+    @Override
+    public ResponseEntity<EmailDto> get(@PathVariable int id) {
+        var ret = emailSvc.getEmail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
-    public ResponseEntity<CountResponse> getCount() {
-        return ResponseEntity.ok(addressSvc.getAddressCount());
+    @Override
+    public ResponseEntity<CountResponse> count() {
+        return ResponseEntity.ok(emailSvc.getEmailCount());
     }
 
     @PostMapping
-    public ResponseEntity<AddressDto> createAddress(@RequestBody CreateAddressDto address) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createAddress(address));
+    @Override
+    public ResponseEntity<EmailDto> create(@RequestBody CreateEmailDto emailDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(emailDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<AddressDto> updateAddress(@PathVariable int id, @RequestBody CreateAddressDto address) {
-        var ret = addressSvc.updateAddress(id, address);
+    @Override
+    public ResponseEntity<EmailDto> update(@PathVariable int id, @RequestBody CreateEmailDto emailDto) {
+        var ret = emailSvc.updateEmail(id, emailDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteAddress(@PathVariable int id) {
-        addressSvc.deleteAddress(id);
+    @Override
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        emailSvc.deleteEmail(id);
         return ResponseEntity.noContent().build();
     }
 }
