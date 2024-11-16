@@ -2,12 +2,16 @@ package com.smh.club.api.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class CountResponse {
 
     @JsonProperty("count")
-    private final long count;
+    private long count;
 
     private CountResponse(long count) {
         this.count = count;
