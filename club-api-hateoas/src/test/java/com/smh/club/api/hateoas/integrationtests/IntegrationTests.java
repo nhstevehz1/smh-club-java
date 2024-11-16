@@ -2,18 +2,15 @@ package com.smh.club.api.hateoas.integrationtests;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.response.PageResponse;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,27 +36,7 @@ public abstract class IntegrationTests {
                 .set(Keys.COLLECTION_MAX_SIZE, 0);
     }
 
-    protected <T> List<T> executeGetListPage(
-            Class<T> clazz, String path, MultiValueMap<String,
-            String> valueMap, int count, int pageSize) throws Exception {
-
-        var pages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
-        var length = Math.min(count, pageSize);
-
-        // perform get
-        var ret = mockMvc.perform(get(path)
-                        .params(valueMap)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total-pages").value(pages))
-                .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
-                .andDo(print()).andReturn();
-
-        return readPageResponse(ret.getResponse().getContentAsString(), clazz).getItems();
-    }
-
-    protected <T> String executeGetListPageV2(
+    protected <T> String executeGetListPage(
             Class<T> clazz, // the content time
             String path, // path to the endpoint
             MultiValueMap<String, String> valueMap, // page and sort parameters
@@ -87,11 +64,6 @@ public abstract class IntegrationTests {
                 .andDo(print()).andReturn();
 
         return ret.getResponse().getContentAsString();
-    }
-
-    private <T> PageResponse<T> readPageResponse(String json, Class<T> contentClass) throws IOException {
-        JavaType type = mapper.getTypeFactory().constructParametricType(PageResponse.class, contentClass);
-        return mapper.readValue(json, type);
     }
 
     private <T> Page<T> readPage(String json, Class<T> contentClass) throws IOException {

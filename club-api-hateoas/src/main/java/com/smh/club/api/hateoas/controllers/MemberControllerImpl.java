@@ -1,23 +1,12 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.common.assemblers.MemberModelAssembler;
-import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.dto.MemberDto;
 import com.smh.club.api.hateoas.contracts.controllers.MemberController;
-import com.smh.club.api.request.PageParams;
-import com.smh.club.api.request.PagingConfig;
-import com.smh.club.api.response.CountResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})

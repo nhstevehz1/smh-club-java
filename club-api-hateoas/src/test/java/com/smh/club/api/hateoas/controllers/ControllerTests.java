@@ -1,12 +1,7 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.mappers.config.MapperConfig;
-import org.modelmapper.ModelMapper;
-import org.springframework.test.web.servlet.MockMvc;
-
 public abstract class ControllerTests {
-    protected final MockMvc mockMvc;
+    /*protected final MockMvc mockMvc;
     protected final ObjectMapper objMapper;
     protected final ModelMapper modelMapper = new  MapperConfig().createModelMapper();
     protected final String path;
@@ -15,5 +10,5 @@ public abstract class ControllerTests {
         this.mockMvc = mockMvc;
         this.objMapper = objMapper;
         this.path = path;
-    }
+    }*/
 }

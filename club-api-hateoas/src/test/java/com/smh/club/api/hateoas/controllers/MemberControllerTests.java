@@ -1,18 +1,9 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.common.assemblers.MemberModelAssembler;
-import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.controllers.ControllerTests;
-import com.smh.club.api.dto.MemberDetailDto;
-import com.smh.club.api.dto.MemberDto;
-import com.smh.club.api.request.PageParams;
 import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ActiveProfiles("tests")
 @ExtendWith(InstancioExtension.class)
