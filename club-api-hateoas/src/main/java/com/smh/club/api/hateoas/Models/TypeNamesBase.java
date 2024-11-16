@@ -1,4 +1,4 @@
-package com.smh.club.api.dto;
+package com.smh.club.api.hateoas.Models;
 
 public abstract class TypeNamesBase {
     public final static String HOME = "HOME";
