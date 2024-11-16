@@ -1,7 +1,6 @@
-package com.smh.club.api.controllers.v1;
+package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.controllers.ControllerTests;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.dto.MemberDetailDto;
 import com.smh.club.api.dto.MemberDto;

@@ -1,8 +1,8 @@
-package com.smh.club.api.controllers.v1;
+package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.v1.PhoneController;
-import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.api.common.controllers.v1.RenewalController;
+import com.smh.club.api.common.services.RenewalService;
+import com.smh.club.api.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "/api/v1/phones", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PhoneControllerImpl implements PhoneController {
+@RequestMapping(value = "/api/v1/renewals", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RenewalControllerImpl implements RenewalController {
     
-    private final PhoneService phoneSvc;
-
+    private final RenewalService renewSvc;
+    
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<PhoneDto>> page(
+    public ResponseEntity<PageResponse<RenewalDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -40,34 +40,39 @@ public class PhoneControllerImpl implements PhoneController {
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(phoneSvc.getPhoneListPage(pageParams));
+        return ResponseEntity.ok(renewSvc.getRenewalListPage(pageParams));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<PhoneDto> get(@PathVariable int id) {
-        var ret = phoneSvc.getPhone(id);
+    @Override
+    public ResponseEntity<RenewalDto> get(@PathVariable int id) {
+        var ret = renewSvc.getRenewal(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
-    public ResponseEntity<CountResponse> count() {
-        return ResponseEntity.ok(phoneSvc.getPhoneCount());
+    @Override
+    public ResponseEntity<CountResponse> get() {
+        return ResponseEntity.ok(renewSvc.getRenewalCount());
     }
 
     @PostMapping
-    public ResponseEntity<PhoneDto> create(@RequestBody PhoneDto createDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(createDto));
+    @Override
+    public ResponseEntity<RenewalDto> create(@RequestBody RenewalDto createDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(createDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PhoneDto> update(@PathVariable int id, @RequestBody PhoneDto updateDto) {
-        var ret = phoneSvc.updatePhone(id, updateDto);
+    @Override
+    public ResponseEntity<RenewalDto> update(@PathVariable int id, @RequestBody RenewalDto updateDto) {
+        var ret = renewSvc.updateRenewal(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
+    @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        phoneSvc.deletePhone(id);
+        renewSvc.deleteRenewal(id);
         return ResponseEntity.noContent().build();
     }
 }

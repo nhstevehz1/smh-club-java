@@ -1,4 +1,4 @@
-package com.smh.club.api.controllers.v1;
+package com.smh.club.api.controllers;
 
 import com.smh.club.api.common.controllers.v1.AddressController;
 import com.smh.club.api.common.services.AddressService;

@@ -1,10 +1,10 @@
-package com.smh.club.api.controllers.v1;
+package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.v1.EmailController;
-import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.request.PagingConfig;
-import com.smh.club.api.dto.EmailDto;
+import com.smh.club.api.common.controllers.v1.PhoneController;
+import com.smh.club.api.common.services.PhoneService;
+import com.smh.club.api.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
+import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "/api/v1/emails", produces = MediaType.APPLICATION_JSON_VALUE)
-public class EmailControllerImpl implements EmailController {
+@RequestMapping(value = "/api/v1/phones", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PhoneControllerImpl implements PhoneController {
     
-    private final EmailService emailSvc;
+    private final PhoneService phoneSvc;
 
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<EmailDto>> page(
+    public ResponseEntity<PageResponse<PhoneDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -40,39 +40,34 @@ public class EmailControllerImpl implements EmailController {
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(emailSvc.getEmailListPage(pageParams));
+        return ResponseEntity.ok(phoneSvc.getPhoneListPage(pageParams));
     }
 
     @GetMapping("{id}")
-    @Override
-    public ResponseEntity<EmailDto> get(@PathVariable int id) {
-        var ret = emailSvc.getEmail(id);
+    public ResponseEntity<PhoneDto> get(@PathVariable int id) {
+        var ret = phoneSvc.getPhone(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
-    @Override
     public ResponseEntity<CountResponse> count() {
-        return ResponseEntity.ok(emailSvc.getEmailCount());
+        return ResponseEntity.ok(phoneSvc.getPhoneCount());
     }
 
     @PostMapping
-    @Override
-    public ResponseEntity<EmailDto> create(@RequestBody EmailDto emailDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(emailDto));
+    public ResponseEntity<PhoneDto> create(@RequestBody PhoneDto createDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(createDto));
     }
 
     @PutMapping("{id}")
-    @Override
-    public ResponseEntity<EmailDto> update(@PathVariable int id, @RequestBody EmailDto emailDto) {
-        var ret = emailSvc.updateEmail(id, emailDto);
+    public ResponseEntity<PhoneDto> update(@PathVariable int id, @RequestBody PhoneDto updateDto) {
+        var ret = phoneSvc.updatePhone(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
-    @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        emailSvc.deleteEmail(id);
+        phoneSvc.deletePhone(id);
         return ResponseEntity.noContent().build();
     }
 }

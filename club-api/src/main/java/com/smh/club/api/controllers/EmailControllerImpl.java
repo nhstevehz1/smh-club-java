@@ -1,15 +1,13 @@
-package com.smh.club.api.controllers.v1;
+package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.v1.MemberController;
-import com.smh.club.api.common.services.MemberService;
+import com.smh.club.api.common.controllers.v1.EmailController;
+import com.smh.club.api.common.services.EmailService;
 import com.smh.club.api.request.PagingConfig;
-import com.smh.club.api.dto.MemberDetailDto;
-import com.smh.club.api.dto.MemberDto;
+import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -17,17 +15,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "/api/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
-public class MemberControllerImpl implements MemberController {
-
-    private final MemberService memberSvc;
+@RequestMapping(value = "/api/v1/emails", produces = MediaType.APPLICATION_JSON_VALUE)
+public class EmailControllerImpl implements EmailController {
+    
+    private final EmailService emailSvc;
 
     @GetMapping
     @Override
-    public ResponseEntity<PageResponse<MemberDto>> page(
+    public ResponseEntity<PageResponse<EmailDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int page,
             @RequestParam(value = PagingConfig.SIZE_NAME,
@@ -43,46 +40,39 @@ public class MemberControllerImpl implements MemberController {
                 .sortColumn(sort)
                 .build();
 
-        return ResponseEntity.ok(memberSvc.getMemberListPage(pageParams));
+        return ResponseEntity.ok(emailSvc.getEmailListPage(pageParams));
     }
 
     @GetMapping("{id}")
     @Override
-    public ResponseEntity<MemberDto> get(@PathVariable int id) {
-        var ret = memberSvc.getMember(id);
+    public ResponseEntity<EmailDto> get(@PathVariable int id) {
+        var ret = emailSvc.getEmail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
     @Override
     public ResponseEntity<CountResponse> count() {
-        return ResponseEntity.ok(memberSvc.getMemberCount());
+        return ResponseEntity.ok(emailSvc.getEmailCount());
     }
 
-    @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     @Override
-    public ResponseEntity<MemberDto> create(@RequestBody MemberDto member) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
+    public ResponseEntity<EmailDto> create(@RequestBody EmailDto emailDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(emailDto));
     }
 
-    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping("{id}")
     @Override
-    public ResponseEntity<MemberDto> update(@PathVariable int id, @RequestBody MemberDto member) {
-        var ret = memberSvc.updateMember(id,  member);
+    public ResponseEntity<EmailDto> update(@PathVariable int id, @RequestBody EmailDto emailDto) {
+        var ret = emailSvc.updateEmail(id, emailDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @Override
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-        memberSvc.deleteMember(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("{id}/detail")
     @Override
-    public ResponseEntity<MemberDetailDto> detail(@PathVariable int id) {
-        var ret = memberSvc.getMemberDetail(id);
-        return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        emailSvc.deleteEmail(id);
+        return ResponseEntity.noContent().build();
     }
 }

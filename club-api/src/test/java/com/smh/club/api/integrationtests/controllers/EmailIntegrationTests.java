@@ -1,4 +1,4 @@
-package com.smh.club.api.integrationtests.controllers.v1;
+package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.domain.entities.EmailEntity;
@@ -6,7 +6,6 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.EmailDto;
-import com.smh.club.api.integrationtests.controllers.IntegrationTests;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
