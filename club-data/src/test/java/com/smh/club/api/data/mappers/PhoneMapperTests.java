@@ -3,7 +3,6 @@ package com.smh.club.api.data.mappers;
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.dto.PhoneDto;
 import com.smh.club.api.data.config.MapperConfig;
-import com.smh.club.api.data.mappers.PhoneMapperImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

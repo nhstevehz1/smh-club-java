@@ -1,9 +1,8 @@
 package com.smh.club.api.data.mappers;
 
+import com.smh.club.api.data.config.MapperConfig;
 import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.dto.EmailDto;
-import com.smh.club.api.data.config.MapperConfig;
-import com.smh.club.api.data.mappers.EmailMapperImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
