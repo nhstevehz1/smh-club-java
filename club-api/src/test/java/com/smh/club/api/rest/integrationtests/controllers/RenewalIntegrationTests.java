@@ -1,4 +1,4 @@
-package com.smh.club.api.integrationtests.controllers;
+package com.smh.club.api.rest.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
@@ -6,7 +6,7 @@ import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.RenewalsRepo;
 import com.smh.club.api.data.dto.RenewalDto;
-import com.smh.club.api.config.PagingConfig;
+import com.smh.club.api.rest.config.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;

@@ -1,11 +1,11 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.contracts.AddressController;
-import com.smh.club.api.config.PagingConfig;
-import com.smh.club.api.response.CountResponse;
-import com.smh.club.api.response.PageResponse;
-import com.smh.club.api.data.contracts.services.AddressService;
-import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.rest.contracts.PhoneController;
+import com.smh.club.api.rest.config.PagingConfig;
+import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.response.PageResponse;
+import com.smh.club.api.data.contracts.services.PhoneService;
+import com.smh.club.api.data.dto.PhoneDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,53 +15,54 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
-@RequestMapping(value = "/api/v1/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AddressControllerImpl implements AddressController {
-
-    private final AddressService addressSvc;
+@RequestMapping(value = "/api/v1/phones", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PhoneControllerImpl implements PhoneController {
+    
+    private final PhoneService phoneSvc;
 
     @GetMapping
-    public ResponseEntity<PageResponse<AddressDto>> page(
+    @Override
+    public ResponseEntity<PageResponse<PhoneDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int pageNumber,
             @RequestParam(value = PagingConfig.SIZE_NAME,
                     defaultValue = "${request.paging.size}") int pageSize,
             @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value= PagingConfig.SORT_NAME,
+            @RequestParam(value = PagingConfig.SORT_NAME,
                     defaultValue = "") String sort) {
 
-        var page = addressSvc.getAddressListPage(pageNumber, pageSize, sortDir, sort);
+        var page = phoneSvc.getPhoneListPage(pageNumber, pageSize, sortDir, sort);
 
         return ResponseEntity.ok(PageResponse.of(page));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AddressDto> get(@PathVariable int id) {
-        var ret = addressSvc.getAddress(id);
+    public ResponseEntity<PhoneDto> get(@PathVariable int id) {
+        var ret = phoneSvc.getPhone(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("count")
     public ResponseEntity<CountResponse> count() {
 
-        return ResponseEntity.ok(CountResponse.of(addressSvc.getAddressCount()));
+        return ResponseEntity.ok(CountResponse.of(phoneSvc.getPhoneCount()));
     }
 
     @PostMapping
-    public ResponseEntity<AddressDto> create(@RequestBody AddressDto address) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createAddress(address));
+    public ResponseEntity<PhoneDto> create(@RequestBody PhoneDto createDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(createDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<AddressDto> update(@PathVariable int id, @RequestBody AddressDto address) {
-        var ret = addressSvc.updateAddress(id, address);
+    public ResponseEntity<PhoneDto> update(@PathVariable int id, @RequestBody PhoneDto updateDto) {
+        var ret = phoneSvc.updatePhone(id, updateDto);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        addressSvc.deleteAddress(id);
+        phoneSvc.deletePhone(id);
         return ResponseEntity.noContent().build();
     }
 }

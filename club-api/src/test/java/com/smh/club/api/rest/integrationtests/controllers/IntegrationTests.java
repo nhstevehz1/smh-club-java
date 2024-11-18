@@ -1,9 +1,9 @@
-package com.smh.club.api.integrationtests.controllers;
+package com.smh.club.api.rest.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.config.PagingConfig;
-import com.smh.club.api.response.PageResponse;
+import com.smh.club.api.rest.config.PagingConfig;
+import com.smh.club.api.rest.response.PageResponse;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.springframework.http.MediaType;

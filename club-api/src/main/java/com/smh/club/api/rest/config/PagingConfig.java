@@ -1,4 +1,4 @@
-package com.smh.club.api.config;
+package com.smh.club.api.rest.config;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

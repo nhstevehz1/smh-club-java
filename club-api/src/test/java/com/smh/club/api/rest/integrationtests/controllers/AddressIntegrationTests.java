@@ -1,7 +1,7 @@
-package com.smh.club.api.integrationtests.controllers;
+package com.smh.club.api.rest.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.config.PagingConfig;
+import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.AddressRepo;

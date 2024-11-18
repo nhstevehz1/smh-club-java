@@ -1,4 +1,4 @@
-package com.smh.club.api.annotations;
+package com.smh.club.api.rest.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

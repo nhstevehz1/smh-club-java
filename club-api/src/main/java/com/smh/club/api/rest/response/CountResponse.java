@@ -1,4 +1,4 @@
-package com.smh.club.api.response;
+package com.smh.club.api.rest.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

@@ -1,9 +1,9 @@
-package com.smh.club.api.controllers;
+package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.config.PagingConfig;
-import com.smh.club.api.contracts.MemberController;
-import com.smh.club.api.response.CountResponse;
-import com.smh.club.api.response.PageResponse;
+import com.smh.club.api.rest.config.PagingConfig;
+import com.smh.club.api.rest.contracts.MemberController;
+import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.response.PageResponse;
 import com.smh.club.api.data.contracts.services.MemberService;
 import com.smh.club.api.data.dto.MemberDetailDto;
 import com.smh.club.api.data.dto.MemberDto;

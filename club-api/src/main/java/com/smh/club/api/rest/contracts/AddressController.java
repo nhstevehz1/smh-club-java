@@ -1,7 +1,7 @@
-package com.smh.club.api.contracts;
+package com.smh.club.api.rest.contracts;
 
-import com.smh.club.api.response.CountResponse;
-import com.smh.club.api.response.PageResponse;
+import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.response.PageResponse;
 import com.smh.club.api.data.dto.AddressDto;
 import org.springframework.http.ResponseEntity;
 
