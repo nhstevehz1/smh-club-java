@@ -4,4 +4,5 @@ include 'club-gateway'
 include 'club-api'
 include 'club-oauth2'
 include 'club-api-hateoas'
+include 'club-data'
 
