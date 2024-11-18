@@ -1,11 +1,11 @@
 package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.entities.PhoneEntity;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.data.domain.entities.MemberEntity;
+import com.smh.club.data.domain.entities.PhoneEntity;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.domain.repos.PhoneRepo;
+import com.smh.club.data.dto.PhoneDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -185,7 +185,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
         // sort by phone number
         sorted = repo.findAll().stream()
-                .sorted(Comparator.comparing(PhoneEntity::getPhoneNum)).toList();
+                .sorted(Comparator.comparing(PhoneEntity::getPhoneNumber)).toList();
 
         valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SORT_NAME, "phone-number");
@@ -193,7 +193,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
         actual = executeGetListPage(PhoneDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparing(PhoneDto::getPhoneNum)).toList(), actual);
+                .sorted(Comparator.comparing(PhoneDto::getPhoneNumber)).toList(), actual);
 
         expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
@@ -278,13 +278,13 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
     private void verify(PhoneDto expected, PhoneEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
+        assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(expected.getPhoneType(), actual.getPhoneType());
     }
 
     private void verify(PhoneEntity expected, PhoneDto actual) {
         assertEquals(expected.getMember().getId(), actual.getMemberId());
-        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
+        assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(expected.getPhoneType(), actual.getPhoneType());
     }
 

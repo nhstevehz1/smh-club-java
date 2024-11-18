@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("tests")
 @ExtendWith(InstancioExtension.class)
-@WebMvcTest(MemberControllerImpl.class)
+@WebMvcTest(MemberController.class)
 public class MemberControllerTests extends ControllerTests {
 
     /*@MockBean

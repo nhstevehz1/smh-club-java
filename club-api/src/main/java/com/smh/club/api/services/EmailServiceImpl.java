@@ -1,11 +1,11 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.EmailMapper;
+import com.smh.club.data.contracts.mappers.EmailMapper;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.domain.entities.EmailEntity;
-import com.smh.club.api.domain.repos.EmailRepo;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.EmailDto;
+import com.smh.club.data.domain.entities.EmailEntity;
+import com.smh.club.data.domain.repos.EmailRepo;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

@@ -24,7 +24,8 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // includes spring-boot-starter-aop
+	implementation(project(':club-data'))
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.flywaydb:flyway-core'
@@ -45,7 +46,7 @@ dependencies {
 	testImplementation 'io.zonky.test:embedded-postgres:1.2.10'
 	testImplementation 'org.instancio:instancio-junit:5.0.2'
 
-	testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:17.0.0') // embedded Postres DB
+	testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:17.0.0')
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

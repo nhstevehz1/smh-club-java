@@ -1,6 +1,6 @@
 package com.smh.club.api.common.services;
 
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.data.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

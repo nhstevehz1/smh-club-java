@@ -1,12 +1,11 @@
 package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.entities.RenewalEntity;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.PhoneDto;
-import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.data.domain.entities.MemberEntity;
+import com.smh.club.data.domain.entities.RenewalEntity;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.domain.repos.RenewalsRepo;
+import com.smh.club.data.dto.RenewalDto;
 import com.smh.club.api.request.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -233,7 +232,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
                 .andReturn();
 
         // verify
-        var dto = mapper.readValue(ret.getResponse().getContentAsString(), PhoneDto.class);
+        var dto = mapper.readValue(ret.getResponse().getContentAsString(), RenewalDto.class);
         var entity =  renewRepo.findById(dto.getId());
 
         assertTrue(entity.isPresent());

@@ -1,8 +1,8 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.v1.PhoneController;
+import com.smh.club.api.common.controllers.PhoneController;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.data.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;

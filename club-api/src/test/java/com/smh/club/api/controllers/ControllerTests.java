@@ -1,7 +1,7 @@
 package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.mappers.config.MapperConfig;
+import com.smh.club.data.config.MapperConfig;
 import org.modelmapper.ModelMapper;
 import org.springframework.test.web.servlet.MockMvc;
 

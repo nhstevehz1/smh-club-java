@@ -1,16 +1,11 @@
 package com.smh.club.api.hateoas.integrationtests;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
-
-import java.io.IOException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -66,8 +61,8 @@ public abstract class IntegrationTests {
         return ret.getResponse().getContentAsString();
     }
 
-    private <T> Page<T> readPage(String json, Class<T> contentClass) throws IOException {
+    /*private <T> Page<T> readPage(String json, Class<T> contentClass) throws IOException {
         JavaType type = mapper.getTypeFactory().constructParametricType(PageImpl.class, contentClass);
         return mapper.readValue(json, type);
-    }
+    }*/
 }

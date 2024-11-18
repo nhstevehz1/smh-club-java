@@ -1,12 +1,12 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.v1.EmailController;
+import com.smh.club.api.common.controllers.EmailController;
 import com.smh.club.api.common.services.EmailService;
-import com.smh.club.api.request.PagingConfig;
-import com.smh.club.api.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
+import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import com.smh.club.data.dto.EmailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

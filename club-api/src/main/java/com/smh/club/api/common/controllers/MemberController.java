@@ -1,7 +1,7 @@
-package com.smh.club.api.common.controllers.v1;
+package com.smh.club.api.common.controllers;
 
-import com.smh.club.api.dto.MemberDetailDto;
-import com.smh.club.api.dto.MemberDto;
+import com.smh.club.data.dto.MemberDetailDto;
+import com.smh.club.data.dto.MemberDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
 import org.springframework.http.ResponseEntity;

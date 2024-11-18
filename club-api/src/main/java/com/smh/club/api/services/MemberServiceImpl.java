@@ -1,11 +1,11 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.MemberMapper;
+import com.smh.club.data.contracts.mappers.MemberMapper;
 import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.MemberDetailDto;
-import com.smh.club.api.dto.MemberDto;
+import com.smh.club.data.domain.entities.MemberEntity;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.dto.MemberDetailDto;
+import com.smh.club.data.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -46,7 +46,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         return PageResponse.<MemberDto>builder()
                 .totalPages(page.getTotalPages())
                 .totalCount(page.getTotalElements())
-                .items(memberMapper.toMemberDtoList(page.getContent()))
+                .items(memberMapper.toDtoList(page.getContent()))
                 .build();
     }
 
@@ -54,15 +54,15 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
     public Optional<MemberDto> getMember(int id) {
         log.debug("Getting member by id: {}", id);
 
-        return membersRepo.findById(id).map(memberMapper::toMemberDto);
+        return membersRepo.findById(id).map(memberMapper::toDto);
     }
 
     @Override
     public MemberDto createMember(MemberDto member) {
         log.debug("creating member: {}", member);
 
-        var memberEntity = memberMapper.toMemberEntity(member);
-        return memberMapper.toMemberDto(membersRepo.save(memberEntity));
+        var memberEntity = memberMapper.toEntity(member);
+        return memberMapper.toDto(membersRepo.save(memberEntity));
     }
 
 
@@ -71,8 +71,8 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)
-                .map(e -> memberMapper.updateMemberEntity(member, e))
-                .map(memberMapper::toMemberDto);
+                .map(e -> memberMapper.updateEntity(member, e))
+                .map(memberMapper::toDto);
     }
 
     @Override

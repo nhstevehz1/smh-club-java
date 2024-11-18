@@ -1,10 +1,10 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.MemberMapper;
-import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.MemberDetailDto;
-import com.smh.club.api.dto.MemberDto;
+import com.smh.club.data.contracts.mappers.MemberMapper;
+import com.smh.club.data.domain.entities.MemberEntity;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.dto.MemberDetailDto;
+import com.smh.club.data.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -166,7 +166,7 @@ public class MemberServiceTests extends ServiceTests {
         var page = createEntityPage(entityList, pageableMock, 200);
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(mapperMock.toMemberDtoList(page.getContent())).thenReturn(dtoList);
+        when(mapperMock.toDtoList(page.getContent())).thenReturn(dtoList);
 
         // execute
         var pageResponse = svc.getMemberListPage(PageParams.getDefault());
@@ -176,7 +176,7 @@ public class MemberServiceTests extends ServiceTests {
         assertEquals(page.getTotalElements(), pageResponse.getTotalCount());
         assertEquals(page.getContent().size(), pageResponse.getItems().size());
         verify(repoMock).findAll(any(PageRequest.class));
-        verify(mapperMock).toMemberDtoList(page.getContent());
+        verify(mapperMock).toDtoList(page.getContent());
         verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
@@ -188,7 +188,7 @@ public class MemberServiceTests extends ServiceTests {
         var member = Instancio.of(MemberDto.class).set(field(MemberDto::getId), id).create();
 
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(mapperMock.toMemberDto(any(MemberEntity.class))).thenReturn(member);
+        when(mapperMock.toDto(any(MemberEntity.class))).thenReturn(member);
 
         // execute
         var ret = svc.getMember(id);
@@ -196,7 +196,7 @@ public class MemberServiceTests extends ServiceTests {
         // verify
         assertTrue(ret.isPresent());
         verify(repoMock).findById(id);
-        verify(mapperMock).toMemberDto(any(MemberEntity.class));
+        verify(mapperMock).toDto(any(MemberEntity.class));
         verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
@@ -223,8 +223,8 @@ public class MemberServiceTests extends ServiceTests {
         var entity = Instancio.create(MemberEntity.class);
 
         when(repoMock.save(entity)).thenReturn(entity);
-        when(mapperMock.toMemberEntity(create)).thenReturn(entity);
-        when(mapperMock.toMemberDto(entity)).thenReturn(member);
+        when(mapperMock.toEntity(create)).thenReturn(entity);
+        when(mapperMock.toDto(entity)).thenReturn(member);
 
         // execute
         var ret = svc.createMember(create);
@@ -233,8 +233,8 @@ public class MemberServiceTests extends ServiceTests {
         assertNotNull(ret);
         assertEquals(ret, member);
         verify(repoMock).save(entity);
-        verify(mapperMock).toMemberEntity(create);
-        verify(mapperMock).toMemberDto(entity);
+        verify(mapperMock).toEntity(create);
+        verify(mapperMock).toDto(entity);
         verifyNoMoreInteractions(repoMock, mapperMock);
     }
 
@@ -248,8 +248,8 @@ public class MemberServiceTests extends ServiceTests {
 
         when(repoMock.findById(id)).thenReturn(Optional.of(entity));
 
-        when(mapperMock.updateMemberEntity(update, entity)).thenReturn(entity);
-        when(mapperMock.toMemberDto(entity)).thenReturn(member);
+        when(mapperMock.updateEntity(update, entity)).thenReturn(entity);
+        when(mapperMock.toDto(entity)).thenReturn(member);
 
         // execute
         var ret = svc.updateMember(id, update);
@@ -258,8 +258,8 @@ public class MemberServiceTests extends ServiceTests {
         assertTrue(ret.isPresent());
         verify(repoMock).findById(id);
 
-        verify(mapperMock).updateMemberEntity(update, entity);
-        verify(mapperMock).toMemberDto(entity);
+        verify(mapperMock).updateEntity(update, entity);
+        verify(mapperMock).toDto(entity);
         verifyNoMoreInteractions(repoMock, mapperMock);
     }
 

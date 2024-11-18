@@ -1,6 +1,5 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.hateoas.contracts.controllers.MemberController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @RequestMapping(value = "/api/v2/members", produces = MediaTypes.HAL_JSON_VALUE)
-public class MemberControllerImpl implements MemberController {
+public class MemberController {
 
     /*private final MemberService memberSvc;
     private final MemberModelAssembler assembler;
@@ -63,7 +62,7 @@ public class MemberControllerImpl implements MemberController {
         var created = memberSvc.createMember(member);
         var model = assembler.toModel(created);
         return ResponseEntity.created(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(
-                MemberControllerImpl.class).get(created.getId())).toUri()).body(model);
+                MemberController.class).get(created.getId())).toUri()).body(model);
     }
 
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

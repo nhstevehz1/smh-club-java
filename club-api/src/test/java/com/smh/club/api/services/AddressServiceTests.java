@@ -1,11 +1,11 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.AddressMapper;
-import com.smh.club.api.domain.entities.AddressEntity;
-import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.repos.AddressRepo;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.AddressDto;
+import com.smh.club.data.contracts.mappers.AddressMapper;
+import com.smh.club.data.domain.entities.AddressEntity;
+import com.smh.club.data.domain.entities.MemberEntity;
+import com.smh.club.data.domain.repos.AddressRepo;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.dto.AddressDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;

@@ -1,11 +1,11 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.RenewalMapper;
-import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.entities.RenewalEntity;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.data.contracts.mappers.RenewalMapper;
+import com.smh.club.data.domain.entities.MemberEntity;
+import com.smh.club.data.domain.entities.RenewalEntity;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.domain.repos.RenewalsRepo;
+import com.smh.club.data.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;

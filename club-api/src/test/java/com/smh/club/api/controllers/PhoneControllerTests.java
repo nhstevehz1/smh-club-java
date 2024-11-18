@@ -2,7 +2,7 @@ package com.smh.club.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.data.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
@@ -90,7 +90,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
-                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
+                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNumber()))
                 .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
@@ -129,7 +129,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
-                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
+                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNumber()))
                 .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 
@@ -153,7 +153,7 @@ public class PhoneControllerTests extends ControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(ret.getId()))
                 .andExpect(jsonPath("$.member-id").value(ret.getMemberId()))
-                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNum()))
+                .andExpect(jsonPath("$.phone-number").value(ret.getPhoneNumber()))
                 .andExpect(jsonPath("$.phone-type").value(ret.getPhoneType().getPhoneTypeName()))
                 .andDo(print());
 

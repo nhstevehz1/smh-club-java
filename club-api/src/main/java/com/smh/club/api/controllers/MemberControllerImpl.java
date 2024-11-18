@@ -1,10 +1,10 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.v1.MemberController;
+import com.smh.club.api.common.controllers.MemberController;
 import com.smh.club.api.common.services.MemberService;
 import com.smh.club.api.request.PagingConfig;
-import com.smh.club.api.dto.MemberDetailDto;
-import com.smh.club.api.dto.MemberDto;
+import com.smh.club.data.dto.MemberDetailDto;
+import com.smh.club.data.dto.MemberDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

@@ -1,8 +1,8 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.v1.RenewalController;
+import com.smh.club.api.common.controllers.RenewalController;
 import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.api.dto.RenewalDto;
+import com.smh.club.data.dto.RenewalDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.request.PagingConfig;
 import com.smh.club.api.response.CountResponse;

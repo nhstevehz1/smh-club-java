@@ -1,11 +1,11 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.PhoneMapper;
+import com.smh.club.data.contracts.mappers.PhoneMapper;
 import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.api.domain.entities.PhoneEntity;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.PhoneDto;
+import com.smh.club.data.domain.entities.PhoneEntity;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.domain.repos.PhoneRepo;
+import com.smh.club.data.dto.PhoneDto;
 import com.smh.club.api.request.PageParams;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;

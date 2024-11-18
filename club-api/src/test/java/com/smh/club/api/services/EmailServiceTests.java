@@ -1,11 +1,11 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.common.mappers.EmailMapper;
-import com.smh.club.api.domain.entities.EmailEntity;
-import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.repos.EmailRepo;
-import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.EmailDto;
+import com.smh.club.data.contracts.mappers.EmailMapper;
+import com.smh.club.data.domain.entities.EmailEntity;
+import com.smh.club.data.domain.entities.MemberEntity;
+import com.smh.club.data.domain.repos.EmailRepo;
+import com.smh.club.data.domain.repos.MembersRepo;
+import com.smh.club.data.dto.EmailDto;
 import com.smh.club.api.request.PageParams;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -28,7 +28,7 @@ import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
