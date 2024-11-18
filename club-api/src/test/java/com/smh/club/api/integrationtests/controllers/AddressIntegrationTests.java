@@ -1,19 +1,20 @@
 package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.data.domain.entities.AddressEntity;
-import com.smh.club.data.domain.entities.MemberEntity;
-import com.smh.club.data.domain.repos.AddressRepo;
-import com.smh.club.data.domain.repos.MembersRepo;
-import com.smh.club.data.dto.AddressDto;
-import com.smh.club.api.request.PagingConfig;
+import com.smh.club.api.config.PagingConfig;
+import com.smh.club.api.data.domain.entities.AddressEntity;
+import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.domain.repos.AddressRepo;
+import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.dto.AddressDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -48,8 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureEmbeddedDatabase(
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
-        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class AddressIntegrationTests extends IntegrationTests {
 
     @Value("${request.paging.size}")
@@ -61,12 +61,18 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Autowired
     private AddressRepo addressRepo;
 
+    @WithSettings
+    Settings settings =
+            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                    .set(Keys.JPA_ENABLED, true)
+                    .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Autowired
     public AddressIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
         super(mockMvc, mapper, "/api/v1/addresses");
     }
 
-    @BeforeAll
+    @BeforeEach
     public void initMembers() {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
@@ -76,12 +82,6 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();
         memberRepo.saveAllAndFlush(members);
-    }
-
-    @AfterEach
-    public void clearAddressTable() {
-        addressRepo.deleteAll();
-        addressRepo.flush();
     }
 
     @Test

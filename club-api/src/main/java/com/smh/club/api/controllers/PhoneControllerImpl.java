@@ -1,15 +1,13 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.PhoneController;
-import com.smh.club.api.common.services.PhoneService;
-import com.smh.club.data.dto.PhoneDto;
-import com.smh.club.api.request.PageParams;
-import com.smh.club.api.request.PagingConfig;
+import com.smh.club.api.contracts.PhoneController;
+import com.smh.club.api.config.PagingConfig;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import com.smh.club.api.data.contracts.services.PhoneService;
+import com.smh.club.api.data.dto.PhoneDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,21 +24,17 @@ public class PhoneControllerImpl implements PhoneController {
     @Override
     public ResponseEntity<PageResponse<PhoneDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
-                    defaultValue = "${request.paging.page}") int page,
+                    defaultValue = "${request.paging.page}") int pageNumber,
             @RequestParam(value = PagingConfig.SIZE_NAME,
-                    defaultValue = "${request.paging.size}") int size,
+                    defaultValue = "${request.paging.size}") int pageSize,
             @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME, required = false) String sort) {
+            @RequestParam(value = PagingConfig.SORT_NAME,
+                    defaultValue = "") String sort) {
 
-        var pageParams = PageParams.builder()
-                .pageNumber(page)
-                .pageSize(size)
-                .sortDirection(Sort.Direction.fromString(sortDir))
-                .sortColumn(sort)
-                .build();
+        var page = phoneSvc.getPhoneListPage(pageNumber, pageSize, sortDir, sort);
 
-        return ResponseEntity.ok(phoneSvc.getPhoneListPage(pageParams));
+        return ResponseEntity.ok(PageResponse.of(page));
     }
 
     @GetMapping("{id}")
@@ -51,7 +45,8 @@ public class PhoneControllerImpl implements PhoneController {
 
     @GetMapping("count")
     public ResponseEntity<CountResponse> count() {
-        return ResponseEntity.ok(phoneSvc.getPhoneCount());
+
+        return ResponseEntity.ok(CountResponse.of(phoneSvc.getPhoneCount()));
     }
 
     @PostMapping

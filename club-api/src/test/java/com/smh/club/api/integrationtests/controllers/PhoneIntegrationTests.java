@@ -1,12 +1,12 @@
 package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.data.domain.entities.MemberEntity;
-import com.smh.club.data.domain.entities.PhoneEntity;
-import com.smh.club.data.domain.repos.MembersRepo;
-import com.smh.club.data.domain.repos.PhoneRepo;
-import com.smh.club.data.dto.PhoneDto;
-import com.smh.club.api.request.PagingConfig;
+import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.domain.entities.PhoneEntity;
+import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.config.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;

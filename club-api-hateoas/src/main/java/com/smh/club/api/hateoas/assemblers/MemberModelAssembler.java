@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.data.dto.MemberDto;
+import com.smh.club.api.data.dto.MemberDto;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;

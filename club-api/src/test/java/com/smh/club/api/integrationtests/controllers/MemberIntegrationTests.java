@@ -1,11 +1,11 @@
 package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.data.domain.entities.MemberEntity;
-import com.smh.club.data.domain.repos.MembersRepo;
-import com.smh.club.data.dto.AddressDto;
-import com.smh.club.data.dto.MemberDto;
-import com.smh.club.api.request.PagingConfig;
+import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.config.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -56,6 +56,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         super(mockMvc,mapper, "/api/v1/members");
     }
 
+
+
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
     public void getListPage_no_params(int entitySize) throws Exception {
@@ -105,6 +107,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         var sorted = memberRepo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
+
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
         valueMap.add(PagingConfig.SIZE_NAME, pageSize);
 

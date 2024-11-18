@@ -1,17 +1,15 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.MemberController;
-import com.smh.club.api.common.services.MemberService;
-import com.smh.club.api.request.PagingConfig;
-import com.smh.club.data.dto.MemberDetailDto;
-import com.smh.club.data.dto.MemberDto;
-import com.smh.club.api.request.PageParams;
+import com.smh.club.api.config.PagingConfig;
+import com.smh.club.api.contracts.MemberController;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import com.smh.club.api.data.contracts.services.MemberService;
+import com.smh.club.api.data.dto.MemberDetailDto;
+import com.smh.club.api.data.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,21 +27,17 @@ public class MemberControllerImpl implements MemberController {
     @Override
     public ResponseEntity<PageResponse<MemberDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
-                    defaultValue = "${request.paging.page}") int page,
+                    defaultValue = "${request.paging.page}") int pageNumber,
             @RequestParam(value = PagingConfig.SIZE_NAME,
-                    defaultValue = "${request.paging.size}") int size,
+                    defaultValue = "${request.paging.size}") int pageSize,
             @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME, required = false) String sort) {
+            @RequestParam(value = PagingConfig.SORT_NAME,
+                    defaultValue = "") String sort) {
 
-        var pageParams = PageParams.builder()
-                .pageNumber(page)
-                .pageSize(size)
-                .sortDirection(Sort.Direction.fromString(sortDir))
-                .sortColumn(sort)
-                .build();
+        var page = memberSvc.getMemberListPage(pageNumber, pageSize, sortDir, sort);
 
-        return ResponseEntity.ok(memberSvc.getMemberListPage(pageParams));
+        return ResponseEntity.ok(PageResponse.of(page));
     }
 
     @GetMapping("{id}")
@@ -56,7 +50,7 @@ public class MemberControllerImpl implements MemberController {
     @GetMapping("count")
     @Override
     public ResponseEntity<CountResponse> count() {
-        return ResponseEntity.ok(memberSvc.getMemberCount());
+        return ResponseEntity.ok(CountResponse.of(memberSvc.getMemberCount()));
     }
 
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)

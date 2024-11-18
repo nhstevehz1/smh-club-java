@@ -1,15 +1,13 @@
 package com.smh.club.api.controllers;
 
-import com.smh.club.api.common.controllers.RenewalController;
-import com.smh.club.api.common.services.RenewalService;
-import com.smh.club.data.dto.RenewalDto;
-import com.smh.club.api.request.PageParams;
-import com.smh.club.api.request.PagingConfig;
+import com.smh.club.api.contracts.RenewalController;
+import com.smh.club.api.config.PagingConfig;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PageResponse;
+import com.smh.club.api.data.contracts.services.RenewalService;
+import com.smh.club.api.data.dto.RenewalDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,21 +24,17 @@ public class RenewalControllerImpl implements RenewalController {
     @Override
     public ResponseEntity<PageResponse<RenewalDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
-                    defaultValue = "${request.paging.page}") int page,
+                    defaultValue = "${request.paging.page}") int pageNumber,
             @RequestParam(value = PagingConfig.SIZE_NAME,
-                    defaultValue = "${request.paging.size}") int size,
+                    defaultValue = "${request.paging.size}") int pageSize,
             @RequestParam(value = PagingConfig.DIRECTION_NAME,
                     defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME, required = false) String sort) {
+            @RequestParam(value = PagingConfig.SORT_NAME,
+                    defaultValue = "") String sort) {
 
-        var pageParams = PageParams.builder()
-                .pageNumber(page)
-                .pageSize(size)
-                .sortDirection(Sort.Direction.fromString(sortDir))
-                .sortColumn(sort)
-                .build();
+        var page = renewSvc.getRenewalListPage(pageNumber, pageSize, sortDir, sort);
 
-        return ResponseEntity.ok(renewSvc.getRenewalListPage(pageParams));
+        return ResponseEntity.ok(PageResponse.of(page));
     }
 
     @GetMapping("{id}")
@@ -53,7 +47,8 @@ public class RenewalControllerImpl implements RenewalController {
     @GetMapping("count")
     @Override
     public ResponseEntity<CountResponse> get() {
-        return ResponseEntity.ok(renewSvc.getRenewalCount());
+
+        return ResponseEntity.ok(CountResponse.of(renewSvc.getRenewalCount()));
     }
 
     @PostMapping

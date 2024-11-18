@@ -2,6 +2,7 @@ package com.smh.club.api.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.config.PagingConfig;
 import com.smh.club.api.response.PageResponse;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
@@ -40,6 +41,9 @@ public abstract class IntegrationTests {
             Class<T> clazz, String path, MultiValueMap<String,
             String> valueMap, int count, int pageSize) throws Exception {
 
+        var pageNumber = valueMap.getFirst(PagingConfig.PAGE_NAME);
+        pageNumber = pageNumber != null ? pageNumber : "0";
+
         var pages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
         var length = Math.min(count, pageSize);
 
@@ -50,10 +54,12 @@ public abstract class IntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total-pages").value(pages))
                 .andExpect(jsonPath("$.total-count").value(count))
-                .andExpect(jsonPath("$.items.length()").value(length))
+                .andExpect(jsonPath("$.page-size").value(pageSize))
+                .andExpect(jsonPath("$.page-number").value(pageNumber))
+                .andExpect(jsonPath("$.content.length()").value(length))
                 .andDo(print()).andReturn();
 
-        return readPageResponse(ret.getResponse().getContentAsString(), clazz).getItems();
+        return readPageResponse(ret.getResponse().getContentAsString(), clazz).getContent();
     }
 
     private <T> PageResponse<T> readPageResponse(String json, Class<T> contentClass) throws IOException {
