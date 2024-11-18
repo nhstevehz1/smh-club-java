@@ -1,9 +1,8 @@
 package com.smh.club.api.data.mappers;
 
+import com.smh.club.api.data.config.MapperConfig;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.dto.AddressDto;
-import com.smh.club.api.data.config.MapperConfig;
-import com.smh.club.api.data.mappers.AddressMapperImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

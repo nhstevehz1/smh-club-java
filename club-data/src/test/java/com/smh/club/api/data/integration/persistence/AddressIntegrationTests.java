@@ -139,7 +139,7 @@ class AddressIntegrationTests extends PersistenceTestsBase {
     @ValueSource(ints = {5, 10, 20})
     public void findByIdAndMemberId_unknown_member_id_returns_empty_optional(int size) {
         // setup
-        var address = addressRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));;
+        var address = addressRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));
         var ids = this.members.stream()
                 .map(MemberEntity::getId).max(Integer::compareTo);
         assertTrue(ids.isPresent());
@@ -156,7 +156,7 @@ class AddressIntegrationTests extends PersistenceTestsBase {
     @ValueSource(ints = {5, 10, 20})
     public void findByIdAndMemberId_bad_address_id_returns_empty_optional(int size) {
         // setup
-        var addresses = addressRepo.saveAllAndFlush(createList(size, members));;
+        var addresses = addressRepo.saveAllAndFlush(createList(size, members));
         var memberId = addresses.get((int)Math.ceil(size / 2d)).getMember().getId();
         var ids = addresses.stream()
                 .map(AddressEntity::getId).max(Integer::compareTo);

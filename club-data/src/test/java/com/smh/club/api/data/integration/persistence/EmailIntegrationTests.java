@@ -126,7 +126,7 @@ public class EmailIntegrationTests extends PersistenceTestsBase {
     @ValueSource(ints = {5, 10, 20})
     public void findByIdAndMemberId_bad_email_id_returns_empty_optional(int size) {
         // setup
-        var emails = emailRepo.saveAllAndFlush(createList(size, members));;
+        var emails = emailRepo.saveAllAndFlush(createList(size, members));
         var memberId = emails.get((int)Math.ceil(size / 2d)).getMember().getId();
         var ids = emails.stream()
                 .map(EmailEntity::getId).max(Integer::compareTo);

@@ -95,7 +95,7 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
     @ValueSource(ints = {5, 10, 20})
     public void findByIdAndMemberId_returns_phone(int size) {
         // setup
-        var phone = phoneRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));;
+        var phone = phoneRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));
 
         // execute
         var ret = phoneRepo.findByIdAndMemberId(phone.getId(), phone.getMember().getId());
@@ -109,7 +109,7 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
     @ValueSource(ints = {5, 10, 20})
     public void findByIdAndMemberId_unknown_member_id_returns_empty_optional(int size) {
         // setup
-        var phone = phoneRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));;;
+        var phone = phoneRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));
         var ids = this.members.stream()
                 .map(MemberEntity::getId).max(Integer::compareTo);
         assertTrue(ids.isPresent());
@@ -126,7 +126,7 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
     @ValueSource(ints = {5, 10, 20})
     public void findByIdAndMemberId_bad_phone_id_returns_empty_optional(int size) {
         // setup
-        var phones = phoneRepo.saveAllAndFlush(createList(size, members));;
+        var phones = phoneRepo.saveAllAndFlush(createList(size, members));
         var memberId = phones.get((int)Math.ceil(size / 2d)).getMember().getId();
         var ids = phones.stream()
                 .map(PhoneEntity::getId).max(Integer::compareTo);
