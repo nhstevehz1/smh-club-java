@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.contracts.services;
 
-import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.rest.dto.EmailDto;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;

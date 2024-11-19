@@ -5,7 +5,7 @@ import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;
 import com.smh.club.api.rest.contracts.services.RenewalService;
-import com.smh.club.api.data.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

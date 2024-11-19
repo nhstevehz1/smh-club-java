@@ -2,7 +2,7 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.contracts.mappers.EmailMapper;
 import com.smh.club.api.data.domain.entities.EmailEntity;
-import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.rest.dto.EmailDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 

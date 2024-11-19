@@ -5,7 +5,7 @@ import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.PhoneRepo;
-import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

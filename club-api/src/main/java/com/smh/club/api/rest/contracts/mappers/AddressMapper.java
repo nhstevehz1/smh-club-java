@@ -1,7 +1,7 @@
 package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.data.domain.entities.AddressEntity;
-import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressDto;
 
 import java.util.List;
 

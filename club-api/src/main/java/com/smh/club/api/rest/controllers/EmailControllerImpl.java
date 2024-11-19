@@ -5,7 +5,7 @@ import com.smh.club.api.rest.response.PageResponse;
 import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.response.CountResponse;
-import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.rest.dto.EmailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

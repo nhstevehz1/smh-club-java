@@ -5,7 +5,7 @@ import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.repos.AddressRepo;
 import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

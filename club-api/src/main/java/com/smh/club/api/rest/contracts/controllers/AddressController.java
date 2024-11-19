@@ -2,7 +2,7 @@ package com.smh.club.api.rest.contracts.controllers;
 
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;
-import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressDto;
 import org.springframework.http.ResponseEntity;
 
 public interface AddressController {

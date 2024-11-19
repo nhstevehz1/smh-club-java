@@ -1,7 +1,7 @@
 package com.smh.club.api.rest.contracts.services;
 
-import com.smh.club.api.data.dto.MemberDetailDto;
-import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.rest.dto.MemberDetailDto;
+import com.smh.club.api.rest.dto.MemberDto;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;

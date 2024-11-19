@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.contracts.services;
 
-import com.smh.club.api.data.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressDto;
 import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
 

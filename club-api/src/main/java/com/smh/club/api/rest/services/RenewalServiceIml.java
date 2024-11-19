@@ -5,7 +5,7 @@ import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.RenewalsRepo;
-import com.smh.club.api.data.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

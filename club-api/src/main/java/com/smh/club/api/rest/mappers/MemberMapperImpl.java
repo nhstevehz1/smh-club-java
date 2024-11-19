@@ -2,8 +2,8 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.dto.MemberDetailDto;
-import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.rest.dto.MemberDetailDto;
+import com.smh.club.api.rest.dto.MemberDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

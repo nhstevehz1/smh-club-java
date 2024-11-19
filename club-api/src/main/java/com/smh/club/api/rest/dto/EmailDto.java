@@ -1,4 +1,4 @@
-package com.smh.club.api.data.dto;
+package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.data.annotations.SortExclude;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PhoneDto {
+public class EmailDto {
 
     @JsonProperty("id")
     private int id;
@@ -20,9 +20,9 @@ public class PhoneDto {
     @JsonProperty("member-id")
     private int memberId;
 
-    @JsonProperty("phone-number")
-    private String phoneNumber;
+    @JsonProperty("email")
+    private String email;
 
-    @JsonProperty("phone-type")
-    private PhoneType phoneType;
+    @JsonProperty("email-type")
+    private EmailType emailType;
 }

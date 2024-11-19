@@ -2,8 +2,8 @@ package com.smh.club.api.rest.contracts.controllers;
 
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;
-import com.smh.club.api.data.dto.MemberDetailDto;
-import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.rest.dto.MemberDetailDto;
+import com.smh.club.api.rest.dto.MemberDto;
 import org.springframework.http.ResponseEntity;
 
 public interface MemberController {

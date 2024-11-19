@@ -1,7 +1,7 @@
 package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.data.domain.entities.RenewalEntity;
-import com.smh.club.api.data.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalDto;
 
 import java.util.List;
 

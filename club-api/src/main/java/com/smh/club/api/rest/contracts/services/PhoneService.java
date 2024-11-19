@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.contracts.services;
 
-import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneDto;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;
