@@ -1,8 +1,8 @@
-package com.smh.club.api.data.mappers;
+package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.config.MapperConfig;
-import com.smh.club.api.data.domain.entities.EmailEntity;
-import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.data.domain.entities.PhoneEntity;
+import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.config.MapperConfig;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -17,10 +17,10 @@ import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(InstancioExtension.class)
-public class EmailMapperTests {
+public class PhoneMapperTests {
 
-    private final EmailMapperImpl mapper =
-            new EmailMapperImpl(new MapperConfig().createModelMapper());
+    private final PhoneMapperImpl mapper
+            = new PhoneMapperImpl(new MapperConfig().createModelMapper());
 
     @WithSettings
     private final Settings settings = Settings.create()
@@ -31,8 +31,8 @@ public class EmailMapperTests {
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var create = Instancio.of(EmailDto.class)
-                .ignore(field(EmailDto::getId))
+        var create = Instancio.of(PhoneDto.class)
+                .ignore(field(PhoneDto::getId))
                 .create();
 
         // execute
@@ -40,8 +40,8 @@ public class EmailMapperTests {
 
         // verify
         assertNull(entity.getMember());
-        assertEquals(create.getEmail(), entity.getEmail());
-        assertEquals(create.getEmailType(), entity.getEmailType());
+        assertEquals(create.getPhoneNumber(), entity.getPhoneNumber());
+        assertEquals(create.getPhoneType(), entity.getPhoneType());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -53,23 +53,23 @@ public class EmailMapperTests {
     @Test
     public void from_entity_to_dto() {
         // setup
-        var entity = Instancio.create(EmailEntity.class);
+        var entity = Instancio.create(PhoneEntity.class);
 
         // execute
-        var email = mapper.toDto(entity);
+        var ret = mapper.toDto(entity);
 
         // verify
-        assertEquals(entity.getId(), email.getId());
-        assertEquals(entity.getMember().getId(), email.getMemberId());
-        assertEquals(entity.getEmail(), email.getEmail());
-        assertEquals(entity.getEmailType(), email.getEmailType());
+        assertEquals(entity.getId(), ret.getId());
+        assertEquals(entity.getMember().getId(), ret.getMemberId());
+        assertEquals(entity.getPhoneNumber(), ret.getPhoneNumber());
+        assertEquals(entity.getPhoneType(), ret.getPhoneType());
     }
 
     @Test
-    public void update_entity_from_createDto() {
+    public void update_entity_from_updateDto() {
         // setup
-        var update = Instancio.create(EmailDto.class);
-        var entity = Instancio.create(EmailEntity.class);
+        var update = Instancio.create(PhoneDto.class);
+        var entity = Instancio.create(PhoneEntity.class);
 
         // execute
         var updatedEntity = mapper.updateEntity(update, entity);
@@ -77,37 +77,37 @@ public class EmailMapperTests {
         // verify
         assertEquals(entity.getId(), updatedEntity.getId());
         assertEquals(entity.getMember(), updatedEntity.getMember());
-        assertEquals(update.getEmail(), updatedEntity.getEmail());
-        assertEquals(update.getEmailType(), updatedEntity.getEmailType());
+        assertEquals(update.getPhoneNumber(), entity.getPhoneNumber());
+        assertEquals(update.getPhoneType(), entity.getPhoneType());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
     public void from_entityList_to_dtoList(int size) {
         // setup
-        var entityList = Instancio.ofList(EmailEntity.class)
+        var entityList = Instancio.ofList(PhoneEntity.class)
                 .size(size)
-                .withUnique(field(EmailEntity::getId))
+                .withUnique(field(PhoneEntity::getId))
                 .create();
 
         // execute
-        var emailList = mapper.toDtoList(entityList);
+        var phoneList = mapper.toDtoList(entityList);
 
         // verify
-        assertEquals(entityList.size(), emailList.size());
+        assertEquals(entityList.size(), phoneList.size());
 
-        for (var email : emailList) {
+        for (var phone : phoneList) {
             var optional = entityList.stream()
-                    .filter(e -> e.getId() == email.getId()).findFirst();
+                    .filter(e -> e.getId() == phone.getId()).findFirst();
 
             assertTrue(optional.isPresent());
 
             var entity = optional.get();
 
-            assertEquals(entity.getId(), email.getId());
-            assertEquals(entity.getMember().getId(), email.getMemberId());
-            assertEquals(entity.getEmail(), email.getEmail());
-            assertEquals(entity.getEmailType(), email.getEmailType());
+            assertEquals(entity.getId(), phone.getId());
+            assertEquals(entity.getMember().getId(), phone.getMemberId());
+            assertEquals(entity.getPhoneNumber(), phone.getPhoneNumber());
+            assertEquals(entity.getPhoneType(), phone.getPhoneType());
         }
     }
 }

@@ -1,8 +1,8 @@
-package com.smh.club.api.data.mappers;
+package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.config.MapperConfig;
+import com.smh.club.api.rest.config.MapperConfig;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
-import com.smh.club.api.data.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
