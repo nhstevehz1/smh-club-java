@@ -1,4 +1,4 @@
-package com.smh.club.api.data.mappers;
+package com.smh.club.api.rest.mappers;
 
 import org.modelmapper.ModelMapper;
 

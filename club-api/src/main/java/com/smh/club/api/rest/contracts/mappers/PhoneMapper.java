@@ -1,4 +1,4 @@
-package com.smh.club.api.data.contracts.mappers;
+package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.dto.PhoneDto;

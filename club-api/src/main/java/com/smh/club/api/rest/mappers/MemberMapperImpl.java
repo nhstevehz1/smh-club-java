@@ -1,4 +1,4 @@
-package com.smh.club.api.data.mappers;
+package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.data.contracts.mappers.MemberMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
