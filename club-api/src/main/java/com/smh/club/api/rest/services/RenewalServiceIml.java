@@ -1,7 +1,7 @@
-package com.smh.club.api.data.services;
+package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.contracts.mappers.RenewalMapper;
-import com.smh.club.api.data.contracts.services.RenewalService;
+import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
+import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.RenewalsRepo;

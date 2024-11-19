@@ -1,4 +1,4 @@
-package com.smh.club.api.data.services;
+package com.smh.club.api.rest.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.data.annotations.SortDefault;

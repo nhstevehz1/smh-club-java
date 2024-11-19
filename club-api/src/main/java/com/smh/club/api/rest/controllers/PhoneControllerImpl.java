@@ -4,7 +4,7 @@ import com.smh.club.api.rest.contracts.controllers.PhoneController;
 import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;
-import com.smh.club.api.data.contracts.services.PhoneService;
+import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.data.dto.PhoneDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

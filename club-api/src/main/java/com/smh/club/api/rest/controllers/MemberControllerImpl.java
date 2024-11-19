@@ -4,7 +4,7 @@ import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.contracts.controllers.MemberController;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;
-import com.smh.club.api.data.contracts.services.MemberService;
+import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.data.dto.MemberDetailDto;
 import com.smh.club.api.data.dto.MemberDto;
 import lombok.RequiredArgsConstructor;

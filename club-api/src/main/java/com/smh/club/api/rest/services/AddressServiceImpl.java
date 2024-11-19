@@ -1,7 +1,7 @@
-package com.smh.club.api.data.services;
+package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.contracts.mappers.AddressMapper;
-import com.smh.club.api.data.contracts.services.AddressService;
+import com.smh.club.api.rest.contracts.mappers.AddressMapper;
+import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.repos.AddressRepo;
 import com.smh.club.api.data.domain.repos.MembersRepo;
