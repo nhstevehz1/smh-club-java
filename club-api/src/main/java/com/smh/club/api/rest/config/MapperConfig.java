@@ -1,6 +1,7 @@
-package com.smh.club.api.data.config;
+package com.smh.club.api.rest.config;
 
 import com.smh.club.api.data.domain.entities.*;
+import com.smh.club.api.rest.dto.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
