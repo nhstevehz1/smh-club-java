@@ -1,11 +1,11 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.contracts.mappers.EmailMapper;
+import com.smh.club.api.rest.contracts.mappers.EmailMapper;
 import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.EmailRepo;
 import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.dto.EmailDto;
+import com.smh.club.api.rest.dto.EmailDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

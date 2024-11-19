@@ -1,11 +1,11 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.contracts.mappers.PhoneMapper;
+import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.PhoneRepo;
-import com.smh.club.api.data.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

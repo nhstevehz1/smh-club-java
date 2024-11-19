@@ -3,7 +3,7 @@ package com.smh.club.api.hateoas.integrationtests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.dto.MemberDto;
+import com.smh.club.api.rest.dto.MemberDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
