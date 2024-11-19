@@ -1,55 +1,90 @@
 package com.smh.club.api.hateoas.integrationtests;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.dto.MemberDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.Comparator;
+import java.util.List;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static org.instancio.Select.field;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
+@ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class MemberIntegrationTests {//extends IntegrationTests {
+public class MemberIntegrationTests extends IntegrationTests {
 
-    /*@Value("${request.paging.size}")
+    @Value("${request.paging.size}")
     private int defaultPageSize;
 
     @Autowired
     private MembersRepo memberRepo;
 
+    @WithSettings
+    private Settings settings =
+            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+                .set(Keys.JPA_ENABLED, true)
+                .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc,mapper, "/api/v2/members");
+        super(mockMvc, mapper, "/api/v2/members");
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 5, 20, 50})
+    @ValueSource(ints = {1})//, 5, 20, 50})
     public void getListPage_no_params(int entitySize) throws Exception {
         addEntitiesToDb(entitySize);
 
         var sorted = memberRepo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
+        assertEquals(entitySize, sorted.size());
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPageV2(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize, 0);
+        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
         assertNotNull(actual);
-        //assertEquals(actual.stream()
-        //        .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
+        /*
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
 
-        //var expected = sorted.stream().limit(defaultPageSize).toList();
-        //verify(expected, actual);
+        var expected = sorted.stream().limit(defaultPageSize).toList();
+
+        verify(expected, actual);
+
+         */
     }
 
+    /*
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
     public void getListPage_sortDir_desc(int entitySize) throws Exception {
@@ -369,10 +404,11 @@ public class MemberIntegrationTests {//extends IntegrationTests {
         Assertions.assertEquals(count, response.getCount());
     }
 
+*/
+
     private List<MemberEntity> addEntitiesToDb(int size) {
         var entities = Instancio.ofList(MemberEntity.class)
-                .size(size) // must be before withSettings
-                .withSettings(getSettings())
+                .size(size)
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .ignore(field(MemberEntity::getId))
                 .create();
@@ -380,6 +416,7 @@ public class MemberIntegrationTests {//extends IntegrationTests {
         return memberRepo.saveAllAndFlush(entities);
     }
 
+    /*
     private void verify(MemberDto expected, MemberEntity actual) {
         Assertions.assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
         Assertions.assertEquals(expected.getFirstName(), actual.getFirstName());
@@ -407,5 +444,6 @@ public class MemberIntegrationTests {//extends IntegrationTests {
             assertTrue(found.isPresent());
             verify(e, found.get());
         });
-    }*/
+    }
+     */
 }

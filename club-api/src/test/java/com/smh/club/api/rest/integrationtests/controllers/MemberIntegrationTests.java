@@ -74,6 +74,7 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
+
         verify(expected, actual);
     }
 
