@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.EmailController;
+import com.smh.club.api.rest.contracts.controllers.EmailController;
 import com.smh.club.api.rest.response.PageResponse;
 import com.smh.club.api.data.contracts.services.EmailService;
 import com.smh.club.api.rest.config.PagingConfig;

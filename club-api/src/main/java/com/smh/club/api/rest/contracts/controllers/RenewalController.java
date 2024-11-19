@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.contracts;
+package com.smh.club.api.rest.contracts.controllers;
 
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;

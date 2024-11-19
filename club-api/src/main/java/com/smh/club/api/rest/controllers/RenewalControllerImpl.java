@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.RenewalController;
+import com.smh.club.api.rest.contracts.controllers.RenewalController;
 import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;

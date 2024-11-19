@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.AddressController;
+import com.smh.club.api.rest.contracts.controllers.AddressController;
 import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PageResponse;
