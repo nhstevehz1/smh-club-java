@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.contracts.mappers.MemberMapper;
+import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.dto.MemberDetailDto;
 import com.smh.club.api.data.dto.MemberDto;

@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.contracts.mappers.PhoneMapper;
+import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.dto.PhoneDto;
 import org.modelmapper.ModelMapper;
