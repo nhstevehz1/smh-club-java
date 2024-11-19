@@ -1,4 +1,4 @@
-package com.smh.club.api.data.services;
+package com.smh.club.api.rest.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

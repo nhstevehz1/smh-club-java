@@ -1,7 +1,6 @@
 package com.smh.club.api.data.domain.entities;
 
 import com.smh.club.api.data.annotations.SortExclude;
-import com.smh.club.api.data.dto.PhoneType;
 import jakarta.persistence.*;
 import lombok.*;
 

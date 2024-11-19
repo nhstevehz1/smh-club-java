@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.dto;
+package com.smh.club.api.data.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

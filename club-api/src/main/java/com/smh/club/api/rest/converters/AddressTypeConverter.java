@@ -1,6 +1,6 @@
-package com.smh.club.api.data.domain.converters;
+package com.smh.club.api.rest.converters;
 
-import com.smh.club.api.data.dto.AddressType;
+import com.smh.club.api.data.domain.entities.AddressType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

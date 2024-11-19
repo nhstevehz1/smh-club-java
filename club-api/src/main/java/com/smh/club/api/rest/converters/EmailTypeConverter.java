@@ -1,4 +1,4 @@
-package com.smh.club.api.data.domain.converters;
+package com.smh.club.api.rest.converters;
 
 import com.smh.club.api.data.dto.EmailType;
 import jakarta.persistence.AttributeConverter;

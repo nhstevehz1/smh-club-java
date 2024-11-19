@@ -1,4 +1,4 @@
-package com.smh.club.api.data.services;
+package com.smh.club.api.rest.services;
 
 import com.smh.club.api.data.contracts.mappers.EmailMapper;
 import com.smh.club.api.data.domain.entities.EmailEntity;
