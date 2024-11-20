@@ -90,7 +90,7 @@ public class MemberServiceTests extends ServiceTests {
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
-        var actual = "memberId";
+        var actual = "memberNumber";
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
@@ -121,7 +121,7 @@ public class MemberServiceTests extends ServiceTests {
         var pageSize = 20;
         var direction = "ASC";
         var sort = "";
-        var defaultSort = "memberId";
+        var defaultSort = "memberNumber";
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
@@ -151,7 +151,7 @@ public class MemberServiceTests extends ServiceTests {
         var pageSize = 20;
         var direction = "ASC";
         var sort = "thisIsNotAColumn";
-        var defaultSort = "memberId";
+        var defaultSort = "memberNumber";
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
 
