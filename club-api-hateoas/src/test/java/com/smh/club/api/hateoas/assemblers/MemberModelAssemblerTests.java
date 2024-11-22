@@ -20,6 +20,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -30,8 +32,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MemberModelAssemblerTests {
 
     private MemberAssemblerImpl assembler;
-
-    private PagedResourcesAssembler<MemberEntity> mockPaged;
 
     private final MemberMapper mapper
             = new MemberMapperImpl(new MapperConfig().createModelMapper());
@@ -44,7 +44,9 @@ public class MemberModelAssemblerTests {
 
     @BeforeEach
     public void init() {
-        this.assembler = new MemberAssemblerImpl(mapper, null);
+        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/members").build();
+        this.assembler = new MemberAssemblerImpl(mapper,
+            new PagedResourcesAssembler<>(null, components));
     }
 
     @Test

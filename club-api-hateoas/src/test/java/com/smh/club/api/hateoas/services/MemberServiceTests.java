@@ -48,7 +48,6 @@ public class MemberServiceTests extends ServiceTests {
     @InjectMocks
     MemberServiceImpl svc;
 
-    @Mock private Pageable pageableMock;
     @Mock private Page<MemberEntity> pageMock;
 
     @Captor

@@ -6,7 +6,7 @@ import java.util.List;
 
 public abstract class ServiceTests {
 
-    protected <T> PagedModel<T> createdPageModel(List<T> content ) {;
+    protected <T> PagedModel<T> createdPageModel(List<T> content ) {
         PagedModel.PageMetadata md =
             new PagedModel.PageMetadata(content.size(), 5, 200,  20) ;
 

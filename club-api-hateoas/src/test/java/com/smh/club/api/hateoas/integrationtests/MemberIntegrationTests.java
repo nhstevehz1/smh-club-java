@@ -127,7 +127,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @CsvSource({"1,5", "5,2", "20,5", "50,5"})
-    public void getListPage_pageSize(int entitySize, int pageSize) throws Exception {
+    public void getListPage_pageSize(int entitySize, int pageSize) {
         addEntitiesToDb(entitySize);
 
         var sorted = memberRepo.findAll()
@@ -247,7 +247,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void get_returns_status_notFound() throws Exception {
+    public void get_returns_status_notFound() {
         // Setup
         var entities = addEntitiesToDb(5);
         var highest = entities.stream().max(comparingInt(MemberEntity::getId)).map(MemberEntity::getId).orElseThrow();
@@ -353,7 +353,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void delete_status_noContent() throws Exception {
+    public void delete_status_noContent() {
         // create several members
         var entities = addEntitiesToDb(10);
         var id = entities.get(5).getId();
@@ -371,7 +371,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void getCount_returns_count_status_ok() throws Exception {
+    public void getCount_returns_count_status_ok() {
         // setup
         var count = addEntitiesToDb(25).size();
 

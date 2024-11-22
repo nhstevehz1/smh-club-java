@@ -24,7 +24,6 @@ public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberSvc;
 
-    private final MemberAssemblerImpl assembler;
     private final PagedResourcesAssembler<MemberModel> pagedAssembler;
 
     @GetMapping
