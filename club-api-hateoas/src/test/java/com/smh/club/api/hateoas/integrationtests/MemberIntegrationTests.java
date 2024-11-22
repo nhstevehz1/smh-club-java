@@ -162,7 +162,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         map.put(PagingConfig.PAGE_NAME, String.valueOf(page));
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
-            0, defaultPageSize, listNodeName);
+            page, defaultPageSize, listNodeName);
 
         var actual = executeListPage(testParams);
 
@@ -441,8 +441,14 @@ public class MemberIntegrationTests extends IntegrationTests {
         map.put("first-name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
             Comparator.comparing(MemberModel::getFirstName)));
 
+        map.put("middle-name", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+            Comparator.comparingInt(MemberModel::getMemberNumber)));
+
         map.put("last-name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
             Comparator.comparing(MemberModel::getLastName)));
+
+        map.put("suffix", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+            Comparator.comparingInt(MemberModel::getMemberNumber)));
 
         map.put("birth-date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
             Comparator.comparing(MemberModel::getBirthDate)));
