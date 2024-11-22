@@ -60,6 +60,8 @@ public class MemberControllerImpl implements MemberController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<MemberModel> create(@RequestBody MemberModel member) {
+        log.debug("Creating member data: {}", member);
+
         var created = memberSvc.createMember(member);
         var selfLink = created.getLink("self").orElseThrow();
         return ResponseEntity.created(selfLink.toUri()).body(created);
@@ -68,8 +70,9 @@ public class MemberControllerImpl implements MemberController {
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<MemberModel> update(@PathVariable int id, @RequestBody MemberModel member) {
-        member.setId(id); // assume the path variable is the source of truth.
+        log.debug("Updating member id: {}, data: {} ", id, member);
 
+        member.setId(id); // assume the path variable is the source of truth.
         var ret = memberSvc.updateMember(id, member);
 
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
@@ -78,6 +81,8 @@ public class MemberControllerImpl implements MemberController {
     @DeleteMapping(value = "{id}")
     @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {
+        log.debug("Deleting member id: {}", id);
+
         memberSvc.deleteMember(id);
         return ResponseEntity.noContent().build();
     }
