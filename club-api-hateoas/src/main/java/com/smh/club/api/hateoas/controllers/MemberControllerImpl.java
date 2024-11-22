@@ -1,6 +1,5 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.hateoas.assemblers.MemberAssemblerImpl;
 import com.smh.club.api.hateoas.config.PagingConfig;
 import com.smh.club.api.hateoas.contracts.controllers.MemberController;
 import com.smh.club.api.hateoas.contracts.services.MemberService;

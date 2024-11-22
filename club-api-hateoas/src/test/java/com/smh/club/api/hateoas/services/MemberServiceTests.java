@@ -22,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 
 import java.util.Optional;
@@ -72,7 +71,7 @@ public class MemberServiceTests extends ServiceTests {
         when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
 
         // execute
-        var ret = svc.getMemberListPage(pageNumber, pageSize, direction, sort);
+        svc.getMemberListPage(pageNumber, pageSize, direction, sort);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -228,7 +227,6 @@ public class MemberServiceTests extends ServiceTests {
         var pageSize = 20;
         var direction = "desc";
         var sort = "id";
-        var total = 200;
 
         var models = Instancio.ofList(MemberModel.class)
             .size(pageSize)
