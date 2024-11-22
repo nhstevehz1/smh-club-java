@@ -1,10 +1,10 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.hateoas.config.MapperConfig;
-import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
-import com.smh.club.api.hateoas.mappers.MemberMapperImpl;
-import com.smh.club.api.hateoas.models.MemberModel;
+import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
+import com.smh.club.api.hateoas.mappers.AddressMapperImpl;
+import com.smh.club.api.hateoas.models.AddressModel;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -21,30 +21,30 @@ import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(InstancioExtension.class)
-public class MemberModelAssemblerTests extends AssemblerTests{
+public class AddressModelAssemblerTests extends AssemblerTests{
 
-    private MemberAssemblerImpl assembler;
+    private AddressAssemblerImpl assembler;
 
-    private final MemberMapper mapper
-            = new MemberMapperImpl(new MapperConfig().createModelMapper());
+    private final AddressMapper mapper =
+        new AddressMapperImpl(new MapperConfig().createModelMapper());
 
     @WithSettings
     private final Settings settings = Settings.create()
-            .set(Keys.SET_BACK_REFERENCES, true)
-            .set(Keys.JPA_ENABLED, true)
-            .set(Keys.COLLECTION_MAX_SIZE, 0);
+        .set(Keys.SET_BACK_REFERENCES, true)
+        .set(Keys.JPA_ENABLED, true)
+        .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/members").build();
-        this.assembler = new MemberAssemblerImpl(mapper,
+        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/addresses").build();
+        this.assembler = new AddressAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }
 
     @Test
     public void model_contains_links() {
         // setup
-        var entity = Instancio.create(MemberEntity.class);
+        var entity = Instancio.create(AddressEntity.class);
 
         // execute
         var model = assembler.toModel(entity);
@@ -68,38 +68,35 @@ public class MemberModelAssemblerTests extends AssemblerTests{
 
     @Test
     public void model_matches_entity() {
-       // setup
-       var entity = Instancio.create(MemberEntity.class);
+        // setup
+        var entity = Instancio.create(AddressEntity.class);
 
-       // execute
-       var model = assembler.toModel(entity);
+        // execute
+        var model = assembler.toModel(entity);
 
-       // verify
-       assertEquals(entity.getId(), model.getId());
-       assertEquals(entity.getMemberNumber(), model.getMemberNumber());
-       assertEquals(entity.getFirstName(), model.getFirstName());
-       assertEquals(entity.getMiddleName(), model.getMiddleName());
-       assertEquals(entity.getLastName(), model.getLastName());
-       assertEquals(entity.getSuffix(), model.getSuffix());
-       assertEquals(entity.getBirthDate(), model.getBirthDate());
-       assertEquals(entity.getJoinedDate(), model.getJoinedDate());
+        // verify
+        assertEquals(entity.getId(), model.getId());
+        assertEquals(entity.getMember().getId(), model.getMemberId());
+        assertEquals(entity.getAddress1(), model.getAddress1());
+        assertEquals(entity.getAddress2(), model.getAddress2());
+        assertEquals(entity.getCity(), model.getCity());
+        assertEquals(entity.getState(), model.getState());
+        assertEquals(entity.getZip(), model.getZip());
     }
 
     @Test
     public void from_page_to_pageModel () {
         // setup
-        var entities = Instancio.ofList(MemberEntity.class)
-                .size(10)
-                .withUnique(field(MemberEntity::getId))
-                .withUnique(field(MemberEntity::getMemberNumber))
-                .create();
+        var entities = Instancio.ofList(AddressEntity.class)
+            .size(10)
+            .withUnique(field(AddressEntity::getId))
+            .create();
         var page = createPage(entities);
 
         // execute
         var ret = assembler.toPagedModel(page);
 
         // verify
-        assertInstanceOf(MemberModel.class, ret.getContent().stream().toList().get(0));
+        assertInstanceOf(AddressModel.class, ret.getContent().stream().toList().get(0));
     }
-
 }

@@ -59,7 +59,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
     public Optional<AddressModel> updateAddress(int id, AddressModel address) {
         log.debug("Updating address id: {}, with data: {}", id, address);
 
-        return addressRepo.findById(id)
+        return addressRepo.findByIdAndMemberId(id, address.getMemberId())
             .map(entity -> mapper.updateEntity(address, entity))
             .map(assembler::toModel);
     }

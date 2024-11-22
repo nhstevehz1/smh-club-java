@@ -1,6 +1,8 @@
 package com.smh.club.api.hateoas.config;
 
+import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.hateoas.models.AddressModel;
 import com.smh.club.api.hateoas.models.MemberModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -17,7 +19,7 @@ public class MapperConfig {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         memberSettings(modelMapper);
-        //addressSettings(modelMapper);
+        addressSettings(modelMapper);
         //emailSettings(modelMapper);
         //phoneSettings(modelMapper);
         //renewalSetting(modelMapper);
@@ -31,7 +33,7 @@ public class MapperConfig {
         entityTypeMap.addMappings(m -> m.skip(MemberEntity::setId));
     }
 
-    /*private void addressSettings(ModelMapper modelMapper) {
+    private void addressSettings(ModelMapper modelMapper) {
         // Address settings
         TypeMap<AddressEntity, AddressModel> dtoTypeMap
                 = modelMapper.createTypeMap(AddressEntity.class, AddressModel.class);
@@ -45,7 +47,7 @@ public class MapperConfig {
             m.skip(AddressEntity::setId);
         });
     }
-
+/*
     private void emailSettings(ModelMapper modelMapper) {
         // Email settings
         TypeMap<EmailEntity, EmailMapper> dtoTypeMap

@@ -130,5 +130,4 @@ public class MemberMapperTests {
             assertEquals(entity.getJoinedDate(), member.getJoinedDate());
         }
     }
-
 }
