@@ -1,7 +1,6 @@
 package com.smh.club.api.hateoas.contracts.controllers;
 
 import com.smh.club.api.hateoas.models.AddressModel;
-import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +13,9 @@ public interface AddressController {
 
     ResponseEntity<CountResponse> count();
 
-    ResponseEntity<AddressModel> create(MemberModel member);
+    ResponseEntity<AddressModel> create(AddressModel address);
 
-    ResponseEntity<AddressModel> update(int id, MemberModel member);
+    ResponseEntity<AddressModel> update(int id, AddressModel address);
 
     ResponseEntity<Void> delete(int id);
 }

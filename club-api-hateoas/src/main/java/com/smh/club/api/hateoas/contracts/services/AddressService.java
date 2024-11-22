@@ -6,15 +6,15 @@ import org.springframework.hateoas.PagedModel;
 import java.util.Optional;
 
 public interface AddressService {
-    PagedModel<AddressModel> getMemberListPage(int pageSize, int pageNumber, String direction, String sort);
+    PagedModel<AddressModel> getAddressListPage(int pageSize, int pageNumber, String direction, String sort);
 
-    Optional<AddressModel> getMember(int id);
+    Optional<AddressModel> getAddress(int id);
 
-    AddressModel createMember(AddressModel member);
+    AddressModel createAddress(AddressModel address);
 
-    Optional<AddressModel> updateMember(int id, AddressModel member);
+    Optional<AddressModel> updateAddress(int id, AddressModel address);
 
-    void deleteMember(int id);
+    void deleteAddress(int id);
 
-    long getMemberCount();
+    long getAddressCount();
 }

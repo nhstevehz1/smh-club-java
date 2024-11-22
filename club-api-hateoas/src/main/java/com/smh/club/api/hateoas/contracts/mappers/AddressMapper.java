@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface AddressMapper {
 
-    MemberEntity toEntity(AddressModel model);
+    AddressEntity toEntity(AddressModel model);
 
-    MemberModel toModel(AddressEntity entity);
+    AddressModel toModel(AddressEntity entity);
 
-    MemberEntity updateEntity(AddressModel model, AddressEntity entity);
+    AddressEntity updateEntity(AddressModel model, AddressEntity entity);
 
     List<AddressModel> toModelList(List<AddressEntity> entityList);
 }

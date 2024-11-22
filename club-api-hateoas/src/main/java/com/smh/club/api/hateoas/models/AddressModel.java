@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.data.annotations.SortExclude;
 import com.smh.club.api.data.domain.entities.AddressType;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddressModel {
+public class AddressModel extends RepresentationModel<AddressModel> {
 
     @JsonProperty("id")
     private int id;
