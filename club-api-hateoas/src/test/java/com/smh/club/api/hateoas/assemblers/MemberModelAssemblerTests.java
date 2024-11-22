@@ -49,7 +49,7 @@ public class MemberModelAssemblerTests {
     }
 
     @Test
-    public void model_contains_links() throws JsonProcessingException {
+    public void model_contains_links() {
         // setup
         var entity = Instancio.create(MemberEntity.class);
 

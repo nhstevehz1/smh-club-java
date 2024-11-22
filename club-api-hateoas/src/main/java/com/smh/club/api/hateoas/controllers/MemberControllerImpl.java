@@ -23,8 +23,6 @@ public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberSvc;
 
-    private final PagedResourcesAssembler<MemberModel> pagedAssembler;
-
     @GetMapping
     @Override
     public ResponseEntity<PagedModel<MemberModel>> page(
