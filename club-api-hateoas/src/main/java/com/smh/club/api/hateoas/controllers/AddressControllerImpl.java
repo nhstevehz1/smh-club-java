@@ -3,9 +3,7 @@ package com.smh.club.api.hateoas.controllers;
 import com.smh.club.api.hateoas.config.PagingConfig;
 import com.smh.club.api.hateoas.contracts.controllers.AddressController;
 import com.smh.club.api.hateoas.contracts.services.AddressService;
-import com.smh.club.api.hateoas.contracts.services.MemberService;
 import com.smh.club.api.hateoas.models.AddressModel;
-import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +71,7 @@ public class AddressControllerImpl implements AddressController {
     public ResponseEntity<AddressModel> update(@PathVariable int id, @RequestBody AddressModel address) {
         log.debug("Updating address, id: {}, data: {}", id, address);
 
-        address.setId(0);;
+        address.setId(0);
         var ret = addressService.updateAddress(id, address);
 
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

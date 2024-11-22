@@ -6,7 +6,9 @@ import com.smh.club.api.data.domain.entities.AddressType;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
+
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
