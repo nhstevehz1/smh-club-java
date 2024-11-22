@@ -2,7 +2,6 @@ package com.smh.club.api.hateoas.services;
 
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.hateoas.assemblers.MemberAssemblerImpl;
 import com.smh.club.api.hateoas.contracts.assemblers.MemberAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
 import com.smh.club.api.hateoas.contracts.services.MemberService;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +33,10 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
     public PagedModel<MemberModel> getMemberListPage(int pageNumber, int pageSize, String direction, String sort) {
 
         var pageRequest = PageRequest.of(
-                pageNumber,
-                pageSize,
-                Sort.Direction.fromString(direction),
-                getSortColumn(sort));
+            pageNumber,
+            pageSize,
+            Sort.Direction.fromString(direction),
+            getSortColumn(sort));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -63,8 +61,8 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return memberRepo.findById(id)
-                .map(entity -> mapper.updateEntity(member, entity))
-                .map(assembler::toModel);
+            .map(entity -> mapper.updateEntity(member, entity))
+            .map(assembler::toModel);
     }
 
     @Override

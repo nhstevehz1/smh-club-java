@@ -30,17 +30,17 @@ public class MemberControllerImpl implements MemberController {
     @GetMapping
     @Override
     public ResponseEntity<PagedModel<MemberModel>> page(
-            @RequestParam(value = PagingConfig.PAGE_NAME,
-                    defaultValue = "${request.paging.page}") int pageNumber,
-            @RequestParam(value = PagingConfig.SIZE_NAME,
-                    defaultValue = "${request.paging.size}") int pageSize,
-            @RequestParam(value = PagingConfig.DIRECTION_NAME,
-                    defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME,
-                    defaultValue = "" ) String sort) {
+        @RequestParam(value = PagingConfig.PAGE_NAME,
+            defaultValue = "${request.paging.page}") int pageNumber,
+        @RequestParam(value = PagingConfig.SIZE_NAME,
+            defaultValue = "${request.paging.size}") int pageSize,
+        @RequestParam(value = PagingConfig.DIRECTION_NAME,
+            defaultValue = "${request.paging.direction}") String sortDir,
+        @RequestParam(value = PagingConfig.SORT_NAME,
+            defaultValue = "") String sort) {
 
         log.debug("Getting page. page: {}, size: {}, direction: {}, sort: {}",
-                pageNumber, pageSize, sortDir, sort);
+            pageNumber, pageSize, sortDir, sort);
 
         var page = memberSvc.getMemberListPage(pageNumber, pageSize, sortDir, sort);
 
@@ -50,7 +50,7 @@ public class MemberControllerImpl implements MemberController {
     @GetMapping("{id}")
     @Override
     public ResponseEntity<MemberModel> get(@PathVariable int id) {
-        log.debug("Getting Member with id: {}", id );
+        log.debug("Getting Member with id: {}", id);
         var ret = memberSvc.getMember(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -74,7 +74,7 @@ public class MemberControllerImpl implements MemberController {
     public ResponseEntity<MemberModel> update(@PathVariable int id, @RequestBody MemberModel member) {
         member.setId(id); // assume the path variable is the source of truth.
 
-        var ret = memberSvc.updateMember(id,  member);
+        var ret = memberSvc.updateMember(id, member);
 
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 public interface MemberController {
     ResponseEntity<PagedModel<MemberModel>> page(int pageNumber, int pageSize, String sortDir, String sort);
 
-    ResponseEntity<MemberModel> get( int id);
+    ResponseEntity<MemberModel> get(int id);
 
     ResponseEntity<CountResponse> count();
 
@@ -16,6 +16,6 @@ public interface MemberController {
 
     ResponseEntity<MemberModel> update(int id, MemberModel member);
 
-    ResponseEntity<Void> delete( int id);
-    
+    ResponseEntity<Void> delete(int id);
+
 }

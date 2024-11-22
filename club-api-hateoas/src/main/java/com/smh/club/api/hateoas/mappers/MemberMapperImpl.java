@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
-    
+
 
     public MemberMapperImpl(ModelMapper modelMapper) {
         super(modelMapper);

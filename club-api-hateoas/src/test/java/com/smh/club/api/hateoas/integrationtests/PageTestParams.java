@@ -11,7 +11,7 @@ import java.util.Map;
 @Getter
 @Builder
 public class PageTestParams<T> {
-    private Class<T> clazz;;
+    private Class<T> clazz;
     @Builder.Default
     private Map<String, String> query = new HashMap<>();
     private String path;

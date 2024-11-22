@@ -111,7 +111,7 @@ public class MemberModelAssemblerTests {
     private Page<MemberEntity> createPage(List<MemberEntity> content) {
         var pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "memberNumber");
 
-        return new PageImpl<MemberEntity>(content, pageable, 100);
+        return new PageImpl<>(content, pageable, 100);
 
     }
 }

@@ -7,5 +7,6 @@ import org.springframework.hateoas.PagedModel;
 
 public interface MemberAssembler {
     MemberModel toModel(MemberEntity entity);
+
     PagedModel<MemberModel> toPagedModel(Page<MemberEntity> page);
 }

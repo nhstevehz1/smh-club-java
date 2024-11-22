@@ -1,11 +1,9 @@
 package com.smh.club.api.hateoas.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.config.PagingConfig;
-import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
 import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -34,10 +32,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.ToIntFunction;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static java.util.Comparator.comparingInt;
 import static org.instancio.Select.field;

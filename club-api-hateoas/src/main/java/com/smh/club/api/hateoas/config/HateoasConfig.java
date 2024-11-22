@@ -9,6 +9,7 @@ public class HateoasConfig {
 
     /**
      * Corrects links when calls are forwarded.
+     *
      * @return {@link ForwardedHeaderFilter}
      */
     @Bean

@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.config;
 
-import com.smh.club.api.data.domain.entities.*;
+import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.hateoas.models.MemberModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -27,7 +27,7 @@ public class MapperConfig {
 
     private void memberSettings(ModelMapper modelMapper) {
         TypeMap<MemberModel, MemberEntity> entityTypeMap
-                = modelMapper.createTypeMap(MemberModel.class, MemberEntity.class);
+            = modelMapper.createTypeMap(MemberModel.class, MemberEntity.class);
         entityTypeMap.addMappings(m -> m.skip(MemberEntity::setId));
     }
 

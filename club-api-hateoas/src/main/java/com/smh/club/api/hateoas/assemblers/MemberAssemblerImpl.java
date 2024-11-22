@@ -18,8 +18,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class MemberAssemblerImpl
-        extends RepresentationModelAssemblerSupport<MemberEntity, MemberModel>
-        implements MemberAssembler {
+    extends RepresentationModelAssemblerSupport<MemberEntity, MemberModel>
+    implements MemberAssembler {
 
     private final MemberMapper mapper;
     private final PagedResourcesAssembler<MemberEntity> pagedAssembler;

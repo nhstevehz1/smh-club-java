@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface MemberMapper {
     MemberEntity toEntity(MemberModel model);
+
     MemberModel toModel(MemberEntity entity);
+
     MemberEntity updateEntity(MemberModel model, MemberEntity entity);
+
     List<MemberModel> toModelList(List<MemberEntity> entityList);
 }
