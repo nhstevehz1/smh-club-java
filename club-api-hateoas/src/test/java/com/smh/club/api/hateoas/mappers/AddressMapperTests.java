@@ -27,7 +27,7 @@ public class AddressMapperTests {
     private final Settings settings = Settings.create()
         .set(Keys.SET_BACK_REFERENCES, true)
         .set(Keys.JPA_ENABLED, true)
-        .set(Keys.MAX_DEPTH, 4);
+        .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Test
     public void from_model_to_entity() {

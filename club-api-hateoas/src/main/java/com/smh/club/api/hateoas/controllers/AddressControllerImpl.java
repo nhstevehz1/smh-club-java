@@ -22,6 +22,7 @@ public class AddressControllerImpl implements AddressController {
 
     private final AddressService addressService;
 
+    @GetMapping
     @Override
     public ResponseEntity<PagedModel<AddressModel>> page(
         @RequestParam(value = PagingConfig.PAGE_NAME,
@@ -58,7 +59,7 @@ public class AddressControllerImpl implements AddressController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public ResponseEntity<AddressModel> create(AddressModel address) {
+    public ResponseEntity<AddressModel> create(@RequestBody AddressModel address) {
         log.debug("Creating address, data: {}", address);
 
         var created = addressService.createAddress(address);
@@ -77,10 +78,11 @@ public class AddressControllerImpl implements AddressController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "{id}")
     @Override
-    public ResponseEntity<Void> delete(int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting address, id: {}", id);
+        addressService.deleteAddress(id);
         return ResponseEntity.noContent().build();
     }
 }

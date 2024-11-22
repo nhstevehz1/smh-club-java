@@ -5,9 +5,11 @@ import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
 import com.smh.club.api.hateoas.models.AddressModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AddressMapperImpl extends DomainDataMapper implements AddressMapper {
 
     @Autowired

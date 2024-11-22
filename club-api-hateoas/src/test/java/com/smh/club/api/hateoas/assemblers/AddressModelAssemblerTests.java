@@ -54,15 +54,15 @@ public class AddressModelAssemblerTests extends AssemblerTests{
 
         var link = model.getLink(IanaLinkRelations.SELF);
         assertTrue(link.isPresent());
-        assertTrue(link.get().getHref().endsWith("/api/v2/members/" + entity.getId()));
+        assertTrue(link.get().getHref().endsWith("/api/v2/addresses/" + entity.getId()));
 
         link = model.getLink("update");
         assertTrue(link.isPresent());
-        assertTrue(link.get().getHref().endsWith("/api/v2/members/" + entity.getId()));
+        assertTrue(link.get().getHref().endsWith("/api/v2/addresses/" + entity.getId()));
 
         link = model.getLink("delete");
         assertTrue(link.isPresent());
-        assertTrue(link.get().getHref().endsWith("/api/v2/members/" + entity.getId()));
+        assertTrue(link.get().getHref().endsWith("/api/v2/addresses/" + entity.getId()));
 
     }
 

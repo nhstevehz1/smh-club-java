@@ -2,6 +2,7 @@ package com.smh.club.api.hateoas.services;
 
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.repos.AddressRepo;
+import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.contracts.assemblers.AddressAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
 import com.smh.club.api.hateoas.contracts.services.AddressService;
@@ -24,12 +25,14 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
 
     private final AddressRepo addressRepo;
 
+    private final MembersRepo membersRepo;
+
     private final AddressAssembler assembler;
 
     private final AddressMapper mapper;
 
     @Override
-    public PagedModel<AddressModel> getAddressListPage(int pageSize, int pageNumber, String direction, String sort) {
+    public PagedModel<AddressModel> getAddressListPage(int pageNumber, int pageSize, String direction, String sort) {
 
         var pageRequest = PageRequest.of(
             pageNumber,
@@ -51,7 +54,11 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
     @Override
     public AddressModel createAddress(AddressModel address) {
         log.debug("Creating address: {}", address);
+
+        var member = membersRepo.getReferenceById(address.getMemberId());
         var entity = mapper.toEntity(address);
+        entity.setMember(member);
+
         return assembler.toModel(addressRepo.save(entity));
     }
 

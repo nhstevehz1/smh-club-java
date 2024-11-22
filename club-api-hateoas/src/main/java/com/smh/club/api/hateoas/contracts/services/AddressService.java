@@ -6,7 +6,7 @@ import org.springframework.hateoas.PagedModel;
 import java.util.Optional;
 
 public interface AddressService {
-    PagedModel<AddressModel> getAddressListPage(int pageSize, int pageNumber, String direction, String sort);
+    PagedModel<AddressModel> getAddressListPage(int pageNumber, int pageSize, String direction, String sort);
 
     Optional<AddressModel> getAddress(int id);
 
