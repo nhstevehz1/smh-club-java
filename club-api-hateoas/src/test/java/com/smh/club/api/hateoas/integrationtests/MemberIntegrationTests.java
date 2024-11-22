@@ -1,39 +1,53 @@
 package com.smh.club.api.hateoas.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.hateoas.config.PagingConfig;
+import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
+import com.smh.club.api.hateoas.models.MemberModel;
+import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.ToIntFunction;
 
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static java.util.Comparator.comparingInt;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -49,8 +63,12 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Autowired
     private MembersRepo memberRepo;
 
+    private final String listNodeName = "memberModelList";
+
+    private final Map<String, SortFields<MemberEntity, MemberModel>> sorts;
+
     @WithSettings
-    private Settings settings =
+    private final Settings settings =
             Settings.create().set(Keys.SET_BACK_REFERENCES, true)
                 .set(Keys.JPA_ENABLED, true)
                 .set(Keys.COLLECTION_MAX_SIZE, 0);
@@ -58,93 +76,102 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
         super(mockMvc, mapper, "/api/v2/members");
+        sorts = getSorts();
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(ints = /*{1, 5, 20,*/ {50})
+    public void getListPage_no_params(int entitySize)  {
+        // setup
+        addEntitiesToDb(entitySize);
+
+        var sorted = memberRepo.findAll().stream()
+            .sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
+
+        Map<String, String> map = new HashMap<>();
+        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+            0, defaultPageSize, listNodeName);
+
+        var actual = executeListPage(testParams);
+
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(MemberModel::getMemberNumber)).toList(), actual);
+
+        var expected = sorted.stream().limit(testParams.getPageSize()).toList();
+
+        verify(expected, actual);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1})//, 5, 20, 50})
-    public void getListPage_no_params(int entitySize) throws Exception {
+    @ValueSource(ints = {1, 5, 20, 50})
+    public void getListPage_sortDir_desc(int entitySize) {
+        addEntitiesToDb(entitySize);
+
+        // setup
+        addEntitiesToDb(entitySize);
+
+        var sorted = memberRepo.findAll().stream()
+            .sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
+
+        Map<String, String> map = new HashMap<>();
+        map.put(PagingConfig.DIRECTION_NAME, "desc");
+
+        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+            0, defaultPageSize, listNodeName);
+
+        var actual = executeListPage(testParams);
+
+        assertEquals(actual.stream()
+            .sorted(Comparator.comparingInt(MemberModel::getMemberNumber).reversed()).toList(), actual);
+
+        var expected = sorted.stream().limit(testParams.getPageSize()).toList();
+
+        verify(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1,5", "5,2", "20,5", "50,5"})
+    public void getListPage_pageSize(int entitySize, int pageSize) throws Exception {
         addEntitiesToDb(entitySize);
 
         var sorted = memberRepo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        Map<String,String> map = new HashMap<>();
+        map.put(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
 
-        assertNotNull(actual);
-        /*
+        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+            0, pageSize, listNodeName);
+
+        var actual = executeListPage(testParams);
+
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
+                .sorted(Comparator.comparingInt(MemberModel::getMemberNumber)).toList(), actual);
 
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-
-        verify(expected, actual);
-
-         */
-    }
-
-    /*
-    @ParameterizedTest
-    @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_sortDir_desc(int entitySize) throws Exception {
-        addEntitiesToDb(entitySize);
-
-        var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
-
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
-
-        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber).reversed()).toList(), actual);
-
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-    }
-
-    @ParameterizedTest
-    @CsvSource({"1,5", "5,2", "20,5", "50,5"})
-    public void getListPage_pageSize(int entitySize, String pageSize) throws Exception {
-        addEntitiesToDb(entitySize);
-
-        var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SIZE_NAME, pageSize);
-
-        var actual = executeGetListPage(MemberDto.class, path,
-                valueMap, sorted.size(), Integer.parseInt(pageSize));
-
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
-
-        var expected = sorted.stream().limit(Integer.parseInt(pageSize)).toList();
+        var expected = sorted.stream().limit(pageSize).toList();
         verify(expected, actual);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {2,4,5,8})
-    public void getListPage_page(int page) throws Exception {
+    public void getListPage_page(int page) {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
-
         var sorted = memberRepo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
+        assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
+        Map<String,String> map = new HashMap<>();
+        map.put(PagingConfig.PAGE_NAME, String.valueOf(page));
 
-        var actual = executeGetListPage(MemberDto.class, path,
-                valueMap, sorted.size(), defaultPageSize);
+        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+            0, defaultPageSize, listNodeName);
 
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
+        var actual = executeListPage(testParams);
+
+        assertEquals(actual.stream()
+                .sorted(Comparator.comparingInt(MemberModel::getMemberNumber)).toList(), actual);
 
         var skip = page * defaultPageSize;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -152,239 +179,199 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_sortColumn() throws Exception {
+    @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date" })
+    public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
+        var sortFields = sorts.get(sort);
 
-        // sort by id
-        var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getId)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "id");
+        var sorted = memberRepo.findAll().stream().sorted(sortFields.getEntity()).toList();
+        assertEquals(entitySize, sorted.size());
 
-        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var map = new HashMap<String, String>();
+        map.put(PagingConfig.SORT_NAME, sort);
 
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getId)).toList(), actual);
+        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+            0, defaultPageSize, listNodeName);
+        var actual = executeListPage(testParams);
+        assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
+    }
 
-        // sort by member-number
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
+    @ParameterizedTest
+    @ValueSource(strings = {"middle-name", "suffix"})
+    public void getListPage_excluded_sort_using_default(String sort) {
+        var entitySize = 50;
+        addEntitiesToDb(entitySize);
+        var sortFields = sorts.get(sort);
 
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "member-number");
+        var sorted = memberRepo.findAll().stream().sorted(sortFields.getEntity()).toList();
+        assertEquals(entitySize, sorted.size());
 
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var map = new HashMap<String, String>();
+        map.put(PagingConfig.SORT_NAME, sort);
 
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
+        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+            0, defaultPageSize, listNodeName);
+        var actual = executeListPage(testParams);
+        assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
 
-        expected = sorted.stream().limit(defaultPageSize).toList();
+        var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
-
-        // sort by first-name
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getFirstName)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "first-name");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getFirstName)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        //sort by last-name
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getLastName)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "last-name");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getLastName)).toList(), actual);
-
-        expected = sorted.stream().limit(10).toList();
-        verify(expected, actual);
-
-        //sort by birthdate
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getBirthDate)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "birth-date");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getBirthDate)).toList(), actual);
-
-        expected = sorted.stream().limit(10).toList();
-        verify(expected, actual);
-
-        //sort by joined-date
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getJoinedDate)).toList();
-        Assertions.assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "joined-date");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        Assertions.assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getJoinedDate)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
     }
 
     @Test
-    public void get_returns_memberDto_status_ok() throws Exception {
-        // Setup
-        var member = addEntitiesToDb(10).get(5);
+    public void get_returns_model_status_ok() {
+        // setup
+        var member = addEntitiesToDb(20).get(10);
+        var id = member.getId();
 
         // perform get
-        var ret = mockMvc.perform(MockMvcRequestBuilders.get(path + "/{id}", member.getId())
-                        .accept(MediaTypes.HAL_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaTypes.HAL_JSON))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.length()").value(3))
-                .andExpect(jsonPath("$._links.self").exists())
-                .andExpect(jsonPath("$._links.self.href").isNotEmpty())
-                .andExpect(jsonPath("$._links.update").exists())
-                .andExpect(jsonPath("$._links.update.href").isNotEmpty())
-                .andExpect(jsonPath("$._links.create").exists())
-                .andExpect(jsonPath("$._links.create.href").isNotEmpty())
-                .andDo(print())
-                .andReturn();
+        var uri = "http://localhost" + path + "/" + id;
+        var actual =
+            given()
+                .auth().none()
+                .pathParam("id", id)
+                .accept(MediaTypes.HAL_JSON_VALUE)
+            .when()
+                .get( path + "/{id}")
+            .then()
+                .assertThat().status(HttpStatus.OK)
+                .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
+                .expect(jsonPath("$._links").exists())
+                .expect(jsonPath("$._links.length()").value(3))
+                .expect(jsonPath("$._links.self.href").value(uri))
+                .expect(jsonPath("$._links.update.href").value(uri))
+                .expect(jsonPath("$._links.delete.href").value(uri))
+            .extract().body().as(MemberModel.class);
 
-        var dto = mapper.readValue(ret.getResponse().getContentAsString(), MemberDto.class);
-
-        verify(member, dto);
+        verify(member, actual);
     }
 
     @Test
     public void get_returns_status_notFound() throws Exception {
         // Setup
-        var id = 100;
+        var entities = addEntitiesToDb(5);
+        var highest = entities.stream().max(comparingInt(MemberEntity::getId)).map(MemberEntity::getId).orElseThrow();
+        var id = highest + 100;
 
-        // perform get
-        mockMvc.perform(get(path + "/{id}", id))
-                .andExpect(status().isNotFound())
-                .andDo(print())
-                .andReturn();
-    }
-
-
-    @Test
-    public void createMember_returns_memberDto_status_created() throws Exception {
-        // Setup
-        addEntitiesToDb(10);
-        var create = Instancio.of(MemberDto.class)
-                .create();
-
-        // perform POST
-        var ret = mockMvc.perform(MockMvcRequestBuilders.post(path)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaTypes.HAL_JSON)
-                        .content(mapper.writeValueAsString(create)))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaTypes.HAL_JSON))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.length()").value(3))
-                .andExpect(jsonPath("$._links.self").exists())
-                .andExpect(jsonPath("$._links.self.href").isNotEmpty())
-                .andExpect(jsonPath("$._links.update").exists())
-                .andExpect(jsonPath("$._links.update.href").isNotEmpty())
-                .andExpect(jsonPath("$._links.create").exists())
-                .andExpect(jsonPath("$._links.create.href").isNotEmpty())
-                .andDo(print())
-                .andReturn();
-
-        // verify
-        var dto = mapper.readValue(ret.getResponse().getContentAsString(), MemberDto.class);
-        var entity =  memberRepo.findById(dto.getId());
-
-        Assertions.assertTrue(entity.isPresent());
-        verify(create, entity.get());
+        // perform get and verify
+        given()
+            .auth().none()
+            .pathParam("id", id)
+            .accept(MediaTypes.HAL_JSON)
+        .when()
+            .get( path + "/{id}")
+        .then()
+            .assertThat().status(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void update_returns_memberDto_status_ok() throws Exception{
-        // create several members
-        var member = addEntitiesToDb(10).get(5);
-        var update = Instancio.of(MemberDto.class)
-                .set(field(MemberDto::getId), member.getId())
-                .set(field(MemberDto::getMemberNumber), member.getMemberNumber())
-                .create();
+    public void create_returns_model_status_created() throws Exception {
+        // setup
+        var expected = Instancio.of(MemberModel.class)
+            .ignore(field(MemberModel::getId))
+            .create();
 
-        mockMvc.perform(MockMvcRequestBuilders.put( path + "/{id}", member.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaTypes.HAL_JSON)
-                        .content(mapper.writeValueAsString(update)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaTypes.HAL_JSON))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.length()").value(3))
-                .andExpect(jsonPath("$._links.self").exists())
-                .andExpect(jsonPath("$._links.self.href").isNotEmpty())
-                .andExpect(jsonPath("$._links.update").exists())
-                .andExpect(jsonPath("$._links.update.href").isNotEmpty())
-                .andExpect(jsonPath("$._links.create").exists())
-                .andExpect(jsonPath("$._links.create.href").isNotEmpty())
-                .andDo(print());
+        // perform post
+        var result =
+            given()
+                .auth().none()
+                    .accept(MediaTypes.HAL_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(mapper.writeValueAsString(expected))
+                .when()
+                    .post(path);
 
-        var entity = memberRepo.findById(member.getId());
+        var model = result.then().extract().body().as(MemberModel.class);
+        var uri = "http://localhost" + path + "/" + model.getId();
 
-        Assertions.assertTrue(entity.isPresent());
-        verify(update, entity.get());
+        result.then()
+                    .assertThat().status(HttpStatus.CREATED)
+                    .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
+                    .expect(jsonPath("$._links").exists())
+                    .expect(jsonPath("$._links.length()").value(3))
+                    .expect(jsonPath("$._links.self.href").value(uri))
+                    .expect(jsonPath("$._links.update.href").value(uri))
+                    .expect(jsonPath("$._links.delete.href").value(uri));
+
+        var member = memberRepo.findById(model.getId());
+
+        assertTrue(member.isPresent());
+        verify(expected, member.get());
+    }
+
+    @Test
+    public void update_returns_model_status_ok() throws Exception{
+        // setup
+        var id = addEntitiesToDb(20).get(10).getId();
+        var update = Instancio.of(MemberModel.class)
+            .set(field(MemberModel::getId), id)
+            .create();
+
+        // perform put
+        var uri = "http://localhost/api/v2/members/" + id;
+        var actual =
+            given()
+                .auth().none()
+                .accept(MediaTypes.HAL_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("id", id)
+                .body(mapper.writeValueAsString(update))
+            .when()
+                .put( path + "/{id}")
+            .then()
+                .assertThat().status(HttpStatus.OK)
+                .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
+                .expect(jsonPath("$._links").exists())
+                .expect(jsonPath("$._links.length()").value(3))
+                .expect(jsonPath("$._links.self.href").value(uri))
+                .expect(jsonPath("$._links.update.href").value(uri))
+                .expect(jsonPath("$._links.delete.href").value(uri))
+            .extract().body().as(MemberModel.class);
+
+        var member = memberRepo.findById(actual.getId());
+        assertTrue(member.isPresent());
+        verify(member.get(), actual);
     }
 
     @Test
     public void update_returns_status_badRequest() throws Exception {
         // Setup
-        var id = 100;
-        var update = Instancio.create(MemberDto.class);
+        var update = Instancio.create(MemberModel.class);
 
-        // perform get
-        mockMvc.perform(put(path + "/{id}", id)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaTypes.HAL_JSON)
-                    .content(mapper.writeValueAsString(update)))
-                .andExpect(status().isBadRequest())
-                .andDo(print());
+        // perform put
+        given()
+            .auth().none()
+            .accept(MediaTypes.HAL_JSON)
+            .pathParam("id", update.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(update))
+        .when()
+            .put(path + "/{id}")
+        .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST);
+
     }
 
     @Test
-    public void deleteMember_status_noContent() throws Exception {
+    public void delete_status_noContent() throws Exception {
         // create several members
         var entities = addEntitiesToDb(10);
         var id = entities.get(5).getId();
 
-        // perform DELETE
-        mockMvc.perform(delete(path + "/{id}", id))
-                .andExpect(status().isNoContent())
-                .andDo(print());
+        // perform delete
+        given()
+            .auth().none().pathParam("id", id)
+        .when()
+            .delete(path + "/{id}")
+        .then()
+            .assertThat().status(HttpStatus.NO_CONTENT);
 
         var member = memberRepo.findById(id);
-        Assertions.assertFalse(member.isPresent());
+        assertTrue(member.isEmpty());
     }
 
     @Test
@@ -393,18 +380,18 @@ public class MemberIntegrationTests extends IntegrationTests {
         var count = addEntitiesToDb(25).size();
 
         // execute
-        var ret = mockMvc.perform(get(path + "/count")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andReturn();
+        var result =
+            given()
+                .auth().none()
+                .accept(MediaType.APPLICATION_JSON)
+            .when()
+                .get(path + "/count")
+            .then()
+                .assertThat(status().isOk())
+                .extract().body().as(CountResponse.class);
 
-        var response = mapper.readValue(ret.getResponse().getContentAsString(), CountResponse.class);
-        Assertions.assertEquals(count, response.getCount());
+        assertEquals(count, result.getCount());
     }
-
-*/
 
     private List<MemberEntity> addEntitiesToDb(int size) {
         var entities = Instancio.ofList(MemberEntity.class)
@@ -416,34 +403,58 @@ public class MemberIntegrationTests extends IntegrationTests {
         return memberRepo.saveAllAndFlush(entities);
     }
 
-    /*
-    private void verify(MemberDto expected, MemberEntity actual) {
-        Assertions.assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
-        Assertions.assertEquals(expected.getFirstName(), actual.getFirstName());
-        Assertions.assertEquals(expected.getMiddleName(), actual.getMiddleName());
-        Assertions.assertEquals(expected.getLastName(), actual.getLastName());
-        Assertions.assertEquals(expected.getSuffix(), actual.getSuffix());
-        Assertions.assertEquals(expected.getBirthDate(), actual.getBirthDate());
-        Assertions.assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
+    
+    private void verify(MemberModel expected, MemberEntity actual) {
+        assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getMiddleName(), actual.getMiddleName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getSuffix(), actual.getSuffix());
+        assertEquals(expected.getBirthDate(), actual.getBirthDate());
+        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
     }
 
-    private void verify(MemberEntity expected, MemberDto actual) {
-        Assertions.assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
-        Assertions.assertEquals(expected.getFirstName(), actual.getFirstName());
-        Assertions.assertEquals(expected.getMiddleName(), actual.getMiddleName());
-        Assertions.assertEquals(expected.getLastName(), actual.getLastName());
-        Assertions.assertEquals(expected.getSuffix(), actual.getSuffix());
-        Assertions.assertEquals(expected.getBirthDate(), actual.getBirthDate());
-        Assertions.assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
+    private void verify(MemberEntity expected, MemberModel actual) {
+        assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getMiddleName(), actual.getMiddleName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getSuffix(), actual.getSuffix());
+        assertEquals(expected.getBirthDate(), actual.getBirthDate());
+        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
     }
 
 
-    private void verify(List<MemberEntity> expected, List<MemberDto> actual) {
+    private void verify(List<MemberEntity> expected, List<MemberModel> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
             verify(e, found.get());
         });
     }
-     */
+
+    private Map<String, SortFields<MemberEntity, MemberModel>> getSorts() {
+
+        Map<String, SortFields<MemberEntity, MemberModel>> map = new HashMap<>();
+        map.put("id", SortFields.of(Comparator.comparingInt(MemberEntity::getId),
+                                    Comparator.comparingInt(MemberModel::getId)));
+
+        map.put("member-number", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+            Comparator.comparingInt(MemberModel::getMemberNumber)));
+
+        map.put("first-name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
+            Comparator.comparing(MemberModel::getFirstName)));
+
+        map.put("last-name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
+            Comparator.comparing(MemberModel::getLastName)));
+
+        map.put("birth-date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
+            Comparator.comparing(MemberModel::getBirthDate)));
+
+        map.put("joined-date", SortFields.of(Comparator.comparing(MemberEntity::getJoinedDate),
+            Comparator.comparing(MemberModel::getJoinedDate)));
+
+        return map;
+    }
+    
 }
