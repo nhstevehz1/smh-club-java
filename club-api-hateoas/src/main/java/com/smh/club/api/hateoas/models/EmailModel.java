@@ -7,7 +7,7 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
