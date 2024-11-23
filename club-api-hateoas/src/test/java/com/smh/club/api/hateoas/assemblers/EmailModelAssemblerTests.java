@@ -36,7 +36,7 @@ public class EmailModelAssemblerTests extends AssemblerTests {
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/emailes").build();
+        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/emails").build();
         this.assembler = new EmailAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }
