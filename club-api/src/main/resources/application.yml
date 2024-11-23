@@ -7,4 +7,3 @@ request:
     size: 10
     page: 0
     direction: ASC
-    sort: default
