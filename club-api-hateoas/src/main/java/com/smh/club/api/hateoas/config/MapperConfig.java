@@ -3,7 +3,6 @@ package com.smh.club.api.hateoas.config;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.hateoas.contracts.mappers.EmailMapper;
 import com.smh.club.api.hateoas.models.AddressModel;
 import com.smh.club.api.hateoas.models.EmailModel;
 import com.smh.club.api.hateoas.models.MemberModel;
