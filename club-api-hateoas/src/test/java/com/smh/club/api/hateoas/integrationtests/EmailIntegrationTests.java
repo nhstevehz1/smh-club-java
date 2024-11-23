@@ -1,10 +1,12 @@
 package com.smh.club.api.hateoas.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.domain.repos.EmailRepo;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.config.PagingConfig;
-import com.smh.club.api.hateoas.models.MemberModel;
+import com.smh.club.api.hateoas.models.EmailModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
@@ -12,6 +14,7 @@ import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,33 +51,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(
-        provider = ZONKY,
-        type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
-        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class MemberIntegrationTests extends IntegrationTests {
+    provider = ZONKY,
+    type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
+    refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
+public class EmailIntegrationTests extends IntegrationTests {
 
     @Value("${request.paging.size}")
     private int defaultPageSize;
 
     @Autowired
+    private EmailRepo repo;
+
+    @Autowired
     private MembersRepo memberRepo;
 
-    private final String listNodeName = "memberModelList";
+    private List<MemberEntity> members;
 
-    private final Map<String, SortFields<MemberEntity, MemberModel>> sorts;
+    private final String listNodeName = "emailModelList";
+
+    private Map<String, SortFields<EmailEntity, EmailModel>> sorts;
 
     @WithSettings
     private final Settings settings =
-            Settings.create().set(Keys.SET_BACK_REFERENCES, true)
-                .set(Keys.JPA_ENABLED, true)
-                .set(Keys.COLLECTION_MAX_SIZE, 0);
+        Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Autowired
-    public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc, mapper, "/api/v2/members");
-        sorts = getSorts();
+    public EmailIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
+        super(mockMvc, mapper, "/api/v2/emails");
     }
 
+    @BeforeEach
+    public void init() {
+        sorts = getSorts();
+        var members = Instancio.ofList(MemberEntity.class)
+            .size(5)
+            .ignore(field(MemberEntity::getId))
+            .withUnique(field(MemberEntity::getMemberNumber))
+            .create();
+
+        this.members = memberRepo.saveAllAndFlush(members);
+    }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
@@ -82,16 +100,16 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         addEntitiesToDb(entitySize);
 
-        var sorted = memberRepo.findAll().stream()
-            .sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
+        var sorted = repo.findAll().stream()
+            .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         Map<String, String> map = new HashMap<>();
-        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
 
         var actual = executeListPage(testParams);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(MemberModel::getMemberNumber)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(EmailModel::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(testParams.getPageSize()).toList();
 
@@ -101,22 +119,24 @@ public class MemberIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
     public void getListPage_sortDir_desc(int entitySize) {
+        addEntitiesToDb(entitySize);
+
         // setup
         addEntitiesToDb(entitySize);
 
-        var sorted = memberRepo.findAll().stream()
-            .sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
+        var sorted = repo.findAll().stream()
+            .sorted(Comparator.comparingInt(EmailEntity::getId).reversed()).toList();
 
         Map<String, String> map = new HashMap<>();
         map.put(PagingConfig.DIRECTION_NAME, "desc");
 
-        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-            .sorted(Comparator.comparingInt(MemberModel::getMemberNumber).reversed()).toList(), actual);
+            .sorted(Comparator.comparingInt(EmailModel::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(testParams.getPageSize()).toList();
 
@@ -128,20 +148,20 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_pageSize(int entitySize, int pageSize) {
         addEntitiesToDb(entitySize);
 
-        var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
+        var sorted = repo.findAll()
+            .stream().sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
         assertEquals(entitySize, sorted.size());
 
         Map<String,String> map = new HashMap<>();
         map.put(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
 
-        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailModel.class, map, path, sorted.size(),
             0, pageSize, listNodeName);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberModel::getMemberNumber)).toList(), actual);
+            .sorted(Comparator.comparingInt(EmailModel::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
         verify(expected, actual);
@@ -152,20 +172,20 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_page(int page) {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
-        var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
+        var sorted = repo.findAll()
+            .stream().sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
         assertEquals(entitySize, sorted.size());
 
         Map<String,String> map = new HashMap<>();
         map.put(PagingConfig.PAGE_NAME, String.valueOf(page));
 
-        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailModel.class, map, path, sorted.size(),
             page, defaultPageSize, listNodeName);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberModel::getMemberNumber)).toList(), actual);
+            .sorted(Comparator.comparingInt(EmailModel::getId)).toList(), actual);
 
         var skip = page * defaultPageSize;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -173,19 +193,19 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date" })
+    @ValueSource(strings = {"id", "member-id", "email", "email-type" })
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = sorts.get(sort);
 
-        var sorted = memberRepo.findAll().stream().sorted(sortFields.getEntity()).toList();
+        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
 
         var map = new HashMap<String, String>();
         map.put(PagingConfig.SORT_NAME, sort);
 
-        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
         var actual = executeListPage(testParams);
         assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
@@ -195,19 +215,19 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"middle-name", "suffix"})
+    @ValueSource(strings = {"member-id"})
     public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = sorts.get(sort);
 
-        var sorted = memberRepo.findAll().stream().sorted(sortFields.getEntity()).toList();
+        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
 
         var map = new HashMap<String, String>();
         map.put(PagingConfig.SORT_NAME, sort);
 
-        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
         var actual = executeListPage(testParams);
         assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
@@ -219,8 +239,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void get_returns_model_status_ok() {
         // setup
-        var member = addEntitiesToDb(20).get(10);
-        var id = member.getId();
+        var email = addEntitiesToDb(20).get(10);
+        var id = email.getId();
 
         // perform get
         var uri = "http://localhost" + path + "/" + id;
@@ -229,9 +249,9 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .auth().none()
                 .pathParam("id", id)
                 .accept(MediaTypes.HAL_JSON_VALUE)
-            .when()
+                .when()
                 .get( path + "/{id}")
-            .then()
+                .then()
                 .assertThat().status(HttpStatus.OK)
                 .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
                 .expect(jsonPath("$._links").exists())
@@ -239,16 +259,16 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .expect(jsonPath("$._links.self.href").value(uri))
                 .expect(jsonPath("$._links.update.href").value(uri))
                 .expect(jsonPath("$._links.delete.href").value(uri))
-            .extract().body().as(MemberModel.class);
+                .extract().body().as(EmailModel.class);
 
-        verify(member, actual);
+        verify(email, actual);
     }
 
     @Test
     public void get_returns_status_notFound() {
         // Setup
         var entities = addEntitiesToDb(5);
-        var highest = entities.stream().max(comparingInt(MemberEntity::getId)).map(MemberEntity::getId).orElseThrow();
+        var highest = entities.stream().max(comparingInt(EmailEntity::getId)).map(EmailEntity::getId).orElseThrow();
         var id = highest + 100;
 
         // perform get and verify
@@ -256,57 +276,64 @@ public class MemberIntegrationTests extends IntegrationTests {
             .auth().none()
             .pathParam("id", id)
             .accept(MediaTypes.HAL_JSON)
-        .when()
+            .when()
             .get( path + "/{id}")
-        .then()
+            .then()
             .assertThat().status(HttpStatus.NOT_FOUND);
     }
 
     @Test
     public void create_returns_model_status_created() throws Exception {
         // setup
-        var expected = Instancio.of(MemberModel.class)
-            .ignore(field(MemberModel::getId))
+        var id = memberRepo.findAll().get(2).getId();
+
+        var expected = Instancio.of(EmailModel.class)
+            .ignore(field(EmailModel::getId))
+            .set(field(EmailModel::getMemberId), id)
             .create();
 
         // perform post
         var result =
             given()
                 .auth().none()
-                    .accept(MediaTypes.HAL_JSON_VALUE)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(mapper.writeValueAsString(expected))
+                .accept(MediaTypes.HAL_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(expected))
                 .when()
-                    .post(path);
+                .post(path);
 
-        var model = result.then().extract().body().as(MemberModel.class);
+        var model = result.then().extract().body().as(EmailModel.class);
         var uri = "http://localhost" + path + "/" + model.getId();
 
         result.then()
-                    .assertThat().status(HttpStatus.CREATED)
-                    .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-                    .expect(jsonPath("$._links").exists())
-                    .expect(jsonPath("$._links.length()").value(3))
-                    .expect(jsonPath("$._links.self.href").value(uri))
-                    .expect(jsonPath("$._links.update.href").value(uri))
-                    .expect(jsonPath("$._links.delete.href").value(uri));
+            .assertThat().status(HttpStatus.CREATED)
+            .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
+            .expect(jsonPath("$._links").exists())
+            .expect(jsonPath("$._links.length()").value(3))
+            .expect(jsonPath("$._links.self.href").value(uri))
+            .expect(jsonPath("$._links.update.href").value(uri))
+            .expect(jsonPath("$._links.delete.href").value(uri));
 
-        var member = memberRepo.findById(model.getId());
+        var email = repo.findById(model.getId());
 
-        assertTrue(member.isPresent());
-        verify(expected, member.get());
+        assertTrue(email.isPresent());
+        verify(expected, email.get());
     }
 
     @Test
     public void update_returns_model_status_ok() throws Exception{
         // setup
-        var id = addEntitiesToDb(20).get(10).getId();
-        var update = Instancio.of(MemberModel.class)
-            .set(field(MemberModel::getId), id)
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(EmailModel.class)
+            .set(field(EmailModel::getId), id)
+            .set(field(EmailModel::getMemberId), memberId)
             .create();
 
         // perform put
-        var uri = "http://localhost/api/v2/members/" + id;
+        var uri = "http://localhost/api/v2/emails/" + id;
         var actual =
             given()
                 .auth().none()
@@ -314,9 +341,9 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .pathParam("id", id)
                 .body(mapper.writeValueAsString(update))
-            .when()
+                .when()
                 .put( path + "/{id}")
-            .then()
+                .then()
                 .assertThat().status(HttpStatus.OK)
                 .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
                 .expect(jsonPath("$._links").exists())
@@ -324,17 +351,17 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .expect(jsonPath("$._links.self.href").value(uri))
                 .expect(jsonPath("$._links.update.href").value(uri))
                 .expect(jsonPath("$._links.delete.href").value(uri))
-            .extract().body().as(MemberModel.class);
+                .extract().body().as(EmailModel.class);
 
-        var member = memberRepo.findById(actual.getId());
-        assertTrue(member.isPresent());
-        verify(member.get(), actual);
+        var email = repo.findById(actual.getId());
+        assertTrue(email.isPresent());
+        verify(email.get(), actual);
     }
 
     @Test
     public void update_returns_status_badRequest() throws Exception {
         // Setup
-        var update = Instancio.create(MemberModel.class);
+        var update = Instancio.create(EmailModel.class);
 
         // perform put
         given()
@@ -343,9 +370,9 @@ public class MemberIntegrationTests extends IntegrationTests {
             .pathParam("id", update.getId())
             .contentType(MediaType.APPLICATION_JSON)
             .body(mapper.writeValueAsString(update))
-        .when()
+            .when()
             .put(path + "/{id}")
-        .then()
+            .then()
             .assertThat().status(HttpStatus.BAD_REQUEST);
 
     }
@@ -359,13 +386,13 @@ public class MemberIntegrationTests extends IntegrationTests {
         // perform delete
         given()
             .auth().none().pathParam("id", id)
-        .when()
+            .when()
             .delete(path + "/{id}")
-        .then()
+            .then()
             .assertThat().status(HttpStatus.NO_CONTENT);
 
-        var member = memberRepo.findById(id);
-        assertTrue(member.isEmpty());
+        var email = repo.findById(id);
+        assertTrue(email.isEmpty());
     }
 
     @Test
@@ -378,48 +405,40 @@ public class MemberIntegrationTests extends IntegrationTests {
             given()
                 .auth().none()
                 .accept(MediaType.APPLICATION_JSON)
-            .when()
+                .when()
                 .get(path + "/count")
-            .then()
+                .then()
                 .assertThat(status().isOk())
                 .extract().body().as(CountResponse.class);
 
         assertEquals(count, result.getCount());
     }
 
-    private List<MemberEntity> addEntitiesToDb(int size) {
-        var entities = Instancio.ofList(MemberEntity.class)
-                .size(size)
-                .ignore(field(MemberEntity::getId))
-                .withUnique(field(MemberEntity::getMemberNumber))
-                .create();
+    private List<EmailEntity> addEntitiesToDb(int size) {
+        var entities = Instancio.ofList(EmailEntity.class)
+            .size(size)
+            .ignore(field(EmailEntity::getId))
+            .generate(field(EmailEntity::getMember), g -> g.oneOf(members))
+            .create();
 
-        return memberRepo.saveAllAndFlush(entities);
-    }
-
-    
-    private void verify(MemberModel expected, MemberEntity actual) {
-        assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getMiddleName(), actual.getMiddleName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getSuffix(), actual.getSuffix());
-        assertEquals(expected.getBirthDate(), actual.getBirthDate());
-        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
-    }
-
-    private void verify(MemberEntity expected, MemberModel actual) {
-        assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getMiddleName(), actual.getMiddleName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getSuffix(), actual.getSuffix());
-        assertEquals(expected.getBirthDate(), actual.getBirthDate());
-        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
+        return repo.saveAllAndFlush(entities);
     }
 
 
-    private void verify(List<MemberEntity> expected, List<MemberModel> actual) {
+    private void verify(EmailModel expected, EmailEntity actual) {
+        assertEquals(expected.getMemberId(), actual.getMember().getId());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getEmailType(), actual.getEmailType());
+    }
+
+    private void verify(EmailEntity expected, EmailModel actual) {
+        assertEquals(expected.getMember().getId(), actual.getMemberId());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getEmailType(), actual.getEmailType());
+    }
+
+
+    private void verify(List<EmailEntity> expected, List<EmailModel> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
@@ -427,34 +446,21 @@ public class MemberIntegrationTests extends IntegrationTests {
         });
     }
 
-    private Map<String, SortFields<MemberEntity, MemberModel>> getSorts() {
+    private Map<String, SortFields<EmailEntity, EmailModel>> getSorts() {
 
-        Map<String, SortFields<MemberEntity, MemberModel>> map = new HashMap<>();
-        map.put("id", SortFields.of(Comparator.comparingInt(MemberEntity::getId),
-                                    Comparator.comparingInt(MemberModel::getId)));
+        Map<String, SortFields<EmailEntity, EmailModel>> map = new HashMap<>();
+        map.put("id", SortFields.of(Comparator.comparingInt(EmailEntity::getId),
+            Comparator.comparingInt(EmailModel::getId)));
 
-        map.put("member-number", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
-            Comparator.comparingInt(MemberModel::getMemberNumber)));
+        map.put("member-id", SortFields.of(Comparator.comparingInt(EmailEntity::getId),
+            Comparator.comparingInt(EmailModel::getId)));
 
-        map.put("first-name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
-            Comparator.comparing(MemberModel::getFirstName)));
+        map.put("email", SortFields.of(Comparator.comparing(EmailEntity::getEmail),
+            Comparator.comparing(EmailModel::getEmail)));
 
-        map.put("middle-name", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
-            Comparator.comparingInt(MemberModel::getMemberNumber)));
-
-        map.put("last-name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
-            Comparator.comparing(MemberModel::getLastName)));
-
-        map.put("suffix", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
-            Comparator.comparingInt(MemberModel::getMemberNumber)));
-
-        map.put("birth-date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
-            Comparator.comparing(MemberModel::getBirthDate)));
-
-        map.put("joined-date", SortFields.of(Comparator.comparing(MemberEntity::getJoinedDate),
-            Comparator.comparing(MemberModel::getJoinedDate)));
+        map.put("email-type", SortFields.of(Comparator.comparing(EmailEntity::getEmailType),
+            Comparator.comparing(EmailModel::getEmailType)));
 
         return map;
     }
-    
 }
