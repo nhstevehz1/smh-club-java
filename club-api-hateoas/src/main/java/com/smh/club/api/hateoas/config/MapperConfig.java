@@ -1,13 +1,7 @@
 package com.smh.club.api.hateoas.config;
 
-import com.smh.club.api.data.domain.entities.AddressEntity;
-import com.smh.club.api.data.domain.entities.EmailEntity;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
-import com.smh.club.api.hateoas.models.AddressModel;
-import com.smh.club.api.hateoas.models.EmailModel;
-import com.smh.club.api.hateoas.models.MemberModel;
-import com.smh.club.api.hateoas.models.PhoneModel;
+import com.smh.club.api.data.domain.entities.*;
+import com.smh.club.api.hateoas.models.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -26,7 +20,7 @@ public class MapperConfig {
         addressSettings(modelMapper);
         emailSettings(modelMapper);
         phoneSettings(modelMapper);
-        //renewalSetting(modelMapper);
+        renewalSetting(modelMapper);
 
         return modelMapper;
     }
@@ -80,18 +74,17 @@ public class MapperConfig {
         });
     }
 
-    /*
     private void renewalSetting(ModelMapper modelMapper) {
         // Renewals settings
-        TypeMap<RenewalEntity, RenewalDto> dtoTypeMap
-                = modelMapper.createTypeMap(RenewalEntity.class, RenewalDto.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), RenewalDto::setMemberId));
+        TypeMap<RenewalEntity, RenewalModel> dtoTypeMap
+                = modelMapper.createTypeMap(RenewalEntity.class, RenewalModel.class);
+        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), RenewalModel::setMemberId));
 
-        TypeMap<RenewalDto, RenewalEntity> entTypeMap
-                = modelMapper.createTypeMap(RenewalDto.class, RenewalEntity.class);
+        TypeMap<RenewalModel, RenewalEntity> entTypeMap
+                = modelMapper.createTypeMap(RenewalModel.class, RenewalEntity.class);
         entTypeMap.addMappings(m -> {
             m.skip(RenewalEntity::setMember);
             m.skip(RenewalEntity::setId);
         });
-    }*/
+    }
 }
