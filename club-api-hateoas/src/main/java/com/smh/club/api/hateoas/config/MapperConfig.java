@@ -3,9 +3,11 @@ package com.smh.club.api.hateoas.config;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.hateoas.models.AddressModel;
 import com.smh.club.api.hateoas.models.EmailModel;
 import com.smh.club.api.hateoas.models.MemberModel;
+import com.smh.club.api.hateoas.models.PhoneModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -23,7 +25,7 @@ public class MapperConfig {
         memberSettings(modelMapper);
         addressSettings(modelMapper);
         emailSettings(modelMapper);
-        //phoneSettings(modelMapper);
+        phoneSettings(modelMapper);
         //renewalSetting(modelMapper);
 
         return modelMapper;
@@ -64,21 +66,21 @@ public class MapperConfig {
         });
     }
 
-    /*
     private void phoneSettings(ModelMapper modelMapper) {
         // Phone settings
-        TypeMap<PhoneEntity, PhoneMapper> dtoTypeMap
-                = modelMapper.createTypeMap(PhoneEntity.class, PhoneMapper.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), PhoneMapper::setMemberId));
+        TypeMap<PhoneEntity, PhoneModel> dtoTypeMap
+                = modelMapper.createTypeMap(PhoneEntity.class, PhoneModel.class);
+        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), PhoneModel::setMemberId));
 
-        TypeMap<PhoneMapper, PhoneEntity> entTypeMap
-                = modelMapper.createTypeMap(PhoneMapper.class, PhoneEntity.class);
+        TypeMap<PhoneModel, PhoneEntity> entTypeMap
+                = modelMapper.createTypeMap(PhoneModel.class, PhoneEntity.class);
         entTypeMap.addMappings(m -> {
             m.skip(PhoneEntity::setMember);
             m.skip(PhoneEntity::setId);
         });
     }
 
+    /*
     private void renewalSetting(ModelMapper modelMapper) {
         // Renewals settings
         TypeMap<RenewalEntity, RenewalDto> dtoTypeMap
