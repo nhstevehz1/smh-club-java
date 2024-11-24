@@ -1,12 +1,9 @@
 package com.smh.club.api.hateoas.assemblers;
 
 import com.smh.club.api.data.domain.entities.PhoneEntity;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.PhoneAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.PhoneMapper;
-import com.smh.club.api.hateoas.contracts.mappers.PhoneMapper;
 import com.smh.club.api.hateoas.controllers.PhoneControllerImpl;
-import com.smh.club.api.hateoas.models.PhoneModel;
 import com.smh.club.api.hateoas.models.PhoneModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
