@@ -20,7 +20,7 @@ public class DataLoader implements ApplicationRunner {
     private MembersRepo repo;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         var now = LocalDate.now();
         for (int ii = 0; ii < 30; ii++) {
             var member = MemberEntity.builder()
