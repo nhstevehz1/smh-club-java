@@ -5,6 +5,9 @@ import com.smh.club.api.hateoas.models.RenewalModel;
 
 import java.util.List;
 
+/**
+ * Maps renewal objects.
+ */
 public interface RenewalMapper {
 
     /**
