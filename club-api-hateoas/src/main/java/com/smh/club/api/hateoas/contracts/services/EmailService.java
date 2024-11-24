@@ -6,7 +6,7 @@ import org.springframework.hateoas.PagedModel;
 import java.util.Optional;
 
 /**
- * Business logic for emailes.
+ * Business logic for emails.
  */
 public interface EmailService {
 

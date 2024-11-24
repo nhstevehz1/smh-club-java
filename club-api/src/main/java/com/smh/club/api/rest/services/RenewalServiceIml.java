@@ -1,10 +1,10 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
-import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.RenewalsRepo;
+import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
+import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.rest.dto.RenewalDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements an {@link RenewalService}.
+ */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
@@ -28,6 +32,9 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
     private final MembersRepo memberRepo;
     private final RenewalMapper renewalMapper;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<RenewalDto> getRenewalListPage(int pageNumber, int pageSize,
                                                @NonNull String direction, @NonNull String sort) {
@@ -43,6 +50,9 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         return renewalRepo.findAll(pageRequest).map(renewalMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<RenewalDto> getRenewal(int id) {
         log.debug("Getting renewal by id: {}", id);
@@ -50,6 +60,9 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         return renewalRepo.findById(id).map(renewalMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RenewalDto createRenewal(RenewalDto renewal) {
         log.debug("creating renewal: {}", renewal);
@@ -60,6 +73,9 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         return renewalMapper.toDto(renewalRepo.save(addressEntity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<RenewalDto> updateRenewal(int id, RenewalDto renewalDto) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
@@ -69,18 +85,27 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
                 .map(renewalMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteRenewal(int id) {
         log.debug("Deleting address, id: {}", id);
         renewalRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getRenewalCount() {
         log.debug("Getting member count");
         return renewalRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected String getSortColumn(String key) {
         var source = RenewalDto.class;
         var target = RenewalEntity.class;
