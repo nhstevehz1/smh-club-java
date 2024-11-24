@@ -1,0 +1,10 @@
+plugins {
+    id 'build-logic.spring-boot-conventions'
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-json'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

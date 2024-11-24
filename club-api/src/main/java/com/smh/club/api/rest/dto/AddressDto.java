@@ -2,11 +2,11 @@ package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.data.annotations.SortExclude;
-import com.smh.club.api.data.domain.entities.AddressType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import smh.club.shared.domain.AddressType;
 
 /**
  * DTO for addresses.

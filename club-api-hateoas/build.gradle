@@ -8,6 +8,7 @@ version = '0.0.1-SNAPSHOT'
 
 
 dependencies {
+	implementation(project(':club-shared'))
 	implementation(project(':club-data'))
 
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -37,4 +38,3 @@ dependencies {
 	testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:17.0.0') // embedded Postres DB
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
-
