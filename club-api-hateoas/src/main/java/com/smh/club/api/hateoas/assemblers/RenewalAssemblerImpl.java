@@ -1,9 +1,12 @@
 package com.smh.club.api.hateoas.assemblers;
 
 import com.smh.club.api.data.domain.entities.RenewalEntity;
+import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.RenewalAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.RenewalMapper;
+import com.smh.club.api.hateoas.contracts.mappers.RenewalMapper;
 import com.smh.club.api.hateoas.controllers.RenewalControllerImpl;
+import com.smh.club.api.hateoas.models.RenewalModel;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,10 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * {@inheritDoc}
+ * Extends {@link RepresentationModelAssemblerSupport}
+ */
 @Component
 public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<RenewalEntity, RenewalModel>
     implements RenewalAssembler {
@@ -23,6 +30,14 @@ public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<Re
     private final RenewalMapper mapper;
     private final PagedResourcesAssembler<RenewalEntity> pagedAssembler;
 
+    /**
+     * Constructor.
+     * @param mapper An {@link RenewalMapper} used to copy the properties to an {@link RenewalModel}
+     *               from an {@link RenewalEntity}.
+     * @param pagedAssembler A {@link PagedResourcesAssembler} of type {@link RenewalEntity} used to
+     *                       copy a {@link Page} to a {@link PagedModel}.
+     * @see RenewalAssemblerImpl#toPagedModel
+     */
     @Autowired
     public RenewalAssemblerImpl(RenewalMapper mapper, PagedResourcesAssembler<RenewalEntity> pagedAssembler) {
         super(RenewalControllerImpl.class, RenewalModel.class);
@@ -30,6 +45,9 @@ public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<Re
         this.pagedAssembler = pagedAssembler;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @NonNull
     @Override
     public RenewalModel toModel(@NonNull RenewalEntity entity) {
@@ -40,11 +58,20 @@ public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<Re
         return model;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PagedModel<RenewalModel> toPagedModel(Page<RenewalEntity> page) {
         return pagedAssembler.toModel(page, this);
     }
 
+    /**
+     * Called internally.  Responsible for mapping an {@link RenewalEntity} to a {@link RenewalModel}.
+     * Override the default behavior of using reflection
+     * @param entity The {@link RenewalEntity} to be mapped
+     * @return The mapped {@link RenewalModel}l
+     */
     @NonNull
     @Override
     protected RenewalModel instantiateModel(@NonNull RenewalEntity entity) {

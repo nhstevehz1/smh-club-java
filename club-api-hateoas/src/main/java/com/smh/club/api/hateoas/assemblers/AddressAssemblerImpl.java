@@ -16,6 +16,10 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * {@inheritDoc}
+ * Extends {@link RepresentationModelAssemblerSupport}
+ */
 @Component
 public class AddressAssemblerImpl
     extends RepresentationModelAssemblerSupport<AddressEntity, AddressModel>
@@ -24,6 +28,14 @@ public class AddressAssemblerImpl
     private final AddressMapper mapper;
     private final PagedResourcesAssembler<AddressEntity> pagedAssembler;
 
+    /**
+     * Constructor.
+     * @param mapper An {@link AddressMapper} used to copy the properties to an {@link AddressModel}
+     *               from an {@link AddressEntity}.
+     * @param pagedAssembler A {@link PagedResourcesAssembler} of type {@link AddressEntity} used to
+     *                       copy a {@link Page} to a {@link PagedModel}.
+     * @see AddressAssemblerImpl#toPagedModel
+     */
     @Autowired
     public AddressAssemblerImpl(AddressMapper mapper, PagedResourcesAssembler<AddressEntity> pagedAssembler) {
         super(AddressControllerImpl.class, AddressModel.class);
@@ -31,6 +43,9 @@ public class AddressAssemblerImpl
         this.pagedAssembler = pagedAssembler;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @NonNull
     @Override
     public AddressModel toModel(@NonNull AddressEntity entity) {
@@ -41,11 +56,20 @@ public class AddressAssemblerImpl
         return model;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PagedModel<AddressModel> toPagedModel(Page<AddressEntity> page) {
         return pagedAssembler.toModel(page, this);
     }
 
+    /**
+     * Called internally.  Responsible for mapping an {@link AddressEntity} to a {@link AddressModel}.
+     * Override the default behavior of using reflection
+     * @param entity The {@link AddressEntity} to be mapped
+     * @return The mapped {@link AddressModel}l
+     */
     @NonNull
     @Override
     protected AddressModel instantiateModel(@NonNull AddressEntity entity) {
