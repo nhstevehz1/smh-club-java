@@ -13,8 +13,11 @@ import java.util.Optional;
  */
 @Repository
 public interface MembersRepo extends JpaRepository<MemberEntity, Integer> {
-    boolean existsByMemberNumber(int memberNumber);
 
+    /**
+     * Returns true if a member number is already in use.  Otherwise false
+     */
+    boolean existsByMemberNumber(int memberNumber);
 
     List<MemberNumberOnly> findByMemberNumberGreaterThanEqualAndMemberNumberLessThanEqual(int low, int high);
 
