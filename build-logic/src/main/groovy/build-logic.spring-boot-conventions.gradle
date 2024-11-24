@@ -1,0 +1,9 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'build-logic.java-conventions'
+}
+
+dependencies {
+
+}

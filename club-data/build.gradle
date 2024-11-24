@@ -1,21 +1,6 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.3.5'
-    id 'io.spring.dependency-management' version '1.1.6'
-}
-
-repositories {
-    mavenCentral()
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-bootJar {
-    enabled  = false
+    // spring boot and dependency management convention
+    id 'build-logic.spring-boot-conventions'
 }
 
 dependencies {
@@ -38,8 +23,4 @@ dependencies {
     testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:17.0.0') // embedded Postres DB
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-test {
-    useJUnitPlatform()
 }
