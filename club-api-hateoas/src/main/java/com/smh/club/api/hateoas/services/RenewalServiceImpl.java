@@ -17,6 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements a {@link RenewalService}.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
@@ -31,6 +35,9 @@ public class RenewalServiceImpl extends AbstractServiceBase implements RenewalSe
 
     private final RenewalMapper mapper;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PagedModel<RenewalModel> getRenewalListPage(int pageNumber, int pageSize, String direction, String sort) {
 
@@ -45,12 +52,18 @@ public class RenewalServiceImpl extends AbstractServiceBase implements RenewalSe
         return assembler.toPagedModel(renewalRepo.findAll(pageRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<RenewalModel> getRenewal(int id) {
         log.debug("Getting renewal by id: {}", id);
         return renewalRepo.findById(id).map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RenewalModel createRenewal(RenewalModel renewal) {
         log.debug("Creating renewal: {}", renewal);
@@ -62,6 +75,9 @@ public class RenewalServiceImpl extends AbstractServiceBase implements RenewalSe
         return assembler.toModel(renewalRepo.save(entity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<RenewalModel> updateRenewal(int id, RenewalModel renewal) {
         log.debug("Updating renewal id: {}, with data: {}", id, renewal);
@@ -71,17 +87,26 @@ public class RenewalServiceImpl extends AbstractServiceBase implements RenewalSe
             .map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteRenewal(int id) {
         log.debug("Deleting renewal id: {}", id);
         renewalRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getRenewalCount() {
         return renewalRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getSortColumn(String key) {
         return getSort(key, RenewalModel.class, RenewalEntity.class).orElse("id");

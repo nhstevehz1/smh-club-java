@@ -17,6 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements an {@link AddressService}.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
@@ -31,6 +35,9 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
 
     private final AddressMapper mapper;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PagedModel<AddressModel> getAddressListPage(int pageNumber, int pageSize, String direction, String sort) {
 
@@ -45,12 +52,18 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         return assembler.toPagedModel(addressRepo.findAll(pageRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AddressModel> getAddress(int id) {
         log.debug("Getting address by id: {}", id);
         return addressRepo.findById(id).map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AddressModel createAddress(AddressModel address) {
         log.debug("Creating address: {}", address);
@@ -62,6 +75,9 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         return assembler.toModel(addressRepo.save(entity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AddressModel> updateAddress(int id, AddressModel address) {
         log.debug("Updating address id: {}, with data: {}", id, address);
@@ -71,17 +87,26 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
             .map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteAddress(int id) {
         log.debug("Deleting address id: {}", id);
         addressRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getAddressCount() {
         return addressRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getSortColumn(String key) {
         return getSort(key, AddressModel.class, AddressEntity.class).orElse("id");

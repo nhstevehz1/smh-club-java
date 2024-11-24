@@ -1,11 +1,11 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.controllers.RenewalController;
 import com.smh.club.api.rest.config.PagingConfig;
-import com.smh.club.api.rest.response.CountResponse;
-import com.smh.club.api.rest.response.PageResponse;
+import com.smh.club.api.rest.contracts.controllers.RenewalController;
 import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,14 +53,14 @@ public class RenewalControllerImpl implements RenewalController {
 
     @PostMapping
     @Override
-    public ResponseEntity<RenewalDto> create(@RequestBody RenewalDto createDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(createDto));
+    public ResponseEntity<RenewalDto> create(@RequestBody RenewalDto renewal) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(renewal));
     }
 
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<RenewalDto> update(@PathVariable int id, @RequestBody RenewalDto updateDto) {
-        var ret = renewSvc.updateRenewal(id, updateDto);
+    public ResponseEntity<RenewalDto> update(@PathVariable int id, @RequestBody RenewalDto renewal) {
+        var ret = renewSvc.updateRenewal(id, renewal);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

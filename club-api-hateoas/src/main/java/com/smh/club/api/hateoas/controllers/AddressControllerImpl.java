@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * {@inheritDoc}
+ */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -22,6 +25,9 @@ public class AddressControllerImpl implements AddressController {
 
     private final AddressService addressService;
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping
     @Override
     public ResponseEntity<PagedModel<AddressModel>> page(
@@ -42,6 +48,9 @@ public class AddressControllerImpl implements AddressController {
         return ResponseEntity.ok(page);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping("{id}")
     @Override
     public ResponseEntity<AddressModel> get(@PathVariable int id) {
@@ -51,12 +60,18 @@ public class AddressControllerImpl implements AddressController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(addressService.getAddressCount()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<AddressModel> create(@RequestBody AddressModel address) {
@@ -67,6 +82,9 @@ public class AddressControllerImpl implements AddressController {
         return ResponseEntity.created(selfLink.toUri()).body(created);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<AddressModel> update(@PathVariable int id, @RequestBody AddressModel address) {
@@ -78,6 +96,9 @@ public class AddressControllerImpl implements AddressController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @DeleteMapping(value = "{id}")
     @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {

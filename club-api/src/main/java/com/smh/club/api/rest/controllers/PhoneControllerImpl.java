@@ -1,11 +1,11 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.controllers.PhoneController;
 import com.smh.club.api.rest.config.PagingConfig;
-import com.smh.club.api.rest.response.CountResponse;
-import com.smh.club.api.rest.response.PageResponse;
+import com.smh.club.api.rest.contracts.controllers.PhoneController;
 import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,13 +50,13 @@ public class PhoneControllerImpl implements PhoneController {
     }
 
     @PostMapping
-    public ResponseEntity<PhoneDto> create(@RequestBody PhoneDto createDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(createDto));
+    public ResponseEntity<PhoneDto> create(@RequestBody PhoneDto phone) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(phone));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PhoneDto> update(@PathVariable int id, @RequestBody PhoneDto updateDto) {
-        var ret = phoneSvc.updatePhone(id, updateDto);
+    public ResponseEntity<PhoneDto> update(@PathVariable int id, @RequestBody PhoneDto phone) {
+        var ret = phoneSvc.updatePhone(id, phone);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

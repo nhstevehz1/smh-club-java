@@ -1,10 +1,10 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.AddressMapper;
-import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.repos.AddressRepo;
 import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.rest.contracts.mappers.AddressMapper;
+import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.rest.dto.AddressDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements an {@link AddressService}.
+ */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
@@ -28,6 +32,9 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
     private final MembersRepo memberRepo;
     private final AddressMapper addressMapper;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<AddressDto> getAddressListPage(int pageNumber, int pageSize,
                                                @NonNull String direction, @NonNull String sort) {
@@ -43,6 +50,9 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         return addressRepo.findAll(pageRequest).map(addressMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AddressDto> getAddress(int id) {
         log.debug("Getting address by id: {}", id);
@@ -50,6 +60,9 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         return addressRepo.findById(id).map(addressMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AddressDto createAddress(AddressDto address) {
         log.debug("creating address: {}", address);
@@ -61,6 +74,9 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         return addressMapper.toDto(addressRepo.save(addressEntity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AddressDto> updateAddress(int id, AddressDto addressDto) {
         log.debug("Updating address id: {}, with data: {}", id, addressDto);
@@ -71,18 +87,27 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteAddress(int id) {
         log.debug("Deleting address, id: {}", id);
         addressRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getAddressCount() {
         log.debug("Getting member count");
         return addressRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected String getSortColumn(String key) {
         var source = AddressDto.class;
         var target = AddressEntity.class;

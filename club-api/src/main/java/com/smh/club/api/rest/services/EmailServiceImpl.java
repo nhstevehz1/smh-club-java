@@ -1,10 +1,10 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.EmailMapper;
-import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.data.domain.repos.EmailRepo;
 import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.rest.contracts.mappers.EmailMapper;
+import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.dto.EmailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements an {@link EmailService}.
+ */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
@@ -28,7 +32,9 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
     private final MembersRepo memberRepo;
     private final EmailMapper emailMapper;
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<EmailDto> getEmailListPage(int pageNumber, int pageSize,
                                            @NonNull String direction, @NonNull String sort) {
@@ -44,6 +50,9 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         return emailRepo.findAll(pageRequest).map(emailMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<EmailDto> getEmail(int id) {
         log.debug("Getting email by id: {}", id);
@@ -51,6 +60,9 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         return emailRepo.findById(id).map(emailMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EmailDto createEmail(EmailDto createDto) {
         log.debug("creating email: {}", createDto);
@@ -61,6 +73,9 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         return emailMapper.toDto(emailRepo.save(emailEntity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<EmailDto> updateEmail(int id, EmailDto updateDto) {
         log.debug("Updating email, id: {}, with data: {}", id, updateDto);
@@ -70,18 +85,27 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
                 .map(emailMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteEmail(int id) {
         log.debug("Deleting address, id: {}", id);
         emailRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getEmailCount() {
         log.debug("Getting member count");
         return emailRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected String getSortColumn(String key) {
         var source = EmailDto.class;
         var target = EmailEntity.class;

@@ -1,7 +1,6 @@
 package com.smh.club.api.hateoas.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.annotations.SortDefault;
 import com.smh.club.api.data.annotations.SortExclude;
 import com.smh.club.api.data.annotations.SortTarget;
 import lombok.Builder;
@@ -11,28 +10,27 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * And abstract service base class.
+ */
 public abstract class AbstractServiceBase {
 
+    /**
+     * Retries a sort column based on a key.
+     * @param key A key that could either be a private member name or an {@link JsonProperty}.
+     * @return The sort column name.
+     */
     protected abstract String getSortColumn(String key);
 
+    /**
+     * Retries an entity's column name based on a key.
+     * @param source The model class.
+     * @param target The entity class.
+     * @return An {@link Optional} {@link String} representing the sort column name.
+     */
     protected <S, T> Optional<String> getSort(String key, Class<S> source, Class<T> target) {
         var sourceField = getSourceField(key, source);
         return sourceField.flatMap(field -> getSortFieldName(target, field));
-    }
-
-    protected <S, T> Optional<String> getDefaultSort(Class<S> source, Class<T> target) {
-        var sourceField = getDefaultSourceField(source);
-        return sourceField.flatMap(field -> getSortFieldName(target, field));
-    }
-
-    private <S> Optional<SourceField> getDefaultSourceField(Class<S> source) {
-        return Arrays.stream(source.getDeclaredFields())
-            .filter(f -> isNotExcluded(f) && isDefault(f))
-            .map(f -> SourceField.builder()
-                .field(f.getName())
-                .target(getTargetPropValue(f))
-                .build())
-            .findFirst();
     }
 
     private <S> Optional<SourceField> getSourceField(String key, Class<S> source) {
@@ -52,10 +50,6 @@ public abstract class AbstractServiceBase {
                 (f.getName().equals(sf.target)) || f.getName().equals(sf.field))
             .map(Field::getName)
             .findFirst();
-    }
-
-    private boolean isDefault(Field field) {
-        return field.getAnnotation(SortDefault.class) != null;
     }
 
     private boolean isNotExcluded(Field field) {

@@ -7,8 +7,19 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+
+/**
+ * A repository for {@link RenewalEntity} objects
+ */
 @Repository
 public interface RenewalsRepo extends JpaRepository<RenewalEntity, Integer> {
+
+    /**
+     * Finds an address that matches an address id and a member id.
+     * @param id The address object id.
+     * @param memberId The member object id.
+     * @return An {@link RenewalEntity}.
+     */
     @Query(value = "SELECT * FROM member_mgmt.renewal r WHERE r.id = :id and r.member_id = :memberId", nativeQuery = true)
     Optional<RenewalEntity> findByIdAndMemberId(int id, int memberId);
 }

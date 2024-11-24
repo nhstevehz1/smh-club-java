@@ -17,6 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements a {@link PhoneService}.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
@@ -31,6 +35,9 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
 
     private final PhoneMapper mapper;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PagedModel<PhoneModel> getPhoneListPage(int pageNumber, int pageSize, String direction, String sort) {
 
@@ -45,12 +52,18 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         return assembler.toPagedModel(phoneRepo.findAll(pageRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<PhoneModel> getPhone(int id) {
         log.debug("Getting phone by id: {}", id);
         return phoneRepo.findById(id).map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PhoneModel createPhone(PhoneModel phone) {
         log.debug("Creating phone: {}", phone);
@@ -62,6 +75,9 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         return assembler.toModel(phoneRepo.save(entity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<PhoneModel> updatePhone(int id, PhoneModel phone) {
         log.debug("Updating phone id: {}, with data: {}", id, phone);
@@ -71,17 +87,26 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
             .map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deletePhone(int id) {
         log.debug("Deleting phone id: {}", id);
         phoneRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getPhoneCount() {
         return phoneRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getSortColumn(String key) {
         return getSort(key, PhoneModel.class, PhoneEntity.class).orElse("id");

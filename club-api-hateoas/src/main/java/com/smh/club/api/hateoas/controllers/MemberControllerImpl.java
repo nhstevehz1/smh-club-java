@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * {@inheritDoc}
+ */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -22,6 +25,9 @@ public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberSvc;
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping
     @Override
     public ResponseEntity<PagedModel<MemberModel>> page(
@@ -42,6 +48,9 @@ public class MemberControllerImpl implements MemberController {
         return ResponseEntity.ok(page);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping("{id}")
     @Override
     public ResponseEntity<MemberModel> get(@PathVariable int id) {
@@ -50,12 +59,18 @@ public class MemberControllerImpl implements MemberController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(memberSvc.getMemberCount()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<MemberModel> create(@RequestBody MemberModel member) {
@@ -66,6 +81,9 @@ public class MemberControllerImpl implements MemberController {
         return ResponseEntity.created(selfLink.toUri()).body(created);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<MemberModel> update(@PathVariable int id, @RequestBody MemberModel member) {
@@ -77,6 +95,9 @@ public class MemberControllerImpl implements MemberController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @DeleteMapping(value = "{id}")
     @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {

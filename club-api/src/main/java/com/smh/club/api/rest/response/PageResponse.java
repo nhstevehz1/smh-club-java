@@ -6,6 +6,10 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+/**
+ * Contains metadata for
+ * @param <T>
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -28,6 +32,11 @@ public class PageResponse<T> {
     @JsonProperty("content")
     private List<T> content;
 
+    /**
+     * Creates a PageResponse of type T.
+     * @param page A {@link Page}.
+     * @return A {@link PageResponse}.
+     */
     public static <T> PageResponse<T> of(Page<T> page) {
         return PageResponse.<T>builder()
                 .content(page.getContent())

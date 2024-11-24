@@ -1,10 +1,10 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
-import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
+import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.rest.dto.PhoneDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements an {@link PhoneService}.
+ */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Transactional
@@ -28,6 +32,9 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
     private final MembersRepo memberRepo;
     private final PhoneMapper phoneMapper;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<PhoneDto> getPhoneListPage(int pageNumber, int pageSize,
                                            @NonNull String direction, @NonNull String sort) {
@@ -43,6 +50,9 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         return phoneRepo.findAll(pageRequest).map(phoneMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<PhoneDto> getPhone(int id) {
         log.debug("Getting phone by id: {}", id);
@@ -50,6 +60,9 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         return phoneRepo.findById(id).map(phoneMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PhoneDto createPhone(PhoneDto createDto) {
         log.debug("creating phone: {}", createDto);
@@ -60,6 +73,9 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         return phoneMapper.toDto(phoneRepo.save(phoneEntity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<PhoneDto> updatePhone(int id, PhoneDto updateDto) {
         log.debug("Updating phone, id: {}, with data: {}", id, updateDto);
@@ -69,18 +85,27 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
                 .map(phoneMapper::toDto);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deletePhone(int id) {
         log.debug("Deleting address, id: {}", id);
         phoneRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getPhoneCount() {
         log.debug("Getting member count");
         return phoneRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected String getSortColumn(String key) {
         var source = PhoneDto.class;
         var target = PhoneEntity.class;

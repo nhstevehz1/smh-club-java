@@ -7,7 +7,11 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
 
-
+/**
+ * DTO for members.  When serialize to JSON, links are generated that
+ * represent controller endpoints.
+ * Extends {@link RepresentationModel}.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
