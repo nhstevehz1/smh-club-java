@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.converters;
+package com.smh.club.api.data.domain.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

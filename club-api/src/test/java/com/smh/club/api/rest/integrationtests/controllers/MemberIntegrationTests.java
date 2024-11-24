@@ -60,8 +60,6 @@ public class MemberIntegrationTests extends IntegrationTests {
         super(mockMvc,mapper, "/api/v1/members");
     }
 
-
-
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
     public void getListPage_no_params(int entitySize) throws Exception {

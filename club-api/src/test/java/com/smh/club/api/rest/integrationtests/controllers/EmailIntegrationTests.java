@@ -9,10 +9,8 @@ import com.smh.club.api.rest.dto.EmailDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -52,8 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureEmbeddedDatabase(
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
-        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class EmailIntegrationTests extends IntegrationTests {
 
     @Value("${request.paging.size}")
@@ -70,7 +67,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         super(mockMvc, mapper, "/api/v1/emails");
     }
 
-    @BeforeAll
+    @BeforeEach
     public void initMembers() {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
@@ -80,12 +77,6 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();
         memberRepo.saveAllAndFlush(members);
-    }
-
-    @AfterEach
-    public void clearEmailTable() {
-        emailRepo.deleteAll();
-        emailRepo.flush();
     }
 
     @Test
@@ -288,6 +279,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         var entities = Instancio.ofList(EmailEntity.class)
                 .size(size) // must be before withSettings
                 .withSettings(getSettings())
+                .ignore(field(EmailEntity::getId))
                 .generate(field(EmailEntity::getMember), g -> g.oneOf(members))
                 .create();
 

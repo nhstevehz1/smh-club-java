@@ -105,6 +105,6 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var source = MemberModel.class;
         var target = MemberEntity.class;
 
-        return getSort(key, source, target).orElse("id");
+        return getSort(key, source, target).orElse("memberNumber");
     }
 }

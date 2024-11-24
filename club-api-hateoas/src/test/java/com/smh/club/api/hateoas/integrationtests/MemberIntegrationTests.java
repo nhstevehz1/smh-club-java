@@ -61,7 +61,6 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     private final String listNodeName = "memberModelList";
 
-    private final Map<String, SortFields<MemberEntity, MemberModel>> sorts;
 
     @WithSettings
     private final Settings settings =
@@ -72,7 +71,6 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
         super(mockMvc, mapper, "/api/v2/members");
-        sorts = getSorts();
     }
 
 
@@ -177,7 +175,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = memberRepo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
@@ -199,7 +197,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = memberRepo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());

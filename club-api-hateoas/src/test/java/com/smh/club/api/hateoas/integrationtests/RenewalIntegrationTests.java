@@ -69,8 +69,6 @@ public class RenewalIntegrationTests extends IntegrationTests {
 
     private final String listNodeName = "renewalModelList";
 
-    private Map<String, SortFields<RenewalEntity, RenewalModel>> sorts;
-
     @WithSettings
     private final Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
@@ -84,7 +82,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
 
     @BeforeEach
     public void init() {
-        sorts = getSorts();
+
         var members = Instancio.ofList(MemberEntity.class)
             .size(5)
             .ignore(field(MemberEntity::getId))
@@ -197,7 +195,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
@@ -219,7 +217,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
     public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());

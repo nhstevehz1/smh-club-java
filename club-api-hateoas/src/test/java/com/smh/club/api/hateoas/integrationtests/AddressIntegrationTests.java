@@ -69,8 +69,6 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     private final String listNodeName = "addressModelList";
 
-    private Map<String, SortFields<AddressEntity, AddressModel>> sorts;
-
     @WithSettings
     private final Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
@@ -84,7 +82,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @BeforeEach
     public void init() {
-        sorts = getSorts();
+
         var members = Instancio.ofList(MemberEntity.class)
             .size(5)
             .ignore(field(MemberEntity::getId))
@@ -197,7 +195,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
@@ -219,7 +217,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());

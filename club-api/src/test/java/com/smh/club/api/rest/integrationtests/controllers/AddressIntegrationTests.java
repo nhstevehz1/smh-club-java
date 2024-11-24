@@ -65,6 +65,8 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Autowired
     private AddressRepo addressRepo;
 
+    private List<MemberEntity> members;
+
     @WithSettings
     Settings settings =
             Settings.create().set(Keys.SET_BACK_REFERENCES, true)
@@ -79,7 +81,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @BeforeEach
     public void initMembers() {
         // there seems to be a bug where @WithSettings is not recognized in before all
-        var members = Instancio.ofList(MemberEntity.class)
+        members = Instancio.ofList(MemberEntity.class)
                 .size(5)
                 .withSettings(getSettings())
                 .ignore(field(MemberEntity::getId))
@@ -319,15 +321,15 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     private List<AddressEntity> addEntitiesToDb(int size) {
-        var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(AddressEntity.class)
                 .size(size) // must be before withSettings
                 .withSettings(getSettings())
+                .ignore(field(AddressEntity::getId))
                 .generate(field(AddressEntity::getMember), g -> g.oneOf(members))
                 .create();
 
-        return addressRepo.saveAllAndFlush(entities);
+        return addressRepo.saveAll(entities);
     }
 
     private void verify(AddressDto expected, AddressEntity actual) {

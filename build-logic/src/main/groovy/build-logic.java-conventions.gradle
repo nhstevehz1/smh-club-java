@@ -14,3 +14,7 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+test {
+    useJUnitPlatform()
+}
