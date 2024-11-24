@@ -17,6 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements an {@link EmailService}.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
@@ -45,12 +49,18 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         return assembler.toPagedModel(emailRepo.findAll(pageRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<EmailModel> getEmail(int id) {
         log.debug("Getting email by id: {}", id);
         return emailRepo.findById(id).map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EmailModel createEmail(EmailModel email) {
         log.debug("Creating email: {}", email);
@@ -62,6 +72,9 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         return assembler.toModel(emailRepo.save(entity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<EmailModel> updateEmail(int id, EmailModel email) {
         log.debug("Updating email id: {}, with data: {}", id, email);
@@ -71,17 +84,26 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
             .map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteEmail(int id) {
         log.debug("Deleting email id: {}", id);
         emailRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getEmailCount() {
         return emailRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getSortColumn(String key) {
         return getSort(key, EmailModel.class, EmailEntity.class).orElse("id");

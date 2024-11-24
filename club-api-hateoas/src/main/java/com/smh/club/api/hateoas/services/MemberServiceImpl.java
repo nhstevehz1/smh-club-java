@@ -16,6 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ * Extends an {@link AbstractServiceBase} and implements a {@link MemberService}.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
@@ -28,7 +32,9 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
 
     private final MemberMapper mapper;
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PagedModel<MemberModel> getMemberListPage(int pageNumber, int pageSize, String direction, String sort) {
 
@@ -43,12 +49,18 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         return assembler.toPagedModel(memberRepo.findAll(pageRequest));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MemberModel> getMember(int id) {
         log.debug("Getting member by id: {}", id);
         return memberRepo.findById(id).map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MemberModel createMember(MemberModel member) {
         log.debug("Creating member: {}", member);
@@ -56,6 +68,9 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         return assembler.toModel(memberRepo.save(entity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MemberModel> updateMember(int id, MemberModel member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
@@ -65,16 +80,25 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
             .map(assembler::toModel);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteMember(int id) {
         memberRepo.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getMemberCount() {
         return memberRepo.count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getSortColumn(String key) {
         return getSort(key, MemberModel.class, MemberEntity.class).orElse("memberNumber");
