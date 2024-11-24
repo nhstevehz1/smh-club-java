@@ -2,11 +2,11 @@ package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.contracts.controllers.MemberController;
-import com.smh.club.api.rest.response.CountResponse;
-import com.smh.club.api.rest.response.PageResponse;
 import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * {@inheritDoc}
+ */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -23,6 +26,9 @@ public class MemberControllerImpl implements MemberController {
 
     private final MemberService memberSvc;
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping
     @Override
     public ResponseEntity<PageResponse<MemberDto>> page(
@@ -40,6 +46,9 @@ public class MemberControllerImpl implements MemberController {
         return ResponseEntity.ok(PageResponse.of(page));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping("{id}")
     @Override
     public ResponseEntity<MemberDto> get(@PathVariable int id) {
@@ -47,18 +56,27 @@ public class MemberControllerImpl implements MemberController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping("count")
     @Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(memberSvc.getMemberCount()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<MemberDto> create(@RequestBody MemberDto member) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public ResponseEntity<MemberDto> update(@PathVariable int id, @RequestBody MemberDto member) {
@@ -66,6 +84,9 @@ public class MemberControllerImpl implements MemberController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
@@ -73,6 +94,9 @@ public class MemberControllerImpl implements MemberController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping("{id}/detail")
     @Override
     public ResponseEntity<MemberDetailDto> detail(@PathVariable int id) {

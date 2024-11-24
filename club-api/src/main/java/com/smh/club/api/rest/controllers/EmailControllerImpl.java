@@ -1,11 +1,11 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.controllers.EmailController;
-import com.smh.club.api.rest.response.PageResponse;
-import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.config.PagingConfig;
-import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.contracts.controllers.EmailController;
+import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.dto.EmailDto;
+import com.smh.club.api.rest.response.CountResponse;
+import com.smh.club.api.rest.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * {@inheritDoc}
+ */
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @RequestMapping(value = "/api/v1/emails", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -20,6 +23,9 @@ public class EmailControllerImpl implements EmailController {
     
     private final EmailService emailSvc;
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping
     @Override
     public ResponseEntity<PageResponse<EmailDto>> page(
@@ -36,6 +42,9 @@ public class EmailControllerImpl implements EmailController {
         return ResponseEntity.ok(PageResponse.of(page));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping("{id}")
     @Override
     public ResponseEntity<EmailDto> get(@PathVariable int id) {
@@ -43,25 +52,37 @@ public class EmailControllerImpl implements EmailController {
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @GetMapping("count")
     @Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(emailSvc.getEmailCount()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PostMapping
     @Override
-    public ResponseEntity<EmailDto> create(@RequestBody EmailDto emailDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(emailDto));
+    public ResponseEntity<EmailDto> create(@RequestBody EmailDto email) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(email));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @PutMapping("{id}")
     @Override
-    public ResponseEntity<EmailDto> update(@PathVariable int id, @RequestBody EmailDto emailDto) {
-        var ret = emailSvc.updateEmail(id, emailDto);
+    public ResponseEntity<EmailDto> update(@PathVariable int id, @RequestBody EmailDto email) {
+        var ret = emailSvc.updateEmail(id, email);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @DeleteMapping("{id}")
     @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {

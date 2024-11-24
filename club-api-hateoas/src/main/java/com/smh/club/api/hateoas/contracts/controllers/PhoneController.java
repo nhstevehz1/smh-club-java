@@ -39,6 +39,7 @@ public interface PhoneController {
      * @return A {@link ResponseEntity} containing a {@link PhoneModel} representing the newly created object.
      */
     ResponseEntity<PhoneModel> create(PhoneModel phone);
+
     /**
      * Endpoint for updating a phone.
      * @param id The id of the phone to update in the database.
