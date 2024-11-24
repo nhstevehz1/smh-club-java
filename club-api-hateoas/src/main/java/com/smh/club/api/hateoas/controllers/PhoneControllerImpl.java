@@ -1,6 +1,5 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.hateoas.config.PagingConfig;
 import com.smh.club.api.hateoas.contracts.controllers.PhoneController;
 import com.smh.club.api.hateoas.contracts.services.PhoneService;
 import com.smh.club.api.hateoas.models.PhoneModel;
@@ -13,6 +12,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import smh.club.shared.config.PagingConfig;
 
 /**
  * {@inheritDoc}

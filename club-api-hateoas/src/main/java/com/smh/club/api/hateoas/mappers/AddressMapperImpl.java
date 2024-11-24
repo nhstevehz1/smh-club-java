@@ -6,6 +6,7 @@ import com.smh.club.api.hateoas.models.AddressModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import smh.club.shared.mappers.DomainDataMapper;
 
 import java.util.List;
 

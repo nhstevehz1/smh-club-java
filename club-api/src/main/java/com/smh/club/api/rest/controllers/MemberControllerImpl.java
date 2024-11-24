@@ -1,6 +1,5 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.contracts.controllers.MemberController;
 import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.rest.dto.MemberDetailDto;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import smh.club.shared.config.PagingConfig;
 
 /**
  * {@inheritDoc}

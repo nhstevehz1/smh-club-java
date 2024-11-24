@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.AddressRepo;
@@ -30,14 +29,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import smh.club.shared.config.PagingConfig;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,6 +65,8 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Autowired
     private AddressRepo addressRepo;
 
+    private List<MemberEntity> members;
+
     @WithSettings
     Settings settings =
             Settings.create().set(Keys.SET_BACK_REFERENCES, true)
@@ -75,7 +81,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @BeforeEach
     public void initMembers() {
         // there seems to be a bug where @WithSettings is not recognized in before all
-        var members = Instancio.ofList(MemberEntity.class)
+        members = Instancio.ofList(MemberEntity.class)
                 .size(5)
                 .withSettings(getSettings())
                 .ignore(field(MemberEntity::getId))
@@ -315,15 +321,15 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     private List<AddressEntity> addEntitiesToDb(int size) {
-        var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(AddressEntity.class)
                 .size(size) // must be before withSettings
                 .withSettings(getSettings())
+                .ignore(field(AddressEntity::getId))
                 .generate(field(AddressEntity::getMember), g -> g.oneOf(members))
                 .create();
 
-        return addressRepo.saveAllAndFlush(entities);
+        return addressRepo.saveAll(entities);
     }
 
     private void verify(AddressDto expected, AddressEntity actual) {

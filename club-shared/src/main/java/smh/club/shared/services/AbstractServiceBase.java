@@ -1,9 +1,9 @@
-package com.smh.club.api.hateoas.services;
+package smh.club.shared.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.annotations.SortExclude;
-import com.smh.club.api.data.annotations.SortTarget;
 import lombok.Builder;
+import smh.club.shared.annotations.SortExclude;
+import smh.club.shared.annotations.SortTarget;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

@@ -3,7 +3,3 @@ plugins {
     id 'io.spring.dependency-management'
     id 'build-logic.java-conventions'
 }
-
-dependencies {
-
-}

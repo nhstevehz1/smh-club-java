@@ -2,13 +2,13 @@ package com.smh.club.api.rest.integrationtests.controllers;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.rest.config.PagingConfig;
 import com.smh.club.api.rest.response.PageResponse;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
+import smh.club.shared.config.PagingConfig;
 
 import java.io.IOException;
 import java.util.List;

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smh.club.shared.services.AbstractServiceBase;
 
 import java.util.Optional;
 
@@ -109,6 +110,9 @@ public class RenewalServiceImpl extends AbstractServiceBase implements RenewalSe
      */
     @Override
     protected String getSortColumn(String key) {
-        return getSort(key, RenewalModel.class, RenewalEntity.class).orElse("id");
+        var source = RenewalModel.class;
+        var target = RenewalEntity.class;
+
+        return getSort(key, source, target).orElse("id");
     }
 }

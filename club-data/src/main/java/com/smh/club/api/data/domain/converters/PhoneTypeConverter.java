@@ -1,8 +1,8 @@
-package com.smh.club.api.rest.converters;
+package com.smh.club.api.data.domain.converters;
 
-import com.smh.club.api.data.domain.entities.PhoneType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import smh.club.shared.domain.PhoneType;
 
 @Converter(autoApply = true)
 public class PhoneTypeConverter implements AttributeConverter<PhoneType, Integer> {

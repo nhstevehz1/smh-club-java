@@ -6,7 +6,9 @@ group = 'com.smh'
 version = '0.0.1-SNAPSHOT'
 
 dependencies {
+	implementation(project(':club-shared'))
 	implementation(project(':club-data'))
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -31,4 +33,3 @@ dependencies {
 	testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:17.0.0')
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
-

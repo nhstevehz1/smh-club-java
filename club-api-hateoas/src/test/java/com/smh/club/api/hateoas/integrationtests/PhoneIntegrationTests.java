@@ -1,11 +1,10 @@
 package com.smh.club.api.hateoas.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.hateoas.config.PagingConfig;
+import com.smh.club.api.data.domain.repos.PhoneRepo;
 import com.smh.club.api.hateoas.models.PhoneModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -30,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import smh.club.shared.config.PagingConfig;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -56,7 +56,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class PhoneIntegrationTests extends IntegrationTests {
 
-
     @Value("${request.paging.size}")
     private int defaultPageSize;
 
@@ -69,8 +68,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
     private List<MemberEntity> members;
 
     private final String listNodeName = "phoneModelList";
-
-    private Map<String, SortFields<PhoneEntity, PhoneModel>> sorts;
 
     @WithSettings
     private final Settings settings =
@@ -85,7 +82,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
     @BeforeEach
     public void init() {
-        sorts = getSorts();
+
         var members = Instancio.ofList(MemberEntity.class)
             .size(5)
             .ignore(field(MemberEntity::getId))
@@ -198,7 +195,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
@@ -220,7 +217,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
-        var sortFields = sorts.get(sort);
+        var sortFields = getSorts().get(sort);
 
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());

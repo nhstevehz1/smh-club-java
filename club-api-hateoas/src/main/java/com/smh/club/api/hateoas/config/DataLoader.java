@@ -1,7 +1,6 @@
 package com.smh.club.api.hateoas.config;
 
 import com.smh.club.api.data.domain.entities.AddressEntity;
-import com.smh.club.api.data.domain.entities.AddressType;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import smh.club.shared.domain.AddressType;
 
 import java.time.LocalDate;
 
@@ -20,7 +20,7 @@ public class DataLoader implements ApplicationRunner {
     private MembersRepo repo;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         var now = LocalDate.now();
         for (int ii = 0; ii < 30; ii++) {
             var member = MemberEntity.builder()

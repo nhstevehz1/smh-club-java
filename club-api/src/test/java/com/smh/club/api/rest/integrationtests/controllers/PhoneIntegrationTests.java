@@ -6,13 +6,11 @@ import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.PhoneRepo;
 import com.smh.club.api.rest.dto.PhoneDto;
-import com.smh.club.api.rest.config.PagingConfig;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
@@ -27,14 +25,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import smh.club.shared.config.PagingConfig;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,8 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureEmbeddedDatabase(
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
-        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_CLASS)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+        refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class PhoneIntegrationTests extends IntegrationTests {
 
     @Value("${request.paging.size}")
@@ -63,15 +65,15 @@ public class PhoneIntegrationTests extends IntegrationTests {
         super(mockMvc, mapper, "/api/v1/phones");
     }
 
-    @BeforeAll
+    @BeforeEach
     public void initMembers() {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
-                .size(5)
-                .withSettings(getSettings())
-                .ignore(field(MemberEntity::getId))
-                .withUnique(field(MemberEntity::getMemberNumber))
-                .create();
+            .size(5)
+            .withSettings(getSettings())
+            .ignore(field(MemberEntity::getId))
+            .withUnique(field(MemberEntity::getMemberNumber))
+            .create();
         memberRepo.saveAllAndFlush(members);
     }
     
@@ -269,10 +271,11 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(PhoneEntity.class)
-                .size(size) // must be before withSettings
-                .withSettings(getSettings())
-                .generate(field(PhoneEntity::getMember), g -> g.oneOf(members))
-                .create();
+            .size(size) // must be before withSettings
+            .withSettings(getSettings())
+            .generate(field(PhoneEntity::getMember), g -> g.oneOf(members))
+            .ignore(field(PhoneEntity::getId))
+            .create();
         return repo.saveAllAndFlush(entities);
     }
 

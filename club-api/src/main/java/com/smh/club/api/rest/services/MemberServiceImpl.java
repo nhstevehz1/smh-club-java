@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smh.club.shared.services.AbstractServiceBase;
 
 import java.util.Optional;
 
@@ -119,7 +120,6 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var target = MemberEntity.class;
 
         return getSort(key, source, target)
-                .orElse(getDefaultSort(source, target)
-                        .orElse("memberNumber"));
+                .orElse("memberNumber");
     }
 }
