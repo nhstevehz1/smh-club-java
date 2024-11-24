@@ -34,24 +34,24 @@ public interface MemberController {
     ResponseEntity<CountResponse> count();
 
     /**
-     * Endpoint for creating an member.
+     * Endpoint for creating a member.
      * @param member The {@link MemberModel} used to create the object in the database
-     * @return A {@link ResponseEntity} containing an {@link MemberModel} representing the newly created object.
+     * @return A {@link ResponseEntity} containing a {@link MemberModel} representing the newly created object.
      */
     ResponseEntity<MemberModel> create(MemberModel member);
 
     /**
-     * Endpoint for updating an member.
+     * Endpoint for updating a member.
      * @param id The id of the member to update in the database.
      * @param member The {@link MemberModel} that contains the updated info.
-     * @return A {@link ResponseEntity} containing an {@link MemberModel} that represents the updated member.
+     * @return A {@link ResponseEntity} containing a {@link MemberModel} that represents the updated member.
      */
     ResponseEntity<MemberModel> update(int id, MemberModel member);
 
     /**
-     * Endpoint for deleting an member from the database.
+     * Endpoint for deleting a member from the database.
      * @param id The id of the member to delete
-     * @return an empty {@link ResponseEntity}.
+     * @return ab empty {@link ResponseEntity}.
      */
     ResponseEntity<Void> delete(int id);
 

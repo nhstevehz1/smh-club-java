@@ -29,8 +29,8 @@ public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<Re
 
     /**
      * Constructor.
-     * @param mapper An {@link RenewalMapper} used to copy the properties to an {@link RenewalModel}
-     *               from an {@link RenewalEntity}.
+     * @param mapper An {@link RenewalMapper} used to copy the properties to a {@link RenewalModel}
+     *               from a {@link RenewalEntity}.
      * @param pagedAssembler A {@link PagedResourcesAssembler} of type {@link RenewalEntity} used to
      *                       copy a {@link Page} to a {@link PagedModel}.
      * @see RenewalAssemblerImpl#toPagedModel
@@ -64,7 +64,7 @@ public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<Re
     }
 
     /**
-     * Called internally.  Responsible for mapping an {@link RenewalEntity} to a {@link RenewalModel}.
+     * Called internally.  Responsible for mapping a {@link RenewalEntity} to a {@link RenewalModel}.
      * Override the default behavior of using reflection
      * @param entity The {@link RenewalEntity} to be mapped
      * @return The mapped {@link RenewalModel}l

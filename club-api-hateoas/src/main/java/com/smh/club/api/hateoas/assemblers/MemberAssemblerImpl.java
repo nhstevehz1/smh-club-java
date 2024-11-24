@@ -31,8 +31,8 @@ public class MemberAssemblerImpl
     /**
         * Constructor.
      * @param mapper An {@link MemberMapper
-    } used to copy the properties to an {@link MemberModel}
-     *               from an {@link MemberEntity
+    } used to copy the properties to a {@link MemberModel}
+     *               from a {@link MemberEntity
     }.
         * @param pagedAssembler A {@link PagedResourcesAssembler} of type {@link MemberEntity} used to
      *                       copy a {@link Page} to a {@link PagedModel}.
@@ -68,7 +68,7 @@ public class MemberAssemblerImpl
     }
 
     /**
-     * Called internally.  Responsible for mapping an {@link MemberEntity} to a {@link MemberModel}.
+     * Called internally.  Responsible for mapping a {@link MemberEntity} to a {@link MemberModel}.
      * Override the default behavior of using reflection
      * @param entity The {@link MemberEntity} to be mapped
      * @return The mapped {@link MemberModel}l

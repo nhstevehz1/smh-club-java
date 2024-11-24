@@ -11,7 +11,7 @@ import org.springframework.hateoas.PagedModel;
 public interface RenewalAssembler {
 
     /**
-     * Converts an {@link RenewalEntity} to an {@link RenewalModel}
+     * Converts a {@link RenewalEntity} to a {@link RenewalModel}
      * @param entity The {@link RenewalEntity} to convert.
      * @return An {@link RenewalModel} that contains links to itself.
      */

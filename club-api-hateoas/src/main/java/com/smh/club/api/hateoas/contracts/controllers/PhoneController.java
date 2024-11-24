@@ -34,21 +34,21 @@ public interface PhoneController {
     ResponseEntity<CountResponse> count();
 
     /**
-     * Endpoint for creating an phone.
+     * Endpoint for creating a phone.
      * @param phone The {@link PhoneModel} used to create the object in the database
-     * @return A {@link ResponseEntity} containing an {@link PhoneModel} representing the newly created object.
+     * @return A {@link ResponseEntity} containing a {@link PhoneModel} representing the newly created object.
      */
     ResponseEntity<PhoneModel> create(PhoneModel phone);
     /**
-     * Endpoint for updating an phone.
+     * Endpoint for updating a phone.
      * @param id The id of the phone to update in the database.
      * @param phone The {@link PhoneModel} that contains the updated info.
-     * @return A {@link ResponseEntity} containing an {@link PhoneModel} that represents the updated phone.
+     * @return A {@link ResponseEntity} containing a {@link PhoneModel} that represents the updated phone.
      */
     ResponseEntity<PhoneModel> update(int id, PhoneModel phone);
 
     /**
-     * Endpoint for deleting an phone from the database.
+     * Endpoint for deleting a phone from the database.
      * @param id The id of the phone to delete
      * @return an empty {@link ResponseEntity}.
      */

@@ -6,12 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 
 /**
- * Adds hyper media links an {@link PhoneModel} that points to the resource it represents.
+ * Adds hyper media links a {@link PhoneModel} that points to the resource it represents.
  */
 public interface PhoneAssembler {
 
     /**
-     * Converts an {@link PhoneEntity} to an {@link PhoneModel}
+     * Converts a {@link PhoneEntity} to a {@link PhoneModel}
      * @param entity The {@link PhoneEntity} to convert.
      * @return An {@link PhoneModel} that contains links to itself.
      */

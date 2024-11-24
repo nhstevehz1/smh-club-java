@@ -6,12 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 
 /**
- * Adds hyper media links an {@link MemberModel} that points to the resource it represents.
+ * Adds hyper media links a {@link MemberModel} that points to the resource it represents.
  */
 public interface MemberAssembler {
 
     /**
-     * Converts an {@link MemberEntity} to an {@link MemberModel}
+     * Converts a {@link MemberEntity} to a {@link MemberModel}
      * @param entity The {@link MemberEntity} to convert.
      * @return An {@link MemberModel} that contains links to itself.
      */

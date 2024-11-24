@@ -34,22 +34,22 @@ public interface RenewalController {
     ResponseEntity<CountResponse> count();
 
     /**
-     * Endpoint for creating an address.
+     * Endpoint for creating a renewal.
      * @param renewal The {@link RenewalModel } used to create the object in the database
-     * @return A {@link ResponseEntity} containing an {@link RenewalModel} representing the newly created object.
+     * @return A {@link ResponseEntity} containing a {@link RenewalModel} representing the newly created object.
      */
     ResponseEntity<RenewalModel> create(RenewalModel renewal);
     
     /**
-     * Endpoint for updating an renewal.
+     * Endpoint for updating a renewal.
      * @param id The id of the renewal to update in the database.
      * @param renewal The {@link RenewalModel} that contains the updated info.
-     * @return A {@link ResponseEntity} containing an {@link RenewalModel} that represents the updated renewal.
+     * @return A {@link ResponseEntity} containing a {@link RenewalModel} that represents the updated renewal.
      */
     ResponseEntity<RenewalModel> update(int id, RenewalModel renewal);
     
     /**
-     * Endpoint for deleting an renewal from the database.
+     * Endpoint for deleting a renewal from the database.
      * @param id The id of the renewal to delete
      * @return an empty {@link ResponseEntity}.
      */

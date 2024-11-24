@@ -29,8 +29,8 @@ public class PhoneAssemblerImpl extends RepresentationModelAssemblerSupport<Phon
 
     /**
      * Constructor.
-     * @param mapper An {@link PhoneMapper} used to copy the properties to an {@link PhoneModel}
-     *               from an {@link PhoneEntity}.
+     * @param mapper An {@link PhoneMapper} used to copy the properties to a {@link PhoneModel}
+     *               from a {@link PhoneEntity}.
      * @param pagedAssembler A {@link PagedResourcesAssembler} of type {@link PhoneEntity} used to
      *                       copy a {@link Page} to a {@link PagedModel}.
      * @see PhoneAssemblerImpl#toPagedModel
@@ -64,7 +64,7 @@ public class PhoneAssemblerImpl extends RepresentationModelAssemblerSupport<Phon
     }
 
     /**
-     * Called internally.  Responsible for mapping an {@link PhoneEntity} to a {@link PhoneModel}.
+     * Called internally.  Responsible for mapping a {@link PhoneEntity} to a {@link PhoneModel}.
      * Override the default behavior of using reflection
      * @param entity The {@link PhoneEntity} to be mapped
      * @return The mapped {@link PhoneModel}l
