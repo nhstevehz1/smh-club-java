@@ -4,6 +4,9 @@ import com.smh.club.api.data.annotations.SortExclude;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Represents a phone object.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

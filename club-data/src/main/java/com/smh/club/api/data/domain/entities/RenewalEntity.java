@@ -6,6 +6,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * Represents a renewal object.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
