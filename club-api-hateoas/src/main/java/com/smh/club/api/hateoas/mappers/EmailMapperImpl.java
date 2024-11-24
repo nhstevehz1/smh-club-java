@@ -9,14 +9,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * {@inheritDoc}
+ * Extends {@link DomainDataMapper} and implements{@link EmailMapper}.
+ */
 @Service
 public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
 
+    /**
+     * Constructor.
+     * @param modelMapper A {@link ModelMapper} object.;
+     */
     @Autowired
     public EmailMapperImpl(ModelMapper modelMapper) {
         super(modelMapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EmailEntity toEntity(EmailModel model) {
         var entity = modelMapper.map(model, EmailEntity.class);
@@ -24,17 +35,26 @@ public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
         return entity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EmailModel toModel(EmailEntity entity) {
         return modelMapper.map(entity, EmailModel.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EmailEntity updateEntity(EmailModel model, EmailEntity entity) {
         modelMapper.map(model, entity);
         return entity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<EmailModel> toModelList(List<EmailEntity> entityList) {
         return mapList(entityList, EmailModel.class);
