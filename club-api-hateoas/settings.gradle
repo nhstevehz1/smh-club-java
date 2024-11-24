@@ -1,5 +1,0 @@
-rootProject.name = 'club-api-hateoas'
-include 'club-data'
-project(':club-data').projectDir = new File(settingsDir, '../club-data')
-
-
