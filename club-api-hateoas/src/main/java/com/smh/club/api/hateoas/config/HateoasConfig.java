@@ -8,7 +8,7 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 public class HateoasConfig {
 
     /**
-     * Corrects links when calls are forwarded.
+     * Corrects links when calls are forwarded through a gateway or proxy server.
      *
      * @return {@link ForwardedHeaderFilter}
      */

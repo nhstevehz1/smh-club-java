@@ -8,9 +8,16 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration for {@link ModelMapper.}
+ */
 @Configuration
 public class MapperConfig {
 
+    /**
+     * Creates and configs a {@link ModelMapper}.
+     * @return A {@link ModelMapper}.
+     */
     @Bean
     public ModelMapper createModelMapper() {
         var modelMapper = new ModelMapper();

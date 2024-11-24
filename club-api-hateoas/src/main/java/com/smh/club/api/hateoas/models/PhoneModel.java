@@ -6,6 +6,11 @@ import com.smh.club.api.data.domain.entities.PhoneType;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
+/**
+ * Represents a phone.  When serialize to JSON, links are generated that
+ * represent controller endpoints.
+ * Extends {@link RepresentationModel}.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

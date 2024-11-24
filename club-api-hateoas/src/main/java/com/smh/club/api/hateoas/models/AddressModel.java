@@ -6,7 +6,11 @@ import com.smh.club.api.data.domain.entities.AddressType;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
-
+/**
+ * Represents an address.  When serialize to JSON, links are generated that
+ * represent controller endpoints.
+ * Extends {@link RepresentationModel}.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
