@@ -1,4 +1,5 @@
 plugins {
+    // spring boot and dependency management convention
     id 'build-logic.spring-boot-conventions'
 }
 

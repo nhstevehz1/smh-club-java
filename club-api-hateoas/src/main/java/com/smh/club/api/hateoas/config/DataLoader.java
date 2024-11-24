@@ -4,7 +4,6 @@ import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.entities.AddressType;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
