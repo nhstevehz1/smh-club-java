@@ -7,7 +7,7 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Represents a phone.  When serialize to JSON, links are generated that
+ * DTO for phones.  When serialize to JSON, links are generated that
  * represent controller endpoints.
  * Extends {@link RepresentationModel}.
  */

@@ -7,7 +7,7 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Represents an email.  When serialize to JSON, links are generated that
+ * DTO for emails.  When serialize to JSON, links are generated that
  * represent controller endpoints.
  * Extends {@link RepresentationModel}.
  */
