@@ -5,7 +5,6 @@ import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.RenewalsRepo;
-import com.smh.club.api.hateoas.config.PagingConfig;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -30,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import smh.club.shared.config.PagingConfig;
 
 import java.util.Comparator;
 import java.util.HashMap;
