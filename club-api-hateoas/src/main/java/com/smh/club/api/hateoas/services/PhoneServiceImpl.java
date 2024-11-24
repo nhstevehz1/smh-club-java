@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smh.club.shared.services.AbstractServiceBase;
 
 import java.util.Optional;
 
@@ -109,6 +110,9 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      */
     @Override
     protected String getSortColumn(String key) {
-        return getSort(key, PhoneModel.class, PhoneEntity.class).orElse("id");
+        var source = PhoneModel.class;
+        var target = PhoneEntity.class;
+
+        return getSort(key, source, target).orElse("id");
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smh.club.shared.services.AbstractServiceBase;
 
 import java.util.Optional;
 
@@ -106,6 +107,9 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      */
     @Override
     protected String getSortColumn(String key) {
-        return getSort(key, EmailModel.class, EmailEntity.class).orElse("id");
+        var source = EmailModel.class;
+        var target = EmailEntity.class;
+
+        return getSort(key, source, target).orElse("id");
     }
 }

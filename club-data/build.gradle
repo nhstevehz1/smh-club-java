@@ -3,6 +3,10 @@ plugins {
     id 'build-logic.spring-boot-conventions'
 }
 
+bootJar {
+    enabled=false
+}
+
 dependencies {
 
     implementation(project(':club-shared'))

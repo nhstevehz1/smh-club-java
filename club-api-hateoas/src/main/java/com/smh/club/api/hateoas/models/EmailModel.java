@@ -1,9 +1,9 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.annotations.SortExclude;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
+import smh.club.shared.annotations.SortExclude;
 import smh.club.shared.domain.EmailType;
 
 /**

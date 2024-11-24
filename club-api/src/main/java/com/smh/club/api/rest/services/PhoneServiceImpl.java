@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smh.club.shared.services.AbstractServiceBase;
 
 import java.util.Optional;
 
@@ -111,7 +112,6 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var target = PhoneEntity.class;
 
         return getSort(key, source, target)
-                .orElse(getDefaultSort(source, target)
-                        .orElse("id"));
+                .orElse("id");
     }
 }

@@ -1,11 +1,11 @@
 package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.annotations.SortExclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import smh.club.shared.annotations.SortExclude;
 import smh.club.shared.domain.EmailType;
 
 /**

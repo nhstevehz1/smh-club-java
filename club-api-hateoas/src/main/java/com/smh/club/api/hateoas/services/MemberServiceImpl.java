@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smh.club.shared.services.AbstractServiceBase;
 
 import java.util.Optional;
 
@@ -101,6 +102,9 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      */
     @Override
     protected String getSortColumn(String key) {
-        return getSort(key, MemberModel.class, MemberEntity.class).orElse("memberNumber");
+        var source = MemberModel.class;
+        var target = MemberEntity.class;
+
+        return getSort(key, source, target).orElse("id");
     }
 }
