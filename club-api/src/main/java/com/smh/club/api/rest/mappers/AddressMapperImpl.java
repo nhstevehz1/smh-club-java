@@ -5,6 +5,7 @@ import com.smh.club.api.rest.contracts.mappers.AddressMapper;
 import com.smh.club.api.rest.dto.AddressDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import smh.club.shared.mappers.DomainDataMapper;
 
 import java.util.List;
 

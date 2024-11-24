@@ -5,6 +5,7 @@ import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
 import com.smh.club.api.hateoas.models.MemberModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import smh.club.shared.mappers.DomainDataMapper;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.smh.club.api.hateoas.mappers;
+package smh.club.shared.mappers;
 
 import org.modelmapper.ModelMapper;
 
@@ -21,7 +21,7 @@ public abstract class DomainDataMapper {
     }
 
     /**
-     * Generic method for converting a {@link List} of one to type to another type.
+     * Generic method for converting a {@link List} of one type to another type.
      */
     protected <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
         return source

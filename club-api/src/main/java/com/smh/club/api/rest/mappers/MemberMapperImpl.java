@@ -6,6 +6,7 @@ import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import smh.club.shared.mappers.DomainDataMapper;
 
 import java.util.List;
 
