@@ -212,28 +212,6 @@ public class EmailIntegrationTests extends IntegrationTests {
         verify(expected, actual);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"member-id"})
-    public void getListPage_excluded_sort_using_default(String sort) {
-        var entitySize = 50;
-        addEntitiesToDb(entitySize);
-        var sortFields = getSorts().get(sort);
-
-        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
-
-        var map = new HashMap<String, String>();
-        map.put(PagingConfig.SORT_NAME, sort);
-
-        var testParams = PageTestParams.of(EmailModel.class, map, path, sorted.size(),
-            0, defaultPageSize, listNodeName);
-        var actual = executeListPage(testParams);
-        assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
-
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-    }
-
     @Test
     public void get_returns_model_status_ok() {
         // setup

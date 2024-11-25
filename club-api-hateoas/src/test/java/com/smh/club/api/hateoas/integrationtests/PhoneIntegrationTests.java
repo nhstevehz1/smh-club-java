@@ -60,10 +60,10 @@ public class PhoneIntegrationTests extends IntegrationTests {
     private int defaultPageSize;
 
     @Autowired
-    private PhoneRepo repo;
+    private MembersRepo memberRepo;
 
     @Autowired
-    private MembersRepo memberRepo;
+    private PhoneRepo repo;
 
     private List<MemberEntity> members;
 
@@ -193,28 +193,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(strings = {"id", "member-id", "phone-number", "phone-type" })
     public void getListPage_sortColumn(String sort) {
-        var entitySize = 50;
-        addEntitiesToDb(entitySize);
-        var sortFields = getSorts().get(sort);
-
-        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
-
-        var map = new HashMap<String, String>();
-        map.put(PagingConfig.SORT_NAME, sort);
-
-        var testParams = PageTestParams.of(PhoneModel.class, map, path, sorted.size(),
-            0, defaultPageSize, listNodeName);
-        var actual = executeListPage(testParams);
-        assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
-
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"member-id"})
-    public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);

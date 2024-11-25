@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.integrationtests.controllers;
+package com.smh.club.api.rest.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.domain.entities.AddressEntity;
@@ -32,7 +32,9 @@ import org.springframework.util.MultiValueMap;
 import smh.club.shared.config.PagingConfig;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
@@ -63,7 +65,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     private MembersRepo memberRepo;
 
     @Autowired
-    private AddressRepo addressRepo;
+    private AddressRepo repo;
 
     private List<MemberEntity> members;
 
@@ -95,7 +97,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         // populate address table
         addEntitiesToDb(15);
 
-        var sorted = addressRepo.findAll().stream()
+        var sorted = repo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -114,7 +116,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         // populate address table
        addEntitiesToDb(15);
 
-        var sorted = addressRepo.findAll().stream()
+        var sorted = repo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId).reversed()).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -135,7 +137,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void getListPage_pageSize(int pageSize) throws Exception {
         addEntitiesToDb(15);
 
-        var sorted = addressRepo.findAll().stream()
+        var sorted = repo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -156,7 +158,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void getListPage_page(int page) throws Exception {
         addEntitiesToDb(150);
 
-        var sorted = addressRepo.findAll().stream()
+        var sorted = repo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
@@ -173,83 +175,24 @@ public class AddressIntegrationTests extends IntegrationTests {
         verify(expected, actual);
     }
 
-    @Test
-    public void getListPage_sortColumn() throws Exception {
-        addEntitiesToDb(15);
+    @ParameterizedTest
+    @ValueSource(strings = {"id", "member-id", "address1", "address2", "city", "state", "zip", "address-type" })
+    public void getListPage_sortColumn(String sort) throws Exception {
+        var entitySize = 50;
+        addEntitiesToDb(entitySize);
+        var sortFields = getSorts().get(sort);
 
-        // sort by id
-        var sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
+        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
+        assertEquals(entitySize, sorted.size());
 
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "id");
+        valueMap.add(PagingConfig.SORT_NAME, sort);
 
         var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(sortFields.getDto()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        // sort by address1
-        sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparing(AddressEntity::getAddress1)).toList();
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "address1");
-
-        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getAddress1)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        // sort by city
-        sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparing(AddressEntity::getCity)).toList();
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "city");
-
-        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getCity)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        // sort by state
-        sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparing(AddressEntity::getState)).toList();
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "state");
-
-        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getState)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        // sort by zip
-        sorted = addressRepo.findAll().stream()
-                .sorted(Comparator.comparing(AddressEntity::getZip)).toList();
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "zip");
-
-        actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(AddressDto::getZip)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
     }
 
@@ -273,7 +216,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         // verify
         var dto = mapper.readValue(ret.getResponse().getContentAsString(), AddressDto.class);
-        var entity =  addressRepo.findById(dto.getId());
+        var entity =  repo.findById(dto.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
@@ -291,7 +234,7 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .andDo(print());
 
         // verify
-        var address = addressRepo.findById(id);
+        var address = repo.findById(id);
         assertFalse(address.isPresent());
     }
 
@@ -314,7 +257,7 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .andDo(print());
 
         // verify
-        var entity = addressRepo.findById(address.getId());
+        var entity = repo.findById(address.getId());
 
         assertTrue(entity.isPresent());
         verify(update, entity.get());
@@ -329,7 +272,7 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .generate(field(AddressEntity::getMember), g -> g.oneOf(members))
                 .create();
 
-        return addressRepo.saveAll(entities);
+        return repo.saveAll(entities);
     }
 
     private void verify(AddressDto expected, AddressEntity actual) {
@@ -358,5 +301,35 @@ public class AddressIntegrationTests extends IntegrationTests {
             assertTrue(found.isPresent());
             verify(e, found.get());
         });
+    }
+
+    private Map<String, SortFields<AddressEntity, AddressDto>> getSorts() {
+
+        Map<String, SortFields<AddressEntity, AddressDto>> map = new HashMap<>();
+        map.put("id", SortFields.of(Comparator.comparingInt(AddressEntity::getId),
+            Comparator.comparingInt(AddressDto::getId)));
+
+        map.put("member-id", SortFields.of(Comparator.comparingInt(AddressEntity::getId),
+            Comparator.comparingInt(AddressDto::getId)));
+
+        map.put("address1", SortFields.of(Comparator.comparing(AddressEntity::getAddress1),
+            Comparator.comparing(AddressDto::getAddress1)));
+
+        map.put("address2", SortFields.of(Comparator.comparing(AddressEntity::getId),
+            Comparator.comparing(AddressDto::getId)));
+
+        map.put("city", SortFields.of(Comparator.comparing(AddressEntity::getCity),
+            Comparator.comparing(AddressDto::getCity)));
+
+        map.put("state", SortFields.of(Comparator.comparing(AddressEntity::getState),
+            Comparator.comparing(AddressDto::getState)));
+
+        map.put("zip", SortFields.of(Comparator.comparing(AddressEntity::getZip),
+            Comparator.comparing(AddressDto::getZip)));
+
+        map.put("address-type", SortFields.of(Comparator.comparing(AddressEntity::getAddressType),
+            Comparator.comparing(AddressDto::getAddressType)));
+
+        return map;
     }
 }
