@@ -191,30 +191,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "renewal-date", "renewal-year" })
+    @ValueSource(strings = {"id", "member-id", "renewal-date", "renewal-year" })
     public void getListPage_sortColumn(String sort) {
-        var entitySize = 50;
-        addEntitiesToDb(entitySize);
-        var sortFields = getSorts().get(sort);
-
-        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
-
-        var map = new HashMap<String, String>();
-        map.put(PagingConfig.SORT_NAME, sort);
-
-        var testParams = PageTestParams.of(RenewalModel.class, map, path, sorted.size(),
-            0, defaultPageSize, listNodeName);
-        var actual = executeListPage(testParams);
-        assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
-
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"member-id"})
-    public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);

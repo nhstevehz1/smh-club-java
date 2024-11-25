@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.integrationtests.controllers;
+package com.smh.club.api.rest.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
@@ -26,7 +26,9 @@ import org.springframework.util.MultiValueMap;
 import smh.club.shared.config.PagingConfig;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
@@ -53,7 +55,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     private int defaultPageSize;
 
     @Autowired
-    private MembersRepo memberRepo;
+    private MembersRepo repo;
 
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -65,7 +67,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_no_params(int entitySize) throws Exception {
         addEntitiesToDb(entitySize);
 
-        var sorted = memberRepo.findAll()
+        var sorted = repo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
 
@@ -85,7 +87,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_sortDir_desc(int entitySize) throws Exception {
         addEntitiesToDb(entitySize);
 
-        var sorted = memberRepo.findAll()
+        var sorted = repo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
         assertEquals(entitySize, sorted.size());
 
@@ -107,7 +109,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_pageSize(int entitySize, String pageSize) throws Exception {
         addEntitiesToDb(entitySize);
 
-        var sorted = memberRepo.findAll()
+        var sorted = repo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
 
@@ -130,7 +132,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
 
-        var sorted = memberRepo.findAll()
+        var sorted = repo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
 
@@ -148,108 +150,27 @@ public class MemberIntegrationTests extends IntegrationTests {
         verify(expected, actual);
     }
 
-
     @ParameterizedTest
-    @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_sortColumn() throws Exception {
+    @ValueSource(strings = {"id", "member-number", "first-name", "middle-name", "last-name",
+        "suffix", "birth-date", "joined-date" })
+    public void getListPage_sortColumn(String sort) throws Exception {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
+        var sortFields = getSorts().get(sort);
 
         // sort by id
-        var sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getId)).toList();
+        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
+
         MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "id");
+        valueMap.add(PagingConfig.SORT_NAME, sort);
 
         var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
 
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(sortFields.getDto()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
-
-        // sort by member-number
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
-        assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "member-number");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        // sort by first-name
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getFirstName)).toList();
-        assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "first-name");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getFirstName)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
-        //sort by last-name
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getLastName)).toList();
-        assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "last-name");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getLastName)).toList(), actual);
-
-        expected = sorted.stream().limit(10).toList();
-        verify(expected, actual);
-
-        //sort by birthdate
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getBirthDate)).toList();
-        assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "birth-date");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getBirthDate)).toList(), actual);
-
-        expected = sorted.stream().limit(10).toList();
-        verify(expected, actual);
-
-        //sort by joined-date
-        sorted = memberRepo.findAll()
-                .stream().sorted(Comparator.comparing(MemberEntity::getJoinedDate)).toList();
-        assertEquals(entitySize, sorted.size());
-
-        valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, "joined-date");
-
-        actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream()
-                .sorted(Comparator.comparing(MemberDto::getJoinedDate)).toList(), actual);
-
-        expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-
     }
 
     @Test
@@ -269,7 +190,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
         // verify
         var dto = mapper.readValue(ret.getResponse().getContentAsString(), AddressDto.class);
-        var entity =  memberRepo.findById(dto.getId());
+        var entity =  repo.findById(dto.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
@@ -286,7 +207,7 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
-        var member = memberRepo.findById(id);
+        var member = repo.findById(id);
         assertFalse(member.isPresent());
     }
 
@@ -306,7 +227,7 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        var entity = memberRepo.findById(member.getId());
+        var entity = repo.findById(member.getId());
         assertTrue(entity.isPresent());
         verify(update, entity.get());
     }
@@ -319,7 +240,7 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .ignore(field(MemberEntity::getId))
                 .create();
 
-        return memberRepo.saveAllAndFlush(entities);
+        return repo.saveAllAndFlush(entities);
     }
 
     private void verify(MemberDto expected, MemberEntity actual) {
@@ -349,5 +270,35 @@ public class MemberIntegrationTests extends IntegrationTests {
             assertTrue(found.isPresent());
             verify(e, found.get());
         });
+    }
+
+    private Map<String, SortFields<MemberEntity, MemberDto>> getSorts() {
+
+        Map<String, SortFields<MemberEntity, MemberDto>> map = new HashMap<>();
+        map.put("id", SortFields.of(Comparator.comparingInt(MemberEntity::getId),
+            Comparator.comparingInt(MemberDto::getId)));
+
+        map.put("member-number", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+            Comparator.comparingInt(MemberDto::getMemberNumber)));
+
+        map.put("first-name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
+            Comparator.comparing(MemberDto::getFirstName)));
+
+        map.put("middle-name", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+            Comparator.comparingInt(MemberDto::getMemberNumber)));
+
+        map.put("last-name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
+            Comparator.comparing(MemberDto::getLastName)));
+
+        map.put("suffix", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+            Comparator.comparingInt(MemberDto::getMemberNumber)));
+
+        map.put("birth-date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
+            Comparator.comparing(MemberDto::getBirthDate)));
+
+        map.put("joined-date", SortFields.of(Comparator.comparing(MemberEntity::getJoinedDate),
+            Comparator.comparing(MemberDto::getJoinedDate)));
+
+        return map;
     }
 }

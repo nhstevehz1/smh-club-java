@@ -1,8 +1,12 @@
-package com.smh.club.api.rest.integrationtests.controllers;
+package com.smh.club.api.rest.integrationtests;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.rest.response.PageResponse;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.springframework.http.MediaType;
@@ -11,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import smh.club.shared.config.PagingConfig;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -65,5 +70,20 @@ public abstract class IntegrationTests {
     private <T> PageResponse<T> readPageResponse(String json, Class<T> contentClass) throws IOException {
         JavaType type = mapper.getTypeFactory().constructParametricType(PageResponse.class, contentClass);
         return mapper.readValue(json, type);
+    }
+
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    @Builder
+    public static class SortFields<E, M> {
+        private Comparator<E> entity;
+        private Comparator<M> dto;
+
+        public static <E, M> SortFields<E, M> of(Comparator<E> entity, Comparator<M> dto) {
+            return SortFields.<E, M>builder()
+                .entity(entity)
+                .dto(dto)
+                .build();
+        }
     }
 }

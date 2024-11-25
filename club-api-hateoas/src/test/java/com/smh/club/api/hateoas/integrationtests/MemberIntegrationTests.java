@@ -171,30 +171,9 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date" })
+    @ValueSource(strings = {"id", "member-number", "first-name", "middle-name", "last-name",
+        "suffix", "birth-date", "joined-date" })
     public void getListPage_sortColumn(String sort) {
-        var entitySize = 50;
-        addEntitiesToDb(entitySize);
-        var sortFields = getSorts().get(sort);
-
-        var sorted = memberRepo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
-
-        var map = new HashMap<String, String>();
-        map.put(PagingConfig.SORT_NAME, sort);
-
-        var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
-            0, defaultPageSize, listNodeName);
-        var actual = executeListPage(testParams);
-        assertEquals(actual.stream().sorted(sortFields.getModel()).toList(), actual);
-
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"middle-name", "suffix"})
-    public void getListPage_excluded_sort_using_default(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
