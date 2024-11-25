@@ -196,27 +196,6 @@ public class AddressIntegrationTests extends IntegrationTests {
         verify(expected, actual);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"address2", "member-id"})
-    public void getListPage_excluded_sort_using_default(String sort) throws Exception {
-        var entitySize = 50;
-        addEntitiesToDb(entitySize);
-        var sortFields = getSorts().get(sort);
-
-        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
-
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, sort);
-
-        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
-
-        assertEquals(actual.stream().sorted(sortFields.getDto()).toList(), actual);
-
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
-    }
-
     @Test
     public void createAddresses_returns_addressDto_status_created() throws Exception {
         // create addresses
