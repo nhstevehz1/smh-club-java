@@ -1,19 +1,19 @@
 package smh.club.shared.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import smh.club.shared.annotations.SortExclude;
-import smh.club.shared.annotations.SortTarget;
-
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.Builder;
+import smh.club.shared.annotations.SortExclude;
+import smh.club.shared.annotations.SortTarget;
+import smh.club.shared.validators.AbstractSortFieldBase;
 
 /**
  * And abstract service base class.
  */
-public abstract class AbstractServiceBase {
+public abstract class AbstractServiceBase extends AbstractSortFieldBase {
 
     /**
      * Retries a sort column based on a key.
@@ -23,7 +23,7 @@ public abstract class AbstractServiceBase {
     protected abstract String getSortColumn(String key);
 
     /**
-     * Retries an entity's column name based on a key.
+     * Retrieves an entity's column name based on a key.
      * @param source The model class.
      * @param target The entity class.
      * @return An {@link Optional} {@link String} representing the sort column name.
