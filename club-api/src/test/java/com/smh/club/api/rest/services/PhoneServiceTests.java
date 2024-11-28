@@ -1,11 +1,12 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.rest.dto.PhoneDto;
+import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -25,10 +26,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -213,7 +215,7 @@ public class PhoneServiceTests extends ServiceTests {
         var entityList = Instancio.ofList(PhoneEntity.class).size(pageSize).create();
         var dto = Instancio.of(PhoneDto.class).create();
 
-        var page = createEntityPage(entityList, pageableMock, total);
+        var page = createPage(entityList, pageableMock, total);
 
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
         when(phnMapMock.toDto(any(PhoneEntity.class))).thenReturn(dto);

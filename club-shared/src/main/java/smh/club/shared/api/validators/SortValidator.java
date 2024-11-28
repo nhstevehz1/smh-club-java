@@ -42,14 +42,14 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
   public void initialize(SortConstraint constraintAnnotation) {
 
     // Get the matching entity type
-    var sortEntity = constraintAnnotation.dtoClass().getAnnotation(SortTarget.class);
+    var sortEntity = constraintAnnotation.value().getAnnotation(SortTarget.class);
 
     // Get a list of fields from the entity class
-    var entityFields = Arrays.stream(sortEntity.target().getDeclaredFields())
+    var entityFields = Arrays.stream(sortEntity.value().getDeclaredFields())
         .map(Field::getName).toList();
 
     // Get a list of fields from the dto along with other metadata
-    var dtoFields = Arrays.stream(constraintAnnotation.dtoClass().getDeclaredFields())
+    var dtoFields = Arrays.stream(constraintAnnotation.value().getDeclaredFields())
         .map(DtoSortField::of).toList();
 
     // Gather a list of allowed fields based on the criteria described above

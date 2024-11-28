@@ -1,11 +1,12 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.RenewalsRepo;
+import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.rest.dto.RenewalDto;
+import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -25,10 +26,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -214,7 +216,7 @@ public class RenewalServiceTests extends ServiceTests {
         var entityList = Instancio.ofList(RenewalEntity.class).size(pageSize).create();
         var dto = Instancio.of(RenewalDto.class).create();
 
-        var page = createEntityPage(entityList, pageableMock, total);
+        var page = createPage(entityList, pageableMock, total);
 
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
         when(renMapMock.toDto(any(RenewalEntity.class))).thenReturn(dto);
