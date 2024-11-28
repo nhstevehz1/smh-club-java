@@ -3,7 +3,7 @@ package com.smh.club.api.hateoas.assemblers;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.RenewalAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.RenewalMapper;
-import com.smh.club.api.hateoas.controllers.RenewalControllerImpl;
+import com.smh.club.api.hateoas.controllers.RenewalController;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +37,7 @@ public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<Re
      */
     @Autowired
     public RenewalAssemblerImpl(RenewalMapper mapper, PagedResourcesAssembler<RenewalEntity> pagedAssembler) {
-        super(RenewalControllerImpl.class, RenewalModel.class);
+        super(RenewalController.class, RenewalModel.class);
         this.mapper = mapper;
         this.pagedAssembler = pagedAssembler;
     }
@@ -50,8 +50,8 @@ public class RenewalAssemblerImpl extends RepresentationModelAssemblerSupport<Re
     public RenewalModel toModel(@NonNull RenewalEntity entity) {
         RenewalModel model = createModelWithId(entity.getId(), entity);
 
-        model.add(linkTo(methodOn(RenewalControllerImpl.class).update(entity.getId(), model)).withRel("update"));
-        model.add(linkTo(methodOn(RenewalControllerImpl.class).delete(entity.getId())).withRel("delete"));
+        model.add(linkTo(methodOn(RenewalController.class).update(entity.getId(), model)).withRel("update"));
+        model.add(linkTo(methodOn(RenewalController.class).delete(entity.getId())).withRel("delete"));
         return model;
     }
 
