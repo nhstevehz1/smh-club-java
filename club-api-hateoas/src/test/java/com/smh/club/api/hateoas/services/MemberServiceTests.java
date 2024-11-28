@@ -99,12 +99,11 @@ public class MemberServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"middle-name", "suffix", "addresses", "emails", "phones", "renewals"})
-    public void getPage_excludes_throws_exception() {
+    public void getPage_excludes_throws_exception(String sort) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
-        var sort = "thisIsNotAColumn";
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
