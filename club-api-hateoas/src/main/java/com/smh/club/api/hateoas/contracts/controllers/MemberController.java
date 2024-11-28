@@ -2,23 +2,28 @@ package com.smh.club.api.hateoas.contracts.controllers;
 
 import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import smh.club.shared.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets member objects in the database.
  */
+@Validated
 public interface MemberController {
 
     /**
      * Endpoint for retrieving a page of member objects from the database.
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param sortDir The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
+     *
+     * @param pageable A {@link Pageable} that contains page and sort information.
      * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link MemberModel}.
      */
-    ResponseEntity<PagedModel<MemberModel>> page(int pageNumber, int pageSize, String sortDir, String sort);
+    @Valid
+    ResponseEntity<PagedModel<MemberModel>> page(
+        @SortConstraint(dtoClass = PagedModel.class) Pageable pageable);
 
     /**
      * Endpoint for retrieving a single member from the database.

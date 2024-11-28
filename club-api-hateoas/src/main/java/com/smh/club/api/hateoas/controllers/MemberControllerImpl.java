@@ -1,27 +1,30 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.hateoas.contracts.controllers.MemberController;
 import com.smh.club.api.hateoas.contracts.services.MemberService;
 import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.config.PagingConfig;
+import smh.club.shared.annotations.SortConstraint;
 
 /**
  * {@inheritDoc}
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Validated
 @RestController
 @RequestMapping(value = "/api/v2/members", produces = MediaTypes.HAL_JSON_VALUE)
-public class MemberControllerImpl implements MemberController {
+public class MemberControllerImpl {
 
     private final MemberService memberSvc;
 
@@ -29,21 +32,15 @@ public class MemberControllerImpl implements MemberController {
      * {@inheritDoc}
      */
     @GetMapping
-    @Override
+    //@Override
     public ResponseEntity<PagedModel<MemberModel>> page(
-        @RequestParam(value = PagingConfig.PAGE_NAME,
-            defaultValue = "${request.paging.page}") int pageNumber,
-        @RequestParam(value = PagingConfig.SIZE_NAME,
-            defaultValue = "${request.paging.size}") int pageSize,
-        @RequestParam(value = PagingConfig.DIRECTION_NAME,
-            defaultValue = "${request.paging.direction}") String sortDir,
-        @RequestParam(value = PagingConfig.SORT_NAME,
-            defaultValue = "") String sort) {
+        @PageableDefault(sort = {"memberNumber"})
+        @SortConstraint(dtoClass = MemberModel.class)
+        Pageable pageable) {
 
-        log.debug("Getting page. page: {}, size: {}, direction: {}, sort: {}",
-            pageNumber, pageSize, sortDir, sort);
+        log.debug("Getting member page for pageable:  {}", pageable );
 
-        var page = memberSvc.getMemberListPage(pageNumber, pageSize, sortDir, sort);
+        var page = memberSvc.getPage(pageable);
 
         return ResponseEntity.ok(page);
     }
@@ -52,7 +49,7 @@ public class MemberControllerImpl implements MemberController {
      * {@inheritDoc}
      */
     @GetMapping("{id}")
-    @Override
+    //@Override
     public ResponseEntity<MemberModel> get(@PathVariable int id) {
         log.debug("Getting Member with id: {}", id);
         var ret = memberSvc.getMember(id);
@@ -63,7 +60,7 @@ public class MemberControllerImpl implements MemberController {
      * {@inheritDoc}
      */
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Override
+    //@Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(memberSvc.getMemberCount()));
     }
@@ -72,7 +69,7 @@ public class MemberControllerImpl implements MemberController {
      * {@inheritDoc}
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
+    //@Override
     public ResponseEntity<MemberModel> create(@RequestBody MemberModel member) {
         log.debug("Creating member data: {}", member);
 
@@ -85,7 +82,7 @@ public class MemberControllerImpl implements MemberController {
      * {@inheritDoc}
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
+    //@Override
     public ResponseEntity<MemberModel> update(@PathVariable int id, @RequestBody MemberModel member) {
         log.debug("Updating member id: {}, data: {} ", id, member);
 
@@ -99,7 +96,7 @@ public class MemberControllerImpl implements MemberController {
      * {@inheritDoc}
      */
     @DeleteMapping(value = "{id}")
-    @Override
+    //@Override
     public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting member id: {}", id);
 

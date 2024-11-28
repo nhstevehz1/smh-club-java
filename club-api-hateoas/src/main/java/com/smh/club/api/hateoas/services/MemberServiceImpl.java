@@ -6,16 +6,17 @@ import com.smh.club.api.hateoas.contracts.assemblers.MemberAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
 import com.smh.club.api.hateoas.contracts.services.MemberService;
 import com.smh.club.api.hateoas.models.MemberModel;
+import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smh.club.shared.services.AbstractServiceBase;
-
-import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -36,18 +37,17 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
     /**
      * {@inheritDoc}
      */
+    @Valid
     @Override
-    public PagedModel<MemberModel> getMemberListPage(int pageNumber, int pageSize, String direction, String sort) {
+    public PagedModel<MemberModel> getPage(Pageable pageable) {
+        log.debug("Getting page for pageable: {}", pageable);
 
-        var pageRequest = PageRequest.of(
-            pageNumber,
-            pageSize,
-            Sort.Direction.fromString(direction),
-            getSortColumn(sort));
+        var request = PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            getSort(pageable.getSort())); // map the dto field to the entity field.
 
-        log.debug("Created pageable: {}", pageRequest);
-
-        return assembler.toPagedModel(memberRepo.findAll(pageRequest));
+        return assembler.toPagedModel(memberRepo.findAll(request));
     }
 
     /**
@@ -106,5 +106,18 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var target = MemberEntity.class;
 
         return getSort(key, source, target).orElse("memberNumber");
+    }
+
+    @Override
+    protected Sort getSort(Sort sort) {
+        if (sort.isUnsorted()) {
+            return sort;
+        }
+
+        var orders = sort.get()
+            .map(o -> new Sort.Order(o.getDirection(),
+                getSort(o.getProperty(), MemberModel.class, MemberEntity.class).orElseThrow())).toList();
+
+        return Sort.by(orders);
     }
 }

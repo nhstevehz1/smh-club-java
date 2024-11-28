@@ -5,15 +5,13 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import lombok.Builder;
+import org.springframework.data.domain.Sort;
 import smh.club.shared.annotations.SortExclude;
-import smh.club.shared.annotations.SortTarget;
-import smh.club.shared.validators.AbstractSortFieldBase;
 
 /**
  * And abstract service base class.
  */
-public abstract class AbstractServiceBase extends AbstractSortFieldBase {
+public abstract class AbstractServiceBase {
 
     /**
      * Retries a sort column based on a key.
@@ -21,6 +19,8 @@ public abstract class AbstractServiceBase extends AbstractSortFieldBase {
      * @return The sort column name.
      */
     protected abstract String getSortColumn(String key);
+
+    protected  Sort getSort(Sort sort) {return null;}
 
     /**
      * Retrieves an entity's column name based on a key.
@@ -33,21 +33,17 @@ public abstract class AbstractServiceBase extends AbstractSortFieldBase {
         return sourceField.flatMap(field -> getSortFieldName(target, field));
     }
 
-    private <S> Optional<SourceField> getSourceField(String key, Class<S> source) {
+    private <S> Optional<String> getSourceField(String key, Class<S> source) {
         return Arrays.stream(source.getDeclaredFields())
             .filter(f -> isNotExcluded(f) &&
                 (Objects.equals(getJsonPropValue(f), key) || f.getName().equals(key)))
-            .map(f -> SourceField.builder()
-                .field(f.getName())
-                .target(getTargetPropValue(f))
-                .build())
+            .map(Field::getName)
             .findFirst();
     }
 
-    private <T> Optional<String> getSortFieldName(Class<T> target, SourceField sf) {
+    private <T> Optional<String> getSortFieldName(Class<T> target, String sortField) {
         return Arrays.stream(target.getDeclaredFields())
-            .filter(f -> isNotExcluded(f) &&
-                (f.getName().equals(sf.target)) || f.getName().equals(sf.field))
+            .filter(f -> isNotExcluded(f) && f.getName().equals(sortField))
             .map(Field::getName)
             .findFirst();
     }
@@ -61,12 +57,7 @@ public abstract class AbstractServiceBase extends AbstractSortFieldBase {
         return jsonProp != null ? jsonProp.value() : null;
     }
 
-    private String getTargetPropValue(Field field) {
-        var sortTargetProp = field.getAnnotation(SortTarget.class);
-        return sortTargetProp != null ? sortTargetProp.value() : null;
-    }
-
-    @Builder
-    private record SourceField(String field, String target, boolean isDefault) {
-    }
+    //@Builder
+    //private record SourceField(String field) {
+    //}
 }

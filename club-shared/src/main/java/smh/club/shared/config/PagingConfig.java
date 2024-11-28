@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 public class PagingConfig {
     public final static String PAGE_NAME = "page";
     public final static String SIZE_NAME = "size";
+    //TODO: Remove after pageable implementation
     public final static String DIRECTION_NAME = "sortDir";
     public final static String SORT_NAME = "sort";
     public int pageSize = 10;
