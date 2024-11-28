@@ -114,9 +114,11 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
             return sort;
         }
 
-        var orders = sort.get()
-            .map(o -> new Sort.Order(o.getDirection(),
-                getSort(o.getProperty(), MemberModel.class, MemberEntity.class).orElseThrow())).toList();
+        var orders =
+            sort.get()
+                .map(o -> new Sort.Order(o.getDirection(),
+                    getSort(o.getProperty(), MemberModel.class, MemberEntity.class)
+                .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);
     }
