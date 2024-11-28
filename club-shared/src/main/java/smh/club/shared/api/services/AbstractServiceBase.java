@@ -13,17 +13,19 @@ import smh.club.shared.api.annotations.SortExclude;
  */
 public abstract class AbstractServiceBase {
 
-    /**
-     * Retries a sort column based on a key.
-     * @param key A key that could either be a private member name or an {@link JsonProperty}.
-     * @return The sort column name.
-     */
-    protected String getSortColumn(String key) {return null;};
+    protected String getSortColumn(String key) {return null;}
 
-    protected Sort getSort(Sort sort) {return null;}
+    /**
+     * Maps the Sort.Order's in to actual fields
+     *
+     * @param sort The input {@link Sort}.
+     * @return The mapped {@link Sort}
+     */
+    protected Sort getSort(Sort sort) {return null;} // TODO: make abstract after refactor
 
     /**
      * Retrieves an entity's column name based on a key.
+     *
      * @param source The model class.
      * @param target The entity class.
      * @return An {@link Optional} {@link String} representing the sort column name.
@@ -56,8 +58,4 @@ public abstract class AbstractServiceBase {
         var jsonProp = field.getAnnotation(JsonProperty.class);
         return jsonProp != null ? jsonProp.value() : null;
     }
-
-    //@Builder
-    //private record SourceField(String field) {
-    //}
 }
