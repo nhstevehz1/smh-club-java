@@ -18,9 +18,9 @@ public abstract class AbstractServiceBase {
      * @param key A key that could either be a private member name or an {@link JsonProperty}.
      * @return The sort column name.
      */
-    protected abstract String getSortColumn(String key);
+    protected String getSortColumn(String key) {return null;};
 
-    protected  Sort getSort(Sort sort) {return null;}
+    protected Sort getSort(Sort sort) {return null;}
 
     /**
      * Retrieves an entity's column name based on a key.
