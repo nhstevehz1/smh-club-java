@@ -11,7 +11,7 @@ import org.springframework.hateoas.PagedModel;
 public interface PhoneService {
 
     /**
-     * Retrieves a page of phonees from the database.
+     * Retrieves a page of phones from the database.
      *
      * @param pageable A {@link Pageable} that contains the sort criteria.
      * @return A {@link PagedModel} of type {@link PhoneModel}.
