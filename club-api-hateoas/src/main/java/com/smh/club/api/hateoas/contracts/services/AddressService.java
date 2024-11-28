@@ -1,9 +1,9 @@
 package com.smh.club.api.hateoas.contracts.services;
 
 import com.smh.club.api.hateoas.models.AddressModel;
-import org.springframework.hateoas.PagedModel;
-
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 /**
  * Business logic for addresses.
@@ -12,13 +12,10 @@ public interface AddressService {
 
     /**
      * Retrieves a page of addresses from the database.
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param direction The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
-     * @return A {@link PagedModel} of type {@link AddressModel}.
+     *
+     * @param pageable@return A {@link PagedModel} of type {@link AddressModel}.
      */
-    PagedModel<AddressModel> getAddressListPage(int pageNumber, int pageSize, String direction, String sort);
+    PagedModel<AddressModel> getPage(Pageable pageable);
 
     /**
      * Retrieves an address from the database.

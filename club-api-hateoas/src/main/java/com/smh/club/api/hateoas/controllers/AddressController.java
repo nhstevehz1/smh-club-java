@@ -1,58 +1,61 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.hateoas.contracts.controllers.AddressController;
 import com.smh.club.api.hateoas.contracts.services.AddressService;
 import com.smh.club.api.hateoas.models.AddressModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.api.config.PagingConfig;
+import smh.club.shared.api.annotations.SortConstraint;
 
 /**
- * {@inheritDoc}
+ * Defines REST endpoints that targets address objects in the database.
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Validated
 @RestController
 @RequestMapping(value = "/api/v2/addresses", produces = MediaTypes.HAL_JSON_VALUE)
-public class AddressControllerImpl implements AddressController {
+public class AddressController {
+
+    private final String DEFAULT_SORT = "id";
 
     private final AddressService addressService;
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a page of address objects from the database.
+     * if no sort is specified then the DEFAULT_SORT is used.
+     *
+     * @param pageable A {@link Pageable} that describes the sort.
+     * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link AddressModel}.
      */
     @GetMapping
-    @Override
     public ResponseEntity<PagedModel<AddressModel>> page(
-        @RequestParam(value = PagingConfig.PAGE_NAME,
-            defaultValue = "${request.paging.page}") int pageNumber,
-        @RequestParam(value = PagingConfig.SIZE_NAME,
-            defaultValue = "${request.paging.size}") int pageSize,
-        @RequestParam(value = PagingConfig.DIRECTION_NAME,
-            defaultValue = "${request.paging.direction}") String sortDir,
-        @RequestParam(value = PagingConfig.SORT_NAME,
-            defaultValue = "") String sort) {
+        @PageableDefault(sort = {DEFAULT_SORT})
+        @SortConstraint(dtoClass = AddressModel.class)
+        Pageable pageable) {
 
-        log.debug("Getting page. page: {}, size: {}, direction: {}, sort: {}",
-            pageNumber, pageSize, sortDir, sort);
+        log.debug("Getting member page for pageable:  {}", pageable );
 
-        var page = addressService.getAddressListPage(pageNumber, pageSize, sortDir, sort);
+        var page = addressService.getPage(pageable);
 
         return ResponseEntity.ok(page);
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a single address from the database.
+     * @param id The id of the address.
+     * @return @return A {@link ResponseEntity} containing a {@link AddressModel}
      */
     @GetMapping("{id}")
-    @Override
     public ResponseEntity<AddressModel> get(@PathVariable int id) {
         log.debug("Getting address with id: {}", id);
 
@@ -61,19 +64,20 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for getting the total count of addresses in the database.
+     * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(addressService.getAddressCount()));
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for creating an address.
+     * @param address The {@link AddressModel} used to create the object in the database
+     * @return A {@link ResponseEntity} containing an {@link AddressModel} representing the newly created object.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<AddressModel> create(@RequestBody AddressModel address) {
         log.debug("Creating address, data: {}", address);
 
@@ -83,10 +87,12 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for updating an address.
+     * @param id The id of the address to update in the database.
+     * @param address The {@link AddressModel} that contains the updated info.
+     * @return A {@link ResponseEntity} containing an {@link AddressModel} that represents the updated address.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<AddressModel> update(@PathVariable int id, @RequestBody AddressModel address) {
         log.debug("Updating address, id: {}, data: {}", id, address);
 
@@ -97,10 +103,11 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for deleting an address from the database.
+     * @param id The id of the address to delete
+     * @return an empty {@link ResponseEntity}.
      */
     @DeleteMapping(value = "{id}")
-    @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting address, id: {}", id);
         addressService.deleteAddress(id);

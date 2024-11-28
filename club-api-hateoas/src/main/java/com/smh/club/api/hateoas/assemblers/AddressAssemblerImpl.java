@@ -3,7 +3,7 @@ package com.smh.club.api.hateoas.assemblers;
 import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.AddressAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
-import com.smh.club.api.hateoas.controllers.AddressControllerImpl;
+import com.smh.club.api.hateoas.controllers.AddressController;
 import com.smh.club.api.hateoas.models.AddressModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +38,7 @@ public class AddressAssemblerImpl
      */
     @Autowired
     public AddressAssemblerImpl(AddressMapper mapper, PagedResourcesAssembler<AddressEntity> pagedAssembler) {
-        super(AddressControllerImpl.class, AddressModel.class);
+        super(AddressController.class, AddressModel.class);
         this.mapper = mapper;
         this.pagedAssembler = pagedAssembler;
     }
@@ -51,8 +51,8 @@ public class AddressAssemblerImpl
     public AddressModel toModel(@NonNull AddressEntity entity) {
         AddressModel model = createModelWithId(entity.getId(), entity);
 
-        model.add(linkTo(methodOn(AddressControllerImpl.class).update(entity.getId(), model)).withRel("update"));
-        model.add(linkTo(methodOn(AddressControllerImpl.class).delete(entity.getId())).withRel("delete"));
+        model.add(linkTo(methodOn(AddressController.class).update(entity.getId(), model)).withRel("update"));
+        model.add(linkTo(methodOn(AddressController.class).delete(entity.getId())).withRel("delete"));
         return model;
     }
 
