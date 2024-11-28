@@ -12,8 +12,9 @@ public interface AddressService {
 
     /**
      * Retrieves a page of addresses from the database.
-     *
-     * @param pageable@return A {@link PagedModel} of type {@link AddressModel}.
+     * @
+     * @param pageable The {@link Pageable} that contains the sort criteria.
+     * @return A {@link PagedModel} of type {@link AddressModel}.
      */
     PagedModel<AddressModel> getPage(Pageable pageable);
 
