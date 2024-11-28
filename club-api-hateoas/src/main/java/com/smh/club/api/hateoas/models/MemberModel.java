@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-import smh.club.shared.annotations.SortExclude;
-import smh.club.shared.annotations.SortTarget;
+import smh.club.shared.api.annotations.SortExclude;
+import smh.club.shared.api.annotations.SortTarget;
 
 /**
  * DTO for members.  When serialize to JSON, links are generated that

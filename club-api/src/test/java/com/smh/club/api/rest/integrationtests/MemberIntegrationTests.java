@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import smh.club.shared.config.PagingConfig;
+import smh.club.shared.api.config.PagingConfig;
 
 import java.util.Comparator;
 import java.util.HashMap;

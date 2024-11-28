@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.config.PagingConfig;
+import smh.club.shared.api.config.PagingConfig;
 
 /**
  * {@inheritDoc}

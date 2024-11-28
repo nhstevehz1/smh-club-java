@@ -3,7 +3,7 @@ package com.smh.club.api.hateoas.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-import smh.club.shared.annotations.SortExclude;
+import smh.club.shared.api.annotations.SortExclude;
 
 import java.time.LocalDate;
 

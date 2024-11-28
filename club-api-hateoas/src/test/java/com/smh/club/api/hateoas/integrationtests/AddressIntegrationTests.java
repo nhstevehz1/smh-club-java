@@ -29,7 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import smh.club.shared.config.PagingConfig;
+import smh.club.shared.api.config.PagingConfig;
 
 import java.util.Comparator;
 import java.util.HashMap;

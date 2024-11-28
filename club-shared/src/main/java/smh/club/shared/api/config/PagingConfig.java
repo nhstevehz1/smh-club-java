@@ -1,4 +1,4 @@
-package smh.club.shared.config;
+package smh.club.shared.api.config;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

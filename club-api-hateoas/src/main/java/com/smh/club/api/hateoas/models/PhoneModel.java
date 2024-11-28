@@ -3,8 +3,8 @@ package com.smh.club.api.hateoas.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-import smh.club.shared.annotations.SortExclude;
-import smh.club.shared.domain.PhoneType;
+import smh.club.shared.api.annotations.SortExclude;
+import smh.club.shared.api.domain.PhoneType;
 
 /**
  * DTO for phones.  When serialize to JSON, links are generated that

@@ -2,8 +2,8 @@ package com.smh.club.api.data.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import smh.club.shared.annotations.SortExclude;
-import smh.club.shared.domain.EmailType;
+import smh.club.shared.api.annotations.SortExclude;
+import smh.club.shared.api.domain.EmailType;
 
 /**
  * Represents an email object.

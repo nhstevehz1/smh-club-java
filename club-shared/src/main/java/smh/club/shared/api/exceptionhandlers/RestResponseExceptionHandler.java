@@ -1,4 +1,4 @@
-package smh.club.shared.exceptionhandlers;
+package smh.club.shared.api.exceptionhandlers;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
