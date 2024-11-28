@@ -1,6 +1,5 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.controllers.AddressController;
 import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.response.CountResponse;
@@ -15,17 +14,23 @@ import smh.club.shared.api.config.PagingConfig;
 
 
 /**
- * {@inheritDoc}
+ * Defines REST endpoints that targets address objects in the database.
  */
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @RequestMapping(value = "/api/v1/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AddressControllerImpl implements AddressController {
+public class AddressController {
 
     private final AddressService addressSvc;
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a page of address objects from the database.
+     *
+     * @param pageNumber The page number to retrieve.
+     * @param pageSize The size of the page.
+     * @param sortDir The sort direction of the object list. Must be either 'ASC" or 'DESC'
+     * @param sort The column name used for the sort.
+     * @return A {@link ResponseEntity} containing an {@link AddressDto}.
      */
     @GetMapping
     public ResponseEntity<PageResponse<AddressDto>> page(
@@ -44,7 +49,10 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a single address from the database.
+     *
+     * @param id The id of the address.
+     * @return @return A {@link ResponseEntity} containing a {@link AddressDto}
      */
     @GetMapping("{id}")
     public ResponseEntity<AddressDto> get(@PathVariable int id) {
@@ -53,7 +61,9 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for getting the total count of addresses in the database.
+     *
+     * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
     @GetMapping("count")
     public ResponseEntity<CountResponse> count() {
@@ -62,7 +72,10 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for creating an address.
+     *
+     * @param address The {@link AddressDto} used to create the object in the database
+     * @return A {@link ResponseEntity} containing an {@link AddressDto} representing the newly created object.
      */
     @PostMapping
     public ResponseEntity<AddressDto> create(@RequestBody AddressDto address) {
@@ -70,7 +83,11 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for updating an address.
+     *
+     * @param id The id of the address to update in the database.
+     * @param address The {@link AddressDto} that contains the updated info.
+     * @return A {@link ResponseEntity} containing an {@link AddressDto} that represents the updated address.
      */
     @PutMapping("{id}")
     public ResponseEntity<AddressDto> update(@PathVariable int id, @RequestBody AddressDto address) {
@@ -79,7 +96,10 @@ public class AddressControllerImpl implements AddressController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for deleting an address from the database.
+     *
+     * @param id The id of the address to delete
+     * @return an empty {@link ResponseEntity}.
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {

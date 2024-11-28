@@ -1,6 +1,5 @@
 package com.smh.club.api.rest.controllers;
 
-import com.smh.club.api.rest.contracts.controllers.MemberController;
 import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
@@ -16,21 +15,26 @@ import org.springframework.web.bind.annotation.*;
 import smh.club.shared.api.config.PagingConfig;
 
 /**
- * {@inheritDoc}
+ * Defines REST endpoints that targets member objects in the database.
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @RequestMapping(value = "/api/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
-public class MemberControllerImpl implements MemberController {
+public class MemberController {
 
     private final MemberService memberSvc;
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a page of member objects from the database.
+     *
+     * @param pageNumber The page number to retrieve.
+     * @param pageSize The size of the page.
+     * @param sortDir The sort direction of the object list. Must be either 'ASC" or 'DESC'
+     * @param sort The column name used for the sort.
+     * @return A {@link ResponseEntity} containing a {@link PageResponse} of type {@link MemberDto}.
      */
     @GetMapping
-    @Override
     public ResponseEntity<PageResponse<MemberDto>> page(
             @RequestParam(value = PagingConfig.PAGE_NAME,
                     defaultValue = "${request.paging.page}") int pageNumber,
@@ -47,58 +51,64 @@ public class MemberControllerImpl implements MemberController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a single member from the database.
+     *
+     * @param id The id of the member.
+     * @return @return A {@link ResponseEntity} containing a {@link MemberDto}
      */
     @GetMapping("{id}")
-    @Override
     public ResponseEntity<MemberDto> get(@PathVariable int id) {
         var ret = memberSvc.getMember(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for getting the total count of members in the database.
+     *
+     * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
     @GetMapping("count")
-    @Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(memberSvc.getMemberCount()));
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for creating a member.
+     *
+     * @param member The {@link MemberDto} used to create the object in the database
+     * @return A {@link ResponseEntity} containing a {@link MemberDto} representing the newly created object.
      */
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<MemberDto> create(@RequestBody MemberDto member) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for updating a member.
+     *
+     * @param id The id of the member to update in the database.
+     * @param member The {@link MemberDto} that contains the updated info.
+     * @return A {@link ResponseEntity} containing a {@link MemberDto} that represents the updated member.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<MemberDto> update(@PathVariable int id, @RequestBody MemberDto member) {
         var ret = memberSvc.updateMember(id,  member);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for deleting a member from the database.
+     * @param id The id of the member to delete
+     * @return ab empty {@link ResponseEntity}.
      */
-    @Override
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         memberSvc.deleteMember(id);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @GetMapping("{id}/detail")
-    @Override
     public ResponseEntity<MemberDetailDto> detail(@PathVariable int id) {
         var ret = memberSvc.getMemberDetail(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
