@@ -12,6 +12,7 @@ public interface PhoneController {
 
     /**
      * Endpoint for retrieving a page of phone objects from the database.
+     *
      * @param pageNumber The page number to retrieve.
      * @param pageSize The size of the page.
      * @param sortDir The sort direction of the object list. Must be either 'ASC" or 'DESC'

@@ -1,58 +1,62 @@
 package com.smh.club.api.hateoas.controllers;
 
-import com.smh.club.api.hateoas.contracts.controllers.PhoneController;
 import com.smh.club.api.hateoas.contracts.services.PhoneService;
 import com.smh.club.api.hateoas.models.PhoneModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.api.config.PagingConfig;
+import smh.club.shared.api.annotations.SortConstraint;
 
 /**
- * {@inheritDoc}
+ * Defines REST endpoints that targets phone objects in the database.
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@Validated
 @RestController
 @RequestMapping(value = "/api/v2/phones", produces = MediaTypes.HAL_JSON_VALUE)
-public class PhoneControllerImpl implements PhoneController {
+public class PhoneControllerImpl {
+
+    private final String DEFAULT_SORT = "id";
 
     private final PhoneService phoneService;
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a page of phone objects from the database.
+     * if no sort is specified then the DEFAULT_SORT is used.
+     *
+     * @param pageable A {@link Pageable} that describes the sort.
+     * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link PhoneModel}.
      */
     @GetMapping
-    @Override
     public ResponseEntity<PagedModel<PhoneModel>> page(
-        @RequestParam(value = PagingConfig.PAGE_NAME,
-            defaultValue = "${request.paging.page}") int pageNumber,
-        @RequestParam(value = PagingConfig.SIZE_NAME,
-            defaultValue = "${request.paging.size}") int pageSize,
-        @RequestParam(value = PagingConfig.DIRECTION_NAME,
-            defaultValue = "${request.paging.direction}") String sortDir,
-        @RequestParam(value = PagingConfig.SORT_NAME,
-            defaultValue = "") String sort) {
+        @PageableDefault(sort = {DEFAULT_SORT})
+        @SortConstraint(dtoClass = PhoneModel.class)
+        Pageable pageable) {
 
-        log.debug("Getting page. page: {}, size: {}, direction: {}, sort: {}",
-            pageNumber, pageSize, sortDir, sort);
+        log.debug("Getting member page for pageable:  {}", pageable );
 
-        var page = phoneService.getPhoneListPage(pageNumber, pageSize, sortDir, sort);
+        var page = phoneService.getPage(pageable);
 
         return ResponseEntity.ok(page);
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a single phone from the database.
+     *
+     * @param id The id of the phone.
+     * @return @return A {@link ResponseEntity} containing a {@link PhoneModel}
      */
     @GetMapping("{id}")
-    @Override
     public ResponseEntity<PhoneModel> get(@PathVariable int id) {
         log.debug("Getting phone with id: {}", id);
 
@@ -61,19 +65,22 @@ public class PhoneControllerImpl implements PhoneController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for getting the total count of phonees in the database.
+     *
+     * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(phoneService.getPhoneCount()));
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for creating a phone.
+     *
+     * @param phone The {@link PhoneModel} used to create the object in the database
+     * @return A {@link ResponseEntity} containing a {@link PhoneModel} representing the newly created object.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<PhoneModel> create(@RequestBody PhoneModel phone) {
         log.debug("Creating phone, data: {}", phone);
 
@@ -83,10 +90,13 @@ public class PhoneControllerImpl implements PhoneController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for updating a phone.
+     *
+     * @param id The id of the phone to update in the database.
+     * @param phone The {@link PhoneModel} that contains the updated info.
+     * @return A {@link ResponseEntity} containing a {@link PhoneModel} that represents the updated phone.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Override
     public ResponseEntity<PhoneModel> update(@PathVariable int id, @RequestBody PhoneModel phone) {
         log.debug("Updating phone, id: {}, data: {}", id, phone);
 
@@ -97,10 +107,12 @@ public class PhoneControllerImpl implements PhoneController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for deleting a phone from the database.
+     *
+     * @param id The id of the phone to delete
+     * @return an empty {@link ResponseEntity}.
      */
     @DeleteMapping(value = "{id}")
-    @Override
     public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting phone, id: {}", id);
         phoneService.deletePhone(id);

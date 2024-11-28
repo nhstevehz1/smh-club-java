@@ -1,9 +1,12 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.data.domain.entities.PhoneEntity;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 import smh.club.shared.api.annotations.SortExclude;
+import smh.club.shared.api.annotations.SortTarget;
 import smh.club.shared.api.domain.PhoneType;
 
 /**
@@ -16,6 +19,7 @@ import smh.club.shared.api.domain.PhoneType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SortTarget(target = PhoneEntity.class)
 public class PhoneModel extends RepresentationModel<PhoneModel> {
 
     @JsonProperty("id")
@@ -25,6 +29,7 @@ public class PhoneModel extends RepresentationModel<PhoneModel> {
     @JsonProperty("member-id")
     private int memberId;
 
+    @NotEmpty
     @JsonProperty("phone-number")
     private String phoneNumber;
 
