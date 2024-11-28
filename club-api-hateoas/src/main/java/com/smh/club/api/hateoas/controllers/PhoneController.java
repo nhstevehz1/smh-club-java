@@ -24,7 +24,7 @@ import smh.club.shared.api.annotations.SortConstraint;
 @Validated
 @RestController
 @RequestMapping(value = "/api/v2/phones", produces = MediaTypes.HAL_JSON_VALUE)
-public class PhoneControllerImpl {
+public class PhoneController {
 
     private final String DEFAULT_SORT = "id";
 
