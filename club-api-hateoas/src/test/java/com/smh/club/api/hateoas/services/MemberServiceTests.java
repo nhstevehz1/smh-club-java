@@ -99,7 +99,7 @@ public class MemberServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"middle-name", "suffix", "addresses", "emails", "phones", "renewals"})
-    public void getPage_excludes_throw_exception() {
+    public void getPage_excludes_throws_exception() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
@@ -131,7 +131,7 @@ public class MemberServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getMemberListPage_with_descending() {
+    public void getPage_with_descending() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;

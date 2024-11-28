@@ -101,17 +101,6 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    protected String getSortColumn(String key) {
-        var source = MemberModel.class;
-        var target = MemberEntity.class;
-
-        return getSort(key, source, target).orElse("memberNumber");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override //TODO: remove after pageable is fully implmented
     protected Sort getSort(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;

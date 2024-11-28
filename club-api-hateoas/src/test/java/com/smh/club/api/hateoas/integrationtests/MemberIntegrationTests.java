@@ -152,7 +152,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {2,4,5,8})
-    public void getListPage_page(int page) {
+    public void getPage_page(int page) {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
         var sorted = memberRepo.findAll()
@@ -177,7 +177,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date"})
-    public void getListPage_sortColumn(String sort) {
+    public void getPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
@@ -199,7 +199,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"middle-name", "suffix", "addresses", "emails", "phones", "renewals"})
-    public void getListPage_excluded_fields_returns_bad_request(String sort) {
+    public void getPage_excluded_fields_returns_bad_request(String sort) {
         // setup
         Map<String, String > map = new HashMap<>();
         map.put(sortParamName, sort);
@@ -215,8 +215,6 @@ public class MemberIntegrationTests extends IntegrationTests {
             .expect(jsonPath("$.validation-errors").isNotEmpty());
 
     }
-
-
 
     @Test
     public void get_returns_model_status_ok() {
