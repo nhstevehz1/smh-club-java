@@ -19,7 +19,7 @@ import smh.club.shared.api.domain.AddressType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SortTarget(target = AddressEntity.class)
+@SortTarget(AddressEntity.class)
 public class AddressModel extends RepresentationModel<AddressModel> {
 
     @JsonProperty("id")

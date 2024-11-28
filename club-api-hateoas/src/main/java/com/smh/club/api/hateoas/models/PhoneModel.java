@@ -19,7 +19,7 @@ import smh.club.shared.api.domain.PhoneType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SortTarget(target = PhoneEntity.class)
+@SortTarget(PhoneEntity.class)
 public class PhoneModel extends RepresentationModel<PhoneModel> {
 
     @JsonProperty("id")

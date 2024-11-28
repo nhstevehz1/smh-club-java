@@ -19,7 +19,7 @@ import smh.club.shared.api.annotations.SortTarget;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SortTarget(target = MemberEntity.class)
+@SortTarget(MemberEntity.class)
 public class MemberModel extends RepresentationModel<MemberModel> {
 
     private int id;

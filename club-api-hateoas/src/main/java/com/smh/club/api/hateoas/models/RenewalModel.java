@@ -18,7 +18,7 @@ import smh.club.shared.api.annotations.SortTarget;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SortTarget(target = RenewalEntity.class)
+@SortTarget(RenewalEntity.class)
 public class RenewalModel extends RepresentationModel<RenewalModel> {
 
     @JsonProperty("id")

@@ -19,7 +19,7 @@ import smh.club.shared.api.domain.EmailType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SortTarget(target = EmailEntity.class)
+@SortTarget(EmailEntity.class)
 public class EmailModel extends RepresentationModel<EmailModel> {
     @JsonProperty("id")
     private int id;

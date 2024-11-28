@@ -1,11 +1,13 @@
 package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.data.domain.entities.PhoneEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import smh.club.shared.api.annotations.SortExclude;
+import smh.club.shared.api.annotations.SortTarget;
 import smh.club.shared.api.domain.PhoneType;
 
 /**
@@ -15,6 +17,7 @@ import smh.club.shared.api.domain.PhoneType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SortTarget(PhoneEntity.class)
 public class PhoneDto {
 
     @JsonProperty("id")
