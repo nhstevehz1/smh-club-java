@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -94,6 +95,23 @@ public class MemberServiceTests extends ServiceTests {
         verify(repoMock).findAll(any(PageRequest.class));
         verify(assemblerMock).toPagedModel(any());
         verifyNoMoreInteractions(repoMock, pageMock);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"middle-name", "suffix", "addresses", "emails", "phones", "renewals"})
+    public void getPage_excludes_throw_exception() {
+        // setup
+        var pageNumber = 10;
+        var pageSize = 20;
+        var direction = "ASC";
+        var sort = "thisIsNotAColumn";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
+
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
+
+        verifyNoMoreInteractions(repoMock, assemblerMock);
     }
 
     @Test

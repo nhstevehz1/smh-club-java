@@ -108,7 +108,10 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         return getSort(key, source, target).orElse("memberNumber");
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+    @Override //TODO: remove after pageable is fully implmented
     protected Sort getSort(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;

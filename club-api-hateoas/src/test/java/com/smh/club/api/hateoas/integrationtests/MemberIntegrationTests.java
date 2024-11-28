@@ -31,7 +31,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import smh.club.shared.api.config.PagingConfig;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
@@ -51,10 +50,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class MemberIntegrationTests extends IntegrationTests {
 
-
-    @Value("${spring.data.web.pageable.default-page-size}")
+    @Value("${spring.data.web.pageable.default-page-size:20}")
     private int defaultPageSize;
 
+    @Value("${spring.data.rest.sort-param-name:sort}")
+    private String sortParamName;
+
+    @Value("${spring.data.rest.size-param-name:size}")
+    private String sizeParamName;
+
+    @Value("${spring.data.rest.page-param-name:page}")
+    private String pageParamName;
+    
     @Autowired
     private MembersRepo memberRepo;
 
@@ -104,7 +111,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
 
         Map<String, String> map = new HashMap<>();
-        map.put(PagingConfig.SORT_NAME, "memberNumber,desc");
+        map.put(sortParamName, "member-number,desc");
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
@@ -129,7 +136,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(entitySize, sorted.size());
 
         Map<String,String> map = new HashMap<>();
-        map.put(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
+        map.put(sizeParamName, String.valueOf(pageSize));
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             0, pageSize, listNodeName);
@@ -153,7 +160,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(entitySize, sorted.size());
 
         Map<String,String> map = new HashMap<>();
-        map.put(PagingConfig.PAGE_NAME, String.valueOf(page));
+        map.put(pageParamName, String.valueOf(page));
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             page, defaultPageSize, listNodeName);
@@ -179,7 +186,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(entitySize, sorted.size());
 
         var map = new HashMap<String, String>();
-        map.put(PagingConfig.SORT_NAME, sort);
+        map.put(sortParamName, sort);
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
@@ -195,7 +202,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void getListPage_excluded_fields_returns_bad_request(String sort) {
         // setup
         Map<String, String > map = new HashMap<>();
-        map.put(PagingConfig.SORT_NAME, sort);
+        map.put(sortParamName, sort);
 
         // execute and verify
         given()
