@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.annotations.SortConstraint;
+import smh.club.shared.api.annotations.SortConstraint;
 
 /**
  * {@inheritDoc}
@@ -26,6 +26,8 @@ import smh.club.shared.annotations.SortConstraint;
 @RequestMapping(value = "/api/v2/members", produces = MediaTypes.HAL_JSON_VALUE)
 public class MemberController {
 
+    private final String DEFAULT_SORT = "member-number";
+
     private final MemberService memberSvc;
 
     /**
@@ -34,7 +36,7 @@ public class MemberController {
     @GetMapping
     //@Override
     public ResponseEntity<PagedModel<MemberModel>> page(
-        @PageableDefault(sort = {"memberNumber"})
+        @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(dtoClass = MemberModel.class)
         Pageable pageable) {
 
