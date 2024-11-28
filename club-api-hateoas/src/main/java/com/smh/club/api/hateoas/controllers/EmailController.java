@@ -24,7 +24,7 @@ import smh.club.shared.api.annotations.SortConstraint;
 @RestController
 @Validated
 @RequestMapping(value = "/api/v2/emails", produces = MediaTypes.HAL_JSON_VALUE)
-public class EmailControllerImpl {
+public class EmailController {
 
     private final String DEFAULT_SORT = "id";
 

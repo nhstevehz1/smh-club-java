@@ -3,7 +3,7 @@ package com.smh.club.api.hateoas.assemblers;
 import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.EmailAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.EmailMapper;
-import com.smh.club.api.hateoas.controllers.EmailControllerImpl;
+import com.smh.club.api.hateoas.controllers.EmailController;
 import com.smh.club.api.hateoas.models.EmailModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +38,7 @@ public class EmailAssemblerImpl
      */
     @Autowired
     public EmailAssemblerImpl(EmailMapper mapper, PagedResourcesAssembler<EmailEntity> pagedAssembler) {
-        super(EmailControllerImpl.class, EmailModel.class);
+        super(EmailController.class, EmailModel.class);
         this.mapper = mapper;
         this.pagedAssembler = pagedAssembler;
     }
@@ -51,8 +51,8 @@ public class EmailAssemblerImpl
     public EmailModel toModel(@NonNull EmailEntity entity) {
         EmailModel model = createModelWithId(entity.getId(), entity);
 
-        model.add(linkTo(methodOn(EmailControllerImpl.class).update(entity.getId(), model)).withRel("update"));
-        model.add(linkTo(methodOn(EmailControllerImpl.class).delete(entity.getId())).withRel("delete"));
+        model.add(linkTo(methodOn(EmailController.class).update(entity.getId(), model)).withRel("update"));
+        model.add(linkTo(methodOn(EmailController.class).delete(entity.getId())).withRel("delete"));
         return model;
     }
 
