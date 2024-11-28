@@ -24,7 +24,7 @@ import smh.club.shared.annotations.SortConstraint;
 @Validated
 @RestController
 @RequestMapping(value = "/api/v2/members", produces = MediaTypes.HAL_JSON_VALUE)
-public class MemberControllerImpl {
+public class MemberController {
 
     private final MemberService memberSvc;
 
