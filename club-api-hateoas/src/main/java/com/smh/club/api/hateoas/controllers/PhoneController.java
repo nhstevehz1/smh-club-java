@@ -40,7 +40,7 @@ public class PhoneController {
     @GetMapping
     public ResponseEntity<PagedModel<PhoneModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(dtoClass = PhoneModel.class)
+        @SortConstraint(PhoneModel.class)
         Pageable pageable) {
 
         log.debug("Getting member page for pageable:  {}", pageable );

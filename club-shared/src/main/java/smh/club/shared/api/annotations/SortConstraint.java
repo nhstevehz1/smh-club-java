@@ -12,10 +12,8 @@ import smh.club.shared.api.validators.SortValidator;
 @Target( { ElementType.METHOD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SortConstraint {
-
+  Class<?> value();
   String message () default "Sort contains an invalid column name.";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
-
-  Class<?> dtoClass();
 }

@@ -24,7 +24,7 @@ import smh.club.shared.api.annotations.SortConstraint;
 @Validated
 @RestController
 @RequestMapping(value = "/api/v2/renewals", produces = MediaTypes.HAL_JSON_VALUE)
-public class RenewalControllerImpl {
+public class RenewalController {
 
     private final String DEFAULT_SORT = "id";
 
@@ -39,7 +39,7 @@ public class RenewalControllerImpl {
     @GetMapping
     public ResponseEntity<PagedModel<RenewalModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(dtoClass = RenewalModel.class)
+        @SortConstraint(RenewalModel.class)
         Pageable pageable) {
 
         log.debug("Getting member page for pageable:  {}", pageable );

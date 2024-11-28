@@ -40,7 +40,7 @@ public class AddressController {
     @GetMapping
     public ResponseEntity<PagedModel<AddressModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(dtoClass = AddressModel.class)
+        @SortConstraint(AddressModel.class)
         Pageable pageable) {
 
         log.debug("Getting member page for pageable:  {}", pageable );

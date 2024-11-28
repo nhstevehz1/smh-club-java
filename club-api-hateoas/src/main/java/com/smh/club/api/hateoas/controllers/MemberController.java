@@ -39,7 +39,7 @@ public class MemberController {
     //@Override
     public ResponseEntity<PagedModel<MemberModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(dtoClass = MemberModel.class)
+        @SortConstraint(MemberModel.class)
         Pageable pageable) {
 
         log.debug("Getting member page for pageable:  {}", pageable );

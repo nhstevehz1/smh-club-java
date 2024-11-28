@@ -39,7 +39,7 @@ public class EmailController {
     @GetMapping
     public ResponseEntity<PagedModel<EmailModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(dtoClass = EmailModel.class)
+        @SortConstraint(EmailModel.class)
         Pageable pageable) {
 
         log.debug("Getting member page for pageable:  {}", pageable );
