@@ -162,7 +162,8 @@ public class AddressServiceTests extends ServiceTests {
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(sort, order.getProperty());
         verify(addRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(addRepoMock);
+        verify(addMapMock).toPage(pageMock);
+        verifyNoMoreInteractions(addRepoMock, addMapMock);
     }
 
 

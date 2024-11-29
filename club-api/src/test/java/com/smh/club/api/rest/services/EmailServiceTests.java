@@ -159,12 +159,13 @@ public class EmailServiceTests extends ServiceTests {
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(sort, order.getProperty());
         verify(emailRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(emailRepoMock);
+        verify(emailMapMock).toPage(pageMock);
+        verifyNoMoreInteractions(emailRepoMock, emailMapMock);
     }
 
 
     @Test
-    public void getPage_returns_List() {
+    public void getPage_returns_list() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
@@ -183,7 +184,7 @@ public class EmailServiceTests extends ServiceTests {
         when(emailRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
         when(emailMapMock.toPage(pageMock)).thenReturn(page);
 
-        // g
+        // execute
         var ret = svc.getPage(pageable);
 
         // verify

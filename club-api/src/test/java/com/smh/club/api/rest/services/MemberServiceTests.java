@@ -58,7 +58,7 @@ public class MemberServiceTests extends ServiceTests {
     @ParameterizedTest
     @CsvSource({"id, id", "member-number, memberNumber", "first-name, firstName", "last-name, lastName",
                 "birth-date, birthDate", "joined-date, joinedDate"})
-    public void getMemberListPage(String sort, String actual) {
+    public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
@@ -96,7 +96,7 @@ public class MemberServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"middle-name", "middleName", "suffix"})
-    public void getMemberListPage_excludes_throws_exception(String sort) {
+    public void getPage_excludes_throws_exception(String sort) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
@@ -125,7 +125,7 @@ public class MemberServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getMemberListPage_with_descending() {
+    public void getPage_with_descending() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
@@ -158,9 +158,9 @@ public class MemberServiceTests extends ServiceTests {
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(sort, order.getProperty());
         verify(repoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(repoMock);
+        verify(mapperMock).toPage(pageMock);
+        verifyNoMoreInteractions(repoMock, mapperMock);
     }
-
 
     @Test
     public void getPage_returns_list() {
