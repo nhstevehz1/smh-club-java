@@ -6,18 +6,17 @@ import com.smh.club.api.data.domain.repos.RenewalsRepo;
 import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.response.PagedDto;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smh.club.shared.api.services.AbstractServiceBase;
-
-import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -37,18 +36,18 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public Page<RenewalDto> getRenewalListPage(int pageNumber, int pageSize,
-                                               @NonNull String direction, @NonNull String sort) {
+    public PagedDto<RenewalDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
-                pageNumber,
-                pageSize,
-                Sort.Direction.fromString(direction),
-                getSortColumn(sort));
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            getSort(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
-        return renewalRepo.findAll(pageRequest).map(renewalMapper::toDto);
+        var page = renewalMapper.toPage(renewalRepo.findAll(pageRequest));
+
+        return PagedDto.of(page);
     }
 
     /**
@@ -107,11 +106,18 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
     /**
      * {@inheritDoc}
      */
-    protected String getSortColumn(String key) {
-        var source = RenewalDto.class;
-        var target = RenewalEntity.class;
+    @Override
+    protected Sort getSort(Sort sort) {
+        if (sort.isUnsorted()) {
+            return sort;
+        }
 
-        return getSort(key, source, target)
-                .orElse("id");
+        var orders =
+            sort.get()
+                .map(o -> new Sort.Order(o.getDirection(),
+                    getSort(o.getProperty(), RenewalDto.class, RenewalEntity.class)
+                        .orElseThrow(IllegalArgumentException::new))).toList();
+
+        return Sort.by(orders);
     }
 }
