@@ -74,8 +74,6 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Autowired
     private AddressRepo repo;
 
-    private List<MemberEntity> members;
-
     @WithSettings // Instancio settings
     Settings settings =
             Settings.create().set(Keys.SET_BACK_REFERENCES, true)
@@ -96,7 +94,7 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();
         
-        this.members = memberRepo.saveAllAndFlush(members);
+        memberRepo.saveAllAndFlush(members);
     }
 
     @ParameterizedTest
@@ -309,6 +307,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     private List<AddressEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(AddressEntity.class)
                 .size(size) // must be before withSettings

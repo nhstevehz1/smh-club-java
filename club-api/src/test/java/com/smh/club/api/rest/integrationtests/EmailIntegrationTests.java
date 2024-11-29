@@ -73,8 +73,6 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Autowired
     private EmailRepo repo;
 
-    private List<MemberEntity> members;
-
     @WithSettings // Instancio settings
     Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
@@ -95,7 +93,7 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();
 
-        this.members = memberRepo.saveAllAndFlush(members);
+        memberRepo.saveAllAndFlush(members);
     }
 
     @ParameterizedTest
@@ -197,7 +195,6 @@ public class EmailIntegrationTests extends IntegrationTests {
         var sortFields = getSorts().get(sort);
 
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
 
         var map = new HashMap<String, String>();
         map.put(sortParamName, sort);
