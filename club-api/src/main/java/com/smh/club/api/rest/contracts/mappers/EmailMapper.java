@@ -1,9 +1,11 @@
 package com.smh.club.api.rest.contracts.mappers;
 
+import com.smh.club.api.data.domain.entities.AddressEntity;
 import com.smh.club.api.data.domain.entities.EmailEntity;
+import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.dto.EmailDto;
-
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * Maps email objects
@@ -38,4 +40,12 @@ public interface EmailMapper {
      * @return A list of {@link EmailDto}.
      */
     List<EmailDto> toDtoList(List<EmailEntity> entityList);
+
+    /**
+     * Maps a page of address entities to a page of DTOs.
+     *
+     * @param page The {@link Page} of {@link AddressEntity} to map.
+     * @return A page of {@link AddressDto}
+     */
+    Page<EmailDto> toPage(Page<EmailEntity> page);
 }

@@ -3,8 +3,8 @@ package com.smh.club.api.rest.contracts.mappers;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
-
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * Maps member objects
@@ -39,5 +39,14 @@ public interface MemberMapper {
      * @return A list of {@link MemberDto}.
      */
     List<MemberDto> toDtoList(List<MemberEntity> entityList);
+
+    /**
+     * Maps a page of address entities to a page of DTOs.
+     *
+     * @param page The {@link Page} of {@link MemberEntity} to map.
+     * @return A page of {@link MemberDto}
+     */
+    Page<MemberDto> toPage(Page<MemberEntity> page);
+
     MemberDetailDto toMemberDetailDto(MemberEntity entity);
 }
