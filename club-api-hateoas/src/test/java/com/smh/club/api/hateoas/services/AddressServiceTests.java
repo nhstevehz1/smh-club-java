@@ -6,6 +6,7 @@ import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.contracts.assemblers.AddressAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
 import com.smh.club.api.hateoas.models.AddressModel;
+import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -23,14 +24,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 
-import java.util.Optional;
-
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(InstancioExtension.class)
@@ -65,18 +71,21 @@ public class AddressServiceTests extends ServiceTests {
 
 
     @ParameterizedTest
-    @CsvSource({"id, id", "address1, address1", "city, city", "state, state", "zip, zip", "address-type, addressType"})
-    public void getAddressListPage(String sort, String actual) {
+    @CsvSource({"id, id", "address1, address1", "city, city", "state, state", "zip, zip",
+        "address-type, addressType"})
+    public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
         when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
 
         // execute
-        svc.getAddressListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -98,100 +107,33 @@ public class AddressServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"address2", "member-id"})
-    public void getAddressListPage_excludes_use_id(String sort) {
+    public void getPage_excludes_throw_exception(String sort) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
-        var actual = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
 
-
-        // execute
-        svc.getAddressListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(repoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(actual, order.getProperty());
-
-        verify(repoMock).findAll(any(PageRequest.class));
-        verify(assemblerMock).toPagedModel(any());
         verifyNoMoreInteractions(repoMock, assemblerMock);
     }
 
     @Test
-    public void getAddressListPage_with_empty_sort_uses_default() {
-        // setup
-        var pageNumber = 10;
-        var pageSize = 20;
-        var direction = "ASC";
-        var sort = "";
-        var defaultSort = "id";
-
-        when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
-
-        // execute
-        svc.getAddressListPage(pageNumber, pageSize, direction, sort);
-
-
-        // verify
-        verify(repoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-
-        verify(repoMock).findAll(any(PageRequest.class));
-        verify(assemblerMock).toPagedModel(pageMock);
-        verifyNoMoreInteractions(repoMock, assemblerMock);
-    }
-
-    @Test
-    public void getAddressListPage_unknown_sortColumn_uses_default() {
+    public void gePage_unknown_sortColumn_throws_exception() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
         var sort = "thisIsNotAColumn";
-        var defaultSort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
 
-        // execute
-        svc.getAddressListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(repoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-
-        verify(repoMock).findAll(any(PageRequest.class));
-        verify(assemblerMock).toPagedModel(pageMock);
-        verify(assemblerMock).toPagedModel(pageMock);
         verifyNoMoreInteractions(repoMock, assemblerMock);
     }
 
@@ -200,14 +142,16 @@ public class AddressServiceTests extends ServiceTests {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
+        var direction = "DESC";
         var sort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
         when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
 
         // execute
-        svc.getAddressListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -226,12 +170,14 @@ public class AddressServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getAddressListPage_returns_pagedModel() {
+    public void getPage_returns_pagedModel() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
+        var direction = "DESC";
         var sort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
         var models = Instancio.ofList(AddressModel.class)
             .size(pageSize)
@@ -243,7 +189,7 @@ public class AddressServiceTests extends ServiceTests {
         when(assemblerMock.toPagedModel(pageMock)).thenReturn(pagedModel);
 
         // execute
-        var ret = svc.getAddressListPage(pageNumber, pageSize, direction, sort);
+        var ret = svc.getPage(pageable);
 
         // verify
         assertEquals(pagedModel, ret);
@@ -252,7 +198,7 @@ public class AddressServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getItem_returns_address() {
+    public void getAddress_returns_address() {
         // setup
         int id = 1;
         var entity = Instancio.of(AddressEntity.class).set(field(AddressEntity::getId), id).create();
@@ -275,7 +221,7 @@ public class AddressServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getItem_notFound_returns_empty_optional() {
+    public void getAddress_notFound_returns_empty_optional() {
         // setup
         int id = 1;
         when(repoMock.findById(id)).thenReturn(Optional.empty());

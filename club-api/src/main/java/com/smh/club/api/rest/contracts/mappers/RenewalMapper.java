@@ -2,8 +2,8 @@ package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.dto.RenewalDto;
-
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * Maps renewal objects.
@@ -38,4 +38,12 @@ public interface RenewalMapper {
      * @return A list of {@link RenewalDto}.
      */
     List<RenewalDto> toDtoList(List<RenewalEntity> entityList);
+
+    /**
+     * Maps a page of address entities to a page of DTOs.
+     *
+     * @param page The {@link Page} of {@link RenewalEntity} to map.
+     * @return A page of {@link RenewalDto}
+     */
+    Page<RenewalDto> toPage(Page<RenewalEntity> page);
 }

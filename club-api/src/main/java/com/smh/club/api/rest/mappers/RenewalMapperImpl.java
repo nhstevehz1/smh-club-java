@@ -3,11 +3,11 @@ package com.smh.club.api.rest.mappers;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.rest.dto.RenewalDto;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
-import smh.club.shared.mappers.DomainDataMapper;
-
 import java.util.List;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
+import smh.club.shared.api.mappers.DomainDataMapper;
 
 /**
  * {@inheritDoc}
@@ -54,5 +54,13 @@ public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper
     @Override
     public List<RenewalDto> toDtoList(List<RenewalEntity> entityList) {
         return mapList(entityList, RenewalDto.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<RenewalDto> toPage(Page<RenewalEntity> page) {
+        return page.map(this::toDto);
     }
 }

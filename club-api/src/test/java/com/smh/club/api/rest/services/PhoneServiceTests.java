@@ -1,11 +1,12 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.entities.PhoneEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.rest.dto.PhoneDto;
+import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -24,13 +25,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
+import org.springframework.data.domain.Sort;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(InstancioExtension.class)
@@ -47,7 +50,7 @@ public class PhoneServiceTests extends ServiceTests {
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
-    @WithSettings
+    @WithSettings // Instancio settings
     private final Settings settings = Settings.create()
             .set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
@@ -60,11 +63,20 @@ public class PhoneServiceTests extends ServiceTests {
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
+
+        var list = Instancio.ofList(PhoneDto.class)
+            .size(20)
+            .create();
+
+        var page = createPage(list, pageableMock,100);
 
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(phnMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
-        svc.getPhoneListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -85,106 +97,55 @@ public class PhoneServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"member-id", "memberId"})
-    public void getPhoneListPage_excludes_use_id(String sort) {
+    public void getPage_excludes_throws_exception(String sort) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
-        var actual = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-
-        // execute
-        svc.getPhoneListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(phnRepoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(actual, order.getProperty());
-        verify(phnRepoMock).findAll(any(PageRequest.class));
-
-
-        verifyNoMoreInteractions(phnRepoMock, phnMapMock);
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
     }
 
     @Test
-    public void getphnMapMockListPage_with_empty_sort_uses_default() {
-        // setup
-        var pageNumber = 10;
-        var pageSize = 20;
-        var direction = "ASC";
-        var sort = "";
-        var defaultSort = "id";
-
-        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-
-        // execute
-        svc.getPhoneListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(phnRepoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-
-        verify(phnRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(phnRepoMock);
-    }
-
-    @Test
-    public void getphnMapMockListPage_unknown_sortColumn_uses_default() {
+    public void gePage_unknown_sortColumn_throws_exception() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
         var sort = "thisIsNotAColumn";
-        var defaultSort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
 
-        // execute
-        svc.getPhoneListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(phnRepoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-        verify(phnRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(phnRepoMock);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock);
     }
 
     @Test
-    public void getPhoneMapMockListPage_with_desc() {
+    public void getPage_with_descending() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
+        var direction = "DESC";
         var sort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
+
+        var list = Instancio.ofList(PhoneDto.class)
+            .size(20)
+            .create();
+
+        var page = createPage(list, pageableMock,100);
 
         when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(phnMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
-        svc.getPhoneListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(phnRepoMock).findAll(acPageRequest.capture());
@@ -198,34 +159,38 @@ public class PhoneServiceTests extends ServiceTests {
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(sort, order.getProperty());
         verify(phnRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(phnRepoMock);
+        verify(phnMapMock).toPage(pageMock);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock);
     }
 
-
     @Test
-    public void getphnMapMockListPage_returns_phnMapMockList() {
+    public void getPage_returns_list() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
-        var sort = "phone";
+        var direction = "DESC";
+        var sort = "id";
         var total = 200;
-        var entityList = Instancio.ofList(PhoneEntity.class).size(pageSize).create();
-        var dto = Instancio.of(PhoneDto.class).create();
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var page = createEntityPage(entityList, pageableMock, total);
+        var list = Instancio.ofList(PhoneDto.class)
+            .size(pageSize)
+            .create();
 
-        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(phnMapMock.toDto(any(PhoneEntity.class))).thenReturn(dto);
+        var page = createPage(list, pageableMock, total);
+
+        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(phnMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
-        var ret = svc.getPhoneListPage(pageNumber, pageSize, direction, sort);
+        var ret = svc.getPage(pageable);
 
         // verify
-        assertEquals(total, ret.getTotalElements());
+        assertEquals(total, ret.getMetadata().totalElements());
         assertEquals(pageSize, ret.getContent().size());
         verify(phnRepoMock).findAll(any(PageRequest.class));
-        verify(phnMapMock, times(pageSize)).toDto(any(PhoneEntity.class));
+        verify(phnMapMock).toPage(pageMock);
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
@@ -265,7 +230,7 @@ public class PhoneServiceTests extends ServiceTests {
     }
 
     @Test
-    public void createItem_returns_phone() {
+    public void create_phone_returns_phone() {
         // setup
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);

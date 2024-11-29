@@ -7,6 +7,10 @@ import com.smh.club.api.data.domain.repos.AddressRepo;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -22,20 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import smh.club.shared.config.PagingConfig;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,6 +42,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
@@ -58,8 +56,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class AddressIntegrationTests extends IntegrationTests {
 
-    @Value("${request.paging.size}")
+    @Value("${spring.data.web.pageable.default-page-size:20}")
     private int defaultPageSize;
+
+    @Value("${spring.data.rest.sort-param-name:sort}")
+    private String sortParamName;
+
+    @Value("${spring.data.rest.size-param-name:size}")
+    private String sizeParamName;
+
+    @Value("${spring.data.rest.page-param-name:page}")
+    private String pageParamName;
 
     @Autowired
     private MembersRepo memberRepo;
@@ -67,9 +74,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Autowired
     private AddressRepo repo;
 
-    private List<MemberEntity> members;
-
-    @WithSettings
+    @WithSettings // Instancio settings
     Settings settings =
             Settings.create().set(Keys.SET_BACK_REFERENCES, true)
                     .set(Keys.JPA_ENABLED, true)
@@ -81,28 +86,31 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @BeforeEach
-    public void initMembers() {
+    public void init() {
         // there seems to be a bug where @WithSettings is not recognized in before all
-        members = Instancio.ofList(MemberEntity.class)
+        var members = Instancio.ofList(MemberEntity.class)
                 .size(5)
-                .withSettings(getSettings())
                 .ignore(field(MemberEntity::getId))
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();
+        
         memberRepo.saveAllAndFlush(members);
     }
 
-    @Test
-    public void getListPage_no_params() throws Exception {
+    @ParameterizedTest
+    @ValueSource(ints = {1, 5, 20, 50})
+    public void getListPage_no_params(int entitySize) {
         // populate address table
-        addEntitiesToDb(15);
+        addEntitiesToDb(entitySize);
 
         var sorted = repo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPage(AddressDto.class, path,
-                valueMap, sorted.size(), defaultPageSize);
+        Map<String,String> map = new HashMap<>();
+        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+            0, defaultPageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
 
@@ -111,18 +119,22 @@ public class AddressIntegrationTests extends IntegrationTests {
         verify(expected, actual);
     }
 
-    @Test
-    public void getListPage_sortDir_desc() throws Exception {
+    @ParameterizedTest
+    @ValueSource(ints = {1, 5, 20, 50})
+    public void getListPage_sortDir_desc(int entitySize) {
         // populate address table
-       addEntitiesToDb(15);
+       addEntitiesToDb(entitySize);
 
         var sorted = repo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId).reversed()).toList();
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
+        Map<String, String> map = new HashMap<>();
+        map.put(sortParamName,  "id,desc");
 
-        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+            0, defaultPageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(AddressDto::getId).reversed()).toList(), actual);
@@ -134,16 +146,19 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
-    public void getListPage_pageSize(int pageSize) throws Exception {
+    public void getListPage_pageSize(int pageSize) {
         addEntitiesToDb(15);
 
         var sorted = repo.findAll().stream()
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
+        Map<String,String> map = new HashMap<>();
+        map.put(sizeParamName, String.valueOf(pageSize));
 
-        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), pageSize);
+        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+            0, pageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
@@ -154,17 +169,23 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 5, 8, 10})
-    public void getListPage_page(int page) throws Exception {
-        addEntitiesToDb(150);
+    @ValueSource(ints = {1, 5, 8})
+    public void getListPage_page(int page) {
+        var entitySize = 100;
+        addEntitiesToDb(entitySize);
 
-        var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
+        var sorted = repo.findAll()
+            .stream().sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
+        assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
 
-        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        Map<String,String> map = new HashMap<>();
+        map.put(pageParamName, String.valueOf(page));
+
+        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+            page, defaultPageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
@@ -176,8 +197,8 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member-id", "address1", "address2", "city", "state", "zip", "address-type" })
-    public void getListPage_sortColumn(String sort) throws Exception {
+    @ValueSource(strings = {"id", "address1", "city", "state", "zip", "address-type" })
+    public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
@@ -185,10 +206,13 @@ public class AddressIntegrationTests extends IntegrationTests {
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, sort);
+        var map = new HashMap<String, String>();
+        map.put(sortParamName, sort);
 
-        var actual = executeGetListPage(AddressDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+            0, defaultPageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream().sorted(sortFields.getDto()).toList(), actual);
 
@@ -196,8 +220,27 @@ public class AddressIntegrationTests extends IntegrationTests {
         verify(expected, actual);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"member-id", "address2"})
+    public void getListPage_excluded_fields_returns_bad_request(String sort) {
+        // setup
+        Map<String, String > map = new HashMap<>();
+        map.put(sortParamName, sort);
+
+        // execute and verify
+        given()
+            .auth().none()
+            .params(map)
+            .when()
+            .get(path)
+            .then().assertThat()
+            .status(HttpStatus.BAD_REQUEST)
+            .expect(jsonPath("$.validation-errors").isNotEmpty());
+
+    }
+
     @Test
-    public void createAddresses_returns_addressDto_status_created() throws Exception {
+    public void create_returns_dto_status_created() throws Exception {
         // create addresses
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
         var create = Instancio.of(AddressDto.class)
@@ -264,10 +307,10 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     private List<AddressEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(AddressEntity.class)
-                .size(size) // must be before withSettings
-                .withSettings(getSettings())
+                .size(size)
                 .ignore(field(AddressEntity::getId))
                 .generate(field(AddressEntity::getMember), g -> g.oneOf(members))
                 .create();

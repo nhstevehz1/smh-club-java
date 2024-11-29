@@ -4,11 +4,11 @@ import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-import smh.club.shared.mappers.DomainDataMapper;
-
 import java.util.List;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import smh.club.shared.api.mappers.DomainDataMapper;
 
 /**
  * {@inheritDoc}
@@ -56,6 +56,14 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
     @Override
     public List<MemberDto> toDtoList(List<MemberEntity> entityList) {
         return mapList(entityList, MemberDto.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<MemberDto> toPage(Page<MemberEntity> page) {
+        return page.map(this::toDto);
     }
 
     /**

@@ -3,7 +3,7 @@ package com.smh.club.api.hateoas.assemblers;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.MemberAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
-import com.smh.club.api.hateoas.controllers.MemberControllerImpl;
+import com.smh.club.api.hateoas.controllers.MemberController;
 import com.smh.club.api.hateoas.models.MemberModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,7 +40,7 @@ public class MemberAssemblerImpl
      */
     @Autowired
     public MemberAssemblerImpl(MemberMapper mapper, PagedResourcesAssembler<MemberEntity> pagedAssembler) {
-        super(MemberControllerImpl.class, MemberModel.class);
+        super(MemberController.class, MemberModel.class);
         this.mapper = mapper;
         this.pagedAssembler = pagedAssembler;
     }
@@ -54,8 +54,8 @@ public class MemberAssemblerImpl
 
         MemberModel model = createModelWithId(entity.getId(), entity);
 
-        model.add(linkTo(methodOn(MemberControllerImpl.class).update(entity.getId(), model)).withRel("update"));
-        model.add(linkTo(methodOn(MemberControllerImpl.class).delete(entity.getId())).withRel("delete"));
+        model.add(linkTo(methodOn(MemberController.class).update(entity.getId(), model)).withRel("update"));
+        model.add(linkTo(methodOn(MemberController.class).delete(entity.getId())).withRel("delete"));
         return model;
     }
 

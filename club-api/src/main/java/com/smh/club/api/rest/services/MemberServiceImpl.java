@@ -6,18 +6,17 @@ import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.response.PagedDto;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import smh.club.shared.services.AbstractServiceBase;
-
-import java.util.Optional;
+import smh.club.shared.api.services.AbstractServiceBase;
 
 /**
  * {@inheritDoc}
@@ -36,18 +35,18 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public Page<MemberDto> getMemberListPage(int pageNumber, int pageSize,
-                                             @NonNull String direction, @NonNull String sort) {
+    public PagedDto<MemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
-                pageNumber,
-                pageSize,
-                Sort.Direction.fromString(direction),
-                getSortColumn(sort));
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            getSort(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
-        return membersRepo.findAll(pageRequest).map(memberMapper::toDto);
+        var page = memberMapper.toPage(membersRepo.findAll(pageRequest));
+
+        return PagedDto.of(page);
     }
 
     /**
@@ -115,11 +114,18 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
     /**
      * {@inheritDoc}
      */
-    protected String getSortColumn(String key) {
-        var source = MemberDto.class;
-        var target = MemberEntity.class;
+    @Override
+    protected Sort getSort(Sort sort) {
+        if (sort.isUnsorted()) {
+            return sort;
+        }
 
-        return getSort(key, source, target)
-                .orElse("memberNumber");
+        var orders =
+            sort.get()
+                .map(o -> new Sort.Order(o.getDirection(),
+                    getSort(o.getProperty(), MemberDto.class, MemberEntity.class)
+                        .orElseThrow(IllegalArgumentException::new))).toList();
+
+        return Sort.by(orders);
     }
 }

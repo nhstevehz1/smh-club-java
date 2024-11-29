@@ -1,9 +1,9 @@
 package com.smh.club.api.hateoas.contracts.services;
 
 import com.smh.club.api.hateoas.models.MemberModel;
-import org.springframework.hateoas.PagedModel;
-
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 /**
  * Business logic for members.
@@ -12,13 +12,12 @@ public interface MemberService {
 
     /**
      * Retrieves a page of members from the database.
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param direction The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
+     *
+     * @param pageable A {@link Pageable} that contains page and sort information.
      * @return A {@link PagedModel} of type {@link MemberModel}.
-     */ 
-    PagedModel<MemberModel> getMemberListPage(int pageSize, int pageNumber, String direction, String sort);
+     */
+    PagedModel<MemberModel> getPage(Pageable pageable);
+
 
     /**
      * Retrieves a member from the database.
@@ -35,7 +34,7 @@ public interface MemberService {
     MemberModel createMember(MemberModel member);
 
     /**
-     * Updates a member int he database.
+     * Updates a member in the database.
      * @param id The id of the member to update.
      * @param member The {@link MemberModel} containing the updates.
      * @return The updated {@link MemberModel}.

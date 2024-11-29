@@ -2,8 +2,8 @@ package com.smh.club.api.data.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import smh.club.shared.annotations.SortExclude;
-import smh.club.shared.domain.EmailType;
+import smh.club.shared.api.annotations.SortExclude;
+import smh.club.shared.api.domain.EmailType;
 
 /**
  * Represents an email object.
@@ -29,7 +29,7 @@ public class EmailEntity {
     private EmailType emailType = EmailType.Home;
 
     @SortExclude
-    @EqualsAndHashCode.Exclude // prevents stack overflow when calling .equals on UserEntityr
+    @EqualsAndHashCode.Exclude // prevents stack overflow when calling .equals on UserEntity
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id", referencedColumnName = "id", nullable = false)

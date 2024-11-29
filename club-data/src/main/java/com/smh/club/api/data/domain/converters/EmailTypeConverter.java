@@ -2,7 +2,7 @@ package com.smh.club.api.data.domain.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import smh.club.shared.domain.EmailType;
+import smh.club.shared.api.domain.EmailType;
 
 @Converter(autoApply = true)
 public class EmailTypeConverter implements AttributeConverter<EmailType, Integer> {

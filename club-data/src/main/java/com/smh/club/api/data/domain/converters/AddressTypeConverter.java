@@ -2,7 +2,7 @@ package com.smh.club.api.data.domain.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import smh.club.shared.domain.AddressType;
+import smh.club.shared.api.domain.AddressType;
 
 @Converter(autoApply = true)
 public class AddressTypeConverter implements AttributeConverter<AddressType, Integer> {

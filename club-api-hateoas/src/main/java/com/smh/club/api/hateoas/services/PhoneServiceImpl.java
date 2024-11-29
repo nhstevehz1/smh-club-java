@@ -7,16 +7,16 @@ import com.smh.club.api.hateoas.contracts.assemblers.PhoneAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.PhoneMapper;
 import com.smh.club.api.hateoas.contracts.services.PhoneService;
 import com.smh.club.api.hateoas.models.PhoneModel;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import smh.club.shared.services.AbstractServiceBase;
-
-import java.util.Optional;
+import smh.club.shared.api.services.AbstractServiceBase;
 
 /**
  * {@inheritDoc}
@@ -40,17 +40,18 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public PagedModel<PhoneModel> getPhoneListPage(int pageNumber, int pageSize, String direction, String sort) {
+    public PagedModel<PhoneModel> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
-            pageNumber,
-            pageSize,
-            Sort.Direction.fromString(direction),
-            getSortColumn(sort));
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            getSort(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
-        return assembler.toPagedModel(phoneRepo.findAll(pageRequest));
+        var page = phoneRepo.findAll(pageRequest);
+
+        return assembler.toPagedModel(page);
     }
 
     /**
@@ -109,10 +110,17 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    protected String getSortColumn(String key) {
-        var source = PhoneModel.class;
-        var target = PhoneEntity.class;
+    protected Sort getSort(Sort sort) {
+        if (sort.isUnsorted()) {
+            return sort;
+        }
 
-        return getSort(key, source, target).orElse("id");
+        var orders =
+            sort.get()
+                .map(o -> new Sort.Order(o.getDirection(),
+                    getSort(o.getProperty(), PhoneModel.class, PhoneEntity.class)
+                        .orElseThrow(IllegalArgumentException::new))).toList();
+
+        return Sort.by(orders);
     }
 }

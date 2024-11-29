@@ -6,6 +6,7 @@ import com.smh.club.api.data.domain.repos.RenewalsRepo;
 import com.smh.club.api.hateoas.contracts.assemblers.RenewalAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.RenewalMapper;
 import com.smh.club.api.hateoas.models.RenewalModel;
+import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -23,15 +24,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 
-import java.util.Optional;
-
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(InstancioExtension.class)
@@ -67,17 +72,19 @@ public class RenewalServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @CsvSource({"id, id", "renewal-date, renewalDate", "renewal-year, renewalYear"})
-    public void getRenewalListPage(String sort, String actual) {
+    public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
         when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
 
         // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -98,116 +105,51 @@ public class RenewalServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"member-id"})
-    public void getRenewalListPage_excludes_use_id(String sort) {
+    public void getPage_excludes_use_id(String sort) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
-        var actual = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
 
-
-        // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(repoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(actual, order.getProperty());
-
-        verify(repoMock).findAll(any(PageRequest.class));
-        verify(assemblerMock).toPagedModel(any());
         verifyNoMoreInteractions(repoMock, assemblerMock);
     }
 
     @Test
-    public void getRenewalListPage_with_empty_sort_uses_default() {
-        // setup
-        var pageNumber = 10;
-        var pageSize = 20;
-        var direction = "ASC";
-        var sort = "";
-        var defaultSort = "id";
-
-        when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
-
-        // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
-
-
-        // verify
-        verify(repoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-
-        verify(repoMock).findAll(any(PageRequest.class));
-        verify(assemblerMock).toPagedModel(pageMock);
-        verifyNoMoreInteractions(repoMock, assemblerMock);
-    }
-
-    @Test
-    public void getRenewalListPage_unknown_sortColumn_uses_default() {
+    public void getPage_unknown_sortColumn_throws_exception() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
         var sort = "thisIsNotAColumn";
-        var defaultSort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
 
-        // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(repoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-
-        verify(repoMock).findAll(any(PageRequest.class));
-        verify(assemblerMock).toPagedModel(pageMock);
-        verify(assemblerMock).toPagedModel(pageMock);
         verifyNoMoreInteractions(repoMock, assemblerMock);
     }
 
     @Test
-    public void getRenewalListPage_with_descending() {
+    public void getPage_with_descending() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
+        var direction = "DESC";
         var sort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
         when(repoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
         when(assemblerMock.toPagedModel(pageMock)).thenReturn(PagedModel.empty());
 
         // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(repoMock).findAll(acPageRequest.capture());
@@ -226,12 +168,14 @@ public class RenewalServiceTests extends ServiceTests {
     }
 
     @Test
-    public void getRenewalListPage_returns_pagedModel() {
+    public void getPage_returns_pagedModel() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
+        var direction = "DESC";
         var sort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
         var models = Instancio.ofList(RenewalModel.class)
             .size(pageSize)
@@ -243,7 +187,7 @@ public class RenewalServiceTests extends ServiceTests {
         when(assemblerMock.toPagedModel(pageMock)).thenReturn(pagedModel);
 
         // execute
-        var ret = svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
+        var ret = svc.getPage(pageable);
 
         // verify
         assertEquals(pagedModel, ret);

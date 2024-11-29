@@ -1,11 +1,12 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.entities.RenewalEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.data.domain.repos.RenewalsRepo;
+import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.rest.dto.RenewalDto;
+import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -24,13 +25,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
+import org.springframework.data.domain.Sort;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(InstancioExtension.class)
@@ -48,7 +51,7 @@ public class RenewalServiceTests extends ServiceTests {
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
-    @WithSettings
+    @WithSettings // Instancio settings
     private final Settings settings = Settings.create()
             .set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
@@ -56,16 +59,25 @@ public class RenewalServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @CsvSource({"id, id", "renewal-date, renewalDate", "renewal-year, renewalYear"})
-    public void getRenewalListPage(String sort, String actual) {
+    public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
+
+        var list = Instancio.ofList(RenewalDto.class)
+            .size(20)
+            .create();
+
+        var page = createPage(list, pageableMock,100);
 
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(renMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -79,113 +91,61 @@ public class RenewalServiceTests extends ServiceTests {
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(actual, order.getProperty());
         verify(renRepoMock).findAll(any(PageRequest.class));
-
 
         verifyNoMoreInteractions(renRepoMock, renMapMock);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"member-id", "memberId"})
-    public void getRenewalListPage_excludes_use_id(String sort) {
+    public void getPage_excludes_throws_exception(String sort) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
-        var actual = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-
-        // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(renRepoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(actual, order.getProperty());
-        verify(renRepoMock).findAll(any(PageRequest.class));
-
-
-        verifyNoMoreInteractions(renRepoMock, renMapMock);
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
     }
 
     @Test
-    public void getRenewalListPage_with_empty_sort_uses_default() {
-        // setup
-        var pageNumber = 10;
-        var pageSize = 20;
-        var direction = "ASC";
-        var sort = "";
-        var defaultSort = "id";
-
-        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-
-        // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(renRepoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-
-        verify(renRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(renRepoMock);
-    }
-
-    @Test
-    public void getRenewalListPage_unknown_sortColumn_uses_default() {
+    public void gePage_unknown_sortColumn_throws_exception() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
         var direction = "ASC";
         var sort = "thisIsNotAColumn";
-        var defaultSort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        // execute and verify
+        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
 
-        // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
-
-        // verify
-        verify(renRepoMock).findAll(acPageRequest.capture());
-
-        var pageRequest = acPageRequest.getValue();
-        assertEquals(pageSize, pageRequest.getPageSize());
-        assertEquals(pageNumber, pageRequest.getPageNumber());
-
-        // only one sort order is supported
-        var order = pageRequest.getSort().get().findFirst().orElseThrow();
-        assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
-        assertEquals(defaultSort, order.getProperty());
-        verify(renRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(renRepoMock);
+        verifyNoMoreInteractions(renRepoMock, renMapMock);
     }
 
     @Test
-    public void getRenewalListPage_with_desc() {
+    public void getPage_with_descending() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
+        var direction = "DESC";
         var sort = "id";
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
+
+        var list = Instancio.ofList(RenewalDto.class)
+            .size(20)
+            .create();
+
+        var page = createPage(list, pageableMock,100);
 
         when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(renMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
-        svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
+        svc.getPage(pageable);
 
         // verify
         verify(renRepoMock).findAll(acPageRequest.capture());
@@ -199,34 +159,38 @@ public class RenewalServiceTests extends ServiceTests {
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(sort, order.getProperty());
         verify(renRepoMock).findAll(any(PageRequest.class));
-        verifyNoMoreInteractions(renRepoMock);
+        verify(renMapMock).toPage(pageMock);
+        verifyNoMoreInteractions(renRepoMock, renMapMock);
     }
 
-
     @Test
-    public void getRenewalListPage_returns_RenewalList() {
+    public void getPage_returns_list() {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
-        var direction = "desc";
+        var direction = "DESC";
         var sort = "id";
         var total = 200;
-        var entityList = Instancio.ofList(RenewalEntity.class).size(pageSize).create();
-        var dto = Instancio.of(RenewalDto.class).create();
+        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var page = createEntityPage(entityList, pageableMock, total);
+        var list = Instancio.ofList(RenewalDto.class)
+            .size(pageSize)
+            .create();
 
-        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(page);
-        when(renMapMock.toDto(any(RenewalEntity.class))).thenReturn(dto);
+        var page = createPage(list, pageableMock, total);
+
+        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(renMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
-        var ret = svc.getRenewalListPage(pageNumber, pageSize, direction, sort);
+        var ret = svc.getPage(pageable);
 
         // verify
-        assertEquals(total, ret.getTotalElements());
+        assertEquals(total, ret.getMetadata().totalElements());
         assertEquals(pageSize, ret.getContent().size());
         verify(renRepoMock).findAll(any(PageRequest.class));
-        verify(renMapMock, times(pageSize)).toDto(any(RenewalEntity.class));
+        verify(renMapMock).toPage(pageMock);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 
@@ -235,16 +199,16 @@ public class RenewalServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.of(RenewalEntity.class).set(field(RenewalEntity::getId), id).create();
-        var dto = Instancio.of(RenewalDto.class).set(field(RenewalDto::getId), id).create();
+        var renewal = Instancio.of(RenewalDto.class).set(field(RenewalDto::getId), id).create();
 
         when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(renMapMock.toDto(entity)).thenReturn(dto);
+        when(renMapMock.toDto(entity)).thenReturn(renewal);
 
         // execute
-        var member = svc.getRenewal(id);
+        var ret = svc.getRenewal(id);
 
         // verify
-        assertNotNull(member);
+        assertNotNull(ret);
         verify(renRepoMock).findById(id);
         verify(renMapMock).toDto(any(RenewalEntity.class));
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);

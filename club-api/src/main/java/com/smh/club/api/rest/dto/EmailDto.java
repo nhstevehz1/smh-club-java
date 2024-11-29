@@ -1,12 +1,14 @@
 package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.data.domain.entities.EmailEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import smh.club.shared.annotations.SortExclude;
-import smh.club.shared.domain.EmailType;
+import smh.club.shared.api.annotations.SortExclude;
+import smh.club.shared.api.annotations.SortTarget;
+import smh.club.shared.api.domain.EmailType;
 
 /**
  * DTO for emails.
@@ -15,6 +17,7 @@ import smh.club.shared.domain.EmailType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SortTarget(EmailEntity.class)
 public class EmailDto {
 
     @JsonProperty("id")

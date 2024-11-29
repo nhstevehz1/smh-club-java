@@ -1,11 +1,17 @@
 package com.smh.club.api.hateoas.integrationtests;
 
+import static java.util.Comparator.comparingInt;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -24,18 +30,10 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import smh.club.shared.config.PagingConfig;
-
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
-import static java.util.Comparator.comparingInt;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
-@ExtendWith(SpringExtension.class)
 @ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -53,16 +50,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class MemberIntegrationTests extends IntegrationTests {
 
-    @Value("${request.paging.size}")
+    @Value("${spring.data.web.pageable.default-page-size:20}")
     private int defaultPageSize;
 
+    @Value("${spring.data.rest.sort-param-name:sort}")
+    private String sortParamName;
+
+    @Value("${spring.data.rest.size-param-name:size}")
+    private String sizeParamName;
+
+    @Value("${spring.data.rest.page-param-name:page}")
+    private String pageParamName;
+    
     @Autowired
     private MembersRepo memberRepo;
 
     private final String listNodeName = "memberModelList";
 
-
-    @WithSettings
+    @WithSettings // Instancio settings
     private final Settings settings =
             Settings.create().set(Keys.SET_BACK_REFERENCES, true)
                 .set(Keys.JPA_ENABLED, true)
@@ -106,7 +111,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
 
         Map<String, String> map = new HashMap<>();
-        map.put(PagingConfig.DIRECTION_NAME, "desc");
+        map.put(sortParamName, "member-number,desc");
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
@@ -131,7 +136,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(entitySize, sorted.size());
 
         Map<String,String> map = new HashMap<>();
-        map.put(PagingConfig.SIZE_NAME, String.valueOf(pageSize));
+        map.put(sizeParamName, String.valueOf(pageSize));
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             0, pageSize, listNodeName);
@@ -147,7 +152,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {2,4,5,8})
-    public void getListPage_page(int page) {
+    public void getPage_page(int page) {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
         var sorted = memberRepo.findAll()
@@ -155,7 +160,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(entitySize, sorted.size());
 
         Map<String,String> map = new HashMap<>();
-        map.put(PagingConfig.PAGE_NAME, String.valueOf(page));
+        map.put(pageParamName, String.valueOf(page));
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             page, defaultPageSize, listNodeName);
@@ -171,9 +176,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member-number", "first-name", "middle-name", "last-name",
-        "suffix", "birth-date", "joined-date" })
-    public void getListPage_sortColumn(String sort) {
+    @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date"})
+    public void getPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
@@ -182,7 +186,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(entitySize, sorted.size());
 
         var map = new HashMap<String, String>();
-        map.put(PagingConfig.SORT_NAME, sort);
+        map.put(sortParamName, sort);
 
         var testParams = PageTestParams.of(MemberModel.class, map, path, sorted.size(),
             0, defaultPageSize, listNodeName);
@@ -191,6 +195,25 @@ public class MemberIntegrationTests extends IntegrationTests {
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"middle-name", "suffix", "addresses", "emails", "phones", "renewals"})
+    public void getPage_excluded_fields_returns_bad_request(String sort) {
+        // setup
+        Map<String, String > map = new HashMap<>();
+        map.put(sortParamName, sort);
+
+        // execute and verify
+        given()
+            .auth().none()
+            .params(map)
+        .when()
+            .get(path)
+        .then().assertThat()
+            .status(HttpStatus.BAD_REQUEST)
+            .expect(jsonPath("$.validation-errors").isNotEmpty());
+
     }
 
     @Test
