@@ -232,7 +232,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var id = email.getId();
 
         // perform get
-        var uri = "http://localhost" + path + "/" + id;
         var actual =
             given()
                 .auth().none()
