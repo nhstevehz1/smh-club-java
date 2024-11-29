@@ -96,7 +96,6 @@ public class AddressController {
     public ResponseEntity<AddressModel> update(@PathVariable int id, @RequestBody AddressModel address) {
         log.debug("Updating address, id: {}, data: {}", id, address);
 
-        address.setId(0);
         var ret = addressService.updateAddress(id, address);
 
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
