@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.EmailService;
-import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.dto.EmailDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
@@ -34,7 +33,7 @@ public class EmailController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing an {@link AddressDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link EmailDto}.
      */
     @GetMapping
     public ResponseEntity<PagedDto<EmailDto>> page(

@@ -34,7 +34,7 @@ public class AddressController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing an {@link AddressDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link AddressDto}.
      */
     @GetMapping
     public ResponseEntity<PagedDto<AddressDto>> page(
