@@ -99,7 +99,6 @@ public class EmailController {
     public ResponseEntity<EmailModel> update(@PathVariable int id, @RequestBody EmailModel email) {
         log.debug("Updating email, id: {}, data: {}", id, email);
 
-        email.setId(0);
         var ret = emailService.updateEmail(id, email);
 
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

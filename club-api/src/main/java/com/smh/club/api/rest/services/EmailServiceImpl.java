@@ -6,18 +6,17 @@ import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.rest.contracts.mappers.EmailMapper;
 import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.dto.EmailDto;
+import com.smh.club.api.rest.response.PagedDto;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import smh.club.shared.api.services.AbstractServiceBase;
-
-import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -37,18 +36,18 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public Page<EmailDto> getEmailListPage(int pageNumber, int pageSize,
-                                           @NonNull String direction, @NonNull String sort) {
+    public PagedDto<EmailDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
-                pageNumber,
-                pageSize,
-                Sort.Direction.fromString(direction),
-                getSortColumn(sort));
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            getSort(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
-        return emailRepo.findAll(pageRequest).map(emailMapper::toDto);
+        var page = emailMapper.toPage(emailRepo.findAll(pageRequest));
+
+        return PagedDto.of(page);
     }
 
     /**
@@ -107,11 +106,18 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
     /**
      * {@inheritDoc}
      */
-    protected String getSortColumn(String key) {
-        var source = EmailDto.class;
-        var target = EmailEntity.class;
+    @Override
+    protected Sort getSort(Sort sort) {
+        if (sort.isUnsorted()) {
+            return sort;
+        }
 
-        return getSort(key, source, target)
-                .orElse("id");
+        var orders =
+            sort.get()
+                .map(o -> new Sort.Order(o.getDirection(),
+                    getSort(o.getProperty(), EmailDto.class, EmailEntity.class)
+                        .orElseThrow(IllegalArgumentException::new))).toList();
+
+        return Sort.by(orders);
     }
 }

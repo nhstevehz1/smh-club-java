@@ -1,9 +1,10 @@
 package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.EmailDto;
-import org.springframework.data.domain.Page;
-
+import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Business logic for emails.
@@ -12,13 +13,11 @@ public interface EmailService {
 
     /**
      * Retrieves a page of emailes from the database.
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param direction The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
+     *
+     * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link Page} of type {@link EmailDto}.
      */
-    Page<EmailDto> getEmailListPage(int pageNumber, int pageSize, String direction, String sort);
+    PagedDto<EmailDto> getPage(Pageable pageable);
 
     /**
      * Retrieves an email from the database.
