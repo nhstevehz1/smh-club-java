@@ -1,10 +1,10 @@
 package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.AddressDto;
-import org.springframework.data.domain.Page;
-import org.springframework.lang.NonNull;
-
+import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Business logic for addresses.
@@ -13,14 +13,11 @@ public interface AddressService {
 
     /**
      * Retrieves a page of addresses from the database.
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param direction The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
+     *
+     * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link Page} of type {@link AddressDto}.
      */
-    Page<AddressDto> getAddressListPage(int pageNumber, int pageSize,
-                                        @NonNull String direction, @NonNull String sort);
+    PagedDto<AddressDto> getPage(Pageable pageable);
 
     /**
      * Retrieves an address from the database.
