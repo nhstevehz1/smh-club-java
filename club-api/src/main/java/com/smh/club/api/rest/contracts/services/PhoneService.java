@@ -1,9 +1,9 @@
 package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.PhoneDto;
-import org.springframework.data.domain.Page;
-
+import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Business logic for phonees.
@@ -11,14 +11,12 @@ import java.util.Optional;
 public interface PhoneService {
 
     /**
-     * Retrieves a page of phonees from the database.
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param direction The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
-     * @return A {@link Page} of type {@link PhoneDto}.
+     * Retrieves a page of emailes from the database.
+     *
+     * @param pageable A {@link Pageable} that describes the sort.
+     * @return A {@link PagedDto} of type {@link PhoneDto}.
      */
-    Page<PhoneDto> getPhoneListPage(int pageSize, int pageNumber, String direction, String sort);
+    PagedDto<PhoneDto> getPage(Pageable pageable);
 
     /**
      * Retrieves a phone from the database.

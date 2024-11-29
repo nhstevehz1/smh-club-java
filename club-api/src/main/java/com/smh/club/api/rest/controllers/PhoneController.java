@@ -3,15 +3,17 @@ package com.smh.club.api.rest.controllers;
 import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.response.CountResponse;
-import com.smh.club.api.rest.response.PageResponse;
+import com.smh.club.api.rest.response.PagedDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.api.config.PagingConfig;
+import smh.club.shared.api.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets phone objects in the database.
@@ -21,32 +23,27 @@ import smh.club.shared.api.config.PagingConfig;
 @RestController
 @RequestMapping(value = "/api/v1/phones", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PhoneController {
-    
+
+    private final String DEFAULT_SORT = "id";
+
     private final PhoneService phoneSvc;
 
     /**
-     * Endpoint for retrieving a page of phone objects from the database.
+     * Endpoint for retrieving a page of address objects from the database.
+     * if no sort is specified then the DEFAULT_SORT is used.
      *
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param sortDir The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
-     * @return A {@link ResponseEntity} containing a {@link PageResponse} of type {@link PhoneDto}.
+     * @param pageable A {@link Pageable} that describes the sort.
+     * @return A {@link ResponseEntity} containing a page of {@link PhoneDto}.
      */
     @GetMapping
-    public ResponseEntity<PageResponse<PhoneDto>> page(
-            @RequestParam(value = PagingConfig.PAGE_NAME,
-                    defaultValue = "${request.paging.page}") int pageNumber,
-            @RequestParam(value = PagingConfig.SIZE_NAME,
-                    defaultValue = "${request.paging.size}") int pageSize,
-            @RequestParam(value = PagingConfig.DIRECTION_NAME,
-                    defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME,
-                    defaultValue = "") String sort) {
+    public ResponseEntity<PagedDto<PhoneDto>> page(
+        @PageableDefault(sort = {DEFAULT_SORT})
+        @SortConstraint(PhoneDto.class)
+        Pageable pageable) {
 
-        var page = phoneSvc.getPhoneListPage(pageNumber, pageSize, sortDir, sort);
+        var page = phoneSvc.getPage(pageable);
 
-        return ResponseEntity.ok(PageResponse.of(page));
+        return ResponseEntity.ok(page);
     }
 
     /**
