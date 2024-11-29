@@ -107,14 +107,6 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
     /**
      * {@inheritDoc}
      */
-    @Override //TODO: remove after pageable is fully implemented
-    protected String getSortColumn(String key) {
-        var source = AddressModel.class;
-        var target = AddressEntity.class;
-
-        return getSort(key, source, target).orElse("id");
-    }
-
     @Override
     protected Sort getSort(Sort sort) {
         if (sort.isUnsorted()) {

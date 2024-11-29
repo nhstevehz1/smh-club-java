@@ -310,8 +310,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(AddressEntity.class)
-                .size(size) // must be before withSettings
-                .withSettings(getSettings())
+                .size(size)
                 .ignore(field(AddressEntity::getId))
                 .generate(field(AddressEntity::getMember), g -> g.oneOf(members))
                 .create();

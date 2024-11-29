@@ -12,7 +12,7 @@ import lombok.Getter;
 public class PageTestParams<T> {
     private Class<T> clazz;
     @Builder.Default
-    private Map<String, String> query = new HashMap<>();
+    private final Map<String, String> query = new HashMap<>();
     private String path;
     private int totalCount;
     private int pageNumber;

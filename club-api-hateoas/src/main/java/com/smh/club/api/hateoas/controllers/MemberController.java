@@ -16,10 +16,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import smh.club.shared.api.annotations.SortConstraint;
 
-//TODO: fix javadocs
-
 /**
- * {@inheritDoc}
+ * Defines REST endpoints that targets member objects in the database.
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -33,10 +31,13 @@ public class MemberController {
     private final MemberService memberSvc;
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a page of member objects from the database.
+     * if no sort is specified then the DEFAULT_SORT is used.
+     *
+     * @param pageable A {@link Pageable} that describes the sort.
+     * @return A {@link ResponseEntity} containing an {@link PagedModel} of type {@link MemberModel}.
      */
     @GetMapping
-    //@Override
     public ResponseEntity<PagedModel<MemberModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(MemberModel.class)
@@ -50,7 +51,10 @@ public class MemberController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for retrieving a single member from the database.
+     *
+     * @param id The id of the member.
+     * @return @return A {@link ResponseEntity} containing a {@link MemberModel}
      */
     @GetMapping("{id}")
     //@Override
@@ -61,7 +65,9 @@ public class MemberController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for getting the total count of members in the database.
+     *
+     * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     //@Override
@@ -70,7 +76,10 @@ public class MemberController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for creating a member.
+     *
+     * @param member The {@link MemberModel} used to create the object in the database
+     * @return A {@link ResponseEntity} containing a {@link MemberModel} representing the newly created object.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     //@Override
@@ -83,7 +92,11 @@ public class MemberController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for updating a member.
+     *
+     * @param id The id of the member to update in the database.
+     * @param member The {@link MemberModel} that contains the updated info.
+     * @return A {@link ResponseEntity} containing a {@link MemberModel} that represents the updated member.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     //@Override
@@ -97,7 +110,10 @@ public class MemberController {
     }
 
     /**
-     * {@inheritDoc}
+     * Endpoint for deleting a member from the database.
+     *
+     * @param id The id of the member to delete
+     * @return ab empty {@link ResponseEntity}.
      */
     @DeleteMapping(value = "{id}")
     //@Override

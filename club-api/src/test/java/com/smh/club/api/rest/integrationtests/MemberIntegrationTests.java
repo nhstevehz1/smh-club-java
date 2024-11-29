@@ -14,7 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
@@ -40,6 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
+@ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(
@@ -62,6 +68,12 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @Autowired
     private MembersRepo repo;
+
+    @WithSettings // Instancio settings
+    private final Settings settings =
+        Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -386,8 +398,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     private List<MemberEntity> addEntitiesToDb(int size) {
         var entities = Instancio.ofList(MemberEntity.class)
-                .size(size) // must be before withSettings
-                .withSettings(getSettings())
+                .size(size)
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .ignore(field(MemberEntity::getId))
                 .create();

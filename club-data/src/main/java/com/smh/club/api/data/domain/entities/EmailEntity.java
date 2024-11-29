@@ -29,7 +29,7 @@ public class EmailEntity {
     private EmailType emailType = EmailType.Home;
 
     @SortExclude
-    @EqualsAndHashCode.Exclude // prevents stack overflow when calling .equals on UserEntityr
+    @EqualsAndHashCode.Exclude // prevents stack overflow when calling .equals on UserEntity
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id", referencedColumnName = "id", nullable = false)

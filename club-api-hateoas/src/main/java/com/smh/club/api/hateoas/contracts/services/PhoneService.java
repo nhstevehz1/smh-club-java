@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 
 /**
- * Business logic for phonees.
+ * Business logic for phones.
  */
 public interface PhoneService {
 
@@ -35,7 +35,7 @@ public interface PhoneService {
     PhoneModel createPhone(PhoneModel phone);
 
     /**
-     * Updates a phone int he database.
+     * Updates a phone in the database.
      *
      * @param id The id of the phone to update.
      * @param phone The {@link PhoneModel} containing the updates.

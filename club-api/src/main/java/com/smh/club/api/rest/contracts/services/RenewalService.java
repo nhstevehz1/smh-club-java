@@ -35,7 +35,7 @@ public interface RenewalService {
     RenewalDto createRenewal(RenewalDto renewal);
 
     /**
-     * Updates a renewal int he database.
+     * Updates a renewal in the database.
      *
      * @param id The id of the renewal to update.
      * @param renewal The {@link RenewalDto} containing the updates.

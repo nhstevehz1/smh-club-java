@@ -1,11 +1,10 @@
 package com.smh.club.api.hateoas.integrationtests;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @AllArgsConstructor
 @Getter
@@ -13,7 +12,7 @@ import java.util.Map;
 public class PageTestParams<T> {
     private Class<T> clazz;
     @Builder.Default
-    private Map<String, String> query = new HashMap<>();
+    private final Map<String, String> query = new HashMap<>();
     private String path;
     private int totalCount;
     private int pageNumber;

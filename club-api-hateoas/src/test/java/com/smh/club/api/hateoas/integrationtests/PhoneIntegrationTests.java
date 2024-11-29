@@ -73,8 +73,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Autowired
     private PhoneRepo repo;
 
-    private List<MemberEntity> members;
-
     private final String listNodeName = "phoneModelList";
 
     @WithSettings // Instancio settings
@@ -97,7 +95,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .withUnique(field(MemberEntity::getMemberNumber))
             .create();
 
-        this.members = memberRepo.saveAllAndFlush(members);
+        memberRepo.saveAllAndFlush(members);
     }
 
     @ParameterizedTest
@@ -418,6 +416,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     }
 
     private List<PhoneEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
+
         var entities = Instancio.ofList(PhoneEntity.class)
             .size(size)
             .ignore(field(PhoneEntity::getId))

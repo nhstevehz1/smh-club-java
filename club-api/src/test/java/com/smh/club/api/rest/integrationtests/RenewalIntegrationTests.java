@@ -191,7 +191,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"id", "renewal-date", "renewal-year" })
-    public void getListPage_sortColumn(String sort) throws Exception {
+    public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
@@ -397,8 +397,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(RenewalEntity.class)
-                .size(size) // must be before withSettings
-                .withSettings(getSettings())
+                .size(size)
                 .generate(field(RenewalEntity::getMember), g -> g.oneOf(members))
                 .ignore(field(RenewalEntity::getId))
             .generate(field(RenewalEntity::getRenewalYear),

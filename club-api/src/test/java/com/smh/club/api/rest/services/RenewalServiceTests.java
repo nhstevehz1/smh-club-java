@@ -97,7 +97,7 @@ public class RenewalServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"member-id", "memberId"})
-    public void getPage_excludes_throws_excepton(String sort) {
+    public void getPage_excludes_throws_exception(String sort) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;

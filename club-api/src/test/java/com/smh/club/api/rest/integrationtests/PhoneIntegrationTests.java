@@ -15,9 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.WithSettings;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
@@ -41,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
+@ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(
@@ -67,6 +73,12 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Autowired
     private PhoneRepo repo;
 
+    @WithSettings // Instancio settings
+    Settings settings =
+        Settings.create().set(Keys.SET_BACK_REFERENCES, true)
+            .set(Keys.JPA_ENABLED, true)
+            .set(Keys.COLLECTION_MAX_SIZE, 0);
+
     @Autowired
     public PhoneIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
         super(mockMvc, mapper, "/api/v1/phones");
@@ -77,7 +89,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
             .size(5)
-            .withSettings(getSettings())
             .ignore(field(MemberEntity::getId))
             .withUnique(field(MemberEntity::getMemberNumber))
             .create();
@@ -387,8 +398,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(PhoneEntity.class)
-            .size(size) // must be before withSettings
-            .withSettings(getSettings())
+            .size(size)
             .generate(field(PhoneEntity::getMember), g -> g.oneOf(members))
             .ignore(field(PhoneEntity::getId))
             .create();

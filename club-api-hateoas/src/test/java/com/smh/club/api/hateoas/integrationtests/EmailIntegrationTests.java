@@ -71,9 +71,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Autowired
     private MembersRepo memberRepo;
 
-    private List<MemberEntity> members;
-
-    private final String listNodeName = "emailModelList";
+     private final String listNodeName = "emailModelList";
 
     @WithSettings // Instancio settings
     private final Settings settings =
@@ -95,7 +93,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             .withUnique(field(MemberEntity::getMemberNumber))
             .create();
 
-        this.members = memberRepo.saveAllAndFlush(members);
+        memberRepo.saveAllAndFlush(members);
     }
 
     @ParameterizedTest
@@ -416,6 +414,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     }
 
     private List<EmailEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
+
         var entities = Instancio.ofList(EmailEntity.class)
             .size(size)
             .ignore(field(EmailEntity::getId))

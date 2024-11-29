@@ -6,12 +6,12 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Business logic for phonees.
+ * Business logic for phones.
  */
 public interface PhoneService {
 
     /**
-     * Retrieves a page of emailes from the database.
+     * Retrieves a page of phones from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link PagedDto} of type {@link PhoneDto}.
@@ -33,7 +33,7 @@ public interface PhoneService {
     PhoneDto createPhone(PhoneDto phone);
 
     /**
-     * Updates a phone int he database.
+     * Updates a phone in the database.
      * @param id The id of the phone to update.
      * @param phone The {@link PhoneDto} containing the updates.
      * @return The updated {@link PhoneDto}.

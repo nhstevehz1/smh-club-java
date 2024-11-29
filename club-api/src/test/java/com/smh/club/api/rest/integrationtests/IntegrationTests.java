@@ -10,8 +10,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.instancio.settings.Keys;
-import org.instancio.settings.Settings;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,13 +29,6 @@ public abstract class IntegrationTests {
         this.mapper = mapper;
         this.path = path;
         configure();
-    }
-
-    // TODO: remove after integration test fixes
-    protected Settings getSettings() {
-        return Settings.create().set(Keys.SET_BACK_REFERENCES, true)
-                .set(Keys.JPA_ENABLED, true)
-                .set(Keys.COLLECTION_MAX_SIZE, 0);
     }
 
     protected <T> List<T> executeListPage(PageTestParams<T> testParams) {

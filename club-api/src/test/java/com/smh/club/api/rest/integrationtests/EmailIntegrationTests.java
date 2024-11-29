@@ -393,8 +393,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(EmailEntity.class)
-                .size(size) // must be before withSettings
-                .withSettings(getSettings())
+                .size(size)
                 .ignore(field(EmailEntity::getId))
                 .generate(field(EmailEntity::getMember), g -> g.oneOf(members))
                 .create();

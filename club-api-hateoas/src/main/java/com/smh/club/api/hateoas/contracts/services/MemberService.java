@@ -34,7 +34,7 @@ public interface MemberService {
     MemberModel createMember(MemberModel member);
 
     /**
-     * Updates a member int he database.
+     * Updates a member in the database.
      * @param id The id of the member to update.
      * @param member The {@link MemberModel} containing the updates.
      * @return The updated {@link MemberModel}.

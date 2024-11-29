@@ -33,7 +33,7 @@ public interface AddressService {
     AddressDto createAddress(AddressDto address);
 
     /**
-     * Updates an address int he database.
+     * Updates an address in the database.
      * @param id The id of the address to update.
      * @param address The {@link AddressDto} containing the updates.
      * @return The updated {@link AddressDto}.

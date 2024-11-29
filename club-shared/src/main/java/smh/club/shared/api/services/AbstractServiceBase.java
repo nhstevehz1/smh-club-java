@@ -13,15 +13,13 @@ import smh.club.shared.api.annotations.SortExclude;
  */
 public abstract class AbstractServiceBase {
 
-    protected String getSortColumn(String key) {return null;}
-
     /**
      * Maps the Sort.Order's in to actual fields
      *
      * @param sort The input {@link Sort}.
      * @return The mapped {@link Sort}
      */
-    protected Sort getSort(Sort sort) {return null;} // TODO: make abstract after refactor
+    protected abstract Sort getSort(Sort sort);
 
     /**
      * Retrieves an entity's column name based on a key.

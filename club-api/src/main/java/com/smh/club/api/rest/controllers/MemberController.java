@@ -97,6 +97,7 @@ public class MemberController {
 
     /**
      * Endpoint for deleting a member from the database.
+     *
      * @param id The id of the member to delete
      * @return ab empty {@link ResponseEntity}.
      */

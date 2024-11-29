@@ -105,17 +105,6 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
     /**
      * {@inheritDoc}
      */
-    @Override //TODO: remove after pageable is fully implemented
-    protected String getSortColumn(String key) {
-        var source = EmailModel.class;
-        var target = EmailEntity.class;
-
-        return getSort(key, source, target).orElse("id");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Sort getSort(Sort sort) {
         if (sort.isUnsorted()) {

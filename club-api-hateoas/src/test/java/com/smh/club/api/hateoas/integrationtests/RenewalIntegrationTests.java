@@ -73,9 +73,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
     @Autowired
     private MembersRepo memberRepo;
 
-    private List<MemberEntity> members;
-
-    private final String listNodeName = "renewalModelList";
+     private final String listNodeName = "renewalModelList";
 
     @WithSettings
     private final Settings settings =
@@ -97,7 +95,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .withUnique(field(MemberEntity::getMemberNumber))
             .create();
 
-        this.members = memberRepo.saveAllAndFlush(members);
+        memberRepo.saveAllAndFlush(members);
     }
 
     @ParameterizedTest
@@ -422,6 +420,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
     }
 
     private List<RenewalEntity> addEntitiesToDb(int size) {
+        var members = memberRepo.findAll();
+
         var entities = Instancio.ofList(RenewalEntity.class)
             .size(size)
             .ignore(field(RenewalEntity::getId))

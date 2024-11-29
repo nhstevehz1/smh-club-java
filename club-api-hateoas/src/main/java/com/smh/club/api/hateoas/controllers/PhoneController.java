@@ -65,7 +65,7 @@ public class PhoneController {
     }
 
     /**
-     * Endpoint for getting the total count of phonees in the database.
+     * Endpoint for getting the total count of phones in the database.
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
