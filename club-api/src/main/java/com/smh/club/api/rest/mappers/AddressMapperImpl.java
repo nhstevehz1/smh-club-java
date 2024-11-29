@@ -56,6 +56,9 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
         return mapList(source, AddressDto.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<AddressDto> toPage(Page<AddressEntity> page) {
         return page.map(this::toDto);
