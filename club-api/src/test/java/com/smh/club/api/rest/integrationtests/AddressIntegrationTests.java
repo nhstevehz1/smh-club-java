@@ -99,7 +99,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_no_params(int entitySize) throws Exception {
+    public void getListPage_no_params(int entitySize) {
         // populate address table
         addEntitiesToDb(entitySize);
 
@@ -121,7 +121,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_sortDir_desc(int entitySize) throws Exception {
+    public void getListPage_sortDir_desc(int entitySize) {
         // populate address table
        addEntitiesToDb(entitySize);
 
@@ -146,7 +146,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
-    public void getListPage_pageSize(int pageSize) throws Exception {
+    public void getListPage_pageSize(int pageSize) {
         addEntitiesToDb(15);
 
         var sorted = repo.findAll().stream()
@@ -170,7 +170,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 8})
-    public void getListPage_page(int page) throws Exception {
+    public void getListPage_page(int page) {
         var entitySize = 100;
         addEntitiesToDb(entitySize);
 
@@ -198,7 +198,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"id", "address1", "city", "state", "zip", "address-type" })
-    public void getListPage_sortColumn(String sort) throws Exception {
+    public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);

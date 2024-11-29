@@ -98,7 +98,7 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_no_params(int entitySize) throws Exception {
+    public void getListPage_no_params(int entitySize)  {
         addEntitiesToDb(entitySize);
 
         var sorted = repo.findAll().stream()
@@ -119,7 +119,7 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_sortDir_desc(int entitySize) throws Exception {
+    public void getListPage_sortDir_desc(int entitySize) {
         addEntitiesToDb(entitySize);
 
         var sorted = repo.findAll().stream()
@@ -142,7 +142,7 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {2,5,8,10})
-    public void getListPage_pageSize(int pageSize) throws Exception {
+    public void getListPage_pageSize(int pageSize) {
         addEntitiesToDb(15);
 
         var sorted = repo.findAll().stream()
@@ -165,7 +165,7 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 8})
-    public void getListPage_page(int page) throws Exception {
+    public void getListPage_page(int page) {
         addEntitiesToDb(150);
 
         var sorted = repo.findAll().stream()
@@ -189,7 +189,7 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"id", "email", "email-type" })
-    public void getListPage_sortColumn(String sort) throws Exception {
+    public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
@@ -238,7 +238,6 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = email.getId();
 
         // perform get
-        var uri = "http://localhost" + path + "/" + id;
         var actual =
             given()
                 .auth().none()
