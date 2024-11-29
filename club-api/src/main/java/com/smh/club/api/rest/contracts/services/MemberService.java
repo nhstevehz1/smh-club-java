@@ -2,9 +2,9 @@ package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
-import org.springframework.data.domain.Page;
-
+import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Business logic for members.
@@ -13,13 +13,10 @@ public interface MemberService {
 
     /**
      * Retrieves a page of members from the database.
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param direction The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
-     * @return A {@link Page} of type {@link MemberDto}.
+     *
+     * @param pageable@return A {@link PagedDto} of type {@link MemberDto}.
      */
-    Page<MemberDto> getMemberListPage(int pageSize, int pageNumber, String direction, String sort);
+    PagedDto<MemberDto> getPage(Pageable pageable);
 
     /**
      * Retrieves a member from the database.

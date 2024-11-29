@@ -4,16 +4,18 @@ import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import com.smh.club.api.rest.response.CountResponse;
-import com.smh.club.api.rest.response.PageResponse;
+import com.smh.club.api.rest.response.PagedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.api.config.PagingConfig;
+import smh.club.shared.api.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets member objects in the database.
@@ -25,31 +27,26 @@ import smh.club.shared.api.config.PagingConfig;
 @RequestMapping(value = "/api/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MemberController {
 
+    private final String DEFAULT_SORT = "member-number";
+
     private final MemberService memberSvc;
 
     /**
      * Endpoint for retrieving a page of member objects from the database.
+     * if no sort is specified then the DEFAULT_SORT is used.
      *
-     * @param pageNumber The page number to retrieve.
-     * @param pageSize The size of the page.
-     * @param sortDir The sort direction of the object list. Must be either 'ASC" or 'DESC'
-     * @param sort The column name used for the sort.
-     * @return A {@link ResponseEntity} containing a {@link PageResponse} of type {@link MemberDto}.
+     * @param pageable A {@link Pageable} that describes the sort.
+     * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberDto}.
      */
     @GetMapping
-    public ResponseEntity<PageResponse<MemberDto>> page(
-            @RequestParam(value = PagingConfig.PAGE_NAME,
-                    defaultValue = "${request.paging.page}") int pageNumber,
-            @RequestParam(value = PagingConfig.SIZE_NAME,
-                    defaultValue = "${request.paging.size}") int pageSize,
-            @RequestParam(value = PagingConfig.DIRECTION_NAME,
-                    defaultValue = "${request.paging.direction}") String sortDir,
-            @RequestParam(value = PagingConfig.SORT_NAME,
-                    defaultValue = "") String sort) {
+    public ResponseEntity<PagedDto<MemberDto>> page(
+        @PageableDefault(sort = {DEFAULT_SORT})
+        @SortConstraint(MemberDto.class)
+        Pageable pageable) {
 
-        var page = memberSvc.getMemberListPage(pageNumber, pageSize, sortDir, sort);
+        var page = memberSvc.getPage(pageable);
 
-        return ResponseEntity.ok(PageResponse.of(page));
+        return ResponseEntity.ok(page);
     }
 
     /**

@@ -1,44 +1,41 @@
 package com.smh.club.api.rest.integrationtests;
 
+import static java.util.Comparator.comparingInt;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.domain.entities.MemberEntity;
 import com.smh.club.api.data.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import smh.club.shared.api.config.PagingConfig;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
@@ -51,8 +48,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class MemberIntegrationTests extends IntegrationTests {
 
-    @Value("${request.paging.size}")
+    @Value("${spring.data.web.pageable.default-page-size:20}")
     private int defaultPageSize;
+
+    @Value("${spring.data.rest.sort-param-name:sort}")
+    private String sortParamName;
+
+    @Value("${spring.data.rest.size-param-name:size}")
+    private String sizeParamName;
+
+    @Value("${spring.data.rest.page-param-name:page}")
+    private String pageParamName;
 
     @Autowired
     private MembersRepo repo;
@@ -71,9 +77,12 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
         assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        Map<String,String> map = new HashMap<>();
 
+        var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
+            0, defaultPageSize);
+
+        var actual = executeListPage(testParams);
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
 
@@ -89,13 +98,14 @@ public class MemberIntegrationTests extends IntegrationTests {
 
         var sorted = repo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
-        assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.DIRECTION_NAME, Sort.Direction.DESC.toString());
+        Map<String, String> map = new HashMap<>();
+        map.put(sortParamName,  "member-number,desc");
 
-        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
+            0, defaultPageSize);
 
+        var actual = executeListPage(testParams);
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber).reversed()).toList(), actual);
 
@@ -105,42 +115,44 @@ public class MemberIntegrationTests extends IntegrationTests {
 
 
     @ParameterizedTest
-    @CsvSource({"1,5", "5,2", "20,5", "50,5"})
-    public void getListPage_pageSize(int entitySize, String pageSize) throws Exception {
-        addEntitiesToDb(entitySize);
+    @ValueSource(ints = {2,5,8,10})
+    public void getListPage_pageSize(int pageSize) throws Exception {
+        addEntitiesToDb(15);
 
         var sorted = repo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
-        assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SIZE_NAME, pageSize);
+        Map<String,String> map = new HashMap<>();
+        map.put(sizeParamName, String.valueOf(pageSize));
 
-        var actual = executeGetListPage(MemberDto.class, path,
-                valueMap, sorted.size(), Integer.parseInt(pageSize));
+        var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
+            0, pageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
 
-        var expected = sorted.stream().limit(Integer.parseInt(pageSize)).toList();
+        var expected = sorted.stream().limit(pageSize).toList();
         verify(expected, actual);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {2,4,5,8})
+    @ValueSource(ints = {1, 5, 8})
     public void getListPage_page(int page) throws Exception {
-        var entitySize = 100;
+        var entitySize = 150;
         addEntitiesToDb(entitySize);
 
         var sorted = repo.findAll()
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber)).toList();
-        assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.PAGE_NAME, String.valueOf(page));
+        Map<String,String> map = new HashMap<>();
+        map.put(pageParamName, String.valueOf(page));
 
-        var actual = executeGetListPage(MemberDto.class, path,
-                valueMap, sorted.size(), defaultPageSize);
+        var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
+            page, defaultPageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
                 .sorted(Comparator.comparingInt(MemberDto::getMemberNumber)).toList(), actual);
@@ -151,8 +163,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member-number", "first-name", "middle-name", "last-name",
-        "suffix", "birth-date", "joined-date" })
+    @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date" })
     public void getListPage_sortColumn(String sort) throws Exception {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
@@ -162,10 +173,13 @@ public class MemberIntegrationTests extends IntegrationTests {
         var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
         assertEquals(entitySize, sorted.size());
 
-        MultiValueMap<String,String> valueMap = new LinkedMultiValueMap<>();
-        valueMap.add(PagingConfig.SORT_NAME, sort);
+        var map = new HashMap<String, String>();
+        map.put(sortParamName, sort);
 
-        var actual = executeGetListPage(MemberDto.class, path, valueMap, sorted.size(), defaultPageSize);
+        var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
+            0, defaultPageSize);
+
+        var actual = executeListPage(testParams);
 
         assertEquals(actual.stream().sorted(sortFields.getDto()).toList(), actual);
 
@@ -196,40 +210,179 @@ public class MemberIntegrationTests extends IntegrationTests {
         verify(create, entity.get());
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"middle-name", "suffix"})
+    public void getListPage_excluded_fields_returns_bad_request(String sort) {
+        // setup
+        Map<String, String > map = new HashMap<>();
+        map.put(sortParamName, sort);
+
+        // execute and verify
+        given()
+            .auth().none()
+            .params(map)
+            .when()
+            .get(path)
+            .then().assertThat()
+            .status(HttpStatus.BAD_REQUEST)
+            .expect(jsonPath("$.validation-errors").isNotEmpty());
+
+    }
+
     @Test
-    public void deleteMember_status_noContent() throws Exception {
+    public void get_returns_model_status_ok() {
+        // setup
+        var email = addEntitiesToDb(20).get(10);
+        var id = email.getId();
+
+        // perform get
+        var uri = "http://localhost" + path + "/" + id;
+        var actual =
+            given()
+                .auth().none()
+                .pathParam("id", id)
+                .accept(MediaType.APPLICATION_JSON)
+                .when()
+                .get(path + "/{id}")
+                .then()
+                .assertThat().status(HttpStatus.OK)
+                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract().body().as(MemberDto.class);
+
+        verify(email, actual);
+    }
+
+    @Test
+    public void get_returns_status_notFound() {
+        // Setup
+        var entities = addEntitiesToDb(5);
+        var highest = entities.stream().max(comparingInt(MemberEntity::getId)).map(MemberEntity::getId).orElseThrow();
+        var id = highest + 100;
+
+        // perform get and verify
+        given()
+            .auth().none()
+            .pathParam("id", id)
+            .accept(MediaType.APPLICATION_JSON)
+            .when()
+            .get( path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void create_returns_dto_status_created() throws Exception {
+        var create = Instancio.of(MemberDto.class)
+            .ignore((field(MemberDto::getId)))
+            .create();
+
+        // perform POST
+        var ret =
+            given()
+                .auth().none()
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(create))
+                .when()
+                .post(path)
+                .then()
+                .assertThat().status(HttpStatus.CREATED)
+                .extract().body().as(MemberDto.class);
+
+        // verify
+        var entity =  repo.findById(ret.getId());
+
+        assertTrue(entity.isPresent());
+        verify(create, entity.get());
+    }
+
+    @Test
+    public void update_returns_dto_status_ok() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getId), id)
+            .set(field(MemberDto::getMemberNumber), entity.getMemberNumber())
+            .create();
+
+        // perform PUT
+        var actual =
+            given()
+                .auth().none()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("id", id)
+                .body(mapper.writeValueAsString(update))
+                .when()
+                .put(path + "/{id}")
+                .then()
+                .assertThat().status(HttpStatus.OK)
+                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract().body().as(MemberDto.class);
+
+        // verify
+        var member = repo.findById(actual.getId());
+
+        assertTrue(member.isPresent());
+        verify(update, member.get());
+    }
+
+    @Test
+    public void update_returns_status_badRequest() throws Exception {
+        // Setup
+        var update = Instancio.create(MemberDto.class);
+
+        // perform put
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .pathParam("id", update.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    public void delete_status_noContent() {
         // create several members
         var entities = addEntitiesToDb(10);
         var id = entities.get(5).getId();
 
-        // perform DELETE
-        mockMvc.perform(delete(path + "/{id}", id))
-                .andExpect(status().isNoContent())
-                .andDo(print());
+        // perform delete
+        given()
+            .auth().none().pathParam("id", id)
+            .when()
+            .delete(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.NO_CONTENT);
 
-        var member = repo.findById(id);
-        assertFalse(member.isPresent());
+        var email = repo.findById(id);
+        assertTrue(email.isEmpty());
     }
 
     @Test
-    public void update_returns_memberDto_status_ok() throws Exception{
-        // create several members
-        var member = addEntitiesToDb(10).get(5);
-        var update = Instancio.of(MemberDto.class)
-                .set(field(MemberDto::getId), member.getId())
-                .set(field(MemberDto::getMemberNumber), member.getMemberNumber())
-                .create();
+    public void getCount_returns_count_status_ok() {
+        // setup
+        var count = addEntitiesToDb(25).size();
 
-        mockMvc.perform(put( path + "/{id}", member.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(update)))
-                .andExpect(status().isOk())
-                .andDo(print());
+        // execute
+        var result =
+            given()
+                .auth().none()
+                .accept(MediaType.APPLICATION_JSON)
+                .when()
+                .get(path + "/count")
+                .then()
+                .assertThat(status().isOk())
+                .extract().body().as(CountResponse.class);
 
-        var entity = repo.findById(member.getId());
-        assertTrue(entity.isPresent());
-        verify(update, entity.get());
+        assertEquals(count, result.getCount());
     }
 
     private List<MemberEntity> addEntitiesToDb(int size) {
