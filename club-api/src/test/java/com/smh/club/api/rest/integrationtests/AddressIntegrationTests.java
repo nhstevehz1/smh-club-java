@@ -242,7 +242,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void createAddresses_returns_addressDto_status_created() throws Exception {
+    public void create_returns_dto_status_created() throws Exception {
         // create addresses
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
         var create = Instancio.of(AddressDto.class)
