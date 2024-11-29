@@ -177,11 +177,11 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var dtos = Instancio.ofList(AddressDto.class)
+        var list = Instancio.ofList(AddressDto.class)
             .size(pageSize)
             .create();
 
-        var page = createPage(dtos, pageableMock, total);
+        var page = createPage(list, pageableMock, total);
 
         when(addRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
         when(addMapMock.toPage(pageMock)).thenReturn(page);
