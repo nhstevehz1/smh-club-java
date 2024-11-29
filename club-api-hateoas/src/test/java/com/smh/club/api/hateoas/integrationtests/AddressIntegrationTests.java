@@ -125,8 +125,6 @@ public class AddressIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
     public void getListPage_sortDir_desc(int entitySize) {
-        addEntitiesToDb(entitySize);
-
         // setup
         addEntitiesToDb(entitySize);
 
