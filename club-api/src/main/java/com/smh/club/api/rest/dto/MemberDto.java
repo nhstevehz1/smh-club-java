@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.annotations.SortTarget;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +24,11 @@ public class MemberDto {
     @JsonProperty("id")
     private int id;
 
+    @Min(1)
     @JsonProperty("member-number")
     private int memberNumber;
 
+    @NotBlank
     @JsonProperty("first-name")
     private String firstName;
 
@@ -32,6 +36,7 @@ public class MemberDto {
     @JsonProperty("middle-name")
     private String middleName;
 
+    @NotBlank
     @JsonProperty("last-name")
     private String lastName;
 

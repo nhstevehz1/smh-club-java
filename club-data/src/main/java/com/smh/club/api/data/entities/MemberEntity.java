@@ -23,7 +23,7 @@ public class MemberEntity {
     @Column(name = "id", nullable = false, updatable = false, unique = true )
     private int id;
 
-    @Column(name = "member_number")
+    @Column(name = "member_number", nullable = false, unique = true)
     private int memberNumber;
 
     @Column(name = "first_name", nullable = false, length = 40)

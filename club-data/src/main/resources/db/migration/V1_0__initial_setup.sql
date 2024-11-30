@@ -22,7 +22,7 @@ CREATE TABLE member_mgmt.address (
 	address2 varchar(100),
 	city varchar(30) NOT NULL,
 	state varchar(30) NOT NULL,
-	zip varchar(15) NOT NULL,
+	zip varchar(10) NOT NULL,
 	address_type smallint NOT NULL,
 
 	CONSTRAINT pk_address PRIMARY KEY (id),
