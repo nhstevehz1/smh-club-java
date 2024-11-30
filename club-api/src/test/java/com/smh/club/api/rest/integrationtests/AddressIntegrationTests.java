@@ -1,5 +1,7 @@
 package com.smh.club.api.rest.integrationtests;
 
+import static java.util.Comparator.comparingInt;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.data.entities.MemberEntity;
@@ -247,6 +249,45 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @Test
+    public void get_returns_dto_status_ok() {
+        // setup
+        var address = addEntitiesToDb(20).get(10);
+        var id = address.getId();
+
+        // perform get
+        var actual =
+            given()
+                .auth().none()
+                .pathParam("id", id)
+                .accept(MediaType.APPLICATION_JSON)
+                .when()
+                .get(path + "/{id}")
+                .then()
+                .assertThat().status(HttpStatus.OK)
+                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract().body().as(AddressDto.class);
+
+        verify(address, actual);
+    }
+
+    @Test
+    public void get_returns_status_notFound() {
+        var entities = addEntitiesToDb(5);
+        var highest = entities.stream().max(comparingInt(AddressEntity::getId)).map(AddressEntity::getId).orElseThrow();
+        var id = highest + 100;
+
+        // perform get and verify
+        given()
+            .auth().none()
+            .pathParam("id", id)
+            .accept(MediaType.APPLICATION_JSON)
+            .when()
+            .get( path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     public void create_returns_dto_status_created() throws Exception {
         // create addresses
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
@@ -277,6 +318,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         verify(create, entity.get());
     }
 
+    // used with test that follows
     private static Stream<Arguments> nonNullFields() {
         return Stream.of(
             arguments(field(AddressDto::getAddress1)),
@@ -345,6 +387,48 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
+    }
+
+    @Test
+    public void create_with_invalid_memberNumber_returns_bad_request() throws Exception {
+        // setup
+        var create = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getMemberId), 0)
+            .ignore(field(AddressDto::getId))
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty());
+    }
+
+    @Test
+    public void create_with_invalid_zip_returns_bad_request() throws Exception {
+        // setup
+        var create = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getZip), "AAA")
+            .ignore(field(AddressDto::getId))
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty());
     }
 
     @Test
