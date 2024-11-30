@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import smh.club.shared.api.annotations.SortExclude;
-import smh.club.shared.api.annotations.SortTarget;
-import smh.club.shared.api.domain.PhoneType;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
+import com.smh.club.api.shared.domain.PhoneType;
 
 /**
  * DTO for phones.

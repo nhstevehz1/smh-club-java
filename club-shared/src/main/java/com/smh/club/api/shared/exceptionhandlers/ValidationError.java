@@ -1,4 +1,4 @@
-package smh.club.shared.api.exceptionhandlers;
+package com.smh.club.api.shared.exceptionhandlers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;

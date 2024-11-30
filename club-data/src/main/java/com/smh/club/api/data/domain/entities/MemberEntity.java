@@ -2,7 +2,7 @@ package com.smh.club.api.data.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import smh.club.shared.api.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortExclude;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

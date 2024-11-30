@@ -1,4 +1,4 @@
-package smh.club.shared.api.annotations;
+package com.smh.club.api.shared.annotations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -6,7 +6,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import smh.club.shared.api.validators.SortValidator;
+import com.smh.club.api.shared.validators.SortValidator;
 
 @Constraint(validatedBy = SortValidator.class)
 @Target( { ElementType.METHOD, ElementType.PARAMETER })

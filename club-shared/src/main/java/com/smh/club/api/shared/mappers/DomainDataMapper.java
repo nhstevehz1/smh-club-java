@@ -1,4 +1,4 @@
-package smh.club.shared.api.mappers;
+package com.smh.club.api.shared.mappers;
 
 import org.modelmapper.ModelMapper;
 

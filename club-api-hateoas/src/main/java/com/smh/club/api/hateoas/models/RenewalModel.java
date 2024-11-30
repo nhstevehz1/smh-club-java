@@ -5,8 +5,8 @@ import com.smh.club.api.data.domain.entities.RenewalEntity;
 import java.time.LocalDate;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-import smh.club.shared.api.annotations.SortExclude;
-import smh.club.shared.api.annotations.SortTarget;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
 
 /**
  * DTO for renewals  When serialize to JSON, links are generated that

@@ -6,7 +6,7 @@ import com.smh.club.api.hateoas.models.PhoneModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import smh.club.shared.api.mappers.DomainDataMapper;
+import com.smh.club.api.shared.mappers.DomainDataMapper;
 
 import java.util.List;
 

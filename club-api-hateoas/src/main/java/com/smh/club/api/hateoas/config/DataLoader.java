@@ -8,7 +8,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import smh.club.shared.api.domain.AddressType;
+import com.smh.club.api.shared.domain.AddressType;
 
 import java.time.LocalDate;
 

@@ -2,7 +2,7 @@ package com.smh.club.api.data.domain.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import smh.club.shared.api.domain.PhoneType;
+import com.smh.club.api.shared.domain.PhoneType;
 
 @Converter(autoApply = true)
 public class PhoneTypeConverter implements AttributeConverter<PhoneType, Integer> {

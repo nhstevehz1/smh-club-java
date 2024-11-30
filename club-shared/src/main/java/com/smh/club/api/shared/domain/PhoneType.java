@@ -1,4 +1,4 @@
-package smh.club.shared.api.domain;
+package com.smh.club.api.shared.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.Getter;
 import java.util.stream.Stream;
 
 /**
- * Address type enum
+ * A phone type enum.
  */
 @Getter
-public enum AddressType {
+public enum PhoneType {
 
     @JsonProperty(Names.HOME)
     Home(0, Names.HOME),
@@ -17,22 +17,22 @@ public enum AddressType {
     @JsonProperty(Names.WORK)
     Work(1, Names.WORK),
 
-    @JsonProperty(Names.OTHER)
-    Other(2, Names.OTHER);
+    @JsonProperty(Names.Mobile)
+    Mobile(2, Names.Mobile);
 
     private final int code;
-    private final String addressTypeName;
+    private final String phoneTypeName;
 
-    AddressType(int code, String addressTypeName) {
+    PhoneType(int code, String phoneTypeName) {
         this.code = code;
-        this.addressTypeName = addressTypeName;
+        this.phoneTypeName = phoneTypeName;
     }
 
     /**
-     * Returns an address type based on its code.
+     * Returns an address based on its code.
      */
-    public static AddressType of (int code) {
-        return Stream.of(AddressType.values())
+    public static PhoneType of (int code) {
+        return Stream.of(PhoneType.values())
                 .filter(a -> a.getCode() == code)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
@@ -41,6 +41,6 @@ public enum AddressType {
     private static class Names {
         public final static String HOME = "Home";
         public final static String WORK = "Work";
-        public final static String OTHER = "Other";
+        public final static String Mobile = "Mobile";
     }
 }

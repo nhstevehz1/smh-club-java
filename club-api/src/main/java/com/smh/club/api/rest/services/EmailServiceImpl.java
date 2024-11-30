@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import smh.club.shared.api.services.AbstractServiceBase;
+import com.smh.club.api.shared.services.AbstractServiceBase;
 
 /**
  * {@inheritDoc}

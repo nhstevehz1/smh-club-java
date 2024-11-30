@@ -7,7 +7,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import smh.club.shared.api.mappers.DomainDataMapper;
+import com.smh.club.api.shared.mappers.DomainDataMapper;
 
 /**
  * {@inheritDoc}

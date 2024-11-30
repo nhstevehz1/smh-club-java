@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.api.annotations.SortConstraint;
+import com.smh.club.api.shared.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets email objects in the database.

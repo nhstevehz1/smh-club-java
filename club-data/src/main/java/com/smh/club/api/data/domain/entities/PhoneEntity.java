@@ -2,8 +2,8 @@ package com.smh.club.api.data.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import smh.club.shared.api.annotations.SortExclude;
-import smh.club.shared.api.domain.PhoneType;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.domain.PhoneType;
 
 /**
  * Represents a phone object.

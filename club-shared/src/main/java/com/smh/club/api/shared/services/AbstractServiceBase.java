@@ -1,4 +1,4 @@
-package smh.club.shared.api.services;
+package com.smh.club.api.shared.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.lang.reflect.Field;
@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.data.domain.Sort;
-import smh.club.shared.api.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortExclude;
 
 /**
  * And abstract service base class.

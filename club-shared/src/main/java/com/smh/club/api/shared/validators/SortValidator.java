@@ -1,4 +1,4 @@
-package smh.club.shared.api.validators;
+package com.smh.club.api.shared.validators;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.ConstraintValidator;
@@ -11,9 +11,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import smh.club.shared.api.annotations.SortConstraint;
-import smh.club.shared.api.annotations.SortExclude;
-import smh.club.shared.api.annotations.SortTarget;
+import com.smh.club.api.shared.annotations.SortConstraint;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
 
 public class SortValidator implements ConstraintValidator<SortConstraint, Pageable> {
 

@@ -1,4 +1,4 @@
-package smh.club.shared.api.domain;
+package com.smh.club.api.shared.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

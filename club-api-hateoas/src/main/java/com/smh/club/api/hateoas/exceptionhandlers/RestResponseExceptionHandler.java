@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import smh.club.shared.api.exceptionhandlers.ValidationError;
-import smh.club.shared.api.exceptionhandlers.ValidationErrorResponse;
+import com.smh.club.api.shared.exceptionhandlers.ValidationError;
+import com.smh.club.api.shared.exceptionhandlers.ValidationErrorResponse;
 
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
