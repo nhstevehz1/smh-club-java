@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.contracts.mappers;
 
-import com.smh.club.api.data.domain.entities.PhoneEntity;
+import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.PhoneDto;
 import java.util.List;
 import org.springframework.data.domain.Page;

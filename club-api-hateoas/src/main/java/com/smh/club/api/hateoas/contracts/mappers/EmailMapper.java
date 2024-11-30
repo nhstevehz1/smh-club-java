@@ -1,8 +1,7 @@
 package com.smh.club.api.hateoas.contracts.mappers;
 
-import com.smh.club.api.data.domain.entities.EmailEntity;
+import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.hateoas.models.EmailModel;
-
 import java.util.List;
 
 /**

@@ -1,9 +1,9 @@
-package com.smh.club.api.data.domain.entities;
+package com.smh.club.api.data.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.domain.AddressType;
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
  * Represents an Address object.

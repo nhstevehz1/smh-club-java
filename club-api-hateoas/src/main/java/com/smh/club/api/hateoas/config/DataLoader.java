@@ -1,16 +1,15 @@
 package com.smh.club.api.hateoas.config;
 
-import com.smh.club.api.data.domain.entities.AddressEntity;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.entities.AddressEntity;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.shared.domain.AddressType;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import com.smh.club.api.shared.domain.AddressType;
-
-import java.time.LocalDate;
 
 @Profile("dev")
 @Service

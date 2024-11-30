@@ -1,13 +1,13 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-import com.smh.club.api.shared.annotations.SortExclude;
-import com.smh.club.api.shared.annotations.SortTarget;
 
 /**
  * DTO for members.  When serialize to JSON, links are generated that

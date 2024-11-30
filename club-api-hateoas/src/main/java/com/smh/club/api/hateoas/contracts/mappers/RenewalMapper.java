@@ -1,8 +1,7 @@
 package com.smh.club.api.hateoas.contracts.mappers;
 
-import com.smh.club.api.data.domain.entities.RenewalEntity;
+import com.smh.club.api.data.entities.RenewalEntity;
 import com.smh.club.api.hateoas.models.RenewalModel;
-
 import java.util.List;
 
 /**

@@ -1,10 +1,11 @@
-package com.smh.club.api.data.integration.persistence;
+package com.smh.club.api.data.persistence;
 
-import com.smh.club.api.data.domain.entities.AddressEntity;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.repos.AddressRepo;
-import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.entities.AddressEntity;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.repos.AddressRepo;
+import com.smh.club.api.data.repos.MembersRepo;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -20,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;

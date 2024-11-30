@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.domain.entities.EmailEntity;
+import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.hateoas.config.MapperConfig;
 import com.smh.club.api.hateoas.contracts.mappers.EmailMapper;
 import com.smh.club.api.hateoas.mappers.EmailMapperImpl;
@@ -18,7 +18,9 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(InstancioExtension.class)
 public class EmailModelAssemblerTests extends AssemblerTests {

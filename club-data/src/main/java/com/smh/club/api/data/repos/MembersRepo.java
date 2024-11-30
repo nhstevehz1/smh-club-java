@@ -1,12 +1,11 @@
-package com.smh.club.api.data.domain.repos;
+package com.smh.club.api.data.repos;
 
-import com.smh.club.api.data.domain.entities.EmailEntity;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import com.smh.club.api.data.entities.EmailEntity;
+import com.smh.club.api.data.entities.MemberEntity;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * A repository for {@link EmailEntity} objects

@@ -1,13 +1,13 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
-import org.springframework.hateoas.RepresentationModel;
+import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.annotations.SortTarget;
 import com.smh.club.api.shared.domain.PhoneType;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
  * DTO for phones.  When serialize to JSON, links are generated that

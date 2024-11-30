@@ -1,14 +1,13 @@
 package com.smh.club.api.hateoas.mappers;
 
-import com.smh.club.api.data.domain.entities.EmailEntity;
+import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.hateoas.contracts.mappers.EmailMapper;
 import com.smh.club.api.hateoas.models.EmailModel;
+import com.smh.club.api.shared.mappers.DomainDataMapper;
+import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.smh.club.api.shared.mappers.DomainDataMapper;
-
-import java.util.List;
 
 /**
  * {@inheritDoc}

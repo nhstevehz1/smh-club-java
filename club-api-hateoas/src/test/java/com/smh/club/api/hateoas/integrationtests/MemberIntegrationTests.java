@@ -3,8 +3,8 @@ package com.smh.club.api.hateoas.integrationtests;
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;

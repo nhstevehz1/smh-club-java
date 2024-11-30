@@ -1,12 +1,11 @@
-package com.smh.club.api.data.domain.entities;
+package com.smh.club.api.data.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
 import com.smh.club.api.shared.annotations.SortExclude;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
 
 /**
  * Represents a member object.

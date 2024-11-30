@@ -1,8 +1,9 @@
-package com.smh.club.api.data.integration.persistence;
+package com.smh.club.api.data.persistence;
 
-import com.smh.club.api.data.domain.entities.*;
-import com.smh.club.api.data.domain.repos.*;
+import com.smh.club.api.data.entities.*;
+import com.smh.club.api.data.repos.*;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -18,12 +19,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.all;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @ActiveProfiles("tests")

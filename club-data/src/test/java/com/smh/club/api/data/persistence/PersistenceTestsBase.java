@@ -1,9 +1,8 @@
-package com.smh.club.api.data.integration.persistence;
+package com.smh.club.api.data.persistence;
 
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import org.instancio.Instancio;
-
+import com.smh.club.api.data.entities.MemberEntity;
 import java.util.List;
+import org.instancio.Instancio;
 
 import static org.instancio.Select.field;
 

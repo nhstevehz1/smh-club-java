@@ -1,4 +1,4 @@
-package com.smh.club.api.data.domain.repos;
+package com.smh.club.api.data.repos;
 
 import org.springframework.stereotype.Repository;
 

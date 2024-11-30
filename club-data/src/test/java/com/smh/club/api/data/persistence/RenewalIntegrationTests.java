@@ -1,10 +1,11 @@
-package com.smh.club.api.data.integration.persistence;
+package com.smh.club.api.data.persistence;
 
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
-import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.entities.RenewalEntity;
+import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.data.repos.RenewalsRepo;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -21,8 +22,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
 import static org.junit.Assert.assertEquals;
@@ -32,17 +31,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
+
 @ExtendWith(InstancioExtension.class)
 @DataJpaTest
 @AutoConfigureEmbeddedDatabase (
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class PhoneIntegrationTests extends PersistenceTestsBase {
+public class RenewalIntegrationTests extends PersistenceTestsBase {
 
-   @Autowired
-   private PhoneRepo phoneRepo;
-
+    @Autowired
+    private RenewalsRepo renewalRepo;
+    
     @Autowired
     private MembersRepo membersRepo;
 
@@ -60,63 +60,63 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
         var list = createMembers(5);
         this.members = membersRepo.saveAllAndFlush(list);
     }
-    
+
     @Test
-    public void save_phoneNumber_is_null_throws() {
+    public void save_renewalDate_is_null_throws() {
         // setup
-        var phone = createEntity(members);
-        phone.setPhoneNumber(null);
-        
+        var renewal = createEntity(members);
+        renewal.setRenewalDate(null);
+
         // execute and verify
-        assertThrows(Exception.class, () -> phoneRepo.save(phone));
+        assertThrows(Exception.class, () -> renewalRepo.save(renewal));
     }
 
     @Test
-    public void save_phoneType_is_null_throws() {
+    public void save_renewalYear_is_null_throws() {
         // setup
-        var phone = createEntity(members);
-        phone.setPhoneType(null);
+        var renewal = createEntity(members);
+        renewal.setRenewalYear(null);
 
         // execute and verify
-        assertThrows(Exception.class, () -> phoneRepo.save(phone));
+        assertThrows(Exception.class, () -> renewalRepo.save(renewal));
     }
 
     @Test
     public void save_member_is_null_throws() {
         // setup
-        var phone = createEntity(members);
-        phone.setMember(null);
+        var renewal = createEntity(members);
+        renewal.setMember(null);
 
         // execute and verify
-        assertThrows(Exception.class, () -> phoneRepo.save(phone));
+        assertThrows(Exception.class, () -> renewalRepo.save(renewal));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
-    public void findByIdAndMemberId_returns_phone(int size) {
+    public void findByIdAndMemberId_returns_renewal(int size) {
         // setup
-        var phone = phoneRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));
+        var renewal = renewalRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));
 
         // execute
-        var ret = phoneRepo.findByIdAndMemberId(phone.getId(), phone.getMember().getId());
+        var ret = renewalRepo.findByIdAndMemberId(renewal.getId(), renewal.getMember().getId());
 
         //verify
         assertTrue(ret.isPresent());
-        assertEquals(phone, ret.get());
+        assertEquals(renewal, ret.get());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
     public void findByIdAndMemberId_unknown_member_id_returns_empty_optional(int size) {
         // setup
-        var phone = phoneRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));
+        var renewal = renewalRepo.saveAllAndFlush(createList(size, members)).get((int)Math.ceil(size / 2d));
         var ids = this.members.stream()
                 .map(MemberEntity::getId).max(Integer::compareTo);
         assertTrue(ids.isPresent());
         var memberId = ids.get() + 100;
 
         // execute
-        var ret = phoneRepo.findByIdAndMemberId(phone.getId(), memberId);
+        var ret = renewalRepo.findByIdAndMemberId(renewal.getId(), memberId);
 
         //verify
         assertTrue(ret.isEmpty());
@@ -124,34 +124,34 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10, 20})
-    public void findByIdAndMemberId_bad_phone_id_returns_empty_optional(int size) {
+    public void findByIdAndMemberId_bad_renewal_id_returns_empty_optional(int size) {
         // setup
-        var phones = phoneRepo.saveAllAndFlush(createList(size, members));
-        var memberId = phones.get((int)Math.ceil(size / 2d)).getMember().getId();
-        var ids = phones.stream()
-                .map(PhoneEntity::getId).max(Integer::compareTo);
+        var renewals = renewalRepo.saveAllAndFlush(createList(size, members));
+        var memberId = renewals.get((int)Math.ceil(size / 2d)).getMember().getId();
+        var ids = renewals.stream()
+                .map(RenewalEntity::getId).max(Integer::compareTo);
 
-        var phoneId = ids.get() + 100;
+        var renewalId = ids.get() + 100;
 
         // execute
-        var ret = phoneRepo.findByIdAndMemberId(phoneId, memberId);
+        var ret = renewalRepo.findByIdAndMemberId(renewalId, memberId);
 
         //verify
         assertTrue(ret.isEmpty());
     }
     
-    private PhoneEntity createEntity(List<MemberEntity> members) {
-        return Instancio.of(PhoneEntity.class)
-                .ignore(field(PhoneEntity::getId))
-                .generate(field(PhoneEntity::getMember), g -> g.oneOf(members))
+    private RenewalEntity createEntity(List<MemberEntity> members) {
+        return Instancio.of(RenewalEntity.class)
+                .ignore(field(RenewalEntity::getId))
+                .generate(field(RenewalEntity::getMember), g -> g.oneOf(members))
                 .create();
     }
 
-    private List<PhoneEntity> createList(int size, List<MemberEntity> members) {
-        return Instancio.ofList(PhoneEntity.class)
+    private List<RenewalEntity> createList(int size, List<MemberEntity> members) {
+        return Instancio.ofList(RenewalEntity.class)
                 .size(size)
-                .ignore(field(PhoneEntity::getId))
-                .generate(field(PhoneEntity::getMember), g -> g.oneOf(members))
+                .ignore(field(RenewalEntity::getId))
+                .generate(field(RenewalEntity::getMember), g -> g.oneOf(members))
                 .create();
     }
 }

@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.domain.entities.AddressEntity;
+import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.AddressAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
 import com.smh.club.api.hateoas.controllers.AddressController;

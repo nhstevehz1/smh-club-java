@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.domain.entities.PhoneEntity;
+import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.PhoneAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.PhoneMapper;
 import com.smh.club.api.hateoas.controllers.PhoneController;

@@ -1,9 +1,9 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
-import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.entities.PhoneEntity;
+import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.data.repos.PhoneRepo;
 import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.rest.dto.PhoneDto;
 import java.util.Optional;
