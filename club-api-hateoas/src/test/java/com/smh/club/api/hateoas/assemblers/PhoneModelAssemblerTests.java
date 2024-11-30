@@ -39,7 +39,7 @@ public class PhoneModelAssemblerTests extends AssemblerTests{
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/phones").build();
+        var components = UriComponentsBuilder.fromUriString("http://localhost/api/v2/phones").build();
         this.assembler = new PhoneAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }

@@ -38,7 +38,7 @@ public class RenewalModelAssemblerTest extends AssemblerTests {
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/renewals").build();
+        var components = UriComponentsBuilder.fromUriString("http://localhost/api/v2/renewals").build();
         this.assembler = new RenewalAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }

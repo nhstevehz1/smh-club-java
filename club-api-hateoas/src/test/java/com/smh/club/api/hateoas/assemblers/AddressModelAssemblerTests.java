@@ -38,7 +38,7 @@ public class AddressModelAssemblerTests extends AssemblerTests{
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/addresses").build();
+        var components = UriComponentsBuilder.fromUriString("http://localhost/api/v2/addresses").build();
         this.assembler = new AddressAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }

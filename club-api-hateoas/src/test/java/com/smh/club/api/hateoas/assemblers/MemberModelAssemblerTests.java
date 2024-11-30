@@ -38,7 +38,7 @@ public class MemberModelAssemblerTests extends AssemblerTests{
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/members").build();
+        var components = UriComponentsBuilder.fromUriString("http://localhost/api/v2/members").build();
         this.assembler = new MemberAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }
