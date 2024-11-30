@@ -8,15 +8,9 @@ import static org.instancio.Select.field;
 
 public abstract class PersistenceTestsBase {
 
-    protected MemberEntity createMember() {
-        return Instancio.of(MemberEntity.class)
-                .ignore(field(MemberEntity::getId))
-                .create();
-    }
-
-    protected List<MemberEntity> createMembers(int size) {
+    protected List<MemberEntity> createMembers() {
         return Instancio.ofList(MemberEntity.class)
-                .size(size)
+                .size(5)
                 .ignore(field(MemberEntity::getId))
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();

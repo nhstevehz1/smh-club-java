@@ -57,7 +57,7 @@ public class RenewalIntegrationTests extends PersistenceTestsBase {
 
     @BeforeEach
     public void init() {
-        var list = createMembers(5);
+        var list = createMembers();
         this.members = membersRepo.saveAllAndFlush(list);
     }
 
