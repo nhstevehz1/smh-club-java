@@ -292,10 +292,11 @@ public class AddressIntegrationTests extends IntegrationTests {
         // create addresses
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
         var create = Instancio.of(AddressDto.class)
-                .generate(field(AddressDto::getMemberId), g -> g.oneOf(memberIdList))
+                .generate(field(AddressDto::getMemberId),
+                    g -> g.oneOf(memberIdList))
                 .ignore(field(AddressDto::getId))
                 .generate(field(AddressDto::getZip),
-                g -> g.text().pattern("#d#d#d#d#d-#d#d#d#d"))
+                g -> g.text().pattern("#d#d#d#d#d"))
                 .create();
 
         // perform POST
@@ -322,7 +323,6 @@ public class AddressIntegrationTests extends IntegrationTests {
     private static Stream<Arguments> nonNullFields() {
         return Stream.of(
             arguments(field(AddressDto::getAddress1)),
-            arguments(field(AddressDto::getAddress1)),
             arguments(field(AddressDto::getCity)),
             arguments(field(AddressDto::getState)),
             arguments(field(AddressDto::getZip)),
@@ -335,7 +335,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
         var create = Instancio.of(AddressDto.class)
-            .generate(field(AddressDto::getMemberId), g -> g.oneOf(memberIdList))
+            .generate(field(AddressDto::getMemberId),
+                g -> g.oneOf(memberIdList))
             .ignore(field(AddressDto::getId))
             .ignore(nonNullableField)
             .create();
@@ -350,7 +351,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         .then()
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     private static Stream<Arguments> nullableFields() {
@@ -364,7 +366,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         // create address
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
         var create = Instancio.of(AddressDto.class)
-            .generate(field(AddressDto::getMemberId), g -> g.oneOf(memberIdList))
+            .generate(field(AddressDto::getMemberId),
+                g -> g.oneOf(memberIdList))
             .ignore(field(AddressDto::getId))
             .ignore(nullableField)
             .create();
@@ -390,27 +393,6 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void create_with_invalid_memberNumber_returns_bad_request() throws Exception {
-        // setup
-        var create = Instancio.of(AddressDto.class)
-            .set(field(AddressDto::getMemberId), 0)
-            .ignore(field(AddressDto::getId))
-            .create();
-
-        // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
-    }
-
-    @Test
     public void create_with_invalid_zip_returns_bad_request() throws Exception {
         // setup
         var create = Instancio.of(AddressDto.class)
@@ -418,6 +400,7 @@ public class AddressIntegrationTests extends IntegrationTests {
             .ignore(field(AddressDto::getId))
             .create();
 
+
         // perform POST
         given()
             .auth().none()
@@ -428,7 +411,8 @@ public class AddressIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     @Test
@@ -440,8 +424,6 @@ public class AddressIntegrationTests extends IntegrationTests {
             Instancio.of(AddressDto.class)
                 .set(field(AddressDto::getId), address.getId())
                 .set(field(AddressDto::getMemberId), memberId)
-                .generate(field(AddressDto::getZip),
-                    g -> g.text().pattern("#d#d#d#d#d-#d#d#d#d"))
                 .create();
 
         // perform PUT
@@ -457,6 +439,86 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         assertTrue(entity.isPresent());
         verify(update, entity.get());
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullFields")
+    public void update_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var address = addEntitiesToDb(5).get(2);
+        var memberId = address.getMember().getId();
+        var create = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getMemberId), memberId)
+            .ignore(nonNullableField)
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableFields")
+    public void update_nullableField_returns_dto_status_ok(Selector nullableField) throws Exception {
+        // create address
+        var address = addEntitiesToDb(5).get(2);
+        var memberId = address.getMember().getId();
+        var update = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getMemberId), memberId)
+            .ignore(nullableField)
+            .create();
+
+        // perform POST
+        var ret =
+            given()
+                .auth().none()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(update))
+                .when()
+                .post(path)
+                .then()
+                .assertThat().status(HttpStatus.CREATED)
+                .assertThat().contentType(ContentType.JSON)
+                .extract().body().as(AddressDto.class);
+
+        // verify
+        var entity =  repo.findById(ret.getId());
+
+        assertTrue(entity.isPresent());
+        verify(update, entity.get());
+    }
+
+    @Test
+    public void update_with_invalid_zip_returns_bad_request() throws Exception {
+        // setup
+        var address = addEntitiesToDb(5).get(2);
+        var memberId = address.getMember().getId();
+        var create = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getMemberId), memberId)
+            .set(field(AddressDto::getZip), "XXX")
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     @Test
