@@ -1,6 +1,9 @@
 package com.smh.club.api.shared.validators;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
+import com.smh.club.api.shared.validators.constraints.SortConstraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
@@ -11,10 +14,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import com.smh.club.api.shared.annotations.SortConstraint;
-import com.smh.club.api.shared.annotations.SortExclude;
-import com.smh.club.api.shared.annotations.SortTarget;
 
+/**
+ *
+ * Validates the given Pageable.Sort parameter specifies a valid sort column name.
+ *
+ */
 public class SortValidator implements ConstraintValidator<SortConstraint, Pageable> {
 
   private List<String> allowedSortNames;
@@ -72,6 +77,13 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
     allowedSortNames = Stream.concat(mappedNames.stream(), dtoNames.stream()).distinct().toList();
   }
 
+  /**
+   * Determines if the given Pageable contains valid sort column(s).
+   *
+   * @param pageable An instance of {@link Pageable} that is decorated with the {@link SortConstraint} annotation.
+   * @param constraintValidatorContext An instance of {@link ConstraintValidatorContext}.
+   * @return True if the pageable is unsorted or contains valid sort column(s).  Otherwise, false.
+   */
   @Override
   public boolean isValid(Pageable pageable, ConstraintValidatorContext constraintValidatorContext) {
     // Allow unsorted.

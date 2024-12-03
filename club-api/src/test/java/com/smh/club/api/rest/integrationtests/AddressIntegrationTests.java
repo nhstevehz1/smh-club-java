@@ -43,14 +43,9 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
@@ -338,7 +333,7 @@ public class AddressIntegrationTests extends IntegrationTests {
             .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
             .ignore(field(AddressDto::getId))
-            .ignore(nonNullableField)
+            .setBlank(nonNullableField)
             .create();
 
         // perform POST
@@ -369,7 +364,7 @@ public class AddressIntegrationTests extends IntegrationTests {
             .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
             .ignore(field(AddressDto::getId))
-            .ignore(nullableField)
+            .setBlank(nullableField)
             .create();
 
         // perform POST
@@ -418,27 +413,35 @@ public class AddressIntegrationTests extends IntegrationTests {
     @Test
     public void update_returns_addressDto_status_ok() throws Exception {
         // create several addresses
-        var address = addEntitiesToDb(5).get(2);
-        var memberId = address.getMember().getId();
+        var entity = addEntitiesToDb(5).get(2);
+        var memberId = entity.getMember().getId();
+        var id = entity.getId();
         var update =
             Instancio.of(AddressDto.class)
-                .set(field(AddressDto::getId), address.getId())
+                .set(field(AddressDto::getId), id)
                 .set(field(AddressDto::getMemberId), memberId)
                 .create();
 
         // perform PUT
-        mockMvc.perform(put(path + "/{id}", address.getId())
-                .contentType(MediaType.APPLICATION_JSON)
+        var actual =
+            given()
+                .auth().none()
                 .accept(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(update)))
-            .andExpect(status().isOk())
-            .andDo(print());
+                .contentType(MediaType.APPLICATION_JSON)
+                .pathParam("id", id)
+                .body(mapper.writeValueAsString(update)).when()
+                .put(path + "/{id}")
+                .then()
+                .assertThat().status(HttpStatus.OK)
+                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .extract().body().as(AddressDto.class);
 
         // verify
-        var entity = repo.findById(address.getId());
+        var address = repo.findById(id);
 
-        assertTrue(entity.isPresent());
-        verify(update, entity.get());
+        assertEquals(update, actual);
+        assertTrue(address.isPresent());
+        verify(update, address.get());
     }
 
     @ParameterizedTest
@@ -528,13 +531,16 @@ public class AddressIntegrationTests extends IntegrationTests {
         var id = entities.get(2).getId();
 
         // perform DELETE
-        mockMvc.perform(delete(path + "/{id}", id))
-                .andExpect(status().isNoContent())
-                .andDo(print());
+        given()
+            .auth().none().pathParam("id", id)
+            .when()
+            .delete(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.NO_CONTENT);
 
         // verify
         var address = repo.findById(id);
-        assertFalse(address.isPresent());
+        assertTrue(address.isEmpty());
     }
 
     private List<AddressEntity> addEntitiesToDb(int size) {
