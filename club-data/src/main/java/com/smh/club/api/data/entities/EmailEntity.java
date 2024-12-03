@@ -3,6 +3,7 @@ package com.smh.club.api.data.entities;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.domain.EmailType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 /**
@@ -21,7 +22,8 @@ public class EmailEntity {
     @Column(name = "id", nullable = false, updatable = false, unique = true )
     private int id;
 
-    @Column(name = "email", nullable = false, length = 100)
+    @Email
+    @Column(name = "email", nullable = false, length = 50)
     private String email;
 
     @Builder.Default

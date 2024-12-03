@@ -197,7 +197,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(strings = {"id", "email", "email-type" })
     public void getListPage_sortColumn(String sort) {
-        var entitySize = 50;
+        var entitySize = defaultPageSize;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
 
@@ -215,8 +215,8 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .sorted(sortFields.getDto()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
 
+        verify(expected, actual);
     }
 
     @ParameterizedTest
@@ -234,7 +234,8 @@ public class EmailIntegrationTests extends IntegrationTests {
             .get(path)
             .then().assertThat()
             .status(HttpStatus.BAD_REQUEST)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     @Test
@@ -333,7 +334,8 @@ public class EmailIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     @Test
