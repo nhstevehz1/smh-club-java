@@ -525,7 +525,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void deleteAddress_status_noContent() throws Exception {
+    public void deleteAddress_status_noContent() {
         // create several addresses
         var entities = addEntitiesToDb(5);
         var id = entities.get(2).getId();
