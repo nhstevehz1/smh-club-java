@@ -33,7 +33,7 @@ CREATE TABLE member_mgmt.address (
 CREATE TABLE member_mgmt.email (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
-	email varchar(100) NOT NULL,
+	email varchar(25) NOT NULL,
 	email_type smallint NOT NULL,
 
 	CONSTRAINT pk_email PRIMARY KEY (id),
