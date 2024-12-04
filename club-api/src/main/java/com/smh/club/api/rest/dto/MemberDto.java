@@ -2,7 +2,7 @@ package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.rest.validation.constraints.JoinedDate;
+import com.smh.club.api.rest.validation.constraints.ValidMember;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.annotations.SortTarget;
 import com.smh.club.api.shared.validators.constraints.BirthDate;
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JoinedDate
+@ValidMember
 @SortTarget(MemberEntity.class)
 public class MemberDto {
     @JsonProperty("id")

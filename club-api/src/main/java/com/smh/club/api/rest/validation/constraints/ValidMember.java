@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.validation.constraints;
 
-import com.smh.club.api.rest.validation.JoinedDateValidator;
+import com.smh.club.api.rest.validation.MemberValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -11,12 +11,12 @@ import java.time.LocalDate;
 
 /**
  * A constraint validator used on LocalDate fields.
- * Instructs validation to fire the {@link JoinedDateValidator} validator.
+ * Instructs validation to fire the {@link MemberValidator} validator.
  */
-@Constraint(validatedBy = JoinedDateValidator.class)
+@Constraint(validatedBy = MemberValidator.class)
 @Target({ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JoinedDate {
+public @interface ValidMember {
   Class<?> value() default LocalDate.class;
   String message () default "Invalid joined date.";
   Class<?>[] groups() default {};

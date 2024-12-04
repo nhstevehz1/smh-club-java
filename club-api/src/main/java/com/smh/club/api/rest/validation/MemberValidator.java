@@ -1,7 +1,7 @@
 package com.smh.club.api.rest.validation;
 
 import com.smh.club.api.rest.dto.MemberDto;
-import com.smh.club.api.rest.validation.constraints.JoinedDate;
+import com.smh.club.api.rest.validation.constraints.ValidMember;
 import com.smh.club.api.shared.validators.constraints.BirthDate;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class JoinedDateValidator implements ConstraintValidator<JoinedDate, MemberDto> {
+public class MemberValidator implements ConstraintValidator<ValidMember, MemberDto> {
 
   @Override
   public boolean isValid(MemberDto memberDto, ConstraintValidatorContext constraintValidatorContext) {
