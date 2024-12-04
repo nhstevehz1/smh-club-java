@@ -79,7 +79,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
     private final Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
-            .set(Keys.COLLECTION_MAX_SIZE, 0);
+            .set(Keys.COLLECTION_MAX_SIZE, 0)
+            .set(Keys.BEAN_VALIDATION_ENABLED, true);
 
     @Autowired
     public RenewalIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
