@@ -41,7 +41,7 @@ public class MemberEntity {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = "joined_date")
+    @Column(name = "joined_date", nullable = false)
     private LocalDate joinedDate;
 
     @SortExclude

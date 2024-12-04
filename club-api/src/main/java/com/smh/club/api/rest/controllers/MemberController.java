@@ -5,6 +5,9 @@ import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
+import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.smh.club.api.shared.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets member objects in the database.
@@ -78,7 +80,9 @@ public class MemberController {
      * @return A {@link ResponseEntity} containing a {@link MemberDto} representing the newly created object.
      */
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MemberDto> create(@RequestBody MemberDto member) {
+    public ResponseEntity<MemberDto> create(
+        @NotNull @Valid @RequestBody MemberDto member) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
@@ -90,7 +94,10 @@ public class MemberController {
      * @return A {@link ResponseEntity} containing a {@link MemberDto} that represents the updated member.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MemberDto> update(@PathVariable int id, @RequestBody MemberDto member) {
+    public ResponseEntity<MemberDto> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody MemberDto member) {
+
         var ret = memberSvc.updateMember(id,  member);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

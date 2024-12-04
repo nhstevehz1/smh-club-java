@@ -3,6 +3,7 @@ package com.smh.club.api.hateoas.controllers;
 import com.smh.club.api.hateoas.contracts.services.MemberService;
 import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
+import com.smh.club.api.shared.validators.constraints.SortConstraint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.smh.club.api.shared.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets member objects in the database.
