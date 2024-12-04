@@ -7,10 +7,8 @@ import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.data.repos.EmailRepo;
 import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.dto.EmailDto;
 import com.smh.club.api.rest.response.CountResponse;
-import io.restassured.http.ContentType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -287,17 +285,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        var ret =
-            given()
-                .auth().none()
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(create))
-            .when()
-                .post(path)
-            .then()
-                .assertThat().status(HttpStatus.CREATED)
-                .extract().body().as(AddressDto.class);
+        var ret = sendValidCreate(create, EmailDto.class);
 
         // verify
         var entity =  repo.findById(ret.getId());
@@ -325,17 +313,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+       sendInvalidCreate(create);
     }
 
     @Test
@@ -349,17 +327,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -375,19 +343,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             .create();
 
         // perform PUT
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-            .when()
-                .put(path + "/{id}")
-            .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract().body().as(EmailDto.class);
+        var actual = sendValidUpdate(id, update, EmailDto.class);
 
         // verify
         var email = repo.findById(actual.getId());
@@ -429,19 +385,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             .ignore(nonNullableField)
             .create();
 
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", update.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
     }
 
     @Test
@@ -457,19 +401,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             .set(field(EmailDto::getEmail), "XXX")
             .create();
 
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", update.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
     }
 
     @Test

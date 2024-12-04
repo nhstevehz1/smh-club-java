@@ -10,6 +10,7 @@ import com.smh.club.api.data.repos.RenewalsRepo;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +80,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
     private final Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
-            .set(Keys.COLLECTION_MAX_SIZE, 0);
+            .set(Keys.COLLECTION_MAX_SIZE, 0)
+            .set(Keys.BEAN_VALIDATION_ENABLED, true);
 
     @Autowired
     public RenewalIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -283,48 +285,72 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .assertThat().status(HttpStatus.NOT_FOUND);
     }
 
-    @Test
-    public void create_returns_model_status_created() throws Exception {
+    @ParameterizedTest
+    @ValueSource(ints = {0,1})
+    public void create_returns_model_status_created(int offset) throws Exception {
         // setup
-        var id = memberRepo.findAll().get(2).getId();
-
-        var expected = Instancio.of(RenewalModel.class)
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(RenewalModel.class)
             .ignore(field(RenewalModel::getId))
-            .set(field(RenewalModel::getMemberId), id)
-            .generate(field(RenewalModel::getRenewalYear),
-                g-> g.text().pattern("#d#d#d#d"))
+            .generate(field(RenewalModel::getMemberId), g -> g.oneOf(memberIdList))
+            .set(field(RenewalModel::getRenewalDate), LocalDate.now())
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear() - offset)
             .create();
 
         // perform post
-        var result =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(expected))
-                .when()
-                .post(path);
+        var ret = sendValidCreate(create, RenewalModel.class);
 
-        var model = result.then().extract().body().as(RenewalModel.class);
-        var uri = "http://localhost" + path + "/" + model.getId();
-
-        result.then()
-            .assertThat().status(HttpStatus.CREATED)
-            .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-            .expect(jsonPath("$._links").exists())
-            .expect(jsonPath("$._links.length()").value(3))
-            .expect(jsonPath("$._links.self.href").value(uri))
-            .expect(jsonPath("$._links.update.href").value(uri))
-            .expect(jsonPath("$._links.delete.href").value(uri));
-
-        var renewal = repo.findById(model.getId());
+        var renewal = repo.findById(ret.getId());
 
         assertTrue(renewal.isPresent());
-        verify(expected, renewal.get());
+        verify(create, renewal.get());
     }
 
     @Test
-    public void update_returns_model_status_ok() throws Exception{
+    public void create_with_null_renewalDate_returns_bad_request() throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(RenewalModel.class)
+            .ignore(field(RenewalModel::getId))
+            .generate(field(RenewalModel::getMemberId), g -> g.oneOf(memberIdList))
+            .setBlank(field(RenewalModel::getRenewalDate))
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        sendInvalidCreate(create);
+    }
+
+    @Test
+    public void create_with_invalid_renewalDate_returns_bad_request() throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(RenewalModel.class)
+            .ignore(field(RenewalModel::getId))
+            .generate(field(RenewalModel::getMemberId), g -> g.oneOf(memberIdList))
+            .set(field(RenewalModel::getRenewalDate), LocalDate.now().plusYears(1))
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        sendInvalidCreate(create);
+    }
+
+    @Test
+    public void create_with_invalid_renewalYear_returns_bad_request() throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(RenewalModel.class)
+            .ignore(field(RenewalModel::getId))
+            .generate(field(RenewalModel::getMemberId), g -> g.oneOf(memberIdList))
+            .set(field(RenewalModel::getRenewalDate), LocalDate.now())
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear() + 1)
+            .create();
+
+        sendInvalidCreate(create);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0,1})
+    public void update_returns_model_status_ok(int offset) throws Exception{
         // setup
         var entity = addEntitiesToDb(20).get(10);
         var id = entity.getId();
@@ -333,30 +359,12 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var update = Instancio.of(RenewalModel.class)
             .set(field(RenewalModel::getId), id)
             .set(field(RenewalModel::getMemberId), memberId)
-            .generate(field(RenewalModel::getRenewalYear),
-                g-> g.text().pattern("#d#d#d#d"))
+            .set(field(RenewalModel::getRenewalDate), LocalDate.now())
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear() - offset)
             .create();
 
         // perform put
-        var uri = "http://localhost/api/v2/renewals/" + id;
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put( path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-                .expect(jsonPath("$._links").exists())
-                .expect(jsonPath("$._links.length()").value(3))
-                .expect(jsonPath("$._links.self.href").value(uri))
-                .expect(jsonPath("$._links.update.href").value(uri))
-                .expect(jsonPath("$._links.delete.href").value(uri))
-                .extract().body().as(RenewalModel.class);
+        var actual = sendValidUpdate(id, update, RenewalModel.class);
 
         var renewal = repo.findById(actual.getId());
         assertTrue(renewal.isPresent());
@@ -380,6 +388,57 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @Test
+    public void update_with_null_renewalDate_returns_badRequest() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(RenewalModel.class)
+            .set(field(RenewalModel::getId), id)
+            .set(field(RenewalModel::getMemberId), memberId)
+            .setBlank(field(RenewalModel::getRenewalDate))
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        sendInvalidUpdate(id, update);
+    }
+
+    @Test
+    public void update_with_invalid_renewalDate_returns_badRequest() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(RenewalModel.class)
+            .set(field(RenewalModel::getId), id)
+            .set(field(RenewalModel::getMemberId), memberId)
+            .set(field(RenewalModel::getRenewalDate), LocalDate.now().plusYears(1))
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        sendInvalidUpdate(id, update);
+    }
+
+    @Test
+    public void update_with_invalid_renewalYear_returns_badRequest() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(RenewalModel.class)
+            .set(field(RenewalModel::getId), id)
+            .set(field(RenewalModel::getMemberId), memberId)
+            .set(field(RenewalModel::getRenewalDate), LocalDate.now())
+            .set(field(RenewalModel::getRenewalYear), LocalDate.now().getYear() + 1)
+            .create();
+
+        sendInvalidUpdate(id, update);
     }
 
     @Test
@@ -426,8 +485,6 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .size(size)
             .ignore(field(RenewalEntity::getId))
             .generate(field(RenewalEntity::getMember), g -> g.oneOf(members))
-            .generate(field(RenewalEntity::getRenewalYear),
-                g-> g.text().pattern("#d#d#d#d"))
             .create();
 
         return repo.saveAllAndFlush(entities);

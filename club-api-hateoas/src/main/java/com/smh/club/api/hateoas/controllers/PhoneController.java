@@ -4,6 +4,8 @@ import com.smh.club.api.hateoas.contracts.services.PhoneService;
 import com.smh.club.api.hateoas.models.PhoneModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +83,9 @@ public class PhoneController {
      * @return A {@link ResponseEntity} containing a {@link PhoneModel} representing the newly created object.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PhoneModel> create(@RequestBody PhoneModel phone) {
+    public ResponseEntity<PhoneModel> create(
+        @NotNull @Valid @RequestBody PhoneModel phone) {
+
         log.debug("Creating phone, data: {}", phone);
 
         var created = phoneService.createPhone(phone);
@@ -97,7 +101,10 @@ public class PhoneController {
      * @return A {@link ResponseEntity} containing a {@link PhoneModel} that represents the updated phone.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PhoneModel> update(@PathVariable int id, @RequestBody PhoneModel phone) {
+    public ResponseEntity<PhoneModel> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody PhoneModel phone) {
+
         log.debug("Updating phone, id: {}, data: {}", id, phone);
 
         phone.setId(0);

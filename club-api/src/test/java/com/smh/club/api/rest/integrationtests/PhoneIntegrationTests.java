@@ -9,7 +9,6 @@ import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.data.repos.PhoneRepo;
 import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.response.CountResponse;
-import io.restassured.http.ContentType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -239,8 +238,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Test
     public void get_returns_model_status_ok() {
         // setup
-        var email = addEntitiesToDb(20).get(10);
-        var id = email.getId();
+        var phone = addEntitiesToDb(20).get(10);
+        var id = phone.getId();
 
         // perform get
         var actual =
@@ -255,7 +254,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
                 .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract().body().as(PhoneDto.class);
 
-        verify(email, actual);
+        verify(phone, actual);
     }
 
     @Test
@@ -285,17 +284,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        var ret =
-            given()
-                .auth().none()
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(create))
-                .when()
-                .post(path)
-                .then()
-                .assertThat().status(HttpStatus.CREATED)
-                .extract().body().as(PhoneDto.class);
+        var ret = sendValidCreate(create, PhoneDto.class);
 
         // verify
         var entity =  repo.findById(ret.getId());
@@ -323,17 +312,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidCreate(create);
     }
 
     @ParameterizedTest
@@ -348,17 +327,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -374,25 +343,13 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .create();
 
         // perform PUT
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put(path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract().body().as(PhoneDto.class);
+        var actual = sendValidUpdate(id, update, PhoneDto.class);
 
         // verify
-        var email = repo.findById(actual.getId());
+        var phone = repo.findById(actual.getId());
 
-        assertTrue(email.isPresent());
-        verify(update, email.get());
+        assertTrue(phone.isPresent());
+        verify(update, phone.get());
     }
 
     @Test
@@ -429,19 +386,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .create();
 
         // perform PUT
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .pathParam("id", id)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
     }
 
     @ParameterizedTest
@@ -459,19 +404,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .create();
 
         // perform PUT
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .pathParam("id", id)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
     }
 
     @Test
@@ -488,8 +421,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.NO_CONTENT);
 
-        var email = repo.findById(id);
-        assertTrue(email.isEmpty());
+        var phone = repo.findById(id);
+        assertTrue(phone.isEmpty());
     }
 
     @Test

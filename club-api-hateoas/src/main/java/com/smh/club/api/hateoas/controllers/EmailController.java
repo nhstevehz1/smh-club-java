@@ -4,6 +4,8 @@ import com.smh.club.api.hateoas.contracts.services.EmailService;
 import com.smh.club.api.hateoas.models.EmailModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +82,8 @@ public class EmailController {
      * @return A {@link ResponseEntity} containing an {@link EmailModel} representing the newly created object.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmailModel> create(@RequestBody EmailModel email) {
+    public ResponseEntity<EmailModel> create(
+        @NotNull @Valid @RequestBody EmailModel email) {
         log.debug("Creating email, data: {}", email);
 
         var created = emailService.createEmail(email);
@@ -96,7 +99,10 @@ public class EmailController {
      * @return A {@link ResponseEntity} containing an {@link EmailModel} that represents the updated email.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmailModel> update(@PathVariable int id, @RequestBody EmailModel email) {
+    public ResponseEntity<EmailModel> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody EmailModel email) {
+
         log.debug("Updating email, id: {}, data: {}", id, email);
 
         var ret = emailService.updateEmail(id, email);
@@ -112,6 +118,7 @@ public class EmailController {
      */
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
+
         log.debug("Deleting email, id: {}", id);
         emailService.deleteEmail(id);
         return ResponseEntity.noContent().build();

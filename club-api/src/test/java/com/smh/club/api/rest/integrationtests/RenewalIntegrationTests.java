@@ -9,7 +9,6 @@ import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.data.repos.RenewalsRepo;
 import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.response.CountResponse;
-import io.restassured.http.ContentType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -285,17 +284,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        var ret =
-            given()
-                .auth().none()
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(create))
-                .when()
-                .post(path)
-                .then()
-                .assertThat().status(HttpStatus.CREATED)
-                .extract().body().as(RenewalDto.class);
+        var ret = sendValidCreate(create, RenewalDto.class);
 
         // verify
         var entity =  repo.findById(ret.getId());
@@ -315,17 +304,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -339,17 +318,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -363,17 +332,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidCreate(create);
     }
 
     @ParameterizedTest
@@ -392,19 +351,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .create();
 
         // perform PUT
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put(path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract().body().as(RenewalDto.class);
+        var actual = sendValidUpdate(id, update, RenewalDto.class);
 
         // verify
         var email = repo.findById(actual.getId());
@@ -447,18 +394,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", update.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
 
     }
 
@@ -472,23 +408,12 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var update = Instancio.of(RenewalDto.class)
             .set(field(RenewalDto::getId), id)
             .set(field(RenewalDto::getMemberId), memberId)
-            .setBlank(field(RenewalDto::getRenewalDate))
+            .set(field(RenewalDto::getRenewalDate), LocalDate.now().minusYears(1))
             .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
             .create();
 
         // perform put
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", update.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
 
     }
 
@@ -507,18 +432,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", update.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
 
     }
 
