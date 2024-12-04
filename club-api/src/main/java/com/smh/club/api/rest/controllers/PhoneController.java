@@ -4,6 +4,9 @@ import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
+import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.smh.club.api.shared.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets phone objects in the database.
@@ -75,7 +77,8 @@ public class PhoneController {
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} representing the newly created object.
      */
     @PostMapping
-    public ResponseEntity<PhoneDto> create(@RequestBody PhoneDto phone) {
+    public ResponseEntity<PhoneDto> create(
+        @NotNull @Valid @RequestBody PhoneDto phone) {
         return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(phone));
     }
 
@@ -87,7 +90,10 @@ public class PhoneController {
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} that represents the updated phone.
      */
     @PutMapping("{id}")
-    public ResponseEntity<PhoneDto> update(@PathVariable int id, @RequestBody PhoneDto phone) {
+    public ResponseEntity<PhoneDto> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody PhoneDto phone) {
+
         var ret = phoneSvc.updatePhone(id, phone);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

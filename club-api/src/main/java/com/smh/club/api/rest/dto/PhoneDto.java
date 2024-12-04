@@ -5,9 +5,10 @@ import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.annotations.SortTarget;
 import com.smh.club.api.shared.domain.PhoneType;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,12 +27,13 @@ public class PhoneDto {
     @JsonProperty("id")
     private int id;
 
-    @Min(1)
     @SortExclude
     @JsonProperty("member-id")
     private int memberId;
 
     @NotBlank
+    @Size(min = 10, max = 10)
+    @Digits(integer = 10, fraction = 0)
     @JsonProperty("phone-number")
     private String phoneNumber;
 
