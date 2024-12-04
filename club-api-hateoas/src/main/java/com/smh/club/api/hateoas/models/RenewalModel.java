@@ -32,5 +32,5 @@ public class RenewalModel extends RepresentationModel<RenewalModel> {
     private LocalDate renewalDate;
 
     @JsonProperty("renewal-year")
-    private String renewalYear;
+    private int renewalYear;
 }
