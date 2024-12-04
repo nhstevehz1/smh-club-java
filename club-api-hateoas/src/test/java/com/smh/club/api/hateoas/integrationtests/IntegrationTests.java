@@ -104,13 +104,13 @@ public abstract class IntegrationTests {
                 .pathParam("id", id)
                 .body(mapper.writeValueAsString(update))
                 .when()
-                .post(path);
+                .put(path + "/{id}");
 
         var model = result.then().extract().body().as(AddressModel.class);
         var uri = "http://localhost" + path + "/" + model.getId();
 
         return result.then()
-            .assertThat().status(HttpStatus.CREATED)
+            .assertThat().status(HttpStatus.OK)
             .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
             .expect(jsonPath("$._links").exists())
             .expect(jsonPath("$._links.length()").value(3))

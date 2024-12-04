@@ -4,6 +4,8 @@ import com.smh.club.api.hateoas.contracts.services.MemberService;
 import com.smh.club.api.hateoas.models.MemberModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +85,8 @@ public class MemberController {
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     //@Override
-    public ResponseEntity<MemberModel> create(@RequestBody MemberModel member) {
+    public ResponseEntity<MemberModel> create(
+        @NotNull @Valid @RequestBody MemberModel member) {
         log.debug("Creating member data: {}", member);
 
         var created = memberSvc.createMember(member);
@@ -100,7 +103,10 @@ public class MemberController {
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     //@Override
-    public ResponseEntity<MemberModel> update(@PathVariable int id, @RequestBody MemberModel member) {
+    public ResponseEntity<MemberModel> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody MemberModel member) {
+
         log.debug("Updating member id: {}, data: {} ", id, member);
 
         member.setId(id); // assume the path variable is the source of truth.
