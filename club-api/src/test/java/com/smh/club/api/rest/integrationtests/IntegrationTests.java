@@ -65,7 +65,6 @@ public abstract class IntegrationTests {
     protected <T> T sendValidUpdate(int id, T update, Class<T> clazz) throws JsonProcessingException {
         return given()
                 .auth().none()
-                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .pathParam("id", id)
                 .body(mapper.writeValueAsString(update)).when()
@@ -79,10 +78,12 @@ public abstract class IntegrationTests {
     protected <T> void sendInvalidUpdate(int id, T update) throws JsonProcessingException {
         given()
             .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .pathParam("id", id)
             .body(mapper.writeValueAsString(update))
             .when()
-            .post(path)
+            .put(path + "/{id}")
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
