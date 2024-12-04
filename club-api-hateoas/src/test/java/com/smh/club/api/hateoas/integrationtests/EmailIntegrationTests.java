@@ -14,7 +14,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.instancio.Instancio;
+import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
@@ -23,7 +25,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +44,7 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,7 +82,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     private final Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
-            .set(Keys.COLLECTION_MAX_SIZE, 0);
+            .set(Keys.COLLECTION_MAX_SIZE, 0)
+            .set(Keys.BEAN_VALIDATION_ENABLED, true);
 
     @Autowired
     public EmailIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -284,39 +290,52 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_model_status_created() throws Exception {
         // setup
-        var id = memberRepo.findAll().get(2).getId();
-
-        var expected = Instancio.of(EmailModel.class)
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(EmailModel.class)
             .ignore(field(EmailModel::getId))
-            .set(field(EmailModel::getMemberId), id)
+            .generate(field(EmailModel::getMemberId), g -> g.oneOf(memberIdList))
             .create();
 
         // perform post
-        var result =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(expected))
-                .when()
-                .post(path);
+        var ret = sendValidCreate(create, EmailModel.class);
 
-        var model = result.then().extract().body().as(EmailModel.class);
-        var uri = "http://localhost" + path + "/" + model.getId();
+        var entity = repo.findById(ret.getId());
 
-        result.then()
-            .assertThat().status(HttpStatus.CREATED)
-            .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-            .expect(jsonPath("$._links").exists())
-            .expect(jsonPath("$._links.length()").value(3))
-            .expect(jsonPath("$._links.self.href").value(uri))
-            .expect(jsonPath("$._links.update.href").value(uri))
-            .expect(jsonPath("$._links.delete.href").value(uri));
+        assertTrue(entity.isPresent());
+        verify(create, entity.get());
+    }
 
-        var email = repo.findById(model.getId());
+    // used with test that follows
+    private static Stream<Arguments> nonNullableFields() {
+        return Stream.of(
+            arguments(field(EmailModel::getEmail)),
+            arguments(field(EmailModel::getEmailType)));
+    }
 
-        assertTrue(email.isPresent());
-        verify(expected, email.get());
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(EmailModel.class)
+            .ignore(field(EmailModel::getId))
+            .generate(field(EmailModel::getMemberId), g -> g.oneOf(memberIdList))
+            .setBlank(nonNullableField)
+            .create();
+
+        sendInvalidCreate(create);
+
+    }
+
+    @Test
+    public void create_with_invalid_email_returns_bad_request() throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(EmailModel.class)
+            .ignore(field(EmailModel::getId))
+            .generate(field(EmailModel::getMemberId), g -> g.oneOf(memberIdList))
+            .set(field(EmailModel::getEmail), "XX")
+            .create();
+
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -332,29 +351,12 @@ public class EmailIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-        var uri = "http://localhost/api/v2/emails/" + id;
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put( path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-                .expect(jsonPath("$._links").exists())
-                .expect(jsonPath("$._links.length()").value(3))
-                .expect(jsonPath("$._links.self.href").value(uri))
-                .expect(jsonPath("$._links.update.href").value(uri))
-                .expect(jsonPath("$._links.delete.href").value(uri))
-                .extract().body().as(EmailModel.class);
+        var ret = sendValidUpdate(id, update, EmailModel.class);
 
-        var email = repo.findById(actual.getId());
+        var email = repo.findById(ret.getId());
+
         assertTrue(email.isPresent());
-        verify(email.get(), actual);
+        verify(update, email.get());
     }
 
     @Test
@@ -374,6 +376,39 @@ public class EmailIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void update_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(EmailModel.class)
+            .set(field(EmailModel::getId), id)
+            .set(field(EmailModel::getMemberId), memberId)
+            .setBlank(nonNullableField)
+            .create();
+
+        sendInvalidUpdate(id, update);
+    }
+
+    @Test
+    public void update_with_invalid_email_returns_bad_request() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(EmailModel.class)
+            .set(field(EmailModel::getId), id)
+            .set(field(EmailModel::getMemberId), memberId)
+            .set(field(EmailModel::getEmail), "XX")
+            .create();
+
+        sendInvalidUpdate(id, update);
     }
 
     @Test
@@ -424,8 +459,7 @@ public class EmailIntegrationTests extends IntegrationTests {
 
         return repo.saveAllAndFlush(entities);
     }
-
-
+    
     private void verify(EmailModel expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
@@ -437,8 +471,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType(), actual.getEmailType());
     }
-
-
+    
     private void verify(List<EmailEntity> expected, List<EmailModel> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
