@@ -435,7 +435,15 @@ public class AddressIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @MethodSource("nullableFields")
     public void update_nullableField_returns_dto_status_ok(Selector nullableField) throws Exception {
-
+// setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+        var update = Instancio.of(AddressModel.class)
+            .set(field(AddressModel::getId), id)
+            .set(field(AddressModel::getMemberId), memberId)
+            .setBlank(nullableField)
+            .create();
     }
 
     @Test
