@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidMember {
   Class<?> value() default LocalDate.class;
-  String message () default "Invalid joined date.";
+  String message () default "Invalid Member data.  Joined date must at lease minAge after birth date";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
 }

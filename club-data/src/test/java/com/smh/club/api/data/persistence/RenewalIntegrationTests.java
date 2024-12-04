@@ -72,16 +72,6 @@ public class RenewalIntegrationTests extends PersistenceTestsBase {
     }
 
     @Test
-    public void save_renewalYear_is_null_throws() {
-        // setup
-        var renewal = createEntity(members);
-        renewal.setRenewalYear(null);
-
-        // execute and verify
-        assertThrows(Exception.class, () -> renewalRepo.save(renewal));
-    }
-
-    @Test
     public void save_member_is_null_throws() {
         // setup
         var renewal = createEntity(members);

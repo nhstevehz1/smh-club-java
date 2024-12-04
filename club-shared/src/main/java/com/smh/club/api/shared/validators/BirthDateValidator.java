@@ -1,10 +1,11 @@
 package com.smh.club.api.shared.validators;
 
+import static java.time.temporal.ChronoUnit.YEARS;
+
 import com.smh.club.api.shared.validators.constraints.BirthDate;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
-import java.time.Period;
 
 /**
  * Validates the given {@link LocalDate} is less than or equal to the current date minus
@@ -34,6 +35,6 @@ public class BirthDateValidator implements ConstraintValidator<BirthDate, LocalD
    */
   @Override
   public boolean isValid(LocalDate birthDate, ConstraintValidatorContext constraintValidatorContext) {
-    return birthDate == null || Period.between(birthDate, LocalDate.now()).getYears() >= age;
+    return birthDate == null || YEARS.between(birthDate, LocalDate.now()) >= age;
   }
 }

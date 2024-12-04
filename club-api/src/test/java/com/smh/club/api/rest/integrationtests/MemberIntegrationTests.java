@@ -451,7 +451,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_with_invalid_joinedDate_returns_bad_request() throws Exception {
         // setup
         var create = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getJoinedDate), LocalDate.now().plusYears(1))
+            .set(field(MemberDto::getJoinedDate), LocalDate.now().minusYears(10))
             .ignore(field(MemberDto::getId))
             .create();
 

@@ -41,7 +41,7 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
       } else {
         var errors =
             ex.getBindingResult().getAllErrors().stream()
-                .map(v -> ValidationError.of(null, v.toString()))
+                .map(v -> ValidationError.of(null, v.getDefaultMessage()))
                 .toList();
         return handleExceptionInternal(ex, ValidationErrorResponse.of(errors), headers, status, request);
       }
