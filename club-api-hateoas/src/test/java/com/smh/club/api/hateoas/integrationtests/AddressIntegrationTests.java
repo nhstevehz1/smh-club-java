@@ -2,6 +2,7 @@ package com.smh.club.api.hateoas.integrationtests;
 
 import static java.util.Comparator.comparingInt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.data.entities.MemberEntity;
@@ -434,7 +435,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @MethodSource("nullableFields")
-    public void update_nullableField_returns_dto_status_ok(Selector nullableField) throws Exception {
+    public void update_nullableField_returns_dto_status_ok(Selector nullableField) throws JsonProcessingException {
 // setup
         var entity = addEntitiesToDb(20).get(10);
         var id = entity.getId();
@@ -444,6 +445,13 @@ public class AddressIntegrationTests extends IntegrationTests {
             .set(field(AddressModel::getMemberId), memberId)
             .setBlank(nullableField)
             .create();
+
+        // perform put
+        var actual = sendValidUpdate(id, update, AddressModel.class);
+
+        var address = repo.findById(actual.getId());
+        assertTrue(address.isPresent());
+        verify(address.get(), actual);
     }
 
     @Test
