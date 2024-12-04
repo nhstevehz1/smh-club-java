@@ -386,6 +386,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var create = Instancio.of(MemberDto.class)
             .set(field(MemberDto::getJoinedDate), LocalDate.now().minusYears(10))
+            .set(field(MemberDto::getBirthDate), LocalDate.now().minusYears(22))
             .ignore(field(MemberDto::getId))
             .create();
 
