@@ -1,5 +1,7 @@
 package com.smh.club.api.rest.exceptionhandlers;
 
+import com.smh.club.api.shared.exceptionhandlers.ValidationError;
+import com.smh.club.api.shared.exceptionhandlers.ValidationErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,8 +13,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import com.smh.club.api.shared.exceptionhandlers.ValidationError;
-import com.smh.club.api.shared.exceptionhandlers.ValidationErrorResponse;
 
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
@@ -32,12 +32,19 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
                                                                  @NonNull HttpStatusCode status,
                                                                  @NonNull WebRequest request) {
 
-      var violations =
-        ex.getBindingResult().getFieldErrors().stream()
-            .map(v -> ValidationError.of(v.getField(), v.getDefaultMessage()))
-            .toList();
-
-    return handleExceptionInternal(ex, ValidationErrorResponse.of(violations), headers, status, request);
+      if (!ex.getBindingResult().getFieldErrors().isEmpty()) {
+        var fieldErrors =
+            ex.getBindingResult().getFieldErrors().stream()
+                .map(v -> ValidationError.of(v.getField(), v.getDefaultMessage()))
+                .toList();
+        return handleExceptionInternal(ex, ValidationErrorResponse.of(fieldErrors), headers, status, request);
+      } else {
+        var errors =
+            ex.getBindingResult().getAllErrors().stream()
+                .map(v -> ValidationError.of(null, v.toString()))
+                .toList();
+        return handleExceptionInternal(ex, ValidationErrorResponse.of(errors), headers, status, request);
+      }
   }
 
     @ExceptionHandler(RuntimeException.class)

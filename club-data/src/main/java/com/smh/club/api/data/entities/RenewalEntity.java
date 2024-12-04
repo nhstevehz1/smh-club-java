@@ -24,8 +24,8 @@ public class RenewalEntity {
     @Column(name = "renewal_date", nullable = false)
     private LocalDate renewalDate;
 
-    @Column(name = "renewal_year", nullable = false, length = 5)
-    private String renewalYear;
+    @Column(name = "renewal_year", nullable = false)
+    private int renewalYear;
 
     @SortExclude
     @EqualsAndHashCode.Exclude

@@ -5,6 +5,9 @@ import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
+import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.smh.club.api.shared.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets renewal objects in the database.
@@ -77,7 +79,9 @@ public class RenewalController {
      * @return A {@link ResponseEntity} containing a {@link RenewalDto} representing the newly created object.
      */
     @PostMapping
-    public ResponseEntity<RenewalDto> create(@RequestBody RenewalDto renewal) {
+    public ResponseEntity<RenewalDto> create(
+        @NotNull @Valid @RequestBody RenewalDto renewal) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(renewal));
     }
 
@@ -89,7 +93,10 @@ public class RenewalController {
      * @return A {@link ResponseEntity} containing a {@link RenewalDto} that represents the updated renewal.
      */
     @PutMapping("{id}")
-    public ResponseEntity<RenewalDto> update(@PathVariable int id, @RequestBody RenewalDto renewal) {
+    public ResponseEntity<RenewalDto> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody RenewalDto renewal) {
+
         var ret = renewSvc.updateRenewal(id, renewal);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

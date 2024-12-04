@@ -44,7 +44,7 @@ CREATE TABLE member_mgmt.renewal (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
 	renewal_date DATE NOT NULL,
-	renewal_year char(4) NOT NULL,
+	renewal_year smallint NOT NULL,
 
 	CONSTRAINT pk_renewals PRIMARY KEY (id),
 	CONSTRAINT fk_renewals_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)
