@@ -14,7 +14,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.instancio.Instancio;
+import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
@@ -23,7 +25,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +45,7 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,7 +84,8 @@ public class AddressIntegrationTests extends IntegrationTests {
     private final Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
-            .set(Keys.COLLECTION_MAX_SIZE, 0);
+            .set(Keys.COLLECTION_MAX_SIZE, 0)
+            .set(Keys.BEAN_VALIDATION_ENABLED, true);
 
     @Autowired
     public AddressIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -281,42 +287,98 @@ public class AddressIntegrationTests extends IntegrationTests {
             .assertThat().status(HttpStatus.NOT_FOUND);
     }
 
-    @Test
-    public void create_returns_model_status_created() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"#d#d#d#d#d", "#d#d#d#d#d-#d#d#d#d"})
+    public void create_returns_model_status_created(String pattern) throws Exception {
         // setup
-        var id = memberRepo.findAll().get(2).getId();
-
-        var expected = Instancio.of(AddressModel.class)
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(AddressModel.class)
             .ignore(field(AddressModel::getId))
-            .set(field(AddressModel::getMemberId), id)
+            .generate(field(AddressModel::getMemberId),
+            g -> g.oneOf(memberIdList))
+            .generate(field(AddressModel::getZip), g -> g.text().pattern(pattern))
             .create();
 
         // perform post
-        var result =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(expected))
-                .when()
-                .post(path);
+        var actual = sendValidCreate(create, AddressModel.class);
 
-        var model = result.then().extract().body().as(AddressModel.class);
-        var uri = "http://localhost" + path + "/" + model.getId();
-
-        result.then()
-            .assertThat().status(HttpStatus.CREATED)
-            .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-            .expect(jsonPath("$._links").exists())
-            .expect(jsonPath("$._links.length()").value(3))
-            .expect(jsonPath("$._links.self.href").value(uri))
-            .expect(jsonPath("$._links.update.href").value(uri))
-            .expect(jsonPath("$._links.delete.href").value(uri));
-
-        var address = repo.findById(model.getId());
+        var address = repo.findById(actual.getId());
 
         assertTrue(address.isPresent());
-        verify(expected, address.get());
+        verify(create, address.get());
+    }
+
+    // used with test that follows
+    private static Stream<Arguments> nonNullFields() {
+        return Stream.of(
+            arguments(field(AddressModel::getAddress1)),
+            arguments(field(AddressModel::getCity)),
+            arguments(field(AddressModel::getState)),
+            arguments(field(AddressModel::getState)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullFields")
+    public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception{
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(AddressModel.class)
+            .ignore(field(AddressModel::getId))
+            .generate(field(AddressModel::getMemberId),
+                g -> g.oneOf(memberIdList))
+            .setBlank(nonNullableField)
+            .create();
+
+        sendInvalidCreate(create);
+    }
+
+    @Test
+    public void create_with_null_zip_returns_bad_request() throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(AddressModel.class)
+            .ignore(field(AddressModel::getId))
+            .generate(field(AddressModel::getMemberId),
+                g -> g.oneOf(memberIdList))
+            .setBlank(field(AddressModel::getZip))
+            .create();
+
+        sendInvalidCreate(create);
+    }
+
+    private static Stream<Arguments> nullableFields() {
+        return Stream.of(
+            arguments(field(AddressModel::getAddress2)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableFields")
+    public void create_nullableField_returns_dto_status_created(Selector nullableField) throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(AddressModel.class)
+            .ignore(field(AddressModel::getId))
+            .generate(field(AddressModel::getMemberId),
+                g -> g.oneOf(memberIdList))
+            .setBlank(nullableField)
+            .create();
+
+        var actual = sendValidCreate(create, AddressModel.class);
+
+        var address = repo.findById(actual.getId());
+
+        assertTrue(address.isPresent());
+        verify(create, address.get());
+    }
+
+    @Test
+    public void create_with_invalid_zip_returns_bad_request() throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(AddressModel.class)
+            .ignore(field(AddressModel::getId))
+            .generate(field(AddressModel::getMemberId),
+                g -> g.oneOf(memberIdList))
+            .set(field(AddressModel::getZip), "AAA")
+            .create();
+
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -325,36 +387,55 @@ public class AddressIntegrationTests extends IntegrationTests {
         var entity = addEntitiesToDb(20).get(10);
         var id = entity.getId();
         var memberId = entity.getMember().getId();
-
         var update = Instancio.of(AddressModel.class)
             .set(field(AddressModel::getId), id)
             .set(field(AddressModel::getMemberId), memberId)
             .create();
 
         // perform put
-        var uri = "http://localhost/api/v2/addresses/" + id;
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-            .when()
-                .put( path + "/{id}")
-            .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-                .expect(jsonPath("$._links").exists())
-                .expect(jsonPath("$._links.length()").value(3))
-                .expect(jsonPath("$._links.self.href").value(uri))
-                .expect(jsonPath("$._links.update.href").value(uri))
-                .expect(jsonPath("$._links.delete.href").value(uri))
-                .extract().body().as(AddressModel.class);
+        var actual = sendValidUpdate(id, update, AddressModel.class);
 
         var address = repo.findById(actual.getId());
         assertTrue(address.isPresent());
         verify(address.get(), actual);
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullFields")
+    public void update_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+        var update = Instancio.of(AddressModel.class)
+            .set(field(AddressModel::getId), id)
+            .set(field(AddressModel::getMemberId), memberId)
+            .setBlank(nonNullableField)
+            .create();
+
+        sendInvalidUpdate(id, update);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"#d","#d#d","#d#d#d","#d#d#d#d", "#d#d#d#d#d-#d#d#d", "#c#c"})
+    public void update_with_invalid_zip_returns_bad_request(String pattern) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+        var update = Instancio.of(AddressModel.class)
+            .set(field(AddressModel::getId), id)
+            .set(field(AddressModel::getMemberId), memberId)
+            .generate(field(AddressModel::getZip), g -> g.text().pattern(pattern))
+            .create();
+
+        sendInvalidUpdate(id, update);
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableFields")
+    public void update_nullableField_returns_dto_status_ok(Selector nullableField) throws Exception {
+
     }
 
     @Test
@@ -425,7 +506,6 @@ public class AddressIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
-
     private void verify(AddressModel expected, AddressEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getAddress1(), actual.getAddress1());
@@ -445,7 +525,6 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getZip(), actual.getZip());
         assertEquals(expected.getAddressType(), actual.getAddressType());
     }
-
 
     private void verify(List<AddressEntity> expected, List<AddressModel> actual) {
         expected.forEach(e -> {
@@ -484,6 +563,5 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         return map;
     }
-    
-    
+
 }

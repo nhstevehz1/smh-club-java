@@ -5,7 +5,8 @@ import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.annotations.SortTarget;
 import com.smh.club.api.shared.domain.AddressType;
-import jakarta.validation.constraints.NotEmpty;
+import com.smh.club.api.shared.validators.constraints.PostalCode;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -29,7 +30,7 @@ public class AddressModel extends RepresentationModel<AddressModel> {
     @JsonProperty("member-id")
     private int memberId;
 
-    @NotEmpty
+    @NotBlank
     @JsonProperty("address1")
     private String address1;
 
@@ -37,15 +38,16 @@ public class AddressModel extends RepresentationModel<AddressModel> {
     @JsonProperty("address2")
     private String address2;
 
-    @NotEmpty
+    @NotBlank
     @JsonProperty("city")
     private String city;
 
-    @NotEmpty
+    @NotBlank
     @JsonProperty("state")
     private String state;
 
-    @NotEmpty
+    @NotBlank
+    @PostalCode
     @JsonProperty("zip")
     private String zip;
 

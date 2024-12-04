@@ -4,6 +4,8 @@ import com.smh.club.api.hateoas.contracts.services.AddressService;
 import com.smh.club.api.hateoas.models.AddressModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +80,8 @@ public class AddressController {
      * @return A {@link ResponseEntity} containing an {@link AddressModel} representing the newly created object.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AddressModel> create(@RequestBody AddressModel address) {
+    public ResponseEntity<AddressModel> create(
+        @NotNull @Valid @RequestBody AddressModel address) {
         log.debug("Creating address, data: {}", address);
 
         var created = addressService.createAddress(address);
@@ -93,7 +96,9 @@ public class AddressController {
      * @return A {@link ResponseEntity} containing an {@link AddressModel} that represents the updated address.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AddressModel> update(@PathVariable int id, @RequestBody AddressModel address) {
+    public ResponseEntity<AddressModel> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody AddressModel address) {
         log.debug("Updating address, id: {}, data: {}", id, address);
 
         var ret = addressService.updateAddress(id, address);
