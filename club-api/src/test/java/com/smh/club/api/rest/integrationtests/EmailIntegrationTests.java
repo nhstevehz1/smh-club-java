@@ -321,7 +321,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         var create = Instancio.of(EmailDto.class)
             .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
             .ignore(field(EmailDto::getId))
-            .ignore(nonNullableField)
+            .setBlank(nonNullableField)
             .create();
 
         // perform POST
