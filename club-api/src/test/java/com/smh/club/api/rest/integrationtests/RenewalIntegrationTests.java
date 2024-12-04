@@ -408,7 +408,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var update = Instancio.of(RenewalDto.class)
             .set(field(RenewalDto::getId), id)
             .set(field(RenewalDto::getMemberId), memberId)
-            .setBlank(field(RenewalDto::getRenewalDate))
+            .set(field(RenewalDto::getRenewalDate), LocalDate.now().minusYears(1))
             .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
             .create();
 

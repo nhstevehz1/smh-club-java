@@ -4,6 +4,8 @@ import com.smh.club.api.hateoas.contracts.services.RenewalService;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +82,8 @@ public class RenewalController {
      * @return A {@link ResponseEntity} containing a {@link RenewalModel} representing the newly created object.
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RenewalModel> create(@RequestBody RenewalModel renewal) {
+    public ResponseEntity<RenewalModel> create(
+        @NotNull @Valid @RequestBody RenewalModel renewal) {
         log.debug("Creating renewal, data: {}", renewal);
 
         var created = renewalService.createRenewal(renewal);
@@ -96,7 +99,10 @@ public class RenewalController {
      * @return A {@link ResponseEntity} containing a {@link RenewalModel} that represents the updated renewal.
      */
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RenewalModel> update(@PathVariable int id, @RequestBody RenewalModel renewal) {
+    public ResponseEntity<RenewalModel> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody RenewalModel renewal) {
+
         log.debug("Updating renewal, id: {}, data: {}", id, renewal);
 
         renewal.setId(0);
