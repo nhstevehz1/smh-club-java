@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PostalCode {
   String message() default "Invalid postal code value";
-  String pattern() default "^[0-9]{5}-(?:[0-9]{4})?$";
+  String pattern() default "^[0-9]{5}(?:-[0-9]{4})?$";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
 }

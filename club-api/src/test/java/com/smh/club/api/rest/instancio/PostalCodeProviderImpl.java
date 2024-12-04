@@ -27,11 +27,10 @@ public class PostalCodeProviderImpl implements InstancioServiceProvider {
       if (targetClass == String.class && field != null) {
         PostalCode postalCode = field.getDeclaredAnnotation(PostalCode.class);
         if (postalCode != null) {
-          return gen.text().pattern(postalCode.pattern());
+          return gen.text().pattern("#d#d#d#d#d-#d#d#d#d");
         }
       }
       return null;
     }
   }
-
 }

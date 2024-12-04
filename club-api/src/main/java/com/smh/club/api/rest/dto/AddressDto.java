@@ -5,10 +5,10 @@ import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.annotations.SortTarget;
 import com.smh.club.api.shared.domain.AddressType;
+import com.smh.club.api.shared.validators.constraints.PostalCode;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,7 +47,7 @@ public class AddressDto {
     @JsonProperty("state")
     private String state;
 
-    @Size(min = 5, max = 9)
+    @PostalCode
     @NotBlank
     @JsonProperty("zip")
     private String zip;
