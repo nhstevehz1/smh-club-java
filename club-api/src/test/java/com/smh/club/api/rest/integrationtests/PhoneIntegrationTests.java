@@ -238,8 +238,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Test
     public void get_returns_model_status_ok() {
         // setup
-        var email = addEntitiesToDb(20).get(10);
-        var id = email.getId();
+        var phone = addEntitiesToDb(20).get(10);
+        var id = phone.getId();
 
         // perform get
         var actual =
@@ -254,7 +254,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
                 .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract().body().as(PhoneDto.class);
 
-        verify(email, actual);
+        verify(phone, actual);
     }
 
     @Test
@@ -346,10 +346,10 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var actual = sendValidUpdate(id, update, PhoneDto.class);
 
         // verify
-        var email = repo.findById(actual.getId());
+        var phone = repo.findById(actual.getId());
 
-        assertTrue(email.isPresent());
-        verify(update, email.get());
+        assertTrue(phone.isPresent());
+        verify(update, phone.get());
     }
 
     @Test
@@ -421,8 +421,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.NO_CONTENT);
 
-        var email = repo.findById(id);
-        assertTrue(email.isEmpty());
+        var phone = repo.findById(id);
+        assertTrue(phone.isEmpty());
     }
 
     @Test
