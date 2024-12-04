@@ -7,7 +7,6 @@ import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.rest.dto.MemberDto;
 import com.smh.club.api.rest.response.CountResponse;
-import io.restassured.http.ContentType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -362,6 +361,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var create = Instancio.of(MemberDto.class)
             .set(field(MemberDto::getMemberNumber), 0)
+            .set(field(MemberDto::getJoinedDate), LocalDate.now())
             .ignore(field(MemberDto::getId))
             .create();
 
@@ -378,16 +378,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+        sendInvalidCreate(create);
     }
 
     @Test
