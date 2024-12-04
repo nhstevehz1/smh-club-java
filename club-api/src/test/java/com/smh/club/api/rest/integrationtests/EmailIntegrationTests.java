@@ -3,19 +3,22 @@ package com.smh.club.api.rest.integrationtests;
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.domain.entities.EmailEntity;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.repos.EmailRepo;
-import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.entities.EmailEntity;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.repos.EmailRepo;
+import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.dto.EmailDto;
 import com.smh.club.api.rest.response.CountResponse;
+import io.restassured.http.ContentType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.instancio.Instancio;
+import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
@@ -24,6 +27,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +46,7 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,7 +83,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
-            .set(Keys.COLLECTION_MAX_SIZE, 0);
+            .set(Keys.COLLECTION_MAX_SIZE, 0)
+            .set(Keys.BEAN_VALIDATION_ENABLED, true);
 
     @Autowired
     public EmailIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -190,7 +197,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     @ParameterizedTest
     @ValueSource(strings = {"id", "email", "email-type" })
     public void getListPage_sortColumn(String sort) {
-        var entitySize = 50;
+        var entitySize = defaultPageSize;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
 
@@ -208,8 +215,8 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .sorted(sortFields.getDto()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
 
+        verify(expected, actual);
     }
 
     @ParameterizedTest
@@ -227,12 +234,12 @@ public class EmailIntegrationTests extends IntegrationTests {
             .get(path)
             .then().assertThat()
             .status(HttpStatus.BAD_REQUEST)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
-
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     @Test
-    public void get_returns_model_status_ok() {
+    public void get_returns_dto_status_ok() {
         // setup
         var email = addEntitiesToDb(20).get(10);
         var id = email.getId();
@@ -299,6 +306,62 @@ public class EmailIntegrationTests extends IntegrationTests {
         verify(create, entity.get());
     }
 
+    // used with test that follows
+    private static Stream<Arguments> nonNullableFields() {
+        return Stream.of(
+            arguments(field(EmailDto::getEmail)),
+            arguments(field(EmailDto::getEmailType)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(EmailDto.class)
+            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore(field(EmailDto::getId))
+            .setBlank(nonNullableField)
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @Test
+    public void create_with_invalid_email_returns_bad_request() throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(EmailDto.class)
+            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore(field(EmailDto::getId))
+            .set(field(EmailDto::getEmail), "X")
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
     @Test
     public void update_returns_dto_status_ok() throws Exception {
         // setup
@@ -334,7 +397,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void update_returns_status_badRequest() throws Exception {
+    public void update_returns_status_bad_request() throws Exception {
         // Setup
         var update = Instancio.create(EmailDto.class);
 
@@ -350,6 +413,63 @@ public class EmailIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void update_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(EmailDto.class)
+            .set(field(EmailDto::getId), id)
+            .set(field(EmailDto::getMemberId), memberId)
+            .ignore(nonNullableField)
+            .create();
+
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .pathParam("id", update.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @Test
+    public void update_with_invalid_email_returns_bad_request() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(EmailDto.class)
+            .set(field(EmailDto::getId), id)
+            .set(field(EmailDto::getMemberId), memberId)
+            .set(field(EmailDto::getEmail), "XXX")
+            .create();
+
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .pathParam("id", update.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     @Test

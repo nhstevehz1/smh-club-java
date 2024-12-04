@@ -3,27 +3,31 @@ package com.smh.club.api.rest.integrationtests;
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
-import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.domain.repos.PhoneRepo;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.entities.PhoneEntity;
+import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.data.repos.PhoneRepo;
 import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.response.CountResponse;
+import io.restassured.http.ContentType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.instancio.Instancio;
+import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,7 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,7 +82,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     Settings settings =
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
-            .set(Keys.COLLECTION_MAX_SIZE, 0);
+            .set(Keys.COLLECTION_MAX_SIZE, 0)
+            .set(Keys.BEAN_VALIDATION_ENABLED, true);
 
     @Autowired
     public PhoneIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -85,7 +91,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
     }
 
     @BeforeEach
-    public void initMembers() {
+    public void init() {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
             .size(5)
@@ -93,12 +99,6 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .withUnique(field(MemberEntity::getMemberNumber))
             .create();
         memberRepo.saveAllAndFlush(members);
-    }
-    
-    @AfterEach
-    public void clearPhoneTable() {
-        repo.deleteAll();
-        memberRepo.flush();
     }
 
     @ParameterizedTest
@@ -304,6 +304,63 @@ public class PhoneIntegrationTests extends IntegrationTests {
         verify(create, entity.get());
     }
 
+    // used with test that follows
+    private static Stream<Arguments> nonNullableFields() {
+        return Stream.of(
+            arguments(field(PhoneDto::getPhoneNumber)),
+            arguments(field(PhoneDto::getPhoneType)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(PhoneDto.class)
+            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore(field(PhoneDto::getId))
+            .setBlank(nonNullableField)
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"#d#d#d", "#c#c#c#c#c#c#c#c#c#c"})
+    public void create_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(PhoneDto.class)
+            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore(field(PhoneDto::getId))
+            .generate(field(PhoneDto::getPhoneNumber), g -> g.text().pattern(pattern))
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
     @Test
     public void update_returns_dto_status_ok() throws Exception {
         // setup
@@ -355,6 +412,66 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void update_with_nonNullable_fields_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(PhoneDto.class)
+            .set(field(PhoneDto::getId), id)
+            .set(field(PhoneDto::getMemberId), memberId)
+            .setBlank(nonNullableField)
+            .create();
+
+        // perform PUT
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .pathParam("id", id)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"#d#d#d", "#c#c#c#c#c#c#c#c#c#c"})
+    public void update_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(PhoneDto.class)
+            .set(field(PhoneDto::getId), id)
+            .set(field(PhoneDto::getMemberId), memberId)
+            .generate(field(PhoneDto::getPhoneNumber), g -> g.text().pattern(pattern))
+            .create();
+
+        // perform PUT
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .pathParam("id", id)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
     }
 
     @Test

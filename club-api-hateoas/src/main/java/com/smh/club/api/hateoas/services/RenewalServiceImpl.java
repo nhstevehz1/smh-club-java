@@ -1,12 +1,13 @@
 package com.smh.club.api.hateoas.services;
 
-import com.smh.club.api.data.domain.entities.RenewalEntity;
-import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.domain.repos.RenewalsRepo;
+import com.smh.club.api.data.entities.RenewalEntity;
+import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.data.repos.RenewalsRepo;
 import com.smh.club.api.hateoas.contracts.assemblers.RenewalAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.RenewalMapper;
 import com.smh.club.api.hateoas.contracts.services.RenewalService;
 import com.smh.club.api.hateoas.models.RenewalModel;
+import com.smh.club.api.shared.services.AbstractServiceBase;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import smh.club.shared.api.services.AbstractServiceBase;
 
 /**
  * {@inheritDoc}

@@ -4,6 +4,9 @@ import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.dto.EmailDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
+import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.api.annotations.SortConstraint;
 
 /**
  * Defines REST endpoints that targets email objects in the database.
@@ -75,7 +77,8 @@ public class EmailController {
      * @return A {@link ResponseEntity} containing an {@link EmailDto} representing the newly created object.
      */
     @PostMapping
-    public ResponseEntity<EmailDto> create(@RequestBody EmailDto email) {
+    public ResponseEntity<EmailDto> create(
+        @NotNull @Valid @RequestBody EmailDto email) {
         return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(email));
     }
 
@@ -86,7 +89,10 @@ public class EmailController {
      * @return A {@link ResponseEntity} containing an {@link EmailDto} that represents the updated email.
      */
     @PutMapping("{id}")
-    public ResponseEntity<EmailDto> update(@PathVariable int id, @RequestBody EmailDto email) {
+    public ResponseEntity<EmailDto> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody EmailDto email) {
+
         var ret = emailSvc.updateEmail(id, email);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

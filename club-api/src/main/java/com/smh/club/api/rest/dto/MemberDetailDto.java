@@ -1,15 +1,15 @@
 package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,15 +20,18 @@ public class MemberDetailDto {
     @JsonProperty("id")
     private int id;
 
+    @Min(1)
     @JsonProperty("member-number")
     private int memberNumber;
 
+    @NotBlank
     @JsonProperty("first-name")
     private String firstName;
 
     @JsonProperty("middle-name")
     private String middleName;
 
+    @NotBlank
     @JsonProperty("last-name")
     private String lastName;
 

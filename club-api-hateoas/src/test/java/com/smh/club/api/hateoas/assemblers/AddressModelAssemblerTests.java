@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.domain.entities.AddressEntity;
+import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.hateoas.config.MapperConfig;
 import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
 import com.smh.club.api.hateoas.mappers.AddressMapperImpl;
@@ -18,7 +18,9 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(InstancioExtension.class)
 public class AddressModelAssemblerTests extends AssemblerTests{
@@ -36,7 +38,7 @@ public class AddressModelAssemblerTests extends AssemblerTests{
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/addresses").build();
+        var components = UriComponentsBuilder.fromUriString("http://localhost/api/v2/addresses").build();
         this.assembler = new AddressAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }

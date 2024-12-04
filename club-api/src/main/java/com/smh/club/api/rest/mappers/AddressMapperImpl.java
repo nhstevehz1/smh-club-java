@@ -1,13 +1,13 @@
 package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.domain.entities.AddressEntity;
+import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.rest.contracts.mappers.AddressMapper;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.shared.mappers.DomainDataMapper;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import smh.club.shared.api.mappers.DomainDataMapper;
 
 /**
  * {@inheritDoc}

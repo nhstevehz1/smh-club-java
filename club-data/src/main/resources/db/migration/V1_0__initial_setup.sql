@@ -22,7 +22,7 @@ CREATE TABLE member_mgmt.address (
 	address2 varchar(100),
 	city varchar(30) NOT NULL,
 	state varchar(30) NOT NULL,
-	zip varchar(15) NOT NULL,
+	zip varchar(10) NOT NULL,
 	address_type smallint NOT NULL,
 
 	CONSTRAINT pk_address PRIMARY KEY (id),
@@ -33,7 +33,7 @@ CREATE TABLE member_mgmt.address (
 CREATE TABLE member_mgmt.email (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
-	email varchar(100) NOT NULL,
+	email varchar(50) NOT NULL,
 	email_type smallint NOT NULL,
 
 	CONSTRAINT pk_email PRIMARY KEY (id),
@@ -44,7 +44,7 @@ CREATE TABLE member_mgmt.renewal (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
 	renewal_date DATE NOT NULL,
-	renewal_year char(4) NOT NULL,
+	renewal_year smallint NOT NULL,
 
 	CONSTRAINT pk_renewals PRIMARY KEY (id),
 	CONSTRAINT fk_renewals_members FOREIGN KEY (member_id) REFERENCES member_mgmt.member (id)

@@ -1,12 +1,12 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.domain.entities.RenewalEntity;
+import com.smh.club.api.data.entities.RenewalEntity;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
 import java.time.LocalDate;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-import smh.club.shared.api.annotations.SortExclude;
-import smh.club.shared.api.annotations.SortTarget;
 
 /**
  * DTO for renewals  When serialize to JSON, links are generated that

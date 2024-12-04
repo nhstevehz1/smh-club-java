@@ -1,13 +1,13 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.domain.entities.AddressEntity;
+import com.smh.club.api.data.entities.AddressEntity;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
+import com.smh.club.api.shared.domain.AddressType;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-import smh.club.shared.api.annotations.SortExclude;
-import smh.club.shared.api.annotations.SortTarget;
-import smh.club.shared.api.domain.AddressType;
 
 /**
  * DTO for addresses  When serialize to JSON, links are generated that

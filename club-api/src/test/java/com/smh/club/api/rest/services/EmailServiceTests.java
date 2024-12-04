@@ -1,9 +1,9 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.domain.entities.EmailEntity;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.repos.EmailRepo;
-import com.smh.club.api.data.domain.repos.MembersRepo;
+import com.smh.club.api.data.entities.EmailEntity;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.repos.EmailRepo;
+import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.rest.contracts.mappers.EmailMapper;
 import com.smh.club.api.rest.dto.EmailDto;
 import java.util.Optional;

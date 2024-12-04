@@ -1,14 +1,14 @@
 package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.shared.mappers.DomainDataMapper;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import smh.club.shared.api.mappers.DomainDataMapper;
 
 /**
  * {@inheritDoc}

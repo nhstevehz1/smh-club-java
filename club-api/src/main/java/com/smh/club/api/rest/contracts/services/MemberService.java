@@ -52,4 +52,5 @@ public interface MemberService {
      */
     long getMemberCount();
     Optional<MemberDetailDto> getMemberDetail(int id);
+
 }

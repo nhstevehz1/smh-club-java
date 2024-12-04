@@ -1,14 +1,18 @@
 package com.smh.club.api.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.domain.entities.PhoneEntity;
+import com.smh.club.api.data.entities.PhoneEntity;
+import com.smh.club.api.shared.annotations.SortExclude;
+import com.smh.club.api.shared.annotations.SortTarget;
+import com.smh.club.api.shared.domain.PhoneType;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import smh.club.shared.api.annotations.SortExclude;
-import smh.club.shared.api.annotations.SortTarget;
-import smh.club.shared.api.domain.PhoneType;
 
 /**
  * DTO for phones.
@@ -27,9 +31,13 @@ public class PhoneDto {
     @JsonProperty("member-id")
     private int memberId;
 
+    @NotBlank
+    @Size(min = 10, max = 10)
+    @Digits(integer = 10, fraction = 0)
     @JsonProperty("phone-number")
     private String phoneNumber;
 
+    @NotNull
     @JsonProperty("phone-type")
     private PhoneType phoneType;
 }

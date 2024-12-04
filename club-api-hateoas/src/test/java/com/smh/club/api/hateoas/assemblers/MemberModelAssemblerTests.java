@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.domain.entities.MemberEntity;
+import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.hateoas.config.MapperConfig;
 import com.smh.club.api.hateoas.contracts.mappers.MemberMapper;
 import com.smh.club.api.hateoas.mappers.MemberMapperImpl;
@@ -18,7 +18,9 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(InstancioExtension.class)
 public class MemberModelAssemblerTests extends AssemblerTests{
@@ -36,7 +38,7 @@ public class MemberModelAssemblerTests extends AssemblerTests{
 
     @BeforeEach
     public void init() {
-        var components = UriComponentsBuilder.fromHttpUrl("http://localhost/api/v2/members").build();
+        var components = UriComponentsBuilder.fromUriString("http://localhost/api/v2/members").build();
         this.assembler = new MemberAssemblerImpl(mapper,
             new PagedResourcesAssembler<>(null, components));
     }

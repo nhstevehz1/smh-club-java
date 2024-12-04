@@ -1,7 +1,7 @@
 package com.smh.club.api.rest.mappers;
 
+import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.rest.config.MapperConfig;
-import com.smh.club.api.data.domain.entities.EmailEntity;
 import com.smh.club.api.rest.dto.EmailDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -14,7 +14,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(InstancioExtension.class)
 public class EmailMapperTests {

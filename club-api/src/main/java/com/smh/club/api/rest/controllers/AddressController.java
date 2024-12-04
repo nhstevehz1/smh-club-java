@@ -4,6 +4,9 @@ import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
+import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import smh.club.shared.api.annotations.SortConstraint;
 
 
 /**
@@ -77,7 +79,9 @@ public class AddressController {
      * @return A {@link ResponseEntity} containing an {@link AddressDto} representing the newly created object.
      */
     @PostMapping
-    public ResponseEntity<AddressDto> create(@RequestBody AddressDto address) {
+    public ResponseEntity<AddressDto> create(
+        @NotNull @Valid @RequestBody AddressDto address) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createAddress(address));
     }
 
@@ -89,7 +93,10 @@ public class AddressController {
      * @return A {@link ResponseEntity} containing an {@link AddressDto} that represents the updated address.
      */
     @PutMapping("{id}")
-    public ResponseEntity<AddressDto> update(@PathVariable int id, @RequestBody AddressDto address) {
+    public ResponseEntity<AddressDto> update(
+        @PathVariable int id,
+        @NotNull @Valid @RequestBody AddressDto address) {
+
         var ret = addressSvc.updateAddress(id, address);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }

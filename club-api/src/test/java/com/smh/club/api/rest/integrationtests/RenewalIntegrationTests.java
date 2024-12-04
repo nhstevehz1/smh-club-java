@@ -3,13 +3,15 @@ package com.smh.club.api.rest.integrationtests;
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.domain.entities.MemberEntity;
-import com.smh.club.api.data.domain.entities.RenewalEntity;
-import com.smh.club.api.data.domain.repos.MembersRepo;
-import com.smh.club.api.data.domain.repos.RenewalsRepo;
+import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.data.entities.RenewalEntity;
+import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.data.repos.RenewalsRepo;
 import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.response.CountResponse;
+import io.restassured.http.ContentType;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -271,14 +273,15 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .assertThat().status(HttpStatus.NOT_FOUND);
     }
 
-    @Test
-    public void create_returns_dto_status_created() throws Exception {
+    @ParameterizedTest
+    @ValueSource(ints = {0,1})
+    public void create_returns_dto_status_created(int offset) throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
         var create = Instancio.of(RenewalDto.class)
             .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
             .ignore((field(RenewalDto::getId)))
-            .generate(field(RenewalDto::getRenewalYear),
-                g-> g.text().pattern("#d#d#d#d"))
+            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() - offset)
             .create();
 
         // perform POST
@@ -302,7 +305,80 @@ public class RenewalIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void update_returns_dto_status_ok() throws Exception {
+    public void create_with_null_renewalDate_returns_bad_request() throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(RenewalDto.class)
+            .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore((field(RenewalDto::getId)))
+            .setBlank(field(RenewalDto::getRenewalDate))
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @Test
+    public void create_with_invalid_renewalDate_returns_bad_request() throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(RenewalDto.class)
+            .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore((field(RenewalDto::getId)))
+            .set(field(RenewalDto::getRenewalDate), LocalDate.now().plusYears(1))
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @Test
+    public void create_with_invalid_renewalYear_returns_bad_request() throws Exception {
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(RenewalDto.class)
+            .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore((field(RenewalDto::getId)))
+            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() + 1)
+            .create();
+
+        // perform POST
+        given()
+            .auth().none()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(create))
+            .when()
+            .post(path)
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .assertThat().contentType(ContentType.JSON)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0,1})
+    public void update_returns_dto_status_ok(int offset) throws Exception {
         // setup
         var entity = addEntitiesToDb(20).get(10);
         var id = entity.getId();
@@ -311,8 +387,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var update = Instancio.of(RenewalDto.class)
             .set(field(RenewalDto::getId), id)
             .set(field(RenewalDto::getMemberId), memberId)
-            .generate(field(RenewalDto::getRenewalYear),
-                g-> g.text().pattern("#d#d#d#d"))
+            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() - offset)
             .create();
 
         // perform PUT
@@ -353,6 +429,96 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .put(path + "/{id}")
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    public void update_with_null_renewalDate_returns_badRequest() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(RenewalDto.class)
+            .set(field(RenewalDto::getId), id)
+            .set(field(RenewalDto::getMemberId), memberId)
+            .setBlank(field(RenewalDto::getRenewalDate))
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        // perform put
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .pathParam("id", update.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+
+    }
+
+    @Test
+    public void update_with_invalid_renewalDate_returns_badRequest() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(RenewalDto.class)
+            .set(field(RenewalDto::getId), id)
+            .set(field(RenewalDto::getMemberId), memberId)
+            .setBlank(field(RenewalDto::getRenewalDate))
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .create();
+
+        // perform put
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .pathParam("id", update.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
+
+    }
+
+    @Test
+    public void update_with_invalid_renewalYear_returns_badRequest() throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(RenewalDto.class)
+            .set(field(RenewalDto::getId), id)
+            .set(field(RenewalDto::getMemberId), memberId)
+            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
+            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() + 1)
+            .create();
+
+        // perform put
+        given()
+            .auth().none()
+            .accept(MediaType.APPLICATION_JSON)
+            .pathParam("id", update.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapper.writeValueAsString(update))
+            .when()
+            .put(path + "/{id}")
+            .then()
+            .assertThat().status(HttpStatus.BAD_REQUEST)
+            .expect(jsonPath("$.validation-errors").isNotEmpty())
+            .expect(jsonPath("$.validation-errors.length()").value(1));
 
     }
 
@@ -400,9 +566,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
                 .size(size)
                 .generate(field(RenewalEntity::getMember), g -> g.oneOf(members))
                 .ignore(field(RenewalEntity::getId))
-            .generate(field(RenewalEntity::getRenewalYear),
-                g-> g.text().pattern("#d#d#d#d"))
-            .create();
+                .create();
 
         return repo.saveAllAndFlush(entities);
     }
