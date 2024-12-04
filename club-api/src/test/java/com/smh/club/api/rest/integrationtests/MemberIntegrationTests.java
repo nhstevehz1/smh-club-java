@@ -270,17 +270,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        var ret =
-            given()
-                .auth().none()
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(create))
-                .when()
-                .post(path)
-                .then()
-                .assertThat().status(HttpStatus.CREATED)
-                .extract().body().as(MemberDto.class);
+        var ret = sendValidCreate(create, MemberDto.class);
 
         // verify
         var entity =  repo.findById(ret.getId());
@@ -310,17 +300,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -333,16 +313,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -357,16 +328,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+        sendInvalidCreate(create);
     }
 
     private static Stream<Arguments> nullableFields() {
@@ -386,17 +348,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        var ret =
-            given()
-                .auth().none()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(create))
-                .when()
-                .post(path)
-                .then()
-                .assertThat().status(HttpStatus.CREATED)
-                .assertThat().contentType(ContentType.JSON)
-                .extract().body().as(MemberDto.class);
+        var ret = sendValidCreate(create, MemberDto.class);
 
         // verify
         var entity =  repo.findById(ret.getId());
@@ -414,16 +366,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -456,16 +399,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(mapper.writeValueAsString(create))
-            .when()
-            .post(path)
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -479,19 +413,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put(path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract().body().as(MemberDto.class);
+        var actual = sendValidUpdate(id, update, MemberDto.class);
 
         // verify
         var member = repo.findById(id);
@@ -533,20 +455,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", id)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
-
+        sendInvalidUpdate(id, update);
     }
 
     @Test
@@ -561,20 +470,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", id)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
-
+        sendInvalidUpdate(id, update);
     }
 
     @Test
@@ -591,20 +487,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform POST
-        given()
-            .auth().none()
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .pathParam("id", id)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
-
+        sendInvalidUpdate(id, update);
     }
 
     @ParameterizedTest
@@ -620,19 +503,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put(path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract().body().as(MemberDto.class);
+        var actual = sendValidUpdate(id, update, MemberDto.class);
 
         // verify
         var member = repo.findById(id);
@@ -655,20 +526,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-            given()
-                .auth().none()
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put(path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.BAD_REQUEST)
-                .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .expect(jsonPath("$.validation-errors").isNotEmpty())
-                .expect(jsonPath("$.validation-errors.length()").value(1));
-
+        sendInvalidUpdate(id, update);
     }
 
     @Test
@@ -683,19 +541,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-        given()
-            .auth().none()
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .pathParam("id", id)
-            .body(mapper.writeValueAsString(update))
-            .when()
-            .put(path + "/{id}")
-            .then()
-            .assertThat().status(HttpStatus.BAD_REQUEST)
-            .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+        sendInvalidUpdate(id, update);
     }
 
     @Test
