@@ -14,7 +14,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.instancio.Instancio;
+import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
@@ -23,7 +25,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +45,7 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -287,39 +292,54 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_model_status_created() throws Exception {
         // setup
-        var id = memberRepo.findAll().get(2).getId();
-
-        var expected = Instancio.of(PhoneModel.class)
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(PhoneModel.class)
+            .generate(field(PhoneModel::getMemberId), g -> g.oneOf(memberIdList))
             .ignore(field(PhoneModel::getId))
-            .set(field(PhoneModel::getMemberId), id)
             .create();
 
         // perform post
-        var result =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(mapper.writeValueAsString(expected))
-                .when()
-                .post(path);
+        var ret = sendValidCreate(create, PhoneModel.class);
 
-        var model = result.then().extract().body().as(PhoneModel.class);
-        var uri = "http://localhost" + path + "/" + model.getId();
-
-        result.then()
-            .assertThat().status(HttpStatus.CREATED)
-            .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-            .expect(jsonPath("$._links").exists())
-            .expect(jsonPath("$._links.length()").value(3))
-            .expect(jsonPath("$._links.self.href").value(uri))
-            .expect(jsonPath("$._links.update.href").value(uri))
-            .expect(jsonPath("$._links.delete.href").value(uri));
-
-        var phone = repo.findById(model.getId());
+        var phone = repo.findById(ret.getId());
 
         assertTrue(phone.isPresent());
-        verify(expected, phone.get());
+        verify(create, phone.get());
+    }
+
+    // used with test that follows
+    private static Stream<Arguments> nonNullableFields() {
+        return Stream.of(
+            arguments(field(PhoneModel::getPhoneNumber)),
+            arguments(field(PhoneModel::getPhoneType)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(PhoneModel.class)
+            .generate(field(PhoneModel::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore(field(PhoneModel::getId))
+            .setBlank(nonNullableField)
+            .create();
+
+        sendInvalidCreate(create);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"#d#d#d", "#c#c#c#c#c#c#c#c#c#c"})
+    public void create_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
+        // setup
+        var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+        var create = Instancio.of(PhoneModel.class)
+            .generate(field(PhoneModel::getMemberId), g -> g.oneOf(memberIdList))
+            .ignore(field(PhoneModel::getId))
+            .generate(field(PhoneModel::getPhoneNumber), g -> g.text().pattern(pattern))
+            .create();
+
+        sendInvalidCreate(create);
     }
 
     @Test
@@ -335,27 +355,10 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .create();
 
         // perform put
-        var uri = "http://localhost/api/v2/phones/" + id;
-        var actual =
-            given()
-                .auth().none()
-                .accept(MediaTypes.HAL_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .pathParam("id", id)
-                .body(mapper.writeValueAsString(update))
-                .when()
-                .put( path + "/{id}")
-                .then()
-                .assertThat().status(HttpStatus.OK)
-                .assertThat().contentType(MediaTypes.HAL_JSON_VALUE)
-                .expect(jsonPath("$._links").exists())
-                .expect(jsonPath("$._links.length()").value(3))
-                .expect(jsonPath("$._links.self.href").value(uri))
-                .expect(jsonPath("$._links.update.href").value(uri))
-                .expect(jsonPath("$._links.delete.href").value(uri))
-                .extract().body().as(PhoneModel.class);
+        var actual = sendValidUpdate(id, update, PhoneModel.class);
 
         var phone = repo.findById(actual.getId());
+
         assertTrue(phone.isPresent());
         verify(phone.get(), actual);
     }
@@ -377,6 +380,40 @@ public class PhoneIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("nonNullableFields")
+    public void update_with_nonNullable_fields_returns_bad_request(Selector nonNullableField) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(PhoneModel.class)
+            .set(field(PhoneModel::getId), id)
+            .set(field(PhoneModel::getMemberId), memberId)
+            .setBlank(nonNullableField)
+            .create();
+
+        sendInvalidUpdate(id, update);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"#d#d#d", "#c#c#c#c#c#c#c#c#c#c"})
+    public void update_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
+        // setup
+        var entity = addEntitiesToDb(20).get(10);
+        var id = entity.getId();
+        var memberId = entity.getMember().getId();
+
+        var update = Instancio.of(PhoneModel.class)
+            .set(field(PhoneModel::getId), id)
+            .set(field(PhoneModel::getMemberId), memberId)
+            .generate(field(PhoneModel::getPhoneNumber), g -> g.text().pattern(pattern))
+            .create();
+
+        sendInvalidUpdate(id, update);
     }
 
     @Test

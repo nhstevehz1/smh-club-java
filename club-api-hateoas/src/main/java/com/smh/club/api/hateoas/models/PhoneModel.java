@@ -5,7 +5,10 @@ import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.shared.annotations.SortExclude;
 import com.smh.club.api.shared.annotations.SortTarget;
 import com.smh.club.api.shared.domain.PhoneType;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -29,10 +32,13 @@ public class PhoneModel extends RepresentationModel<PhoneModel> {
     @JsonProperty("member-id")
     private int memberId;
 
-    @NotEmpty
+    @NotBlank
+    @Size(min = 10, max = 10)
+    @Digits(integer = 10, fraction = 0)
     @JsonProperty("phone-number")
     private String phoneNumber;
 
+    @NotNull
     @JsonProperty("phone-type")
     private PhoneType phoneType;
 }
