@@ -22,12 +22,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("default")
+/**
+ * Tests the default server that is configured through properties onlhy
+ */
+@ActiveProfiles("default-props")
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-class DefaultAuthorizationServerApplicationTests {
+class DefaultPropsAuthorizationServerApplicationTests {
 
 	@Autowired
 	private WebClient webClient;

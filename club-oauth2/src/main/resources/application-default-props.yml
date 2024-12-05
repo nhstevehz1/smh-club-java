@@ -1,3 +1,4 @@
+## Server configured entirely through the properties below
 logging:
   level:
     org.springframework.security: debug

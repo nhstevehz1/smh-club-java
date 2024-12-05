@@ -26,11 +26,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ActiveProfiles("default")
+/**
+ * Test the default server that is configured through properties only.
+ */
+@ActiveProfiles("default-props")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class DefaultAuthorizationServerConsentTests {
+public class DefaultPropsAuthorizationServerConsentTests {
   @Autowired
   private WebClient webClient;
 
