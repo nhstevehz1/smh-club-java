@@ -1,3 +1,2 @@
-spring:
-  application:
-    name: SMH Club Authentication Server
+server:
+  port: 9000
