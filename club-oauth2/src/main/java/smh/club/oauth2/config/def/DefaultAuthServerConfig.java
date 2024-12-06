@@ -1,4 +1,4 @@
-package smh.club.oauth2.config;
+package smh.club.oauth2.config.def;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -11,10 +11,13 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,9 +37,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-//@Configuration
-//@EnableWebSecurity
-public class DefaultSecurityConfig {
+@Profile("default-config")
+@Configuration
+@EnableWebSecurity
+public class DefaultAuthServerConfig {
 
   /**
    * Spring Security filter chain for the Protocol endpoints
@@ -51,11 +55,16 @@ public class DefaultSecurityConfig {
         OAuth2AuthorizationServerConfigurer.authorizationServer();
 
     http
+        .authorizeHttpRequests(authorize ->
+            authorize
+                .requestMatchers("/jwks", "/logged-out").permitAll()
+                .anyRequest().authenticated()
+        )
         .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
         .with(authorizationServerConfigurer, (authorizationServer) ->
             authorizationServer
                 // use oidc defaults
-                .oidc(Customizer.withDefaults())	// Enable OpenID Connect 1.0
+                .oidc(Customizer.withDefaults()) // Enable OpenID Connect 1.0
         )
         // Redirect to the login page when not authenticated from the
         // authorization endpoint
@@ -93,8 +102,8 @@ public class DefaultSecurityConfig {
   @Bean
   public UserDetailsService userDetailsService() {
     UserDetails userDetails = User.builder()
-        .username("user")
-        .password("password")
+        .username("user1")
+        .password("{noop}password")
         .roles("USER")
         .build();
 
@@ -108,15 +117,17 @@ public class DefaultSecurityConfig {
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
     RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
-        .clientId("oidc-client")
+        .clientId("messaging-client")
         .clientSecret("{noop}secret")
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
-        .postLogoutRedirectUri("http://127.0.0.1:8080/")
+        .redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
+        .postLogoutRedirectUri("http://127.0.0.1:8080/logged-out")
         .scope(OidcScopes.OPENID)
         .scope(OidcScopes.PROFILE)
+        .scope("message.read")
+        .scope("message.write")
         .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
         .build();
 
