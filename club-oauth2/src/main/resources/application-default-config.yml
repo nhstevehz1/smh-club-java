@@ -1,5 +1,8 @@
 #Server configured through @Configuration and @Beans
-
 logging:
   level:
     org.springframework.security: trace
+
+spring:
+  flyway:
+    enabled: false

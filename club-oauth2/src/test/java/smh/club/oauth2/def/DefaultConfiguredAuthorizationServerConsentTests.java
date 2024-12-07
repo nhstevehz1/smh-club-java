@@ -1,4 +1,4 @@
-package smh.club.oauth2;
+package smh.club.oauth2.def;
 
 import java.io.IOException;
 import java.util.ArrayList;
