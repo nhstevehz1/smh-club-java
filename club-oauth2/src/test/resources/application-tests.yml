@@ -1,3 +1,4 @@
-spring:
-  profiles:
-    active: defaultconfig
+logging:
+  level:
+    org.springframework.security: trace
+    #org.hibernate: debug
