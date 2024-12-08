@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import smh.club.oauth2.contracts.RegisteredClientMapper;
 import smh.club.oauth2.domain.repos.ClientRepository;
 import smh.club.oauth2.domain.repos.UserRepository;
 import smh.club.oauth2.security.JpaRegisteredClientRepository;
@@ -22,6 +23,7 @@ public class AuthorizationConfig {
 
   private final ClientRepository clientRepository;
   private final UserRepository userRepository;
+  private final RegisteredClientMapper clientMapper;
 
 
   /**
@@ -29,7 +31,7 @@ public class AuthorizationConfig {
    */
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
-    return new JpaRegisteredClientRepository(clientRepository);
+    return new JpaRegisteredClientRepository(clientRepository, clientMapper);
   }
 
   /**

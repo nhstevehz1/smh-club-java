@@ -1,59 +1,69 @@
 package smh.club.oauth2.domain.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.Instant;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Set;
+import java.util.UUID;
+import lombok.*;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "`client`", schema = "`auth`")
+@Table(name ="`client`", schema = "`auth`")
 public class Client {
-  @Id
-  @Column(nullable = false, unique = true)
-  private String id;
 
-  @Column(nullable = false)
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
+
+  @Column(nullable = false, length = 30)
   private String clientId;
 
   @Builder.Default
-  @Column(nullable = false)
   private Instant clientIdIssuedAt = Instant.now();
 
+  @Column(length = 30)
   private String clientSecret;
 
   private Instant clientSecretExpiresAt;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 30)
   private String clientName;
 
-  @Column(nullable = false, length = 1000)
-  private String clientAuthenticationMethods;
 
-  @Column(nullable = false, length = 1000)
-  private String authorizationGrantTypes;
+  @Singular("clientAuthenticationMethod")
+  @ElementCollection
+  @Column(nullable = false)
+  private Set<ClientAuthenticationMethod> clientAuthenticationMethods;
 
-  @Column(length = 1000)
-  private String redirectUris;
+  @Singular("authorizationGrantType")
+  @ElementCollection
+  @Column(nullable = false)
+  private Set<AuthorizationGrantType> authorizationGrantTypes;
 
-  @Column(length = 1000)
-  private String postLogoutRedirectUris;
+  @Singular("redirectUri")
+  @ElementCollection
+  private Set<String> redirectUris;
 
-  @Column(nullable = false, length = 1000)
-  private String scopes;
+  @Singular("postLogoutRedirectUri")
+  @ElementCollection
+  private Set<String> postLogoutRedirectUris;
 
-  @Column(nullable = false, length = 2000)
-  private String clientSettings;
+  @Singular("scope")
+  @Column(nullable = false)
+  @ElementCollection
+  private Set<String> scopes;
 
-  @Column(nullable = false, length = 2000)
-  private String tokenSettings;
+  @Column(nullable = false)
+  private ClientSettings clientSettings;
+
+  @Column(nullable = false)
+  private TokenSettings tokenSettings;
 
 }
