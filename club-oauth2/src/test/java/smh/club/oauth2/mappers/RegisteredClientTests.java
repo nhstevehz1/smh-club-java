@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
-import smh.club.oauth2.config.mapper.ModelMapperConfig;
 import smh.club.oauth2.domain.entities.Client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class RegisteredClientTests {
 
   private final RegisteredClientMapperImpl clientMapper =
-      new RegisteredClientMapperImpl(new ModelMapperConfig().createModelMapper());
+      new RegisteredClientMapperImpl();
 
   @WithSettings
   private final Settings settings = Settings.create()
