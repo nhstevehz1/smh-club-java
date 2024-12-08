@@ -1,4 +1,4 @@
-package smh.club.oauth2.config.def;
+package smh.club.oauth2.config.dev;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -18,29 +18,19 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-@Profile("default-config")
+@Profile("!default-config && !default-props")
 @Configuration
 @EnableWebSecurity
-public class DefaultAuthServerConfig {
+public class DevAuthServerConfig {
+
 
   /**
    * Spring Security filter chain for the Protocol endpoints
@@ -96,42 +86,6 @@ public class DefaultAuthServerConfig {
     return http.build();
   }
 
-  /**
-   * In-memory UserDetailsService.
-   */
-  @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails userDetails = User.builder()
-        .username("user1")
-        .password("{noop}password")
-        .roles("USER")
-        .build();
-
-    return new InMemoryUserDetailsManager(userDetails);
-  }
-
-  /**
-   * An in memory RegisteredClientRepository for managing clients.
-   */
-  @Bean
-  public RegisteredClientRepository registeredClientRepository() {
-    RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
-        .clientId("messaging-client")
-        .clientSecret("{noop}secret")
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
-        .postLogoutRedirectUri("http://127.0.0.1:8080/logged-out")
-        .scope(OidcScopes.OPENID)
-        .scope(OidcScopes.PROFILE)
-        .scope("message.read")
-        .scope("message.write")
-        .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-        .build();
-
-    return new InMemoryRegisteredClientRepository(oidcClient);
-  }
 
   /**
    * JWKSource used for signing access tokens
@@ -151,7 +105,7 @@ public class DefaultAuthServerConfig {
 
   /**
    * KeyPair with keys generated at startup that is used to create the
-   * KWKSource.
+   * JWKSource.
    */
   private static KeyPair generateRsaKey() {
     KeyPair keyPair;

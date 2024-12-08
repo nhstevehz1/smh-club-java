@@ -4,6 +4,9 @@ logging:
     org.springframework.security: trace
 
 spring:
+  flyway:
+    enabled: false
+
   security:
     user:
       name: user1
