@@ -15,7 +15,7 @@ public class AuthGrantedAuthority implements GrantedAuthority {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false, unique = true)
-  int id;
+  long id;
 
   @Column(nullable = false, length = 20)
   String authority;
