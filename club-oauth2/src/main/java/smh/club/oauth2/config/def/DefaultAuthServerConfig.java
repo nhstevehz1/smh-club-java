@@ -97,7 +97,7 @@ public class DefaultAuthServerConfig {
   }
 
   /**
-   * In-memory UserDetailsService.  TODO: replace with jdbc or jpa repo
+   * In-memory UserDetailsService.
    */
   @Bean
   public UserDetailsService userDetailsService() {
@@ -112,7 +112,6 @@ public class DefaultAuthServerConfig {
 
   /**
    * An in memory RegisteredClientRepository for managing clients.
-   * TODO: replace with JDBC or JPA repo.
    */
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
