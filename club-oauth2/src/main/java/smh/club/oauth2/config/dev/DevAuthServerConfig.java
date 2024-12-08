@@ -87,9 +87,6 @@ public class DevAuthServerConfig {
   }
 
 
-
-
-
   /**
    * JWKSource used for signing access tokens
    */
@@ -108,7 +105,7 @@ public class DevAuthServerConfig {
 
   /**
    * KeyPair with keys generated at startup that is used to create the
-   * KWKSource.
+   * JWKSource.
    */
   private static KeyPair generateRsaKey() {
     KeyPair keyPair;

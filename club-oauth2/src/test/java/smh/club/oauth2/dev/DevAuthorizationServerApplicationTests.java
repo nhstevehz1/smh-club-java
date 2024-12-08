@@ -27,6 +27,9 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.util.UriComponentsBuilder;
+import smh.club.oauth2.domain.entities.AuthGrantedAuthority;
+import smh.club.oauth2.domain.entities.AuthUserDetails;
+import smh.club.oauth2.domain.repos.UserRepository;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +46,9 @@ public class DevAuthorizationServerApplicationTests {
 
   @Autowired
   private RegisteredClientRepository registeredClientRepository;
+
+  @Autowired
+  private UserRepository userRepository;
 
   @Autowired
   private WebClient webClient;
@@ -65,7 +71,7 @@ public class DevAuthorizationServerApplicationTests {
     this.webClient.getOptions().setRedirectEnabled(true);
     this.webClient.getCookieManager().clearCookies();// log out
 
-    addClientToDb();
+    setupDatabase();
   }
 
   @Test
@@ -135,7 +141,7 @@ public class DevAuthorizationServerApplicationTests {
     assertThat(signInButton.getTextContent()).isEqualTo("Sign in");
   }
 
-  private void addClientToDb() {
+  private void setupDatabase() {
     RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
         .clientId("messaging-client")
         .clientSecret("{noop}secret")
@@ -153,5 +159,15 @@ public class DevAuthorizationServerApplicationTests {
         .build();
 
     registeredClientRepository.save(oidcClient);
+
+    var user = AuthUserDetails.builder()
+        .username("user1")
+        .password("{noop}password")
+        .enabled(true)
+        .build();
+
+    user.addAuthority(AuthGrantedAuthority.builder().authority("USER").build());
+    userRepository.save(user);
+
   }
 }
