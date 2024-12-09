@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.util.StringUtils;
 
 @Converter(autoApply = true)
-public class AuthGrantTypeConverter implements AttributeConverter<Set<AuthorizationGrantType>, String> {
+public class AuthGrantTypeSetConverter implements AttributeConverter<Set<AuthorizationGrantType>, String> {
   @Override
   public String convertToDatabaseColumn(Set<AuthorizationGrantType> authorizationGrantTypes) {
 
