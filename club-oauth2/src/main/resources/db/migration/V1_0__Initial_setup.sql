@@ -2,66 +2,109 @@ CREATE SCHEMA IF NOT EXISTS auth;
 
 CREATE TABLE auth.client
 (
-    id                            varchar(30)                            NOT NULL,
-    client_id                     varchar(30)                            NOT NULL,
+    id                            varchar(50)   NOT NULL,
+    client_id                     varchar(50)   NOT NULL,
     client_id_issued_at           timestamp     DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    client_secret                 varchar(30)  DEFAULT NULL,
+    client_secret                 varchar(100)  DEFAULT NULL,
     client_secret_expires_at      timestamp     DEFAULT NULL,
-    client_name                   varchar(255)                            NOT NULL,
-    client_authentication_methods varchar(1000)                           NOT NULL,
-    authorization_grant_types     varchar(1000)                           NOT NULL,
-    redirect_uris                 varchar(1000) DEFAULT NULL,
-    post_logout_redirect_uris     varchar(1000) DEFAULT NULL,
-    scopes                        varchar(1000)                           NOT NULL,
-    client_settings               varchar(2000)                           NOT NULL,
-    token_settings                varchar(2000)                           NOT NULL,
+    client_name                   varchar(50)   NOT NULL,
 
-    CONSTRAINT pk_client PRIMARY KEY (id)
+    CONSTRAINT pk_client PRIMARY KEY (id),
+    CONSTRAINT unique_client_id UNIQUE (client_id)
+);
+
+CREATE TABLE auth.client_auth_methods_set (
+    client_id varchar(30)   NOT NULL,
+    auth_method varchar(30) NOT NULL,
+
+    CONSTRAINT fk_client_auth_methods_set__client
+        FOREIGN KEY (client_id)
+            REFERENCES auth.client (id)
+);
+
+CREATE TABLE auth.client_grant_types_set (
+    client_id varchar(30)   NOT NULL,
+    grant_type varchar(30)  NOT NULL,
+
+    CONSTRAINT fk_client_grant_types_set__client
+        FOREIGN KEY (client_id)
+            REFERENCES auth.client (id)
+);
+
+CREATE TABLE auth.redirect_uri_set (
+    client_id varchar(30)       NOT NULL,
+    redirect_uri varchar(100)   NOT NULL ,
+
+    CONSTRAINT fk_redirect_uri_set__client
+       FOREIGN KEY (client_id)  REFERENCES auth.client (id)
+);
+
+CREATE TABLE auth.logout_redirect_uri_set (
+    client_id varchar(30)       NOT NULL,
+    redirect_uri varchar(100)   NOT NULL,
+
+    CONSTRAINT fk_logout_redirect_uri_set__client
+        FOREIGN KEY (client_id)  REFERENCES auth.client (id)
+);
+
+CREATE TABLE auth.scopes_set (
+    client_id varchar(30)   NOT NULL,
+    scope varchar(30)       NOT NULL,
+
+    CONSTRAINT fk_scopes_set__client
+       FOREIGN KEY (client_id)  REFERENCES auth.client (id)
+);
+
+CREATE TABLE auth.client_settings_map (
+    client_id varchar(50)       NOT NULL,
+    setting_name varchar(30)    NOT NULL,
+    setting varchar(30),
+
+    CONSTRAINT fk_client_settings__client
+        FOREIGN KEY (client_id)  REFERENCES auth.client (id)
+);
+
+CREATE TABLE auth.token_settings_map (
+    client_id varchar(50)       NOT NULL,
+    setting_name varchar(30)    NOT NULL,
+    setting varchar(30),
+
+    CONSTRAINT fk_token_settings__client
+        FOREIGN KEY (client_id)  REFERENCES auth.client (id)
 );
 
 CREATE TABLE auth.authorization
 (
-    id                            varchar(255) NOT NULL,
-    registered_client_id          varchar(255) NOT NULL,
-    principal_name                varchar(255) NOT NULL,
+    id                            varchar(50) NOT NULL,
+    registered_client_id          varchar(50) NOT NULL,
+    principal_name                varchar(30) NOT NULL,
     authorization_grant_type      varchar(255) NOT NULL,
     authorized_scopes             varchar(1000) DEFAULT NULL,
     attributes                    varchar(4000) DEFAULT NULL,
     state                         varchar(500)  DEFAULT NULL,
-    authorization_code_value      varchar(4000) DEFAULT NULL,
-    authorization_code_issued_at  timestamp     DEFAULT NULL,
-    authorization_code_expires_at timestamp     DEFAULT NULL,
-    authorization_code_metadata   varchar(2000) DEFAULT NULL,
-    access_token_value            varchar(4000) DEFAULT NULL,
-    access_token_issued_at        timestamp     DEFAULT NULL,
-    access_token_expires_at       timestamp     DEFAULT NULL,
-    access_token_metadata         varchar(2000) DEFAULT NULL,
-    access_token_type             varchar(255)  DEFAULT NULL,
-    access_token_scopes           varchar(1000) DEFAULT NULL,
-    refresh_token_value           varchar(4000) DEFAULT NULL,
-    refresh_token_issued_at       timestamp     DEFAULT NULL,
-    refresh_token_expires_at      timestamp     DEFAULT NULL,
-    refresh_token_metadata        varchar(2000) DEFAULT NULL,
-    oidc_id_token_value           varchar(4000) DEFAULT NULL,
-    oidc_id_token_issued_at       timestamp     DEFAULT NULL,
-    oidc_id_token_expires_at      timestamp     DEFAULT NULL,
-    oidc_id_token_metadata        varchar(2000) DEFAULT NULL,
-    oidc_id_token_claims          varchar(2000) DEFAULT NULL,
-    user_code_value               varchar(4000) DEFAULT NULL,
-    user_code_issued_at           timestamp     DEFAULT NULL,
-    user_code_expires_at          timestamp     DEFAULT NULL,
-    user_code_metadata            varchar(2000) DEFAULT NULL,
-    device_code_value             varchar(4000) DEFAULT NULL,
-    device_code_issued_at         timestamp     DEFAULT NULL,
-    device_code_expires_at        timestamp     DEFAULT NULL,
-    device_code_metadata          varchar(2000) DEFAULT NULL,
 
     CONSTRAINT pk_auth PRIMARY KEY (id)
 );
 
-CREATE TABLE auth.authorization_consent
-(
-    registered_client_id varchar(255)  NOT NULL,
+CREATE TABLE auth.oauth2_token (
+    id varchar(50),
+    auth_id varchar(50),
+    token_type varchar(30) NOT NULL,
+    token_value varchar(4000) NOT NULL,
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP DEFAULT NULL,
+    metadata varchar(2000) NOT NULL,
+    scopes varchar(1000) DEFAULT NULL,
+    claims varchar(1000) DEFAULT NULL,
+
+    CONSTRAINT pk_oath2_token PRIMARY KEY (id, token_type),
+    CONSTRAINT fk_oath2_token__authorization
+        FOREIGN KEY (auth_id)
+        references auth.authorization (id)
+);
+
+CREATE TABLE auth.authorization_consent (
+    registered_client_id varchar(50)  NOT NULL,
     principal_name       varchar(255)  NOT NULL,
     authorities          varchar(1000) NOT NULL,
 
