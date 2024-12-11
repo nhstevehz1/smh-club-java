@@ -54,21 +54,21 @@ public class ClientEntity {
 
   @Builder.Default
   @ElementCollection
-  @CollectionTable(name = "redirect_uri_set", schema = "auth",
+  @CollectionTable(name = "client_redirect_uri_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "redirect_uri", length = 100)
   private Set<String> redirectUris = new HashSet<>();
 
   @Builder.Default
   @ElementCollection
-  @CollectionTable(name = "logout_redirect_uri_set", schema = "auth",
+  @CollectionTable(name = "client_logout_redirect_uri_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "redirect_uri", length = 100)
   private Set<String> postLogoutRedirectUris = new HashSet<>();
 
   @Builder.Default
   @ElementCollection
-  @CollectionTable(name = "scopes_set", schema = "auth",
+  @CollectionTable(name = "client_scopes_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "`scope`", length = 30)
   private Set<String> scopes = new HashSet<>();
@@ -83,7 +83,7 @@ public class ClientEntity {
 
   @Builder.Default
   @ElementCollection
-  @CollectionTable(name = "token_settings_map", schema = "auth",
+  @CollectionTable(name = "client_token_settings_map", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @MapKeyColumn(name = "setting_name", length = 30)
   @Column(name = "setting", length = 30)
