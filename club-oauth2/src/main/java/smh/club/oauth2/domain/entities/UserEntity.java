@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "`user`", schema = "`auth`")
-public class AuthUserDetails implements UserDetails {
+@Table(name = "user", schema = "`auth`")
+public class UserEntity implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,15 +44,10 @@ public class AuthUserDetails implements UserDetails {
       orphanRemoval = true,
       cascade = {CascadeType.ALL},
       fetch = FetchType.EAGER)
-  private Set<AuthGrantedAuthority> authorities = new HashSet<>();
+  private Set<GrantedAuthorityEntity> authorities = new HashSet<>();
 
-  public void addAuthority(AuthGrantedAuthority authority) {
+  public void addAuthority(GrantedAuthorityEntity authority) {
     this.authorities.add(authority);
-    authority.setAuthUserDetails(this);
-  }
-
-  public void removeAuthority(AuthGrantedAuthority authority) {
-    authority.setAuthUserDetails(this);
-    this.authorities.remove(authority);
+    authority.setUserEntity(this);
   }
 }

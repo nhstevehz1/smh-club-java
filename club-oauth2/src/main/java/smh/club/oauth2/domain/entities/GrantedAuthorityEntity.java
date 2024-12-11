@@ -9,8 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "`granted_authority`", schema = "`auth`")
-public class AuthGrantedAuthority implements GrantedAuthority {
+@Table(name = "`user_granted_authority`", schema = "`auth`")
+public class GrantedAuthorityEntity implements GrantedAuthority {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,6 @@ public class AuthGrantedAuthority implements GrantedAuthority {
   @ToString.Exclude
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-  private AuthUserDetails authUserDetails;
+  private UserEntity userEntity;
 
 }
