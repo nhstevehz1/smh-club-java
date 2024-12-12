@@ -24,7 +24,7 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
   public void save(RegisteredClient registeredClient) {
 
     Assert.notNull(registeredClient, "registeredClient cannot be null");
-    var clientEntity = mapper.toClientEntity(registeredClient);;
+    var clientEntity = mapper.toClientEntity(registeredClient);
     this.clientRepository.saveAndFlush(clientEntity);
   }
 
