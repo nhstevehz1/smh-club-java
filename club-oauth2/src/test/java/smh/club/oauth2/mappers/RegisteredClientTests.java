@@ -40,7 +40,7 @@ public class RegisteredClientTests {
   }
 
   @Test
-  public void from_registeredClient_to_client_entity() throws Exception {
+  public void from_registeredClient_to_client_entity()  {
     // setup
     RegisteredClient rc = RegisteredClient.withId(UUID.randomUUID().toString())
         .clientId("messaging-client")
