@@ -1,5 +1,6 @@
 package smh.club.oauth2.security;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -12,6 +13,7 @@ import smh.club.oauth2.domain.repos.ClientRepository;
 
 @Profile("dev")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Transactional
 @Component
 public class JpaRegisteredClientRepository implements RegisteredClientRepository {
 
@@ -22,7 +24,8 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
   public void save(RegisteredClient registeredClient) {
 
     Assert.notNull(registeredClient, "registeredClient cannot be null");
-    this.clientRepository.save(mapper.toClientEntity(registeredClient));
+    var clientEntity = mapper.toClientEntity(registeredClient);;
+    this.clientRepository.saveAndFlush(clientEntity);
   }
 
   @Override
@@ -35,7 +38,8 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
   @Override
   public RegisteredClient findByClientId(String clientId) {
     Assert.hasText(clientId, "clientId cannot be empty");
-    return this.clientRepository.findByClientId(clientId).map(mapper::toRegisteredClient).orElse(null);
+    return null;
+    //return this.clientRepository.findByClientId(clientId).map(mapper::toRegisteredClient).orElse(null);
   }
 
 }

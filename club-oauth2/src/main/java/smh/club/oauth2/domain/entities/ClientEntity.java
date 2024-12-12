@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 
 @Data
 @AllArgsConstructor
@@ -39,53 +40,48 @@ public class ClientEntity {
   private String clientName;
 
   @Builder.Default
-  @ElementCollection
+  @Convert(converter = StringObjectMapConverter.class)
+  @Column(nullable = false)
+  private Map<String, Object> clientSettings = new HashMap<>();
+
+  @Builder.Default
+  @Convert(converter = StringObjectMapConverter.class)
+  @Column(nullable = false)
+  private Map<String, Object> tokenSettings  = new HashMap<>();
+
+  @Builder.Default
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "client_auth_methods_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "auth_method", length = 30)
   private Set<ClientAuthenticationMethod> clientAuthenticationMethods = new HashSet<>();
 
   @Builder.Default
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "client_grant_types_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "grant_type", length = 30)
   private Set<AuthorizationGrantType> authorizationGrantTypes = new HashSet<>();
 
   @Builder.Default
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "client_redirect_uri_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "redirect_uri", length = 100)
   private Set<String> redirectUris = new HashSet<>();
 
   @Builder.Default
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "client_logout_redirect_uri_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "redirect_uri", length = 100)
   private Set<String> postLogoutRedirectUris = new HashSet<>();
 
   @Builder.Default
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "client_scopes_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
   @Column(name = "`scope`", length = 30)
   private Set<String> scopes = new HashSet<>();
 
-  @Builder.Default
-  @ElementCollection
-  @CollectionTable(name = "client_settings_map", schema = "auth",
-      joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
-  @MapKeyColumn(name = "setting_name", length = 30)
-  @Column(name = "setting", length = 30)
-  private Map<String, String> clientSettings = new HashMap<>();
-
-  @Builder.Default
-  @ElementCollection
-  @CollectionTable(name = "client_token_settings_map", schema = "auth",
-      joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")})
-  @MapKeyColumn(name = "setting_name", length = 30)
-  @Column(name = "setting", length = 30)
-  private Map<String, String> tokenSettings = new HashMap<>();
 }

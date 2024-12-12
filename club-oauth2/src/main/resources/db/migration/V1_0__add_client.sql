@@ -8,6 +8,8 @@ CREATE TABLE auth.client
     client_secret                 varchar(100)  DEFAULT NULL,
     client_secret_expires_at      timestamp     DEFAULT NULL,
     client_name                   varchar(50)   NOT NULL,
+    client_settings               varchar(100) NOT NULL, -- holds JSON
+    client_token_settings         varchar(1000) NOT NULL, -- holds JSON
 
     CONSTRAINT pk_client PRIMARY KEY (id),
     CONSTRAINT unique_client_id UNIQUE (client_id)
@@ -53,22 +55,4 @@ CREATE TABLE auth.client_scopes_set (
 
     CONSTRAINT fk_client_scopes_set__client
        FOREIGN KEY (client_id)  REFERENCES auth.client (id)
-);
-
-CREATE TABLE auth.client_settings_map (
-    client_id varchar(50)       NOT NULL,
-    setting_name varchar(30)    NOT NULL,
-    setting varchar(30),
-
-    CONSTRAINT fk_client_settings__client
-        FOREIGN KEY (client_id)  REFERENCES auth.client (id)
-);
-
-CREATE TABLE auth.client_token_settings_map (
-    client_id varchar(50)       NOT NULL,
-    setting_name varchar(30)    NOT NULL,
-    setting varchar(30),
-
-    CONSTRAINT fk_client_token_settings__client
-        FOREIGN KEY (client_id)  REFERENCES auth.client (id)
 );
