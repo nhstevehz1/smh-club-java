@@ -11,7 +11,7 @@ public class ObjectMapperConfig {
 
   @Bean
   public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
-    var classLoader = ObjectMapperConfig.class.getClassLoader();;
+    var classLoader = ObjectMapperConfig.class.getClassLoader();
 
     var modules = SecurityJackson2Modules.getModules(classLoader);
     modules.add(new OAuth2AuthorizationServerJackson2Module());
