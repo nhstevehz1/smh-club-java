@@ -9,7 +9,7 @@ CREATE TABLE auth.client
     client_secret_expires_at      timestamp     DEFAULT NULL,
     client_name                   varchar(50)   NOT NULL,
     client_settings               varchar(100) NOT NULL, -- holds JSON
-    client_token_settings         varchar(1000) NOT NULL, -- holds JSON
+    token_settings                varchar(1000) NOT NULL, -- holds JSON
 
     CONSTRAINT pk_client PRIMARY KEY (id),
     CONSTRAINT unique_client_id UNIQUE (client_id)

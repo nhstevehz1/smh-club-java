@@ -1,11 +1,8 @@
 package smh.club.oauth2.config.mapper;
 
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
 
@@ -13,15 +10,12 @@ import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2A
 public class ObjectMapperConfig {
 
   @Bean
-  public ObjectMapper objectMapper() {
-    ObjectMapper objectMapper = new ObjectMapper();
+  public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
+    var classLoader = ObjectMapperConfig.class.getClassLoader();;
 
-    ClassLoader classLoader = ObjectMapperConfig.class.getClassLoader();
-    List<Module> securityModules = SecurityJackson2Modules.getModules(classLoader);
-    objectMapper.registerModules(securityModules);
-    objectMapper.registerModule(new OAuth2AuthorizationServerJackson2Module());
-    objectMapper.registerModule(new JavaTimeModule());
+    var modules = SecurityJackson2Modules.getModules(classLoader);
+    modules.add(new OAuth2AuthorizationServerJackson2Module());
 
-    return objectMapper;
+    return  new Jackson2ObjectMapperBuilder().modules(modules);
   }
 }
