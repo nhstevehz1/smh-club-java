@@ -32,11 +32,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ClientRepoTests {
 
   @Autowired
-  private ClientRepository clientRepository;
+  private ClientRepository repo;
 
   @WithSettings
   Settings settings =
       Settings.create()
+          .set(Keys.SET_BACK_REFERENCES, true)
           .set(Keys.JPA_ENABLED, true);
 
   @Test
@@ -52,8 +53,8 @@ public class ClientRepoTests {
         .create();
 
     // execute
-    clientRepository.saveAndFlush(expected);
-    var optional = clientRepository.findByClientId(expected.getClientId());
+    repo.saveAndFlush(expected);
+    var optional = repo.findByClientId(expected.getClientId());
 
     // assert
     assertTrue(optional.isPresent());
