@@ -2,6 +2,7 @@ package smh.club.oauth2.domain.repos;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Set;
+import java.util.UUID;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -44,19 +45,37 @@ public class ClientRepoTests {
     var grantTypes = Set.of(AuthorizationGrantType.AUTHORIZATION_CODE, AuthorizationGrantType.CLIENT_CREDENTIALS);
     var authMethods = Set.of(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, ClientAuthenticationMethod.CLIENT_SECRET_POST);
 
-    var client = Instancio.of(ClientEntity.class)
+    var expected = Instancio.of(ClientEntity.class)
+        .set(field(ClientEntity::getId), UUID.randomUUID().toString())
         .set(field(ClientEntity::getAuthorizationGrantTypes), grantTypes)
         .set(field(ClientEntity::getClientAuthenticationMethods), authMethods)
         .create();
 
     // execute
-    var saved = clientRepository.saveAndFlush(client);
-    var actual = clientRepository.findByClientId(client.getClientId());
+    clientRepository.saveAndFlush(expected);
+    var optional = clientRepository.findByClientId(expected.getClientId());
 
     // assert
-    assertTrue(actual.isPresent());
-    assertEquals(client.getClientId(), saved.getClientId());
-    assertEquals(client.getClientId(), actual.get().getClientId());
-    assertEquals(client.getClientSecret(), actual.get().getClientSecret());
+    assertTrue(optional.isPresent());
+    var actual = optional.get();
+    assertEquals(expected.getId(), actual.getId());
+    assertEquals(expected.getClientId(), actual.getClientId());
+
+    assertEquals(expected.getClientIdIssuedAt().getEpochSecond(),
+        actual.getClientIdIssuedAt().getEpochSecond());
+
+    assertEquals(expected.getClientSecret(), actual.getClientSecret());
+
+    assertEquals(expected.getClientSecretExpiresAt().getEpochSecond(),
+        actual.getClientSecretExpiresAt().getEpochSecond());
+
+    assertEquals(actual.getClientSettings(), expected.getClientSettings());
+    assertEquals(actual.getTokenSettings(), expected.getTokenSettings());
+    assertEquals(actual.getClientAuthenticationMethods(), expected.getClientAuthenticationMethods());
+    assertEquals(actual.getAuthorizationGrantTypes(), expected.getAuthorizationGrantTypes());
+    assertEquals(actual.getClientAuthenticationMethods(), expected.getClientAuthenticationMethods());
+    assertEquals(actual.getRedirectUris(), expected.getRedirectUris());
+    assertEquals(actual.getPostLogoutRedirectUris(), expected.getPostLogoutRedirectUris());
+    assertEquals(actual.getScopes(), expected.getScopes());
   }
 }
