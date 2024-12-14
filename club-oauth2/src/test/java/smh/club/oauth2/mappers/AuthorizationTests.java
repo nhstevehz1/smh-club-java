@@ -69,9 +69,8 @@ public class AuthorizationTests {
     assertEquals(entity.getState(), auth.getAttributes().get(OAuth2ParameterNames.STATE));
     assertEquals(entity.getAttributes(), auth.getAttributes());
 
-    entity.getTokens().forEach(t -> {
-      verifyToken(t, Objects.requireNonNull(auth.getToken(t.getTokenType().getClazz())));
-    });
+    entity.getTokens().forEach(t ->
+        verifyToken(t, Objects.requireNonNull(auth.getToken(t.getTokenType().getClazz()))));
   }
 
   private TokenEntity createTokenEntity(TokenType tokenType) {
