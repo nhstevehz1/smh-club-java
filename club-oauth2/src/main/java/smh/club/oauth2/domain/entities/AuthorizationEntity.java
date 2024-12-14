@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 
 @Data
 @AllArgsConstructor
@@ -35,19 +36,17 @@ public class AuthorizationEntity {
   private String state;
 
   @Builder.Default
+  @Convert(converter = StringObjectMapConverter.class)
+  @Column(length = 500)
+  private Map<String, Object> attributes = new HashMap<>();
+
+  @Builder.Default
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "authorization_scopes_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "auth_id", nullable = false,
           referencedColumnName = "id")})
   @Column(name = "scope", nullable = false, length = 30)
   private Set<String> authorizedScopes = new HashSet<>();
-
-  @Builder.Default
-  @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "authorization_attributes_map", schema = "auth",
-      joinColumns = {@JoinColumn(name = "auth_id", nullable = false,
-          referencedColumnName = "id")})
-  private Map<String, String> attributes = new HashMap<>();
 
   @Builder.Default
   @OneToMany(mappedBy = "authorization",
