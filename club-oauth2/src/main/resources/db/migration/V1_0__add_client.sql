@@ -8,7 +8,7 @@ CREATE TABLE auth.client
     client_secret                 varchar(100)  DEFAULT NULL,
     client_secret_expires_at      timestamp     DEFAULT NULL,
     client_name                   varchar(50)   NOT NULL,
-    client_settings               varchar(100) NOT NULL, -- holds JSON
+    client_settings               varchar(200) NOT NULL, -- holds JSON
     token_settings                varchar(1000) NOT NULL, -- holds JSON
 
     CONSTRAINT pk_client PRIMARY KEY (id),
@@ -16,7 +16,7 @@ CREATE TABLE auth.client
 );
 
 CREATE TABLE auth.client_auth_methods_set (
-    client_id varchar(30)   NOT NULL,
+    client_id varchar(50)   NOT NULL,
     auth_method varchar(30) NOT NULL,
 
     CONSTRAINT fk_client_auth_methods_set__client
@@ -25,7 +25,7 @@ CREATE TABLE auth.client_auth_methods_set (
 );
 
 CREATE TABLE auth.client_grant_types_set (
-    client_id varchar(30)   NOT NULL,
+    client_id varchar(50)   NOT NULL,
     grant_type varchar(30)  NOT NULL,
 
     CONSTRAINT fk_client_grant_types_set__client
@@ -34,7 +34,7 @@ CREATE TABLE auth.client_grant_types_set (
 );
 
 CREATE TABLE auth.client_redirect_uri_set (
-    client_id varchar(30)       NOT NULL,
+    client_id varchar(50)       NOT NULL,
     redirect_uri varchar(100)   NOT NULL ,
 
     CONSTRAINT fk_client_redirect_uri_set__client
@@ -42,7 +42,7 @@ CREATE TABLE auth.client_redirect_uri_set (
 );
 
 CREATE TABLE auth.client_logout_redirect_uri_set (
-    client_id varchar(30)       NOT NULL,
+    client_id varchar(50)       NOT NULL,
     redirect_uri varchar(100)   NOT NULL,
 
     CONSTRAINT fk_logout_redirect_uri_set__client
@@ -50,7 +50,7 @@ CREATE TABLE auth.client_logout_redirect_uri_set (
 );
 
 CREATE TABLE auth.client_scopes_set (
-    client_id varchar(30)   NOT NULL,
+    client_id varchar(50)   NOT NULL,
     scope varchar(30)       NOT NULL,
 
     CONSTRAINT fk_client_scopes_set__client
