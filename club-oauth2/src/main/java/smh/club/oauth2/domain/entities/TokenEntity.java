@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.*;
 import lombok.*;
+import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 import smh.club.oauth2.domain.models.TokenType;
 
 @Data
@@ -17,7 +18,7 @@ public class TokenEntity {
 
   @Id
   @Column(nullable = false, length = 30)
-  private UUID id;
+  private String id;
 
   @Id
   @Enumerated(EnumType.STRING)
@@ -33,27 +34,21 @@ public class TokenEntity {
   private Instant expiresAt;
 
   @Builder.Default
-  @ElementCollection
-  @CollectionTable(name = "token_metadata_map", schema = "auth",
-      joinColumns = {@JoinColumn(name = "token_id", referencedColumnName = "id")})
-  @MapKeyColumn(name = "metadata_name", length = 30)
-  @Column(name = "metadata", nullable = false, length = 100)
-  private Map<String, String> metadata = new HashMap<>();
+  @Convert(converter = StringObjectMapConverter.class)
+  @Column(length = 1000)
+  private Map<String, Object> metadata = new HashMap<>();
 
   @Builder.Default
-  @ElementCollection
+  @Convert(converter = StringObjectMapConverter.class)
+  @Column(length = 1000)
+  private Map<String, Object> claims = new HashMap<>();
+
+  @Builder.Default
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "token_scopes_set", schema = "auth",
       joinColumns = {@JoinColumn(name = "token_id", referencedColumnName = "id")})
   @Column(name = "`scope`", nullable = false, length = 30)
   private Set<String> scopes = new HashSet<>();
-
-  @Builder.Default
-  @ElementCollection
-  @CollectionTable(name = "token_claims_map", schema = "auth",
-      joinColumns = {@JoinColumn(name = "token_id", referencedColumnName = "id")})
-  @MapKeyColumn(name = "claim_name", length = 30)
-  @Column(name = "claim", nullable = false, length = 100)
-  private Map<String, String> claims = new HashMap<>();
 
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
