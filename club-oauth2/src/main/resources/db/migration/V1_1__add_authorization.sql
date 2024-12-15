@@ -19,7 +19,7 @@ CREATE TABLE auth.authorization_scopes_set (
 
 
 CREATE TABLE auth.authorization_token (
-    id varchar(50),
+    id varchar(30) NOT NULL,
     auth_id varchar(50),
     token_type varchar(30) NOT NULL,
     token_value varchar(500) NOT NULL,
@@ -28,7 +28,9 @@ CREATE TABLE auth.authorization_token (
     metadata varchar(1000) NOT NULL,
     claims varchar(1000) DEFAULT NULL,
 
-    CONSTRAINT pk_authorization_token PRIMARY KEY (id, token_type),
+    CONSTRAINT pk_authorization_token PRIMARY KEY (id),
+    CONSTRAINT unique_auth_id__token_type UNIQUE (auth_id, token_type),
+    CONSTRAINT unique_auth_id__token_value UNIQUE (auth_id, token_value),
     CONSTRAINT fk_authorization_token__authorization
        FOREIGN KEY (auth_id) REFERENCES auth.authorization (id)
 );
@@ -40,7 +42,7 @@ CREATE TABLE auth.token_scopes_set (
 
     CONSTRAINT fk_token_scopes_set__authorization_token
         FOREIGN KEY (token_id, token_type)
-            REFERENCES auth.authorization_token (id, token_type)
+            REFERENCES auth.authorization_token (auth_id, token_type)
 );
 
 CREATE TABLE auth.authorization_consent (
@@ -56,7 +58,7 @@ CREATE TABLE auth.authorization_consent_authorities_set (
     principal_name varchar(50) NOT NULL,
     authority varchar(100) NOT NULL,
 
-    CONSTRAINT pk_reg_client_id__principal_name___authorization_consent
+    CONSTRAINT fk_reg_client_id__principal_name___authorization_consent
         FOREIGN KEY (registered_client_id, principal_name)
             REFERENCES auth.authorization_consent (registered_client_id, principal_name)
 )

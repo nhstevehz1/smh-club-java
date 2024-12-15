@@ -1,4 +1,4 @@
-package smh.club.oauth2.config.dev;
+package smh.club.oauth2.config.auth;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -26,10 +26,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-@Profile("!default-config && !default-props")
+@Profile("prod")
 @Configuration
 @EnableWebSecurity
-public class DevAuthServerConfig {
+public class AuthServerConfig {
 
 
   /**

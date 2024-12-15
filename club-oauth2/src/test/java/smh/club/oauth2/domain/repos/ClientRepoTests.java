@@ -1,6 +1,7 @@
 package smh.club.oauth2.domain.repos;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import jakarta.transaction.Transactional;
 import java.util.Set;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("tests")
+@Transactional
 @ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureEmbeddedDatabase(
@@ -54,7 +56,7 @@ public class ClientRepoTests {
     var expected = list.get(3);
 
     // execute
-    repo.saveAll(list);
+    repo.saveAllAndFlush(list);
     var optional = repo.findByClientId(expected.getClientId());
 
     // assert

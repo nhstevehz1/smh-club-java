@@ -1,7 +1,6 @@
-package smh.club.oauth2.config.dev;
+package smh.club.oauth2.config.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -13,11 +12,11 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import smh.club.oauth2.contracts.RegisteredClientMapper;
 import smh.club.oauth2.domain.repos.ClientRepository;
 import smh.club.oauth2.domain.repos.UserRepository;
-import smh.club.oauth2.security.JpaRegisteredClientRepository;
-import smh.club.oauth2.security.JpaUserDetailsManager;
+import smh.club.oauth2.services.JpaRegisteredClientService;
+import smh.club.oauth2.services.JpaUserDetailsManager;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@Profile("!default-config && !default-props")
+@RequiredArgsConstructor
+@Profile("prod")
 @Configuration
 public class AuthorizationConfig {
 
@@ -31,7 +30,7 @@ public class AuthorizationConfig {
    */
   @Bean
   public RegisteredClientRepository registeredClientRepository() {
-    return new JpaRegisteredClientRepository(clientRepository, clientMapper);
+    return new JpaRegisteredClientService(clientRepository, clientMapper);
   }
 
   /**

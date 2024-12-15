@@ -16,8 +16,9 @@ import smh.club.oauth2.domain.models.TokenType;
 @Builder
 @Entity
 @Table(name = "authorization_token", schema = "auth",
-  uniqueConstraints = {@UniqueConstraint(columnNames = {"auth_id", "token_type"})})
-//@IdClass(TokenEntity.TokenTypeId.class)
+  uniqueConstraints = {
+      @UniqueConstraint(columnNames = {"auth_id", "token_type",}),
+      @UniqueConstraint(columnNames = {"auth_id", "token_value",})})
 public class TokenEntity {
 
   @Id
@@ -28,7 +29,7 @@ public class TokenEntity {
   @Column(name = "token_type", nullable = false)
   private TokenType tokenType;
 
-  @Column(nullable = false, length = 200)
+  @Column(name = "token_value", nullable = false, length = 200)
   private String tokenValue;
 
   @Column(nullable = false)
@@ -57,14 +58,6 @@ public class TokenEntity {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "auth_id", nullable = false)
+  @JoinColumn(name = "auth_id", referencedColumnName ="id", nullable = false)
   private AuthorizationEntity authorization;
-
-  /*@Data
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class TokenTypeId {
-    private String authId;
-    private TokenType tokenType;
-  }*/
 }
