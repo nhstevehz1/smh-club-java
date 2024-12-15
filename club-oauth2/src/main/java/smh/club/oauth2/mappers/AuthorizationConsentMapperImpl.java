@@ -25,7 +25,7 @@ public class AuthorizationConsentMapperImpl implements AuthorizationConsentMappe
     var entity = AuthorizationConsentEntity.builder()
         .registeredClientId(authorizationConsent.getRegisteredClientId())
         .principalName(authorizationConsent.getPrincipalName())
-        .build();;
+        .build();
 
     authorizationConsent.getAuthorities()
         .forEach(a -> entity.getAuthorities().add(a.getAuthority()));
