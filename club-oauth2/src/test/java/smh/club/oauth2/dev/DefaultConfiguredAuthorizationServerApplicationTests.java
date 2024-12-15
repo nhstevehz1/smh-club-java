@@ -1,4 +1,4 @@
-package smh.club.oauth2.def;
+package smh.club.oauth2.dev;
 
 import java.io.IOException;
 import org.htmlunit.Page;

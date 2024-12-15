@@ -1,4 +1,4 @@
-package smh.club.oauth2.config.def;
+package smh.club.oauth2.config.dev;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

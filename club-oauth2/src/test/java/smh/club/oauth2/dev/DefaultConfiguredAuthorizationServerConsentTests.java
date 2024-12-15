@@ -1,4 +1,4 @@
-package smh.club.oauth2.def;
+package smh.club.oauth2.dev;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,14 +26,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-/**
- * Test the default server that is configured through properties only.
- */
-@ActiveProfiles("default-props")
+@ActiveProfiles("default-config")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class DefaultPropsAuthorizationServerConsentTests {
+public class DefaultConfiguredAuthorizationServerConsentTests {
   @Autowired
   private WebClient webClient;
 
