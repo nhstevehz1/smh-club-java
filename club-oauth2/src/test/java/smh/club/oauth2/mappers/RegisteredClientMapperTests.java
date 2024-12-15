@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(InstancioExtension.class)
-public class RegisteredClientTests {
+public class RegisteredClientMapperTests {
 
   private RegisteredClientMapperImpl clientMapper;
 

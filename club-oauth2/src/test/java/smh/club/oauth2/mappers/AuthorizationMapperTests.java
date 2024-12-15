@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(InstancioExtension.class)
-public class AuthorizationTests {
+public class AuthorizationMapperTests {
 
   private AuthorizationMapperImpl mapper;
 
