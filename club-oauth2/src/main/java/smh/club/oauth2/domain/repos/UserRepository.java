@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import smh.club.oauth2.domain.entities.UserEntity;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, String> {
   Optional<UserEntity> findByUsername(String username);
   Optional<UserEntity> findByPassword(String password);
   void deleteByUsername(String username);

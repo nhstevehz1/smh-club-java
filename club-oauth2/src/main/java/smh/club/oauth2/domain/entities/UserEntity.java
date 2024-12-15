@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
@@ -14,17 +15,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "user", schema = "`auth`")
+@Table(name = "users", schema = "auth",
+  indexes =
+    {@Index(name = "idx_users_username", columnList = "username", unique = true)})
 public class UserEntity implements UserDetails {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-
-  @Column(nullable = false, unique = true, length = 20)
+  @Column(name = "username", nullable = false, unique = true, length = 20)
   private String username;
 
-  @Column(nullable = false, length = 20)
+  @Column(name = "password", nullable = false, unique = true, length = 20)
   private String password;
 
   @Builder.Default
@@ -40,14 +40,13 @@ public class UserEntity implements UserDetails {
   private boolean enabled = false;
 
   @Builder.Default
-  @OneToMany(mappedBy = "authUserDetails",
-      orphanRemoval = true,
-      cascade = {CascadeType.ALL},
-      fetch = FetchType.EAGER)
-  private Set<GrantedAuthorityEntity> authorities = new HashSet<>();
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "user_authorities", schema = "auth",
+    joinColumns =
+        {@JoinColumn(name = "username", referencedColumnName = "username")},
+    indexes =
+        {@Index(name = "idx_users_username", columnList = "username, authority", unique = true)})
+  @Column(name = "authority", nullable = false, length = 20)
+  private Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
-  public void addAuthority(GrantedAuthorityEntity authority) {
-    this.authorities.add(authority);
-    authority.setUserEntity(this);
-  }
 }

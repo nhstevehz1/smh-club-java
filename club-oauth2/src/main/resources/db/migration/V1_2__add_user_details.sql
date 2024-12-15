@@ -1,23 +1,25 @@
-CREATE TABLE auth.user
+CREATE TABLE auth.users
 (
-    id                      bigint      NOT NULL GENERATED ALWAYS AS IDENTITY,
-    username                varchar(20) NOT NULL,
+    username                varchar(30) NOT NULL,
     password                varchar(20) NOT NULL,
     account_non_expired     boolean DEFAULT FALSE,
     account_non_locked      boolean DEFAULT FALSE,
     credentials_non_expired boolean DEFAULT FALSE,
     enabled                 boolean DEFAULT FALSE, -- for safety
 
-    CONSTRAINT pk_user PRIMARY KEY (id),
-    CONSTRAINT unique_password_user UNIQUE (username)
+    CONSTRAINT pk_users PRIMARY KEY (username)
 );
 
-CREATE TABLE auth.user_granted_authority
+CREATE UNIQUE INDEX idx_users__username ON auth.users (username);
+
+CREATE TABLE auth.user_authorities
 (
-    id        bigint      NOT NULL GENERATED ALWAYS AS IDENTITY,
-    user_id   bigint      NOT NULL,
-    authority varchar(20) NOT NULL,
+    username   varchar(30)  NOT NULL,
+    authority   varchar(20) NOT NULL,
 
-    CONSTRAINT pk_user_granted_authority PRIMARY KEY (id),
-    CONSTRAINT fk_user_granted_authorities__user FOREIGN KEY (user_id) REFERENCES auth.user (id)
+    CONSTRAINT fk_user_granted_authorities__user
+        FOREIGN KEY (username)
+        REFERENCES auth.users (userName)
 );
+
+CREATE UNIQUE INDEX idx_auth__username ON auth.user_authorities (username, authority);
