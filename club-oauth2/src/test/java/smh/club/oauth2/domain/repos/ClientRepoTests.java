@@ -2,7 +2,6 @@ package smh.club.oauth2.domain.repos;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Set;
-import java.util.UUID;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -46,14 +45,16 @@ public class ClientRepoTests {
     var grantTypes = Set.of(AuthorizationGrantType.AUTHORIZATION_CODE, AuthorizationGrantType.CLIENT_CREDENTIALS);
     var authMethods = Set.of(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, ClientAuthenticationMethod.CLIENT_SECRET_POST);
 
-    var expected = Instancio.of(ClientEntity.class)
-        .set(field(ClientEntity::getId), UUID.randomUUID().toString())
+    var list = Instancio.ofList(ClientEntity.class)
+        .size(5)
         .set(field(ClientEntity::getAuthorizationGrantTypes), grantTypes)
         .set(field(ClientEntity::getClientAuthenticationMethods), authMethods)
         .create();
 
+    var expected = list.get(3);
+
     // execute
-    repo.saveAndFlush(expected);
+    repo.saveAll(list);
     var optional = repo.findByClientId(expected.getClientId());
 
     // assert
@@ -61,15 +62,9 @@ public class ClientRepoTests {
     var actual = optional.get();
     assertEquals(expected.getId(), actual.getId());
     assertEquals(expected.getClientId(), actual.getClientId());
-
-    assertEquals(expected.getClientIdIssuedAt().getEpochSecond(),
-        actual.getClientIdIssuedAt().getEpochSecond());
-
+    assertEquals(expected.getClientIdIssuedAt(), actual.getClientIdIssuedAt());
     assertEquals(expected.getClientSecret(), actual.getClientSecret());
-
-    assertEquals(expected.getClientSecretExpiresAt().getEpochSecond(),
-        actual.getClientSecretExpiresAt().getEpochSecond());
-
+    assertEquals(expected.getClientSecretExpiresAt(), actual.getClientSecretExpiresAt());
     assertEquals(actual.getClientSettings(), expected.getClientSettings());
     assertEquals(actual.getTokenSettings(), expected.getTokenSettings());
     assertEquals(actual.getClientAuthenticationMethods(), expected.getClientAuthenticationMethods());

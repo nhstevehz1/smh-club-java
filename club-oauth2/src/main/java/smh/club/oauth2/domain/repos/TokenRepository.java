@@ -7,8 +7,7 @@ import smh.club.oauth2.domain.entities.TokenEntity;
 import smh.club.oauth2.domain.models.TokenType;
 
 @Repository
-public interface TokenRepository extends JpaRepository<TokenEntity, TokenEntity.TokenTypeId> {
-
+public interface TokenRepository extends JpaRepository<TokenEntity, String> {
   Optional<TokenEntity> findByTokenValue(String token);
   Optional<TokenEntity> findByTokenTypeAndTokenValue(TokenType tokenType, String token);
 }

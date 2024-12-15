@@ -53,6 +53,7 @@ public class AuthorizationEntity {
       orphanRemoval = true,
       cascade = {CascadeType.ALL},
       fetch = FetchType.EAGER)
+  //@JoinColumn(name = "auth_id")
   private Set<TokenEntity> tokens = new HashSet<>();
 
   public void addTokenEntity(TokenEntity tokenEntity) {

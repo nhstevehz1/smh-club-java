@@ -100,10 +100,8 @@ public class AuthorizationTests {
   private <T extends OAuth2Token> void verifyToken(TokenEntity expected, OAuth2Authorization.Token<T> token) {
     var actual = token.getToken();
     assertNotNull(actual);
-    assertEquals(expected.getIssuedAt().getEpochSecond(),
-        Objects.requireNonNull(actual.getIssuedAt()).getEpochSecond());
-    assertEquals(expected.getExpiresAt().getEpochSecond(),
-        Objects.requireNonNull(actual.getExpiresAt()).getEpochSecond());
+    assertEquals(expected.getIssuedAt(), Objects.requireNonNull(actual.getIssuedAt()));
+    assertEquals(expected.getExpiresAt(), Objects.requireNonNull(actual.getExpiresAt()));
     assertEquals(expected.getTokenValue(), actual.getTokenValue());
 
     if (actual instanceof OAuth2AccessToken accessToken) {
@@ -153,10 +151,8 @@ public class AuthorizationTests {
 
   private <T extends OAuth2Token> void verifyToken(OAuth2Authorization.Token<T> expected, TokenEntity actual) {
     assertEquals(expected.getToken().getTokenValue(), actual.getTokenValue());
-    assertEquals(Objects.requireNonNull(expected.getToken().getIssuedAt()).getEpochSecond(),
-        actual.getIssuedAt().getEpochSecond());
-    assertEquals(Objects.requireNonNull(expected.getToken().getExpiresAt()).getEpochSecond(),
-        actual.getExpiresAt().getEpochSecond());
+    assertEquals(Objects.requireNonNull(expected.getToken().getIssuedAt()), actual.getIssuedAt());
+    assertEquals(Objects.requireNonNull(expected.getToken().getExpiresAt()), actual.getExpiresAt());
 
     if (expected.getToken() instanceof OAuth2AccessToken token) {
       assertEquals(token.getScopes(), actual.getScopes());

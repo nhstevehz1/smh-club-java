@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Consumer;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
@@ -128,7 +127,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
     //var token = auth.getToken(clazz);
     if (token != null) {
       var entity = TokenEntity.builder()
-          .id(UUID.randomUUID().toString())
+          //.id(UUID.randomUUID().toString())
           .tokenType(tokenType)
           .build();
 
