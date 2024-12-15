@@ -1,4 +1,4 @@
-package smh.club.oauth2.dev;
+package smh.club.oauth2.auth;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.io.IOException;
@@ -27,8 +27,8 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.util.UriComponentsBuilder;
-import smh.club.oauth2.domain.entities.AuthGrantedAuthority;
-import smh.club.oauth2.domain.entities.AuthUserDetails;
+import smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
+import smh.club.oauth2.domain.entities.UserEntity;
 import smh.club.oauth2.domain.repos.UserRepository;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
@@ -160,13 +160,13 @@ public class DevAuthorizationServerApplicationTests {
 
     registeredClientRepository.save(oidcClient);
 
-    var user = AuthUserDetails.builder()
+    var user = UserEntity.builder()
         .username("user1")
         .password("{noop}password")
         .enabled(true)
         .build();
 
-    user.addAuthority(AuthGrantedAuthority.builder().authority("USER").build());
+    user.addAuthority(GrantedAuthorityEntity.builder().authority("USER").build());
     userRepository.save(user);
 
   }
