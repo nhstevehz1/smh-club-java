@@ -4,7 +4,7 @@ CREATE TABLE auth.authorization (
     principal_name                varchar(30) NOT NULL,
     authorization_grant_type      varchar(30) NOT NULL,
     state                         varchar(500)  DEFAULT NULL,
-    attributes                    varchar(500) DEFAULT NULL,
+    attributes                    varchar(4000) DEFAULT NULL,
 
     CONSTRAINT pk_auth PRIMARY KEY (id)
 );
