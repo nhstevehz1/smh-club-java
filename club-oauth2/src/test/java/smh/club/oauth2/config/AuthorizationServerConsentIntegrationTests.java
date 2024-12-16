@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
     provider = ZONKY,
     type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
     refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class DevAuthorizationServerConsentTests {
+public class AuthorizationServerConsentIntegrationTests {
   @Autowired
   private WebClient webClient;
 
@@ -124,6 +124,7 @@ public class DevAuthorizationServerConsentTests {
   private void addClientToDb() {
     RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
         .clientId("messaging-client")
+        .clientName("my_client_name")
         .clientSecret("{noop}secret")
         .clientIdIssuedAt(Instant.now())
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)

@@ -1,5 +1,8 @@
 package smh.club.oauth2.mappers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
@@ -19,6 +22,7 @@ import smh.club.oauth2.domain.entities.AuthorizationEntity;
 import smh.club.oauth2.domain.entities.TokenEntity;
 import smh.club.oauth2.domain.models.OAuth2AuthorizationEx;
 import smh.club.oauth2.domain.models.TokenType;
+import smh.club.oauth2.utils.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,6 +32,8 @@ public class AuthorizationMapperTests {
 
   private AuthorizationMapperImpl mapper;
 
+  private final ObjectMapper objMapper = TestUtils.getObjectMapper();
+
   @WithSettings
   private final Settings settings = Settings.create()
       .set(Keys.SET_BACK_REFERENCES, true)
@@ -35,24 +41,26 @@ public class AuthorizationMapperTests {
 
   @BeforeEach
   public void setup() {
-    mapper = new AuthorizationMapperImpl(null);
+    mapper = new AuthorizationMapperImpl(objMapper);
   }
 
   @Test
   public void from_auth_entity_to_authorization() {
     // setup
     var id = UUID.randomUUID().toString();
+    var attribs = writeMap(createAttributes());
+
     var entity = AuthorizationEntity.builder()
         .id(id)
         .registeredClientId("client_id")
         .state("state")
         .principalName("principal")
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+        .attributes(attribs)
         .build();
 
     entity.getAuthorizedScopes().addAll(List.of("scope1", "scope2"));
 
-    //entity.getAttributes().put("state", "state");
 
     Stream.of(TokenType.values())
         .forEach(t -> entity.addTokenEntity(createTokenEntity(t)));
@@ -67,7 +75,6 @@ public class AuthorizationMapperTests {
     assertEquals(entity.getPrincipalName(), auth.getPrincipalName());
     assertEquals(entity.getAuthorizationGrantType(), auth.getAuthorizationGrantType());
     assertEquals(entity.getState(), auth.getAttributes().get(OAuth2ParameterNames.STATE));
-    assertEquals(entity.getAttributes(), auth.getAttributes());
 
     entity.getTokens().forEach(t ->
         verifyToken(t, Objects.requireNonNull(auth.getToken(t.getTokenType().getClazz()))));
@@ -91,10 +98,19 @@ public class AuthorizationMapperTests {
       map.put("string", "string");
       map.put("boolean", true);
       map.put("integer", 1);
+      map.put("state", "state");
       token.setClaims(map);
     }
 
     return token;
+  }
+
+  private Map<String, Object> createAttributes() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("string", "string");
+    map.put("boolean", true);
+    map.put("integer", 1);
+    return Collections.unmodifiableMap(map);
   }
 
   private <T extends OAuth2Token> void verifyToken(TokenEntity expected, OAuth2Authorization.Token<T> token) {
@@ -141,7 +157,7 @@ public class AuthorizationMapperTests {
     assertEquals(entity.getPrincipalName(), auth.getPrincipalName());
     assertEquals(entity.getAuthorizationGrantType(), auth.getAuthorizationGrantType());
     assertEquals(entity.getState(), auth.getAttributes().get(OAuth2ParameterNames.STATE));
-    assertEquals(entity.getAttributes(), auth.getAttributes());
+    assertEquals(parseMap(entity.getAttributes()), auth.getAttributes());
 
     Stream.of(TokenType.values()).forEach(t -> {
       var token = getToken(t, entity).orElseThrow();
@@ -194,5 +210,22 @@ public class AuthorizationMapperTests {
     list.add(oidcToken);
 
     return list;
+  }
+
+  private String writeMap(Map<String, Object> map) {
+    try {
+      return objMapper.writeValueAsString(map);
+    } catch (JsonProcessingException ex) {
+      throw new IllegalArgumentException(ex.getMessage(), ex);
+    }
+  }
+
+  private Map<String, Object> parseMap(String data) {
+    try {
+      return objMapper.readValue(data, new TypeReference<>() {
+      });
+    } catch (Exception ex) {
+      throw new IllegalArgumentException(ex.getMessage(), ex);
+    }
   }
 }

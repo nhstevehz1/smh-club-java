@@ -25,7 +25,7 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ActiveProfiles("tests")
+@ActiveProfiles({"tests", "prod"})
 @Transactional
 @ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

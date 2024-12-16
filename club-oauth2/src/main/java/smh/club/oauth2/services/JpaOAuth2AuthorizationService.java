@@ -94,7 +94,7 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
 
   private OAuth2Authorization toAuth(AuthorizationEntity entity) {
     Optional.ofNullable(
-        registeredClientRepository.findByClientId(entity.getRegisteredClientId())).
+        registeredClientRepository.findById(entity.getRegisteredClientId())).
         orElseThrow(() -> new DataRetrievalFailureException(
             "The RegisteredClient with id '" + entity.getRegisteredClientId()
                 + "' was not found in the RegisteredClientRepository."));

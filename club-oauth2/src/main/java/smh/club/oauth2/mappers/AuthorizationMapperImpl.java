@@ -25,7 +25,7 @@ import smh.club.oauth2.domain.models.TokenType;
 @Component
 public class AuthorizationMapperImpl implements AuthorizationMapper {
 
-  private final ObjectMapper objMapper;;
+  private final ObjectMapper objMapper;
 
 
   @Override
@@ -34,8 +34,10 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         .id(entity.getId())
         .principalName(entity.getPrincipalName())
         .authorizationGrantType(entity.getAuthorizationGrantType())
-        .authorizedScopes(entity.getAuthorizedScopes())
-        .attributes(parseMap(entity.getAttributes())::putAll);
+        .authorizedScopes(entity.getAuthorizedScopes());
+
+    parseMap(entity.getAttributes()).forEach(builder::attribute);
+
     if(entity.getState() != null) {
       builder.attribute(OAuth2ParameterNames.STATE, entity.getState());
     }
@@ -52,23 +54,6 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
     });
 
     return builder.build();
-  }
-
-  private String writeMap(Map<String, Object> map) {
-    try {
-      return objMapper.writeValueAsString(map);
-    } catch (JsonProcessingException ex) {
-      throw new IllegalArgumentException(ex.getMessage(), ex);
-    }
-  }
-
-  private Map<String, Object> parseMap(String data) {
-    try {
-      return this.objMapper.readValue(data, new TypeReference<>() {
-      });
-    } catch (Exception ex) {
-      throw new IllegalArgumentException(ex.getMessage(), ex);
-    }
   }
 
   private void addAuthCodeToken(OAuth2Authorization.Builder builder, TokenEntity entity) {
@@ -191,6 +176,23 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
       issuedAtConsumer.accept(oAuth2Token.getIssuedAt());
       expiresAtConsumer.accept(oAuth2Token.getExpiresAt());
       metadataConsumer.accept(token.getMetadata());
+    }
+  }
+
+  private String writeMap(Map<String, Object> map) {
+    try {
+      return objMapper.writeValueAsString(map);
+    } catch (JsonProcessingException ex) {
+      throw new IllegalArgumentException(ex.getMessage(), ex);
+    }
+  }
+
+  private Map<String, Object> parseMap(String data) {
+    try {
+      return this.objMapper.readValue(data, new TypeReference<>() {
+      });
+    } catch (Exception ex) {
+      throw new IllegalArgumentException(ex.getMessage(), ex);
     }
   }
 }

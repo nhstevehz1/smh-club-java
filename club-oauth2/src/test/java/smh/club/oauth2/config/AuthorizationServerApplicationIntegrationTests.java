@@ -42,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     provider = ZONKY,
     type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
     refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class DevAuthorizationServerApplicationTests {
+public class AuthorizationServerApplicationIntegrationTests {
 
   @Autowired
   private RegisteredClientRepository registeredClientRepository;

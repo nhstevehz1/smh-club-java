@@ -32,10 +32,7 @@ public class AuthorizationEntity {
   @Column(length = 500)
   private String state;
 
-  //@Builder.Default
-  //@Convert(converter = StringObjectMapConverter.class)
   @Column(length = 4000)
-  //private Map<String, Object> attributes = new HashMap<>();
   private String attributes;
 
   @Builder.Default
