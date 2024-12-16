@@ -37,10 +37,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-@Profile("default-config")
+@Profile("dev")
 @Configuration
 @EnableWebSecurity
-public class DefaultAuthServerConfig {
+public class DevAuthServerConfig {
 
   /**
    * Spring Security filter chain for the Protocol endpoints

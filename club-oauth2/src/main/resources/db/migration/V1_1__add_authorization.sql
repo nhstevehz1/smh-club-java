@@ -19,7 +19,7 @@ CREATE TABLE auth.authorization_scopes_set (
 
 
 CREATE TABLE auth.authorization_token (
-    id varchar(30) NOT NULL,
+    id varchar(50) NOT NULL,
     auth_id varchar(50),
     token_type varchar(30) NOT NULL,
     token_value varchar(500) NOT NULL,
@@ -34,6 +34,7 @@ CREATE TABLE auth.authorization_token (
     CONSTRAINT fk_authorization_token__authorization
        FOREIGN KEY (auth_id) REFERENCES auth.authorization (id)
 );
+
 
 CREATE TABLE auth.token_scopes_set (
     token_id varchar(50)   NOT NULL,

@@ -2,10 +2,7 @@ package smh.club.oauth2.domain.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import lombok.*;
 import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 import smh.club.oauth2.domain.models.TokenType;
@@ -21,9 +18,10 @@ import smh.club.oauth2.domain.models.TokenType;
       @UniqueConstraint(columnNames = {"auth_id", "token_value",})})
 public class TokenEntity {
 
+  @Builder.Default
   @Id
   @Column(nullable = false, length = 50)
-  private String id;
+  private String id = UUID.randomUUID().toString();
 
   @Enumerated(EnumType.STRING)
   @Column(name = "token_type", nullable = false)

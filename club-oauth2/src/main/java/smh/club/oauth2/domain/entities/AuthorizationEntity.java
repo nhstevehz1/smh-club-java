@@ -1,16 +1,13 @@
 package smh.club.oauth2.domain.entities;
 
 import jakarta.persistence.*;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 
 @Data
 @AllArgsConstructor
@@ -35,10 +32,11 @@ public class AuthorizationEntity {
   @Column(length = 500)
   private String state;
 
-  @Builder.Default
-  @Convert(converter = StringObjectMapConverter.class)
+  //@Builder.Default
+  //@Convert(converter = StringObjectMapConverter.class)
   @Column(length = 4000)
-  private Map<String, Object> attributes = new HashMap<>();
+  //private Map<String, Object> attributes = new HashMap<>();
+  private String attributes;
 
   @Builder.Default
   @ElementCollection(fetch = FetchType.EAGER)

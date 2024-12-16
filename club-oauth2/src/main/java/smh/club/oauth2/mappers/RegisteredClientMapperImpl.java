@@ -62,7 +62,7 @@ public class RegisteredClientMapperImpl implements RegisteredClientMapper {
         .postLogoutRedirectUris(uris -> uris.addAll(entity.getPostLogoutRedirectUris()))
         .scopes(scopes-> scopes.addAll(entity.getScopes()))
         .clientSettings(ClientSettings.withSettings(entity.getClientSettings()).build())
-        .tokenSettings(TokenSettings.withSettings(entity.getClientSettings()).build())
+        .tokenSettings(TokenSettings.withSettings(entity.getTokenSettings()).build())
         .build();
   }
 

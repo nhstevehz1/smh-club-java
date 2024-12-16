@@ -1,4 +1,4 @@
-package smh.club.oauth2.dev;
+package smh.club.oauth2.config.dev;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test the default server that is configured through properties only.
  */
-@ActiveProfiles("default-props")
+@ActiveProfiles("dev")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc

@@ -79,17 +79,8 @@ public class RegisteredClientMapperTests {
     assertTrue(rc.getPostLogoutRedirectUris().containsAll(entity.getPostLogoutRedirectUris()));
     assertTrue(rc.getScopes().containsAll(entity.getScopes()));
 
-    final var cs = entity.getClientSettings();
-    rc.getClientSettings().getSettings().forEach((key, value) -> {
-      assertTrue(cs.containsKey(key));
-      assertEquals(cs.get(key), value);
-    });
-
-    final var ts = entity.getTokenSettings();
-    rc.getTokenSettings().getSettings().forEach((key, value) -> {
-      assertTrue(ts.containsKey(key));
-      assertEquals(ts.get(key), value);
-    });
+    assertEquals(rc.getClientSettings().getSettings().entrySet(), entity.getClientSettings().entrySet());
+    assertEquals(rc.getTokenSettings().getSettings().entrySet(), entity.getTokenSettings().entrySet());
   }
 
   @Test
@@ -126,17 +117,7 @@ public class RegisteredClientMapperTests {
     assertEquals(entity.getRedirectUris(), rc.getRedirectUris());
     assertEquals(entity.getPostLogoutRedirectUris(), rc.getPostLogoutRedirectUris());
     assertEquals(entity.getScopes(), rc.getScopes());
-
-    final var cs = rc.getClientSettings().getSettings();
-    entity.getClientSettings().forEach((key, value) -> {
-      assertTrue(cs.containsKey(key));
-      assertEquals(String.valueOf(cs.get(key)), value);
-    });
-
-    final var ts = rc.getTokenSettings().getSettings();
-    entity.getClientSettings().forEach((key, value) -> {
-      assertTrue(ts.containsKey(key));
-      assertEquals(String.valueOf(ts.get(key)), value);
-    });
+    assertEquals(entity.getClientSettings().entrySet(), rc.getClientSettings().getSettings().entrySet());
+    assertEquals(entity.getTokenSettings().entrySet(), rc.getTokenSettings().getSettings().entrySet());
   }
 }

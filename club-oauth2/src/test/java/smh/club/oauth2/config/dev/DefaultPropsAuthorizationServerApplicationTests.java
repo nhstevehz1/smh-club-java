@@ -1,4 +1,4 @@
-package smh.club.oauth2.dev;
+package smh.club.oauth2.config.dev;
 
 import java.io.IOException;
 import org.htmlunit.Page;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests the default server that is configured through properties onlhy
  */
-@ActiveProfiles("default-props")
+@ActiveProfiles("dev")
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

@@ -35,7 +35,7 @@ public class AuthorizationMapperTests {
 
   @BeforeEach
   public void setup() {
-    mapper = new AuthorizationMapperImpl();
+    mapper = new AuthorizationMapperImpl(null);
   }
 
   @Test
@@ -44,7 +44,7 @@ public class AuthorizationMapperTests {
     var id = UUID.randomUUID().toString();
     var entity = AuthorizationEntity.builder()
         .id(id)
-        .registeredClientId(UUID.randomUUID().toString())
+        .registeredClientId("client_id")
         .state("state")
         .principalName("principal")
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
@@ -52,7 +52,7 @@ public class AuthorizationMapperTests {
 
     entity.getAuthorizedScopes().addAll(List.of("scope1", "scope2"));
 
-    entity.getAttributes().put("state", "state");
+    //entity.getAttributes().put("state", "state");
 
     Stream.of(TokenType.values())
         .forEach(t -> entity.addTokenEntity(createTokenEntity(t)));

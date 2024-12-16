@@ -1,10 +1,14 @@
 package smh.club.oauth2.mappers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -17,8 +21,12 @@ import smh.club.oauth2.domain.entities.TokenEntity;
 import smh.club.oauth2.domain.models.OAuth2AuthorizationEx;
 import smh.club.oauth2.domain.models.TokenType;
 
+@RequiredArgsConstructor
 @Component
 public class AuthorizationMapperImpl implements AuthorizationMapper {
+
+  private final ObjectMapper objMapper;;
+
 
   @Override
   public OAuth2Authorization toAuthorization(AuthorizationEntity entity) {
@@ -27,7 +35,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         .principalName(entity.getPrincipalName())
         .authorizationGrantType(entity.getAuthorizationGrantType())
         .authorizedScopes(entity.getAuthorizedScopes())
-        .attributes(entity.getAttributes()::putAll);
+        .attributes(parseMap(entity.getAttributes())::putAll);
     if(entity.getState() != null) {
       builder.attribute(OAuth2ParameterNames.STATE, entity.getState());
     }
@@ -44,6 +52,23 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
     });
 
     return builder.build();
+  }
+
+  private String writeMap(Map<String, Object> map) {
+    try {
+      return objMapper.writeValueAsString(map);
+    } catch (JsonProcessingException ex) {
+      throw new IllegalArgumentException(ex.getMessage(), ex);
+    }
+  }
+
+  private Map<String, Object> parseMap(String data) {
+    try {
+      return this.objMapper.readValue(data, new TypeReference<>() {
+      });
+    } catch (Exception ex) {
+      throw new IllegalArgumentException(ex.getMessage(), ex);
+    }
   }
 
   private void addAuthCodeToken(OAuth2Authorization.Builder builder, TokenEntity entity) {
@@ -110,7 +135,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         .principalName(auth.getPrincipalName())
         .authorizationGrantType(auth.getAuthorizationGrantType())
         .authorizedScopes(auth.getAuthorizedScopes())
-        .attributes(auth.getAttributes())
+        .attributes(writeMap(auth.getAttributes()))
         .state(auth.getAttribute(OAuth2ParameterNames.STATE))
         .build();
 
