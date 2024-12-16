@@ -3,10 +3,10 @@ package smh.club.oauth2.domain.repos;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import smh.club.oauth2.domain.entities.Client;
+import smh.club.oauth2.domain.entities.ClientEntity;
 
 @Repository
-public interface ClientRepository extends JpaRepository<Client, String> {
+public interface ClientRepository extends JpaRepository<ClientEntity, String> {
 
-  Optional<Client> findByClientId(String clientId);
+  Optional<ClientEntity> findByClientId(String clientId);
 }
