@@ -3,7 +3,7 @@ package smh.club.oauth2.mappers;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsent;
 import org.springframework.stereotype.Component;
-import smh.club.oauth2.contracts.AuthorizationConsentMapper;
+import smh.club.oauth2.contracts.mappers.AuthorizationConsentMapper;
 import smh.club.oauth2.domain.entities.AuthorizationConsentEntity;
 
 @Component

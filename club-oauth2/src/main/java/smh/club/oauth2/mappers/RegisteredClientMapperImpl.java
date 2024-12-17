@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import smh.club.oauth2.contracts.RegisteredClientMapper;
+import smh.club.oauth2.contracts.mappers.RegisteredClientMapper;
 import smh.club.oauth2.domain.entities.ClientEntity;
 
 @NoArgsConstructor
