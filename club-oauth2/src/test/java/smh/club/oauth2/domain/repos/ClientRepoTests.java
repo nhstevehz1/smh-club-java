@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("tests")
 @Transactional
 @ExtendWith(InstancioExtension.class)
+// Can't use @DataJpaTest due to some converters need an injected ObjectMapper
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureEmbeddedDatabase(
     provider = ZONKY,
