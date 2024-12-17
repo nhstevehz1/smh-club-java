@@ -14,8 +14,8 @@ import smh.club.oauth2.domain.models.TokenType;
 @Entity
 @Table(name = "authorization_token", schema = "auth",
   uniqueConstraints = {
-      @UniqueConstraint(columnNames = {"auth_id", "token_type",}),
-      @UniqueConstraint(columnNames = {"auth_id", "token_value",})})
+      @UniqueConstraint(columnNames = {"token_value"}),
+      @UniqueConstraint(columnNames = {"auth_id", "token_type"})})
 public class TokenEntity {
 
   @Builder.Default
@@ -48,7 +48,7 @@ public class TokenEntity {
   @Builder.Default
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "token_scopes_set", schema = "auth",
-      joinColumns = {@JoinColumn(name = "token_id", referencedColumnName = "auth_id"),
+      joinColumns = {@JoinColumn(name = "auth_id", referencedColumnName = "auth_id"),
                       @JoinColumn(name = "token_type", referencedColumnName = "token_type")})
   @Column(name = "scope", nullable = false, length = 30)
   private Set<String> scopes = new HashSet<>();

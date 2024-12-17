@@ -29,20 +29,20 @@ CREATE TABLE auth.authorization_token (
     claims varchar(1000) DEFAULT NULL,
 
     CONSTRAINT pk_authorization_token PRIMARY KEY (id),
+    CONSTRAINT unique_token_value UNIQUE (token_value),
     CONSTRAINT unique_auth_id__token_type UNIQUE (auth_id, token_type),
-    CONSTRAINT unique_auth_id__token_value UNIQUE (auth_id, token_value),
     CONSTRAINT fk_authorization_token__authorization
        FOREIGN KEY (auth_id) REFERENCES auth.authorization (id)
 );
 
 
 CREATE TABLE auth.token_scopes_set (
-    token_id varchar(50)   NOT NULL,
+    auth_id varchar(50)   NOT NULL,
     token_type varchar(30) NOT NULL,
     scope varchar(30)     NOT NULL,
 
     CONSTRAINT fk_token_scopes_set__authorization_token
-        FOREIGN KEY (token_id, token_type)
+        FOREIGN KEY (auth_id, token_type)
             REFERENCES auth.authorization_token (auth_id, token_type)
 );
 
