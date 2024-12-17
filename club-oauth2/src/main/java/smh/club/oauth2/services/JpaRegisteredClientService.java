@@ -38,7 +38,6 @@ public class JpaRegisteredClientService implements RegisteredClientRepository {
   public RegisteredClient findByClientId(String clientId) {
     Assert.hasText(clientId, "clientId cannot be empty");
     var entity = clientRepository.findByClientId(clientId);
-    var rc = entity.map(mapper::toRegisteredClient).orElse(null);
-    return rc;
+    return entity.map(mapper::toRegisteredClient).orElse(null);
   }
 }
