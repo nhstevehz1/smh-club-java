@@ -24,6 +24,7 @@ import smh.club.oauth2.domain.repos.ClientRepository;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ActiveProfiles({"tests", "prod"})
 @Transactional
@@ -49,7 +50,7 @@ public class RegisteredClientServiceIntegrationTests {
 
 
   @Test
-  public void save_registered_client() {
+  public void save_registeredClient() {
     // setup
     var expected = createRegisteredClient();
 
@@ -73,7 +74,7 @@ public class RegisteredClientServiceIntegrationTests {
   }
 
   @Test
-  public void find_registered_client_by_id() {
+  public void findById_returns_registeredClient() {
     // setup
     var expected = createRegisteredClient();
     service.save(expected);
@@ -98,7 +99,19 @@ public class RegisteredClientServiceIntegrationTests {
   }
 
   @Test
-  public void find_registered_client_by_client_id() {
+  public void findById_returns_null_registeredClient_not_found() {
+    // setup
+    var id = UUID.randomUUID().toString();
+
+    // execute
+    var ret = service.findById(id);
+
+    // verify
+    assertNull(ret);
+  }
+
+  @Test
+  public void findByClientId_returns_registeredClient() {
     // setup
     var expected = createRegisteredClient();
 
@@ -118,6 +131,18 @@ public class RegisteredClientServiceIntegrationTests {
     assertEquals(expected.getScopes(), actual.getScopes());
     assertEquals(expected.getPostLogoutRedirectUris(), actual.getPostLogoutRedirectUris());
     assertEquals(expected.getAuthorizationGrantTypes(), actual.getAuthorizationGrantTypes());
+  }
+
+  @Test
+  public void findByClientId_returns_null_registeredClient_when_not_found() {
+    // setup
+    var id = UUID.randomUUID().toString();
+
+    // execute
+    var ret = service.findByClientId(id);
+
+    // verify
+    assertNull(ret);
   }
 
   private RegisteredClient createRegisteredClient() {

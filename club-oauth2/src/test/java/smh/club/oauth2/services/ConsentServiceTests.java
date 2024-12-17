@@ -7,4 +7,5 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(InstancioExtension.class)
 public class ConsentServiceTests {
+
 }
