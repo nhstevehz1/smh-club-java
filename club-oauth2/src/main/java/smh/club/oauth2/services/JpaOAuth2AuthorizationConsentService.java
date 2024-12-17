@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import smh.club.oauth2.contracts.AuthorizationConsentMapper;
+import smh.club.oauth2.contracts.mappers.AuthorizationConsentMapper;
 import smh.club.oauth2.domain.entities.AuthorizationConsentEntity;
 import smh.club.oauth2.domain.repos.AuthorizationConsentRepository;
 
