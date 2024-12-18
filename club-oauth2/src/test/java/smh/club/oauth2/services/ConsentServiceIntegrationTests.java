@@ -16,7 +16,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsent;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.test.context.ActiveProfiles;
-import smh.club.oauth2.contracts.mappers.AuthorizationConsentMapper;
 import smh.club.oauth2.domain.entities.AuthorizationConsentEntity;
 import smh.club.oauth2.domain.entities.ClientEntity;
 import smh.club.oauth2.domain.repos.AuthorizationConsentRepository;
@@ -41,9 +40,6 @@ public class ConsentServiceIntegrationTests {
 
   @Autowired
   private ClientRepository clientRepo;
-
-  @Autowired
-  private AuthorizationConsentMapper mapperMock;
 
   @Autowired
   private OAuth2AuthorizationConsentService service;
