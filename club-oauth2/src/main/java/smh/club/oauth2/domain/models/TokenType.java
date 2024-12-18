@@ -1,7 +1,5 @@
 package smh.club.oauth2.domain.models;
 
-import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.Getter;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
@@ -24,11 +22,5 @@ public enum TokenType {
   TokenType(Class<? extends OAuth2Token> clazz, String paramName) {
     this.clazz = clazz;
     this.paramName = paramName;
-  }
-
-  public static Optional<TokenType> getByParamName(String paramName) {
-    return Stream.of(TokenType.values())
-        .filter(t -> t.paramName.equals(paramName))
-        .findFirst();
   }
 }
