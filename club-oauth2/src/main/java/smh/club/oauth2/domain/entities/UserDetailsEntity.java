@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
@@ -18,13 +17,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users", schema = "auth",
   indexes =
     {@Index(name = "idx_users_username", columnList = "username", unique = true)})
-public class UserEntity implements UserDetails {
+public class UserDetailsEntity implements UserDetails {
 
   @Id
-  @Column(name = "username", nullable = false, unique = true, length = 20)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
+
+  @Column(nullable = false, unique = true, length = 20)
   private String username;
 
-  @Column(name = "password", nullable = false, unique = true, length = 20)
+  @Column(nullable = false, unique = true, length = 20)
   private String password;
 
   @Builder.Default
@@ -40,13 +42,20 @@ public class UserEntity implements UserDetails {
   private boolean enabled = false;
 
   @Builder.Default
-  @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "user_authorities", schema = "auth",
-    joinColumns =
-        {@JoinColumn(name = "username", referencedColumnName = "username")},
-    indexes =
-        {@Index(name = "idx_users_username", columnList = "username, authority", unique = true)})
-  @Column(name = "authority", nullable = false, length = 20)
-  private Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+  @OneToMany(
+      mappedBy = "userDetails",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
+  private Set<GrantedAuthorityEntity> authorities = new HashSet<>();
 
+  public void addGrantedAuthority(GrantedAuthorityEntity grantedAuthority) {
+    grantedAuthority.setUserDetails(this);
+    authorities.add(grantedAuthority);
+  }
+
+  public void removeGrantedAuthority(GrantedAuthorityEntity grantedAuthority) {
+    authorities.remove(grantedAuthority);
+    grantedAuthority.setUserDetails(null);
+  }
 }

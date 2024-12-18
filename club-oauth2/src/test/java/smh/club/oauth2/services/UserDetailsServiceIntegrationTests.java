@@ -1,4 +1,4 @@
-package smh.club.oauth2.domain.repos;
+package smh.club.oauth2.services;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import jakarta.transaction.Transactional;
@@ -7,33 +7,38 @@ import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import smh.club.oauth2.domain.entities.UserDetailsEntity;
+import smh.club.oauth2.domain.repos.UserRepository;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ActiveProfiles("tests")
+@ActiveProfiles({"tests", "prod"})
 @Transactional
 @ExtendWith(InstancioExtension.class)
-// Can't use @JPADataTest.  Some of the converters need an injected ObjectMapper
+// Can't use @DataJpaTest due to some converters need an injected ObjectMapper
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureEmbeddedDatabase(
     provider = ZONKY,
     type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
     refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class UserRepoTests {
+public class UserDetailsServiceIntegrationTests {
 
   @Autowired
   private UserRepository repo;
+
+  @Autowired
+  private UserDetailsService service;
 
   @WithSettings
   Settings settings =
@@ -42,55 +47,40 @@ public class UserRepoTests {
           .set(Keys.COLLECTION_MAX_SIZE, 3)
           .set(Keys.SET_BACK_REFERENCES, true);
 
-  @BeforeEach
-  public void setUp() {
-
-    var entities = Instancio.ofList(UserDetailsEntity.class)
+  @Test
+  public void LoadUserByUsername_returns_User() {
+    // setup
+    var users = Instancio.ofList(UserDetailsEntity.class)
         .size(5)
         .ignore(field(UserDetailsEntity::getId))
         .ignore(field(GrantedAuthorityEntity::getId))
-        .withUnique(field(UserDetailsEntity::getUsername))
         .create();
 
-    repo.saveAllAndFlush(entities);
+    var username = users.get(3).getUsername();
+
+    repo.saveAll(users);
+
+    // execute
+    var user = service.loadUserByUsername(username);
+
+    // verify
+    assertNotNull(user);
   }
 
   @Test
-  public void find_by_username() {
+  public void loadByUseName_throws_when_user_not_found() {
     // setup
-    var entity = repo.findAll().get(3);
+    var users = Instancio.ofList(UserDetailsEntity.class)
+        .size(5)
+        .ignore(field(UserDetailsEntity::getId))
+        .ignore(field(GrantedAuthorityEntity::getId))
+        .create();
 
-    // execute
-    var optional = repo.findByUsername(entity.getUsername());
+    var username = "XXXTENTACION";
 
-    // verify
-    assertTrue(optional.isPresent());
-    assertEquals(entity, optional.get());
+    repo.saveAll(users);
 
-  }
-
-  @Test
-  public void exist_by_username() {
-    // setup
-    var entity = repo.findAll().get(3);
-
-    // execute
-    var exists = repo.existsByUsername(entity.getUsername());
-
-    // verify
-    assertTrue(exists);
-  }
-
-  @Test
-  public void delete_by_username() {
-    // setup
-    var entity = repo.findAll().get(3);
-
-    // execute
-    repo.deleteByUsername(entity.getUsername());
-    var optional = repo.findByUsername(entity.getUsername());
-
-    // verify
-    assertTrue(optional.isEmpty());
+    // execute and verify
+    assertThrows(UsernameNotFoundException.class, () -> service.loadUserByUsername(username));
   }
 }

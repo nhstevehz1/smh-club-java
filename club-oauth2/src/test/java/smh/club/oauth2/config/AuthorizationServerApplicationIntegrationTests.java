@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -28,7 +27,8 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.util.UriComponentsBuilder;
-import smh.club.oauth2.domain.entities.UserEntity;
+import smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
+import smh.club.oauth2.domain.entities.UserDetailsEntity;
 import smh.club.oauth2.domain.repos.UserRepository;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
@@ -160,13 +160,16 @@ public class AuthorizationServerApplicationIntegrationTests {
 
     registeredClientRepository.save(oidcClient);
 
-    var user = UserEntity.builder()
+    var user = UserDetailsEntity.builder()
         .username("user1")
         .password("{noop}password")
         .enabled(true)
         .build();
 
-    user.getAuthorities().add(new SimpleGrantedAuthority("USER"));
+    var authority = GrantedAuthorityEntity.builder()
+        .authority("USER")
+        .build();
+    user.addGrantedAuthority(authority);
     userRepository.save(user);
 
   }

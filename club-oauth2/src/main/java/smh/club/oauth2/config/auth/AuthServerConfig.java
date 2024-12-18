@@ -137,6 +137,7 @@ public class AuthServerConfig {
     return AuthorizationServerSettings.builder().build();
   }
 
+
   //@Bean
   public PasswordEncoder passwordEncoder() {
 
