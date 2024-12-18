@@ -1,7 +1,6 @@
 package smh.club.oauth2.services;
 
 import jakarta.transaction.Transactional;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -9,12 +8,12 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import smh.club.oauth2.contracts.mappers.AuthorizationMapper;
 import smh.club.oauth2.domain.entities.AuthorizationEntity;
 import smh.club.oauth2.domain.repos.AuthorizationRepository;
+import smh.club.oauth2.domain.repos.ClientRepository;
 import smh.club.oauth2.domain.repos.TokenRepository;
 
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ import smh.club.oauth2.domain.repos.TokenRepository;
 @Service
 public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService {
   private final AuthorizationRepository authorizationRepository;
-  private final RegisteredClientRepository registeredClientRepository;
+  private final ClientRepository registeredClientRepository;
   private final TokenRepository tokenRepository;
   private final AuthorizationMapper mapper;
 
@@ -96,12 +95,13 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
 
   private OAuth2Authorization toAuth(AuthorizationEntity entity) {
     // Check a matching client registration exists for the authorization
-    Optional.ofNullable(
-        registeredClientRepository.findById(entity.getRegisteredClientId())).
-        orElseThrow(() -> new DataRetrievalFailureException(
-            "The RegisteredClient with id '" + entity.getRegisteredClientId()
-                + "' was not found in the RegisteredClientRepository."));
-
-    return this.mapper.toAuthorization(entity);
+    var exists = this.registeredClientRepository.existsById(entity.getRegisteredClientId());;
+    if (!exists) {
+      throw new DataRetrievalFailureException(
+          "The RegisteredClient with id '" + entity.getRegisteredClientId()
+              + "' was not found in the RegisteredClientRepository.");
+    } else {
+      return this.mapper.toAuthorization(entity);
+    }
   }
 }
