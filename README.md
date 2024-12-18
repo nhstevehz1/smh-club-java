@@ -39,11 +39,11 @@ Contains code that is shared by other modules.
 
 ### club-gateway
 Entry point for the application.  Routes incoming calls to the appropriate microservice. <br>
-TBD
+_Not started._
 
 ### club-oauth2
 Authentication microservice.<br>
-TBD
+_Under construction._
 
 ### build-logic
 Provides centralized version management for Spring Boot, Spring Framework, and other the libraries used int he project.  
