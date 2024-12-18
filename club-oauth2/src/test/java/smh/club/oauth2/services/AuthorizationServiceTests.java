@@ -132,7 +132,6 @@ public class AuthorizationServiceTests {
   @Test
   public void find_by_id_registered_client_not_found_throws() {
     // setup
-    RegisteredClient client = null;
     var regClientId = UUID.randomUUID().toString();
     var auth = createAuthorization(regClientId);
     var entity = Instancio.of(AuthorizationEntity.class)

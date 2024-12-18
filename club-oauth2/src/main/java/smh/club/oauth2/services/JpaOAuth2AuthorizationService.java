@@ -95,7 +95,7 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
 
   private OAuth2Authorization toAuth(AuthorizationEntity entity) {
     // Check a matching client registration exists for the authorization
-    var exists = this.registeredClientRepository.existsById(entity.getRegisteredClientId());;
+    var exists = this.registeredClientRepository.existsById(entity.getRegisteredClientId());
     if (!exists) {
       throw new DataRetrievalFailureException(
           "The RegisteredClient with id '" + entity.getRegisteredClientId()

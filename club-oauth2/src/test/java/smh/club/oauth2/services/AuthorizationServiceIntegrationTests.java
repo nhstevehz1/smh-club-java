@@ -28,7 +28,6 @@ import smh.club.oauth2.domain.models.OAuth2AuthorizationEx;
 import smh.club.oauth2.domain.models.TokenType;
 import smh.club.oauth2.domain.repos.AuthorizationRepository;
 import smh.club.oauth2.domain.repos.ClientRepository;
-import smh.club.oauth2.domain.repos.TokenRepository;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
@@ -58,8 +57,6 @@ public class AuthorizationServiceIntegrationTests {
 
   @Autowired
   private AuthorizationMapper mapper;
-  @Autowired
-  private TokenRepository tokenRepository;
 
   @Test
   public void save_success() {
@@ -225,7 +222,6 @@ public class AuthorizationServiceIntegrationTests {
     // setup
     var auth = createAuthorization(UUID.randomUUID().toString());
     var authEntity = createAuthorizationEntity(auth);
-    var rc = createClientEntity(auth);
     var tokenType = new OAuth2TokenType(tokenTypeEnum.getParamName());
     var tokenValue = Objects.requireNonNull(auth.getToken(tokenTypeEnum.getClazz())).getToken().getTokenValue();
 
@@ -241,7 +237,6 @@ public class AuthorizationServiceIntegrationTests {
     // setup
     var auth = createAuthorization(UUID.randomUUID().toString());
     var authEntity = createAuthorizationEntity(auth);
-    var rc = createClientEntity(auth);
     var tokenType = new OAuth2TokenType(tokenTypeEnum.getParamName());
     var tokenValue = Objects.requireNonNull(auth.getToken(tokenTypeEnum.getClazz())).getToken().getTokenValue();
 
