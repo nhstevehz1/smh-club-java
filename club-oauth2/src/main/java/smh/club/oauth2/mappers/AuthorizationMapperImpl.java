@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationCode;
 import org.springframework.stereotype.Component;
-import smh.club.oauth2.contracts.AuthorizationMapper;
+import smh.club.oauth2.contracts.mappers.AuthorizationMapper;
 import smh.club.oauth2.domain.entities.AuthorizationEntity;
 import smh.club.oauth2.domain.entities.TokenEntity;
 import smh.club.oauth2.domain.models.OAuth2AuthorizationEx;

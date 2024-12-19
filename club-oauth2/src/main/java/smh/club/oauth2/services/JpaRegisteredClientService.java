@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import smh.club.oauth2.contracts.RegisteredClientMapper;
+import smh.club.oauth2.contracts.mappers.RegisteredClientMapper;
 import smh.club.oauth2.domain.repos.ClientRepository;
 
 @RequiredArgsConstructor
@@ -38,7 +38,6 @@ public class JpaRegisteredClientService implements RegisteredClientRepository {
   public RegisteredClient findByClientId(String clientId) {
     Assert.hasText(clientId, "clientId cannot be empty");
     var entity = clientRepository.findByClientId(clientId);
-    var rc = entity.map(mapper::toRegisteredClient).orElse(null);
-    return rc;
+    return entity.map(mapper::toRegisteredClient).orElse(null);
   }
 }

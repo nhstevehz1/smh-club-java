@@ -19,7 +19,7 @@ import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name ="`client`", schema = "`auth`")
+@Table(name ="client", schema = "auth")
 public class ClientEntity {
 
   @Id

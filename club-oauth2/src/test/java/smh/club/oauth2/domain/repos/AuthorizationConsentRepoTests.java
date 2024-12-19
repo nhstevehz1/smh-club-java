@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("tests")
 @Transactional
 @ExtendWith(InstancioExtension.class)
+// Can't use @DataJpaTest due to some converters need an injected ObjectMapper
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureEmbeddedDatabase(
     provider = ZONKY,
@@ -38,7 +39,6 @@ public class AuthorizationConsentRepoTests {
           .set(Keys.COLLECTION_MAX_SIZE, 2)
           .set(Keys.COLLECTION_MIN_SIZE, 2)
           .set(Keys.JPA_ENABLED, true);
-
 
   @Test
   public void find_by_client_id_and_principal_name() {
