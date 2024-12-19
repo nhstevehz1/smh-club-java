@@ -1,5 +1,6 @@
 package smh.club.oauth2.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,6 +42,7 @@ public class UserDetailsEntity implements UserDetails {
   @Builder.Default
   private boolean enabled = false;
 
+  @JsonManagedReference
   @Builder.Default
   @OneToMany(
       mappedBy = "userDetails",

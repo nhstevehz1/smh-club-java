@@ -1,5 +1,6 @@
 package smh.club.oauth2.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +22,7 @@ public class GrantedAuthorityEntity implements GrantedAuthority {
   @Column(nullable = false, length = 20)
   String authority;
 
+  @JsonBackReference
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   @ManyToOne(fetch = FetchType.EAGER)

@@ -1,4 +1,4 @@
-package smh.club.oauth2.config;
+package smh.club.oauth2;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.io.IOException;
