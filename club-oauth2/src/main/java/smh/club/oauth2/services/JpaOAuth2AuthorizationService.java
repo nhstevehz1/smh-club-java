@@ -35,11 +35,12 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
     Assert.notNull(authorization, "authorization cannot be null");
 
     // Update the authorization if it exists, otherwise save the new one.
-    var authEntity = authorizationRepository.findById(authorization.getId())
-        .map(a -> mapper.update(authorization, a))
-        .orElse(mapper.toEntity(authorization));
-
-    this.authorizationRepository.save(authEntity);
+    var authEntity = authorizationRepository.findById(authorization.getId());
+    if (authEntity.isPresent()) {
+      this.authorizationRepository.save(mapper.update(authorization, authEntity.get()));
+    } else {
+      this.authorizationRepository.save(mapper.toEntity(authorization));
+    }
   }
 
   /**
@@ -87,7 +88,7 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
 
     if(isStateTokenType(tokenType)) {
       return authorizationRepository.findByState(token).map(this::toAuth).orElse(null);
-    } else if (TokenType.containsParamName(tokenType.getValue())){
+    } else if (tokenType != null && TokenType.containsParamName(tokenType.getValue())){
       var tokenTypeEnum = TokenType.getByParamName(tokenType.getValue());
       var auth = authorizationRepository.findByTokensTokenTypeAndTokensTokenValue(tokenTypeEnum, token);
       return auth.map(this::toAuth).orElse(null);

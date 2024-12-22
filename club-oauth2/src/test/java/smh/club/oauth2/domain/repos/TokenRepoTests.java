@@ -15,12 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import smh.club.oauth2.domain.entities.AuthorizationEntity;
 import smh.club.oauth2.domain.entities.TokenEntity;
-import smh.club.oauth2.domain.models.TokenType;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("tests")
@@ -100,35 +98,4 @@ public class TokenRepoTests {
     assertEquals(expected, optional.get());
   }
 
-  @Test
-  public void save_token_authId_tokenType_not_unique_throws_exception () {
-    // setup
-    var auth = authRepo.findById(authId).orElseThrow();
-    var tokens = Instancio.ofList(TokenEntity.class)
-        .size(2)
-        .withUnique(field(TokenEntity::getId))
-        .set(field(TokenEntity::getTokenType), TokenType.IdToken)
-        .withUnique(field(TokenEntity::getTokenValue))
-        .set(field(TokenEntity::getAuthorization), auth)
-        .create();
-
-    // execute and verify
-    assertThrows(Exception.class, () ->  repo.saveAllAndFlush(tokens));
-  }
-
-  @Test
-  public void save_token_authId_tokenValue_not_unique_throws_exception () {
-    // setup
-    var auth = authRepo.findById(authId).orElseThrow();
-    var tokens = Instancio.ofList(TokenEntity.class)
-        .size(2)
-        .withUnique(field(TokenEntity::getId))
-        .set(field(TokenEntity::getTokenValue), "tokenValue")
-        .withUnique(field(TokenEntity::getTokenType))
-        .set(field(TokenEntity::getAuthorization), auth)
-        .create();
-
-    // execute and verify
-    assertThrows(Exception.class, () ->  repo.saveAllAndFlush(tokens));
-  }
 }

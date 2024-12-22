@@ -141,8 +141,6 @@ public class DynamicClientRegistrationIntegrationTests {
     assertFalse(registerResponse.get("registration_access_token").asText().isBlank());
     assertFalse(registerResponse.get("registration_client_uri").asText().isBlank());
 
-
-
   }
 
   private ObjectNode getDiscoveryInfo(String discoveryEndpoint) {
