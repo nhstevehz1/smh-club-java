@@ -22,7 +22,7 @@ import smh.club.oauth2.domain.entities.AuthorizationEntity;
 import smh.club.oauth2.domain.entities.TokenEntity;
 import smh.club.oauth2.domain.models.OAuth2AuthorizationEx;
 import smh.club.oauth2.domain.models.TokenType;
-import smh.club.oauth2.utils.TestUtils;
+import smh.club.oauth2.helpers.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -6,4 +6,5 @@ import smh.club.oauth2.domain.entities.AuthorizationEntity;
 public interface AuthorizationMapper {
   OAuth2Authorization toAuthorization(AuthorizationEntity entity);
   AuthorizationEntity toEntity(OAuth2Authorization authorization);
+  AuthorizationEntity update(OAuth2Authorization authorization, AuthorizationEntity entity);
 }

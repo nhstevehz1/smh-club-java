@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import smh.club.oauth2.contracts.mappers.AuthorizationMapper;
 import smh.club.oauth2.domain.entities.AuthorizationEntity;
+import smh.club.oauth2.domain.models.TokenType;
 import smh.club.oauth2.domain.repos.AuthorizationRepository;
 import smh.club.oauth2.domain.repos.ClientRepository;
-import smh.club.oauth2.domain.repos.TokenRepository;
 
 @RequiredArgsConstructor
 @Profile("prod")
@@ -23,7 +23,6 @@ import smh.club.oauth2.domain.repos.TokenRepository;
 public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService {
   private final AuthorizationRepository authorizationRepository;
   private final ClientRepository registeredClientRepository;
-  private final TokenRepository tokenRepository;
   private final AuthorizationMapper mapper;
 
   /**
@@ -34,8 +33,13 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
   @Override
   public void save(OAuth2Authorization authorization) {
     Assert.notNull(authorization, "authorization cannot be null");
-    var entity = mapper.toEntity(authorization);
-    this.authorizationRepository.save(entity);
+
+    // Update the authorization if it exists, otherwise save the new one.
+    var authEntity = authorizationRepository.findById(authorization.getId())
+        .map(a -> mapper.update(authorization, a))
+        .orElse(mapper.toEntity(authorization));
+
+    this.authorizationRepository.save(authEntity);
   }
 
   /**
@@ -83,9 +87,13 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
 
     if(isStateTokenType(tokenType)) {
       return authorizationRepository.findByState(token).map(this::toAuth).orElse(null);
+    } else if (TokenType.containsParamName(tokenType.getValue())){
+      var tokenTypeEnum = TokenType.getByParamName(tokenType.getValue());
+      var auth = authorizationRepository.findByTokensTokenTypeAndTokensTokenValue(tokenTypeEnum, token);
+      return auth.map(this::toAuth).orElse(null);
     } else {
-      var tokenEntity = tokenRepository.findByTokenValue(token);
-      return tokenEntity.map(t -> toAuth(t.getAuthorization())).orElse(null);
+      var auth = authorizationRepository.findByTokensTokenValue(token);
+      return auth.map(this::toAuth).orElse(null);
     }
   }
 
@@ -96,12 +104,13 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
   private OAuth2Authorization toAuth(AuthorizationEntity entity) {
     // Check a matching client registration exists for the authorization
     var exists = this.registeredClientRepository.existsById(entity.getRegisteredClientId());
-    if (!exists) {
+
+    if (exists) {
+      return this.mapper.toAuthorization(entity);
+    } else {
       throw new DataRetrievalFailureException(
           "The RegisteredClient with id '" + entity.getRegisteredClientId()
               + "' was not found in the RegisteredClientRepository.");
-    } else {
-      return this.mapper.toAuthorization(entity);
     }
   }
 }

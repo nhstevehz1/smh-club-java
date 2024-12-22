@@ -1,4 +1,4 @@
-package smh.club.oauth2.utils;
+package smh.club.oauth2.helpers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
@@ -44,6 +45,7 @@ public class AuthServerConfig {
         OAuth2AuthorizationServerConfigurer.authorizationServer();
 
     http
+        .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize ->
             authorize
                 .requestMatchers("/jwks", "/logged-out").permitAll()
@@ -53,7 +55,10 @@ public class AuthServerConfig {
         .with(authorizationServerConfigurer, (authorizationServer) ->
             authorizationServer
                 // use oidc defaults
-                .oidc(Customizer.withDefaults()) // Enable OpenID Connect 1.0
+                //.oidc(Customizer.withDefaults()) // Enable OpenID Connect 1.0
+                .oidc((oidc) ->
+                    oidc.clientRegistrationEndpoint(Customizer.withDefaults())
+                )
         )
         // Redirect to the login page when not authenticated from the
         // authorization endpoint
