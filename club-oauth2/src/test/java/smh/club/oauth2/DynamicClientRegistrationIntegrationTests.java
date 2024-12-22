@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -69,12 +68,12 @@ public class DynamicClientRegistrationIntegrationTests {
   }
 
   @BeforeEach
-  public void setup(ApplicationContext context) {
+  public void setup() {
     addRegistrarClientToDb();
   }
 
   @Test
-  public void whenGetDiscoveryDoc_return_discoveryDoc() throws Exception {
+  public void whenGetDiscoveryDoc_return_discoveryDoc() {
 
     var discoveryEndpoint = "http://localhost:" + port + "/.well-known/openid-configuration";
 
@@ -95,11 +94,10 @@ public class DynamicClientRegistrationIntegrationTests {
     // resolve endpoints from the returned discovery doc
     var tokenEndpoint = discoveryInfo.get("token_endpoint").asText();
     var registrationEndpoint = discoveryInfo.get("registration_endpoint").asText();
-    var authorizationEndpoint = discoveryInfo.get("authorization_endpoint").asText();
 
     // get registration token
     var tokenResponse = getRegistrationToken(tokenEndpoint);
-    var token = tokenResponse.get("access_token").asText();;
+    var token = tokenResponse.get("access_token").asText();
     assertFalse(token.isBlank());
 
     // register client
@@ -157,7 +155,7 @@ public class DynamicClientRegistrationIntegrationTests {
               .extract().body().as(ObjectNode.class);
   }
 
-  private ObjectNode getRegistrationToken(String endpoint) throws Exception {
+  private ObjectNode getRegistrationToken(String endpoint) {
 
    return
         given()
@@ -189,7 +187,7 @@ public class DynamicClientRegistrationIntegrationTests {
           .extract().body().as(ObjectNode.class);
   }
 
-  public ObjectNode retrieveClient(String registrationAccessToken, String clientUri) throws Exception {
+  public ObjectNode retrieveClient(String registrationAccessToken, String clientUri) {
 
     var header = new Header("Authorization", "Bearer " + registrationAccessToken);
 
