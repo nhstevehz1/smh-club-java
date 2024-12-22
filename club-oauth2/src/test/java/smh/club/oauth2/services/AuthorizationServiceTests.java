@@ -70,7 +70,7 @@ public class AuthorizationServiceTests {
           .set(Keys.JPA_ENABLED, true);
 
   @Test
-  public void save_authorization() {
+  public void save_authorization_authorization_doesnt_exist() {
     // setup
     var auth = createAuthorization(UUID.randomUUID().toString());
     var entity = Instancio.of(AuthorizationEntity.class)
@@ -78,6 +78,7 @@ public class AuthorizationServiceTests {
         .set(field(AuthorizationEntity::getRegisteredClientId), auth.getRegisteredClientId())
         .create();
 
+    when(authRepoMock.findById(auth.getId())).thenReturn(Optional.empty());
     when(mapperMock.toEntity(auth)).thenReturn(entity);
     when(authRepoMock.save(entity)).thenReturn(entity);
 
@@ -85,9 +86,33 @@ public class AuthorizationServiceTests {
     service.save(auth);
 
     // verify
+    verify(authRepoMock).findById(auth.getId());
     verify(authRepoMock).save(entity);
     verify(mapperMock).toEntity(auth);
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
+  }
+
+  @Test
+  public void save_authorization_authorization_exists() {
+    // setup
+    var auth = createAuthorization(UUID.randomUUID().toString());
+    var entity = Instancio.of(AuthorizationEntity.class)
+        .set(field(AuthorizationEntity::getId), auth.getId())
+        .set(field(AuthorizationEntity::getRegisteredClientId), auth.getRegisteredClientId())
+        .create();
+
+    when(authRepoMock.findById(auth.getId())).thenReturn(Optional.of(entity));
+    when(mapperMock.update(auth, entity)).thenReturn(entity);
+    when(authRepoMock.save(entity)).thenReturn(entity);
+
+    // execute
+    service.save(auth);
+
+    // verify
+    verify(authRepoMock).findById(auth.getId());
+    verify(authRepoMock).save(entity);
+    verify(mapperMock).update(auth, entity);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   @Test
@@ -101,7 +126,7 @@ public class AuthorizationServiceTests {
 
     // verify
     verify(authRepoMock).deleteById(auth.getId());
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   @Test
@@ -126,7 +151,7 @@ public class AuthorizationServiceTests {
     verify(authRepoMock).findById(id);
     verify(clientRepoMock).existsById(auth.getRegisteredClientId());
     verify(mapperMock).toAuthorization(entity);
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   @Test
@@ -143,13 +168,12 @@ public class AuthorizationServiceTests {
     when(authRepoMock.findById(id)).thenReturn(Optional.ofNullable(entity));
     when(clientRepoMock.existsById(auth.getRegisteredClientId())).thenReturn(false);
 
-
     // execute and verify
     assertThrows(DataRetrievalFailureException.class, () -> service.findById(id));
 
     verify(authRepoMock).findById(id);
     verify(clientRepoMock).existsById(auth.getRegisteredClientId());
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   @Test
@@ -176,7 +200,7 @@ public class AuthorizationServiceTests {
     verify(authRepoMock).findByState(state);
     verify(clientRepoMock).existsById(auth.getRegisteredClientId());
     verify(mapperMock).toAuthorization(entity);
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   @Test
@@ -191,16 +215,12 @@ public class AuthorizationServiceTests {
 
     assertNull(ret);
     verify(authRepoMock).findByState(tokenValue);
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   @ParameterizedTest
-  /*@ValueSource(strings = {
-      OAuth2ParameterNames.CODE, OAuth2ParameterNames.ACCESS_TOKEN,
-      OAuth2ParameterNames.REFRESH_TOKEN, OidcParameterNames.ID_TOKEN,
-      OAuth2ParameterNames.USER_CODE, OAuth2ParameterNames.DEVICE_CODE})*/
   @EnumSource(TokenType.class)
-  public void find_by_token_tokenType_is_other_returns_auth(TokenType tokenTypeEnum) {
+  public void find_by_token_returns_auth(TokenType tokenTypeEnum) {
     // setup
     var client = createClient();
     var auth = createAuthorization(client.getId());
@@ -208,12 +228,14 @@ public class AuthorizationServiceTests {
         .set(field(AuthorizationEntity::getId), auth.getId())
         .set(field(AuthorizationEntity::getRegisteredClientId), client.getId())
         .create();
+
     // token type doesn't matter as long as there is an authorization attached to it.
     var token = Instancio.of(TokenEntity.class)
         .set(field(TokenEntity::getAuthorization), entity)
         .create();
 
-    when(tokenRepoMock.findByTokenValue(token.getTokenValue())).thenReturn(Optional.of(token));
+    when(authRepoMock.findByTokensTokenTypeAndTokensTokenValue(tokenTypeEnum, token.getTokenValue()))
+        .thenReturn(Optional.of(entity));
     when(clientRepoMock.existsById(auth.getRegisteredClientId())).thenReturn(true);
     when(mapperMock.toAuthorization(entity)).thenReturn(auth);
 
@@ -223,10 +245,10 @@ public class AuthorizationServiceTests {
     var ret = service.findByToken(token.getTokenValue(), tokenType);
 
     assertNotNull(ret);
-    verify(tokenRepoMock).findByTokenValue(token.getTokenValue());
+    verify(authRepoMock).findByTokensTokenTypeAndTokensTokenValue(tokenTypeEnum, token.getTokenValue());
     verify(clientRepoMock).existsById(auth.getRegisteredClientId());
     verify(mapperMock).toAuthorization(entity);
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   @Test
@@ -238,12 +260,13 @@ public class AuthorizationServiceTests {
         .set(field(AuthorizationEntity::getId), auth.getId())
         .set(field(AuthorizationEntity::getRegisteredClientId), client.getId())
         .create();
+
     // token type doesn't matter as long as there is an authorization attached to it.
     var token = Instancio.of(TokenEntity.class)
         .set(field(TokenEntity::getAuthorization), entity)
         .create();
 
-    when(tokenRepoMock.findByTokenValue(token.getTokenValue())).thenReturn(Optional.of(token));
+    when(authRepoMock.findByTokensTokenValue(token.getTokenValue())).thenReturn(Optional.of(entity));
     when(clientRepoMock.existsById(auth.getRegisteredClientId())).thenReturn(true);
     when(mapperMock.toAuthorization(entity)).thenReturn(auth);
 
@@ -253,10 +276,10 @@ public class AuthorizationServiceTests {
     var ret = service.findByToken(token.getTokenValue(), tokenType);
 
     assertNotNull(ret);
-    verify(tokenRepoMock).findByTokenValue(token.getTokenValue());
+    verify(authRepoMock).findByTokensTokenValue(token.getTokenValue());
     verify(clientRepoMock).existsById(auth.getRegisteredClientId());
     verify(mapperMock).toAuthorization(entity);
-    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock, tokenRepoMock);
+    verifyNoMoreInteractions(authRepoMock, mapperMock, tokenRepoMock);
   }
 
   private OAuth2Authorization createAuthorization(String regClientId) {

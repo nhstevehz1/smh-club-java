@@ -54,4 +54,9 @@ public class AuthorizationEntity {
     tokenEntity.setAuthorization(this);
     this.tokens.add(tokenEntity);
   }
+
+  public void removeTokenEntity(TokenEntity tokenEntity) {
+    this.tokens.remove(tokenEntity);
+    tokenEntity.setAuthorization(null);
+  }
 }

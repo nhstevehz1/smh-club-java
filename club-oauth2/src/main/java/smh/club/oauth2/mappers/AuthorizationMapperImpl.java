@@ -125,19 +125,39 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         .build();
 
     Arrays.stream(TokenType.values()).forEach(tokenType -> {
-      var tokenEntity = getTokenEntity(auth.getToken(tokenType.getClazz()), tokenType);
+      var tokenEntity = mapToken(auth.getToken(tokenType.getClazz()), tokenType);
       tokenEntity.ifPresent(entity::addTokenEntity);
     });
 
     return entity;
   }
 
-  private <T extends OAuth2Token> Optional<TokenEntity> getTokenEntity(OAuth2Authorization.Token<T> token,
-                                                                       TokenType tokenType) {
-    //var token = auth.getToken(clazz);
+  @Override
+  public AuthorizationEntity update(OAuth2Authorization auth, AuthorizationEntity entity) {
+    // only the token values should have changed
+    Arrays.stream(TokenType.values()).forEach(tokenType -> {
+      // map the token to TokenEntity
+      var tokenEntity = mapToken(auth.getToken(tokenType.getClazz()), tokenType);
+
+      // Continue if the token exists in the authorization
+      tokenEntity.ifPresent(updated -> {
+        // get the matching token in the original Authorization entity
+        var original = entity.getTokens().stream().
+            filter(t -> t.getTokenType() == tokenType).findFirst();
+        // if the original AuthorizationEntity contains the token type, then update it.
+        // Otherwise, add the token to the AuthenticationEntity
+        original.ifPresent(entity::removeTokenEntity);
+        entity.addTokenEntity(updated);
+      });
+    });
+
+    return entity;
+  }
+
+  private <T extends OAuth2Token> Optional<TokenEntity> mapToken(OAuth2Authorization.Token<T> token,
+                                                                 TokenType tokenType) {
     if (token != null) {
       var entity = TokenEntity.builder()
-          //.id(UUID.randomUUID().toString())
           .tokenType(tokenType)
           .build();
 

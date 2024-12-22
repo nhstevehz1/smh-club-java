@@ -60,9 +60,9 @@ public class AuthorizationRepoTests {
     });
 
     var expected = list.get(3);
+    repo.saveAllAndFlush(list);
 
     // execute
-    repo.saveAllAndFlush(list);
     var entity =  repo.findByState(expected.getState());
 
     assertTrue(entity.isPresent());
@@ -75,6 +75,69 @@ public class AuthorizationRepoTests {
     assertEquals(expected.getAuthorizedScopes(), actual.getAuthorizedScopes());
     assertEquals(expected.getAttributes(), actual.getAttributes());
     assertEquals(expected.getTokens(), actual.getTokens());
+  }
+
+  @Test
+  public void find_by_token_type_and_token_value() {
+    // setup
+    var list = Instancio.ofList(AuthorizationEntity.class)
+        .size(5)
+        .generate(field(AuthorizationEntity::getId), g -> g.string().upperCase().length(10))
+        .generate(field(AuthorizationEntity::getTokens), g -> g.collection().size(0))
+        .create();
+
+    list.forEach(a -> {
+      var tokens = Instancio.ofList(TokenEntity.class)
+          .withUnique(field(TokenEntity::getId))
+          .ignore(field(TokenEntity::getAuthorization))
+          .withUnique(field(TokenEntity::getTokenType))
+          .withUnique(field(TokenEntity::getTokenValue))
+          .create();
+      tokens.forEach(a::addTokenEntity);
+    });
+
+    var expected = list.get(3);
+    repo.saveAllAndFlush(list);
+
+    // execute
+    for (TokenEntity token : expected.getTokens()) {
+      var auth = repo.findByTokensTokenTypeAndTokensTokenValue(token.getTokenType(), token.getTokenValue());
+
+      assertTrue(auth.isPresent());
+      assertEquals(expected, auth.get());
+    }
+
+  }
+
+  @Test
+  public void find_by_token_value() {
+    // setup
+    var list = Instancio.ofList(AuthorizationEntity.class)
+        .size(5)
+        .generate(field(AuthorizationEntity::getId), g -> g.string().upperCase().length(10))
+        .generate(field(AuthorizationEntity::getTokens), g -> g.collection().size(0))
+        .create();
+
+    list.forEach(a -> {
+      var tokens = Instancio.ofList(TokenEntity.class)
+          .withUnique(field(TokenEntity::getId))
+          .ignore(field(TokenEntity::getAuthorization))
+          .withUnique(field(TokenEntity::getTokenType))
+          .withUnique(field(TokenEntity::getTokenValue))
+          .create();
+      tokens.forEach(a::addTokenEntity);
+    });
+
+    var expected = list.get(3);
+    repo.saveAllAndFlush(list);
+
+    // execute
+    for (TokenEntity token : expected.getTokens()) {
+      var auth = repo.findByTokensTokenValue(token.getTokenValue());
+
+      assertTrue(auth.isPresent());
+      assertEquals(expected, auth.get());
+    }
   }
 
 }
