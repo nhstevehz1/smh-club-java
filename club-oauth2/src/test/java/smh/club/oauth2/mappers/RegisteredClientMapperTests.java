@@ -1,9 +1,9 @@
 package smh.club.oauth2.mappers;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
@@ -19,13 +19,15 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import smh.club.oauth2.domain.entities.ClientEntity;
+import smh.club.oauth2.helpers.OAuth2MapperTestBase;
+import smh.club.oauth2.helpers.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(InstancioExtension.class)
-public class RegisteredClientMapperTests {
+public class RegisteredClientMapperTests extends OAuth2MapperTestBase {
 
   private RegisteredClientMapperImpl clientMapper;
 
@@ -36,7 +38,7 @@ public class RegisteredClientMapperTests {
 
   @BeforeEach
   void setup() {
-    clientMapper = new RegisteredClientMapperImpl();
+    clientMapper = new RegisteredClientMapperImpl(TestUtils.getObjectMapper());
   }
 
   @Test
@@ -79,13 +81,16 @@ public class RegisteredClientMapperTests {
     assertTrue(rc.getPostLogoutRedirectUris().containsAll(entity.getPostLogoutRedirectUris()));
     assertTrue(rc.getScopes().containsAll(entity.getScopes()));
 
-    assertEquals(rc.getClientSettings().getSettings().entrySet(), entity.getClientSettings().entrySet());
-    assertEquals(rc.getTokenSettings().getSettings().entrySet(), entity.getTokenSettings().entrySet());
+    assertEquals(rc.getClientSettings().getSettings().entrySet(), parseMap(entity.getClientSettings()).entrySet());
+    assertEquals(rc.getTokenSettings().getSettings().entrySet(), parseMap(entity.getTokenSettings()).entrySet());
   }
 
   @Test
   public void from_clientEntity_to_registeredClient() {
     // setup
+    var tokenSettings = Instancio.ofMap(String.class, Object.class).size(5).create();
+    var clientSettings = Instancio.ofMap(String.class, Object.class).size(5).create();
+
     var entity = ClientEntity.builder()
         .id(String.valueOf(UUID.randomUUID()))
         .clientId("messaging-client")
@@ -98,8 +103,8 @@ public class RegisteredClientMapperTests {
         .redirectUris(Set.of("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc"))
         .postLogoutRedirectUris(Set.of("http://127.0.0.1:8080/logged-out"))
         .scopes(Set.of(OidcScopes.OPENID, OidcScopes.PROFILE))
-        .clientSettings(Map.of("xyx","xyz"))
-        .tokenSettings(Map.of("xyx","xyz"))
+        .clientSettings(writeMap(clientSettings))
+        .tokenSettings(writeMap(tokenSettings))
         .build();
 
     // execute
@@ -117,7 +122,7 @@ public class RegisteredClientMapperTests {
     assertEquals(entity.getRedirectUris(), rc.getRedirectUris());
     assertEquals(entity.getPostLogoutRedirectUris(), rc.getPostLogoutRedirectUris());
     assertEquals(entity.getScopes(), rc.getScopes());
-    assertEquals(entity.getClientSettings().entrySet(), rc.getClientSettings().getSettings().entrySet());
-    assertEquals(entity.getTokenSettings().entrySet(), rc.getTokenSettings().getSettings().entrySet());
+    assertEquals(parseMap(entity.getClientSettings()).entrySet(), rc.getClientSettings().getSettings().entrySet());
+    assertEquals(parseMap(entity.getTokenSettings()).entrySet(), rc.getTokenSettings().getSettings().entrySet());
   }
 }

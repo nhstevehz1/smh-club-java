@@ -2,9 +2,10 @@ package smh.club.oauth2.domain.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import lombok.*;
-import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 import smh.club.oauth2.domain.models.TokenType;
 
 @Data
@@ -32,15 +33,17 @@ public class TokenEntity {
 
   private Instant expiresAt;
 
-  @Builder.Default
-  @Convert(converter = StringObjectMapConverter.class)
-  @Column(length = 1000)
-  private Map<String, Object> metadata = new HashMap<>();
+  //@Builder.Default
+  //@Convert(converter = StringObjectMapConverter.class)
+  @Column(nullable = false, length = 1000)
+  //private Map<String, Object> metadata = new HashMap<>();
+  private String metadata;
 
-  @Builder.Default
-  @Convert(converter = StringObjectMapConverter.class)
+  //@Builder.Default
+  //@Convert(converter = StringObjectMapConverter.class)
   @Column(length = 1000)
-  private Map<String, Object> claims = new HashMap<>();
+  //private Map<String, Object> claims = new HashMap<>();
+  private String claims;
 
   @Builder.Default
   @ElementCollection(fetch = FetchType.EAGER)

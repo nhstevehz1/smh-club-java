@@ -1,11 +1,10 @@
 package smh.club.oauth2.mappers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
+import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
@@ -22,13 +21,14 @@ import smh.club.oauth2.domain.entities.AuthorizationEntity;
 import smh.club.oauth2.domain.entities.TokenEntity;
 import smh.club.oauth2.domain.models.OAuth2AuthorizationEx;
 import smh.club.oauth2.domain.models.TokenType;
+import smh.club.oauth2.helpers.OAuth2MapperTestBase;
 import smh.club.oauth2.helpers.TestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(InstancioExtension.class)
-public class AuthorizationMapperTests {
+public class AuthorizationMapperTests extends OAuth2MapperTestBase {
 
   private AuthorizationMapperImpl mapper;
 
@@ -41,7 +41,7 @@ public class AuthorizationMapperTests {
 
   @BeforeEach
   public void setup() {
-    mapper = new AuthorizationMapperImpl(objMapper);
+    mapper = new AuthorizationMapperImpl(TestUtils.getObjectMapper());
   }
 
   @Test
@@ -82,11 +82,17 @@ public class AuthorizationMapperTests {
 
   private TokenEntity createTokenEntity(TokenType tokenType) {
 
+    var metadataMap = new HashMap<String, Object>();
+    metadataMap.put("string", "string");
+    metadataMap.put("boolean", true);
+    metadataMap.put("integer", 1);
+
     var token = TokenEntity.builder()
         .tokenType(tokenType)
         .tokenValue(tokenType.name())
         .issuedAt(Instant.now())
         .expiresAt(Instant.now().plusSeconds(60))
+        .metadata(writeMap(metadataMap))
         .build();
 
     if (tokenType == TokenType.AccessToken) {
@@ -99,7 +105,7 @@ public class AuthorizationMapperTests {
       map.put("boolean", true);
       map.put("integer", 1);
       map.put("state", "state");
-      token.setClaims(map);
+      token.setClaims(writeMap(Collections.unmodifiableMap(map)));
     }
 
     return token;
@@ -125,11 +131,9 @@ public class AuthorizationMapperTests {
     }
 
     if (actual instanceof OidcIdToken idToken) {
-      assertEquals(expected.getClaims(), idToken.getClaims());
+      assertEquals(expected.getClaims(), writeMap(idToken.getClaims()));
     }
   }
-
-
 
   @Test
   public void from_authorization_to_entity() {
@@ -175,7 +179,7 @@ public class AuthorizationMapperTests {
     }
 
     if (expected.getToken() instanceof OidcIdToken token) {
-      assertEquals(token.getClaims(), actual.getClaims());
+      assertEquals(token.getClaims(), parseMap(actual.getClaims()));
     }
   }
 
@@ -187,45 +191,27 @@ public class AuthorizationMapperTests {
   private List<OAuth2Token> createTokens(){
 
     var list = new ArrayList<OAuth2Token>();
-    list.add(new OAuth2UserCode("oauth2userCode",
-        Instant.now(), Instant.now().plusSeconds(120)));
+    var issuedAt = Instancio.create(Instant.class);
+    var expiresAt = issuedAt.plusSeconds(120);
 
-    list.add(new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "oauthAccessToken", Instant.now(),
-        Instant.now().plusSeconds(120), Set.of("scope1", "scope2")));
+    list.add(new OAuth2UserCode("oauth2userCode", issuedAt, expiresAt));
 
-    list.add(new OAuth2RefreshToken("oath2RefreshToken", Instant.now(),
-        Instant.now().plusSeconds(120)));
+    list.add(new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "oauthAccessToken",
+        issuedAt, expiresAt, Set.of("scope1", "scope2")));
 
-    list.add(new OAuth2AuthorizationCode("oauth2AuthToken", Instant.now(),
-        Instant.now().plusSeconds(120) ));
+    list.add(new OAuth2RefreshToken("oath2RefreshToken", issuedAt, expiresAt));
 
-    list.add(new OAuth2DeviceCode("oauth2DeviceCode", Instant.now(),
-        Instant.now().plusSeconds(120)));
+    list.add(new OAuth2AuthorizationCode("oauth2AuthToken", issuedAt, expiresAt));
+
+    list.add(new OAuth2DeviceCode("oauth2DeviceCode", issuedAt, expiresAt));
 
     var oidcToken = OidcIdToken.withTokenValue("oidcToken")
         .tokenValue("oidcToken")
-        .issuedAt(Instant.now())
-        .expiresAt(Instant.now().plusSeconds(120))
+        .issuedAt(issuedAt)
+        .expiresAt(expiresAt)
         .build();
     list.add(oidcToken);
 
     return list;
-  }
-
-  private String writeMap(Map<String, Object> map) {
-    try {
-      return objMapper.writeValueAsString(map);
-    } catch (JsonProcessingException ex) {
-      throw new IllegalArgumentException(ex.getMessage(), ex);
-    }
-  }
-
-  private Map<String, Object> parseMap(String data) {
-    try {
-      return objMapper.readValue(data, new TypeReference<>() {
-      });
-    } catch (Exception ex) {
-      throw new IllegalArgumentException(ex.getMessage(), ex);
-    }
   }
 }

@@ -2,9 +2,7 @@ package smh.club.oauth2.domain.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import smh.club.oauth2.domain.converters.StringObjectMapConverter;
 
 @Data
 @AllArgsConstructor
@@ -39,15 +36,11 @@ public class ClientEntity {
   @Column(nullable = false, length = 50)
   private String clientName;
 
-  @Builder.Default
-  @Convert(converter = StringObjectMapConverter.class)
-  @Column(nullable = false)
-  private Map<String, Object> clientSettings = new HashMap<>();
+  @Column(nullable = false, length = 500)
+  private String clientSettings;
 
-  @Builder.Default
-  @Convert(converter = StringObjectMapConverter.class)
-  @Column(nullable = false)
-  private Map<String, Object> tokenSettings  = new HashMap<>();
+  @Column(nullable = false, length = 1000)
+  private String tokenSettings;
 
   @Builder.Default
   @ElementCollection(fetch = FetchType.EAGER)
