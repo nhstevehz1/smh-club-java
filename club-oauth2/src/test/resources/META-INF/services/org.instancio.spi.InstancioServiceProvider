@@ -1,2 +1,2 @@
-smh.club.oauth2.instancio.StringObjectMapProviderImpl
-smh.club.oauth2.instancio.InstantProviderImpl
+com.smh.club.oauth2.instancio.StringObjectMapProviderImpl
+com.smh.club.oauth2.instancio.InstantProviderImpl
