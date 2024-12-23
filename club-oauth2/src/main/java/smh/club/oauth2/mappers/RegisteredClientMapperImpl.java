@@ -1,9 +1,9 @@
 package smh.club.oauth2.mappers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -15,9 +15,8 @@ import org.springframework.util.Assert;
 import smh.club.oauth2.contracts.mappers.RegisteredClientMapper;
 import smh.club.oauth2.domain.entities.ClientEntity;
 
-@NoArgsConstructor
 @Component
-public class RegisteredClientMapperImpl implements RegisteredClientMapper {
+public class RegisteredClientMapperImpl extends OAuth2MapperBase implements RegisteredClientMapper {
 
   private final Map<String, ClientAuthenticationMethod>  authMethodMap =
     Map.of(
@@ -36,6 +35,10 @@ public class RegisteredClientMapperImpl implements RegisteredClientMapper {
           AuthorizationGrantType.REFRESH_TOKEN.getValue(), AuthorizationGrantType.REFRESH_TOKEN,
           AuthorizationGrantType.CLIENT_CREDENTIALS.getValue(), AuthorizationGrantType.CLIENT_CREDENTIALS
       );
+
+  public RegisteredClientMapperImpl(ObjectMapper mapper) {
+    super(mapper);
+  }
 
   @Override
   public RegisteredClient toRegisteredClient(@NonNull ClientEntity entity) {
@@ -61,15 +64,14 @@ public class RegisteredClientMapperImpl implements RegisteredClientMapper {
         .redirectUris(uris -> uris.addAll(entity.getRedirectUris()))
         .postLogoutRedirectUris(uris -> uris.addAll(entity.getPostLogoutRedirectUris()))
         .scopes(scopes-> scopes.addAll(entity.getScopes()))
-        .clientSettings(ClientSettings.withSettings(entity.getClientSettings()).build())
-        .tokenSettings(TokenSettings.withSettings(entity.getTokenSettings()).build())
+        .clientSettings(ClientSettings.withSettings(parseMap(entity.getClientSettings())).build())
+        .tokenSettings(TokenSettings.withSettings(parseMap(entity.getTokenSettings())).build())
         .build();
   }
 
   @Override
   public ClientEntity toClientEntity(@NonNull RegisteredClient registeredClient) {
     Assert.notNull(registeredClient, "registeredClient cannot be null");
-
 
     return ClientEntity.builder()
         .id(registeredClient.getId())
@@ -83,8 +85,8 @@ public class RegisteredClientMapperImpl implements RegisteredClientMapper {
         .redirectUris(registeredClient.getRedirectUris())
         .postLogoutRedirectUris(registeredClient.getPostLogoutRedirectUris())
         .scopes(registeredClient.getScopes())
-        .clientSettings(registeredClient.getClientSettings().getSettings())
-        .tokenSettings(registeredClient.getTokenSettings().getSettings())
+        .clientSettings(writeMap(registeredClient.getClientSettings().getSettings()))
+        .tokenSettings(writeMap(registeredClient.getTokenSettings().getSettings()))
         .build();
   }
 }

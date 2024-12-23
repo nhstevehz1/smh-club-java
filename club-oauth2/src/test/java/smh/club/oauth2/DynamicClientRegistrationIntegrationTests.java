@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -55,8 +56,11 @@ public class DynamicClientRegistrationIntegrationTests {
   @Autowired
   private UserRepository userRepository;
 
+  private final ObjectMapper mapper;
+
   @Autowired
-  public DynamicClientRegistrationIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
+  public DynamicClientRegistrationIntegrationTests(MockMvc mockMvc, ObjectMapper withOauth2) {
+    this.mapper =  new Jackson2ObjectMapperBuilder().build();
 
     // setup RestAssured to use the MockMvc Context
     RestAssuredMockMvc.mockMvc(mockMvc);
@@ -64,7 +68,7 @@ public class DynamicClientRegistrationIntegrationTests {
     // Configure RestAssured to use the injected Object mapper.
     RestAssuredMockMvc.config =
         RestAssuredMockMvcConfig.config().objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
-            (type, s) -> mapper));
+            (type, s) -> withOauth2));
   }
 
   @BeforeEach
@@ -87,8 +91,8 @@ public class DynamicClientRegistrationIntegrationTests {
 
   @Test
   public void registerClient_dynamically() throws Exception {
-    var discoveryEndpoint = "http://localhost:" + port + "/.well-known/openid-configuration";// setup
-
+    // discover the endpoints
+    var discoveryEndpoint = "http://localhost:" + port + "/.well-known/openid-configuration";
     var discoveryInfo = getDiscoveryInfo(discoveryEndpoint);
 
     // resolve endpoints from the returned discovery doc
@@ -171,7 +175,7 @@ public class DynamicClientRegistrationIntegrationTests {
   public ObjectNode registerClient(String tokenValue, Map<String, Object> request, String registrationEndpoint) throws Exception {
 
     var header = new Header("Authorization", "Bearer " + tokenValue);
-    var body = new ObjectMapper().writeValueAsString(request);
+    var body = mapper.writeValueAsString(request);
 
     return
         given()

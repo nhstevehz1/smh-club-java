@@ -1,14 +1,10 @@
 package smh.club.oauth2.mappers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -21,12 +17,12 @@ import smh.club.oauth2.domain.entities.TokenEntity;
 import smh.club.oauth2.domain.models.OAuth2AuthorizationEx;
 import smh.club.oauth2.domain.models.TokenType;
 
-@RequiredArgsConstructor
 @Component
-public class AuthorizationMapperImpl implements AuthorizationMapper {
+public class AuthorizationMapperImpl extends OAuth2MapperBase implements AuthorizationMapper {
 
-  private final ObjectMapper objMapper;
-
+  public AuthorizationMapperImpl (ObjectMapper mapper) {
+    super(mapper);
+  }
 
   @Override
   public OAuth2Authorization toAuthorization(AuthorizationEntity entity) {
@@ -61,7 +57,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         entity.getTokenValue(),
         entity.getIssuedAt(),
         entity.getExpiresAt());
-    builder.token(token, metadata -> metadata.putAll(entity.getMetadata()));
+    builder.token(token, metadata -> metadata.putAll(parseMap(entity.getMetadata())));
   }
 
   private void addAccessToken(OAuth2Authorization.Builder builder, TokenEntity entity) {
@@ -72,7 +68,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         entity.getExpiresAt(),
         entity.getScopes());
 
-    builder.token(token, metadata -> metadata.putAll(entity.getMetadata()));
+    builder.token(token, metadata -> metadata.putAll(parseMap(entity.getMetadata())));
   }
 
   private void addRefreshToken(OAuth2Authorization.Builder builder, TokenEntity entity) {
@@ -81,7 +77,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         entity.getIssuedAt(),
         entity.getExpiresAt());
 
-    builder.token(token, metadata -> metadata.putAll(entity.getMetadata()));
+    builder.token(token, metadata -> metadata.putAll(parseMap(entity.getMetadata())));
   }
 
   private void addIdToken(OAuth2Authorization.Builder builder, TokenEntity entity) {
@@ -89,8 +85,8 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         entity.getTokenValue(),
         entity.getIssuedAt(),
         entity.getExpiresAt(),
-        entity.getClaims());
-    builder.token(token, metadata -> metadata.putAll(entity.getMetadata()));
+        parseMap(entity.getClaims()));
+    builder.token(token, metadata -> metadata.putAll(parseMap(entity.getMetadata())));
   }
 
   private void addUserCodeToken(OAuth2Authorization.Builder builder, TokenEntity entity) {
@@ -99,7 +95,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         entity.getIssuedAt(),
         entity.getExpiresAt());
 
-    builder.token(token, metadata -> metadata.putAll(entity.getMetadata()));
+    builder.token(token, metadata -> metadata.putAll(parseMap(entity.getMetadata())));
   }
 
   private void addDeviceCodeToken(OAuth2Authorization.Builder builder, TokenEntity entity) {
@@ -108,7 +104,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         entity.getIssuedAt(),
         entity.getExpiresAt());
 
-    builder.token(token, metadata -> metadata.putAll(entity.getMetadata()));
+    builder.token(token, metadata -> metadata.putAll(parseMap(entity.getMetadata())));
   }
 
   @Override
@@ -173,7 +169,7 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
         entity.setScopes(scopes);
       } else if (token.getToken() instanceof OidcIdToken idToken) {
         var claims = idToken.getClaims();
-        entity.setClaims(claims);
+        entity.setClaims(writeMap(claims));
       }
 
       return Optional.of(entity);
@@ -188,31 +184,14 @@ public class AuthorizationMapperImpl implements AuthorizationMapper {
       Consumer<String> tokenValueConsumer,
       Consumer<Instant> issuedAtConsumer,
       Consumer<Instant> expiresAtConsumer,
-      Consumer<Map<String, Object>> metadataConsumer) {
+      Consumer<String> metadataConsumer) {
 
   if (token != null) {
       OAuth2Token oAuth2Token = token.getToken();
       tokenValueConsumer.accept(oAuth2Token.getTokenValue());
       issuedAtConsumer.accept(oAuth2Token.getIssuedAt());
       expiresAtConsumer.accept(oAuth2Token.getExpiresAt());
-      metadataConsumer.accept(token.getMetadata());
-    }
-  }
-
-  private String writeMap(Map<String, Object> map) {
-    try {
-      return objMapper.writeValueAsString(map);
-    } catch (JsonProcessingException ex) {
-      throw new IllegalArgumentException(ex.getMessage(), ex);
-    }
-  }
-
-  private Map<String, Object> parseMap(String data) {
-    try {
-      return this.objMapper.readValue(data, new TypeReference<>() {
-      });
-    } catch (Exception ex) {
-      throw new IllegalArgumentException(ex.getMessage(), ex);
+      metadataConsumer.accept(writeMap(token.getMetadata()));
     }
   }
 }
