@@ -13,7 +13,7 @@ public class OAuth2MapperTestBase {
 
   protected Map<String, Object> parseMap(String data) {
     try {
-      return this.mapper.readValue(data, new TypeReference<Map<String, Object>>() {
+      return this.mapper.readValue(data, new TypeReference<>() {
       });
     } catch (Exception ex) {
       throw new IllegalArgumentException(ex.getMessage(), ex);

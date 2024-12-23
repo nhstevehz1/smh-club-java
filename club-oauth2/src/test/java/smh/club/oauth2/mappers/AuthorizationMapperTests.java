@@ -1,6 +1,5 @@
 package smh.club.oauth2.mappers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
@@ -31,8 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class AuthorizationMapperTests extends OAuth2MapperTestBase {
 
   private AuthorizationMapperImpl mapper;
-
-  private final ObjectMapper objMapper = TestUtils.getObjectMapper();
 
   @WithSettings
   private final Settings settings = Settings.create()
