@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -219,6 +220,9 @@ public class DynamicClientRegistrationIntegrationTests {
       var user = UserDetailsEntity.builder()
           .username("user1")
           .password("{noop}password")
+          .firstName(Instancio.create(String.class))
+          .lastName(Instancio.create(String.class))
+          .email(Instancio.create(String.class))
           .enabled(true)
           .build();
 
