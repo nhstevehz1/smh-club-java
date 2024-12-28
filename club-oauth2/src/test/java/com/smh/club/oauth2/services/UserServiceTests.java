@@ -130,6 +130,7 @@ public class UserServiceTests {
     verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
   }
 
+  @Test
   public void deleteUser_returns_void() {
     // setup
     long id = 100;
@@ -237,6 +238,7 @@ public class UserServiceTests {
     verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
   }
 
+  @Test
   public void addRole_returns_empty() {
     // setup
     var dto = Instancio.create(RoleDto.class);
