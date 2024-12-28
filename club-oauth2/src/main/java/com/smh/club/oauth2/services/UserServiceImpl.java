@@ -4,12 +4,11 @@ import com.smh.club.oauth2.contracts.mappers.UserMapper;
 import com.smh.club.oauth2.contracts.services.UserService;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.domain.repos.UserRepository;
-import com.smh.club.oauth2.dto.ChangePasswordDto;
 import com.smh.club.oauth2.dto.CreateUserDto;
+import com.smh.club.oauth2.dto.RoleDto;
 import com.smh.club.oauth2.dto.UserDetailsDto;
 import com.smh.club.oauth2.dto.UserDto;
 import com.smh.club.oauth2.responses.PagedDto;
-import com.smh.club.oauth2.responses.PasswordChangeResponse;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -61,17 +60,8 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
   }
 
   @Override
-  public PasswordChangeResponse changePassword(long userId, ChangePasswordDto changePasswordDto) {
-    var user = userRepo.findById(userId);
-
-    return user.map(u -> {
-      if ( passwordEncoder.matches(changePasswordDto.getOldPassword(), user.get().getPassword())) {
-        u.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-        return PasswordChangeResponse.success();
-      } else {
-        return PasswordChangeResponse.noPasswordMatch();
-      }
-    }).orElse(PasswordChangeResponse.noUserMatch());
+  public void updatePassword(long userId, String password) {
+    userRepo.updatePassword(userId, passwordEncoder.encode(password));
   }
 
   @Override
@@ -79,6 +69,23 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
     var user = userRepo.findById(id);
     return user.map(u -> userMapper.updateUserEntity(userDetailsDto, u))
         .map(userMapper::toUserDetailsDto);
+  }
+
+  @Override
+  public void deleteRole(long userId, long authId) {
+    userRepo.findById(userId)
+        .ifPresent(u -> u.removeGrantedAuthorityById(authId));
+  }
+
+  @Override
+  public Optional<RoleDto> addRole(long userId, RoleDto roleDto) {
+    return userRepo.findById(userId)
+        .map(u -> {
+          var ga = userMapper.toGrantedAuthorityEntity(roleDto);
+          u.addGrantedAuthority(ga);
+          userRepo.save(u);
+          return userMapper.toRoleDto(ga);
+        });
   }
 
   @Override
