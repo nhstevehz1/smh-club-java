@@ -30,9 +30,8 @@ public class UserMapperImpl implements UserMapper {
   @Override
   public UserDetailsEntity toUserDetailsEntity(CreateUserDto createUserDto) {
     var entity = modelMapper.map(createUserDto, UserDetailsEntity.class);
-    createUserDto.getRoles().forEach( a -> {
-      entity.addGrantedAuthority(modelMapper.map(a, GrantedAuthorityEntity.class));
-    });
+    createUserDto.getRoles().forEach(
+        a -> entity.addGrantedAuthority(modelMapper.map(a, GrantedAuthorityEntity.class)));
     return entity;
   }
 
@@ -49,6 +48,11 @@ public class UserMapperImpl implements UserMapper {
   @Override
   public UserDetailsEntity updateUserEntity(UserDetailsDto userDetailsDto, UserDetailsEntity userEntity) {
     modelMapper.map(userDetailsDto, userEntity);
+    for (GrantedAuthorityEntity grantedAuthorityEntity : userEntity.getAuthorities()) {
+      userEntity.removeGrantedAuthority(grantedAuthorityEntity);
+    }
+    userDetailsDto.getRoles().forEach(
+        r -> userEntity.addGrantedAuthority(modelMapper.map(r, GrantedAuthorityEntity.class)));
     return userEntity;
   }
 
@@ -63,6 +67,11 @@ public class UserMapperImpl implements UserMapper {
         .stream()
         .map(this::toRoleDto)
         .collect(Collectors.toSet());
+  }
+
+  @Override
+  public GrantedAuthorityEntity toGrantedAuthorityEntity(RoleDto roleDto) {
+    return modelMapper.map(roleDto, GrantedAuthorityEntity.class);
   }
 
 }

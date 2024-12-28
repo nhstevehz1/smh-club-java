@@ -13,6 +13,7 @@ import org.instancio.settings.Settings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.domain.PageImpl;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -119,7 +120,29 @@ public class UserMapperTests {
 
   @Test
   public void from_userEntity_page_to_userDto_page() {
+    // setup
+    var entities = Instancio.ofList(UserDetailsEntity.class).size(10).create();
+    var entityPage = new PageImpl<>(entities);
 
+    // execute
+    var dtoPage = userMapper.toPage(entityPage);
+
+    // verify
+    assertNotNull(dtoPage);
+    assertEquals(entityPage.getContent().size(), dtoPage.getContent().size());
+
+    entityPage.getContent().forEach(ue -> {
+      var dto = dtoPage.getContent().stream().filter(userDto -> userDto.getId() == ue.getId()).findFirst();
+      assertTrue(dto.isPresent());
+      dto.ifPresent(u ->{
+        assertEquals(ue.getId(), u.getId());
+        assertEquals(ue.getUsername(), u.getUsername());
+        assertEquals(ue.getEmail(), u.getEmail());
+        assertEquals(ue.getFirstName(), u.getFirstName());
+        assertEquals(ue.getMiddleName(), u.getMiddleName());
+        assertEquals(ue.getLastName(), u.getLastName());
+      });
+    });
   }
 
   @Test
@@ -171,7 +194,7 @@ public class UserMapperTests {
   }
 
   @Test
-  public void from_grantedAuthority_to_userDto(){
+  public void from_grantedAuthority_to_role_set(){
     //setup
     var gaSet =
         Instancio.ofSet(GrantedAuthorityEntity.class)
