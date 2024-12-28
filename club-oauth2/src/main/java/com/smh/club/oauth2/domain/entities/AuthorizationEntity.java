@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "`authorization`", schema = "`auth`")
+@Table(name = "`authorizations`", schema = "`auth`")
 public class AuthorizationEntity {
 
   @Id

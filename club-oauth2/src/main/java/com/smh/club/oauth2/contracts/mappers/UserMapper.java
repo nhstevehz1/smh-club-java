@@ -17,4 +17,5 @@ public interface  UserMapper {
   UserDetailsEntity updateUserEntity(UserDetailsDto userDetailsDto, UserDetailsEntity userEntity);
   RoleDto toRoleDto(GrantedAuthorityEntity grantedEntity);
   Set<RoleDto> toRoleSet(Set<GrantedAuthorityEntity> grantedAuthorities);
+  GrantedAuthorityEntity toGrantedAuthorityEntity(RoleDto roleDto);
 }

@@ -33,16 +33,10 @@ public class TokenEntity {
 
   private Instant expiresAt;
 
-  //@Builder.Default
-  //@Convert(converter = StringObjectMapConverter.class)
   @Column(nullable = false, length = 1000)
-  //private Map<String, Object> metadata = new HashMap<>();
   private String metadata;
 
-  //@Builder.Default
-  //@Convert(converter = StringObjectMapConverter.class)
   @Column(length = 1000)
-  //private Map<String, Object> claims = new HashMap<>();
   private String claims;
 
   @Builder.Default

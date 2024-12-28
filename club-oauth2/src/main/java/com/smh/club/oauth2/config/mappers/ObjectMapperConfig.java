@@ -1,4 +1,4 @@
-package com.smh.club.oauth2.config.mapper;
+package com.smh.club.oauth2.config.mappers;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

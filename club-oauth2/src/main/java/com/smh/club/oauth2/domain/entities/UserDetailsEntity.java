@@ -30,6 +30,18 @@ public class UserDetailsEntity implements UserDetails {
   @Column(nullable = false, unique = true, length = 20)
   private String password;
 
+  @Column(nullable = false, length = 30)
+  private String firstName;
+
+  @Column(nullable = false, length = 25)
+  private String middleName;
+
+  @Column(nullable = false, length = 30)
+  private String lastName;
+
+  @Column(nullable = false, length = 40)
+  private String email;
+
   @Builder.Default
   private boolean accountNonExpired = true;
 
@@ -54,6 +66,17 @@ public class UserDetailsEntity implements UserDetails {
   public void addGrantedAuthority(GrantedAuthorityEntity grantedAuthority) {
     grantedAuthority.setUserDetails(this);
     authorities.add(grantedAuthority);
+  }
+
+  public void removeGrantedAuthorityById(long grantedAuthorityId) {
+    var auth = authorities.stream()
+        .filter(ga -> ga.getId() == grantedAuthorityId)
+        .findFirst();
+
+    auth.ifPresent(ga -> {
+      authorities.remove(ga);
+      ga.setUserDetails(null);
+    });
   }
 
   public void removeGrantedAuthority(GrantedAuthorityEntity grantedAuthority) {

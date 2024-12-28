@@ -17,10 +17,10 @@ public class GrantedAuthorityEntity implements GrantedAuthority {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  long id;
+  private long id;
 
   @Column(nullable = false, length = 20)
-  String authority;
+  private String authority;
 
   @JsonBackReference
   @EqualsAndHashCode.Exclude
