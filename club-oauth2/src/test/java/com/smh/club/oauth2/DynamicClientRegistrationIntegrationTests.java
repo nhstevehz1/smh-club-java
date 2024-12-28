@@ -19,12 +19,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -60,8 +60,10 @@ public class DynamicClientRegistrationIntegrationTests {
   private final ObjectMapper mapper;
 
   @Autowired
-  public DynamicClientRegistrationIntegrationTests(MockMvc mockMvc, ObjectMapper withOauth2) {
-    this.mapper =  new Jackson2ObjectMapperBuilder().build();
+  public DynamicClientRegistrationIntegrationTests(MockMvc mockMvc,
+                                                   ObjectMapper withOauth2,
+                                                   @Qualifier("without-oauth2") ObjectMapper withoutOauth2) {
+    this.mapper =  withoutOauth2;
 
     // setup RestAssured to use the MockMvc Context
     RestAssuredMockMvc.mockMvc(mockMvc);
