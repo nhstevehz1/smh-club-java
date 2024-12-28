@@ -36,25 +36,16 @@ public class ModelMapperConfig {
 
     TypeMap<UserDetailsEntity, UserDetailsDto> userTypeMap
         = modelMapper.createTypeMap(UserDetailsEntity.class, UserDetailsDto.class);
-    userTypeMap.addMappings(m -> {
-      m.skip(UserDetailsDto::setRoles);
-    });
+    userTypeMap.addMappings(
+        m -> m.skip(UserDetailsDto::setRoles));
   }
 
   private void grantedAuthoritySettings(ModelMapper modelMapper) {
-   /* TypeMap<RoleDto, GrantedAuthorityEntity> entityTypeMap
-        = modelMapper.createTypeMap(RoleDto.class, GrantedAuthorityEntity.class);
-
-    entityTypeMap.addMappings(m -> {
-      m.skip(GrantedAuthorityEntity::setId);
-      m.skip(GrantedAuthorityEntity::setUserDetails);
-    });*/
 
     TypeMap<GrantedAuthorityEntity, RoleDto> dtoTypeMap
         = modelMapper.createTypeMap(GrantedAuthorityEntity.class, RoleDto.class);
 
-    dtoTypeMap.addMappings(m -> {
-      m.map(GrantedAuthorityEntity::getAuthority, RoleDto::setRoleName);
-    });
+    dtoTypeMap.addMappings(
+        m -> m.map(GrantedAuthorityEntity::getAuthority, RoleDto::setRoleName));
   }
 }

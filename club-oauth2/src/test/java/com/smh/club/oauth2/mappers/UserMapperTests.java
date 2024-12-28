@@ -57,15 +57,13 @@ public class UserMapperTests {
     assertEquals(entity.isEnabled(), dto.isEnabled());
     assertEquals(entity.isAccountNonLocked(), dto.isAccountNonLocked());
 
-    entity.getAuthorities().forEach(ga -> {
-      assertTrue(dto.getRoles().stream().anyMatch(
-          r -> ga.getAuthority().equals(r.getRoleName())));
-    });
+    entity.getAuthorities().forEach(
+        ga -> assertTrue(dto.getRoles().stream().anyMatch(
+        r -> ga.getAuthority().equals(r.getRoleName()))));
 
-    dto.getRoles().forEach(r -> {
-      assertTrue(entity.getAuthorities().stream().anyMatch(
-          ga -> ga.getAuthority().equals(r.getRoleName())));
-    });
+    dto.getRoles().forEach(
+        r -> assertTrue(entity.getAuthorities().stream().anyMatch(
+        ga -> ga.getAuthority().equals(r.getRoleName()))));
   }
 
   @Test
@@ -92,15 +90,13 @@ public class UserMapperTests {
     assertEquals(create.isEnabled(), entity.isEnabled());
     assertEquals(create.isAccountNonLocked(), entity.isAccountNonLocked());
 
-    entity.getAuthorities().forEach(ga -> {
-      assertTrue(entity.getAuthorities().stream().anyMatch(
-          r -> ga.getAuthority().equals(r.getAuthority())));
-    });
+    entity.getAuthorities().forEach(
+        ga -> assertTrue(entity.getAuthorities().stream().anyMatch(
+        r -> ga.getAuthority().equals(r.getAuthority()))));
 
-    create.getRoles().forEach(r -> {
-      assertTrue(entity.getAuthorities().stream().anyMatch(
-          ga -> ga.getAuthority().equals(r.getRoleName())));
-    });
+    create.getRoles().forEach(
+        r -> assertTrue(entity.getAuthorities().stream().anyMatch(
+        ga -> ga.getAuthority().equals(r.getRoleName()))));
   }
 
   @Test
