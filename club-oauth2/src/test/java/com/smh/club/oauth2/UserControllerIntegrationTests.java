@@ -317,7 +317,7 @@ public class UserControllerIntegrationTests {
 
   @WithMockUser
   @Test
-  public void reset_password_returns_ok() throws Exception {
+  public void reset_password_returns_ok()  {
     // setup
     var entity = addEntitiesToDb(5).get(2);
     var id = entity.getId();
@@ -410,7 +410,7 @@ public class UserControllerIntegrationTests {
 
   @WithMockUser
   @Test
-  public void delete_returns_no_content() throws Exception {
+  public void delete_returns_no_content() {
     // setup
     var entity = addEntitiesToDb(5).get(2);
     var id = entity.getId();

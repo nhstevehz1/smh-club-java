@@ -29,9 +29,8 @@ public class ModelMapperConfig {
     TypeMap<CreateUserDto, UserDetailsEntity> createTypeMap
         = modelMapper.createTypeMap(CreateUserDto.class, UserDetailsEntity.class);
 
-    createTypeMap.addMappings(m -> {
-      m.skip(UserDetailsEntity::setAuthorities);
-    });
+    createTypeMap.addMappings(
+        m -> m.skip(UserDetailsEntity::setAuthorities));
 
     TypeMap<UserDetailsEntity, UserDetailsDto> userTypeMap
         = modelMapper.createTypeMap(UserDetailsEntity.class, UserDetailsDto.class);
