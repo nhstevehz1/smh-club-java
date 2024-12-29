@@ -1,7 +1,6 @@
 package com.smh.club.oauth2.contracts.services;
 
 import com.smh.club.oauth2.dto.CreateUserDto;
-import com.smh.club.oauth2.dto.RoleDto;
 import com.smh.club.oauth2.dto.UserDetailsDto;
 import com.smh.club.oauth2.dto.UserDto;
 import com.smh.club.oauth2.responses.PagedDto;
@@ -16,6 +15,4 @@ public interface UserService {
   void deleteUser(long userid);
   void resetPassword(long userId);
   Optional<UserDetailsDto> updateUserDetails(long id, UserDetailsDto userDetailsDto);
-  void deleteRole(long userId, long roleId);
-  RoleDto addRole(long userId, RoleDto roleDto);
 }

@@ -1,10 +1,8 @@
 package com.smh.club.oauth2.services;
 
 import com.smh.club.oauth2.contracts.mappers.UserMapper;
-import com.smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.domain.repos.UserRepository;
-import com.smh.club.oauth2.dto.RoleDto;
 import com.smh.club.oauth2.dto.UserDetailsDto;
 import com.smh.club.oauth2.dto.UserDto;
 import java.util.Optional;
@@ -20,10 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -218,57 +214,5 @@ public class UserServiceTests {
     verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
   }
 
-  @Test
-  public void deleteRole_returns_void() {
-    // setup
-    var entity = Instancio.create(UserDetailsEntity.class);
-    var auth = entity.getAuthorities().iterator().next();
-    when(repoMock.findById(entity.getId())).thenReturn(Optional.of(entity));
 
-    // execute
-    svc.deleteRole(entity.getId(), auth.getId());
-
-    // execute
-    assertFalse(entity.getAuthorities().contains(auth));
-    verify(repoMock).findById(entity.getId());
-    verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
-  }
-
-  @Test
-  public void addRole_returns_optional_roleDto() {
-    // setup
-    var entity = Instancio.create(UserDetailsEntity.class);
-    var auth = Instancio.create(GrantedAuthorityEntity.class);
-    var dto = Instancio.create(RoleDto.class);
-    when(repoMock.findById(dto.getId())).thenReturn(Optional.of(entity));
-    when(mapperMock.toGrantedAuthorityEntity(dto)).thenReturn(auth);
-    when(mapperMock.toRoleDto(auth)).thenReturn(dto);
-    when(repoMock.save(entity)).thenReturn(entity);
-
-    // execute
-    var ret = svc.addRole(dto.getId(), dto);
-
-    // verify
-    assertEquals(dto, ret);
-    verify(repoMock).findById(dto.getId());
-    verify(repoMock).save(entity);
-    verify(mapperMock).toGrantedAuthorityEntity(dto);
-    verify(mapperMock).toRoleDto(auth);
-    verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
-  }
-
-  @WithMockUser
-  @Test
-  public void addRole_throws_exception() {
-    // setup
-    var dto = Instancio.create(RoleDto.class);
-    when(repoMock.findById(dto.getId())).thenReturn(Optional.empty());
-
-    // execute
-    assertThrows(UsernameNotFoundException.class, () -> svc.addRole(dto.getId(), dto));
-
-    // verify
-    verify(repoMock).findById(dto.getId());
-    verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
-  }
 }

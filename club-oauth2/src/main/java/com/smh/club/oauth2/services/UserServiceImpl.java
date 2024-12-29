@@ -5,7 +5,6 @@ import com.smh.club.oauth2.contracts.services.UserService;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.domain.repos.UserRepository;
 import com.smh.club.oauth2.dto.CreateUserDto;
-import com.smh.club.oauth2.dto.RoleDto;
 import com.smh.club.oauth2.dto.UserDetailsDto;
 import com.smh.club.oauth2.dto.UserDto;
 import com.smh.club.oauth2.responses.PagedDto;
@@ -78,23 +77,6 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
     var user = userRepo.findById(id);
     return user.map(u -> userMapper.updateUserEntity(userDetailsDto, u))
         .map(userMapper::toUserDetailsDto);
-  }
-
-  @Override
-  public void deleteRole(long userId, long roleId) {
-    userRepo.findById(userId)
-        .ifPresent(u -> u.removeGrantedAuthorityById(roleId));
-  }
-
-  @Override
-  public RoleDto addRole(long userId, RoleDto roleDto) {
-    return userRepo.findById(userId)
-        .map(u -> {
-          var ga = userMapper.toGrantedAuthorityEntity(roleDto);
-          u.addGrantedAuthority(ga);
-          userRepo.save(u);
-          return userMapper.toRoleDto(ga);
-        }).orElseThrow(() -> new UsernameNotFoundException("User with id: " + userId + " not found"));
   }
 
   @Override
