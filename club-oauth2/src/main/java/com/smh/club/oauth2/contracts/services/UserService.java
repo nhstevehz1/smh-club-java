@@ -16,6 +16,6 @@ public interface UserService {
   void deleteUser(long userid);
   void resetPassword(long userId);
   Optional<UserDetailsDto> updateUserDetails(long id, UserDetailsDto userDetailsDto);
-  void deleteRole(long userId, long authId);
-  Optional<RoleDto> addRole(long userId, RoleDto roleDto);
+  void deleteRole(long userId, long roleId);
+  RoleDto addRole(long userId, RoleDto roleDto);
 }

@@ -18,11 +18,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -149,15 +153,31 @@ public class UserServiceTests {
     // setup
     long id = 100;
     var password = Instancio.create(String.class);
-    when(encoderMock.encode(password)).thenReturn(password);
+    when(repoMock.existsById(id)).thenReturn(true);
+    when(encoderMock.encode(anyString())).thenReturn(password);
     doNothing().when(repoMock).updatePassword(id, password);
 
     // execute
     svc.resetPassword(id);
 
     // verify
-    verify(encoderMock).encode(password);
+    verify(repoMock).existsById(id);
+    verify(encoderMock).encode(anyString());
     verify(repoMock).updatePassword(id, password);
+    verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
+
+  }
+
+  @Test
+  public void updatePassword_throws_exception() {
+    // setup
+    long id = 100;
+    when(repoMock.existsById(id)).thenReturn(false);
+
+    // execute
+    assertThrows(UsernameNotFoundException.class, () -> svc.resetPassword(id));
+
+    // verify
     verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
 
   }
@@ -229,8 +249,7 @@ public class UserServiceTests {
     var ret = svc.addRole(dto.getId(), dto);
 
     // verify
-    assertTrue(ret.isPresent());
-    assertEquals(dto, ret.get());
+    assertEquals(dto, ret);
     verify(repoMock).findById(dto.getId());
     verify(repoMock).save(entity);
     verify(mapperMock).toGrantedAuthorityEntity(dto);
@@ -238,17 +257,17 @@ public class UserServiceTests {
     verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
   }
 
+  @WithMockUser
   @Test
-  public void addRole_returns_empty() {
+  public void addRole_throws_exception() {
     // setup
     var dto = Instancio.create(RoleDto.class);
     when(repoMock.findById(dto.getId())).thenReturn(Optional.empty());
 
     // execute
-    var ret = svc.addRole(dto.getId(), dto);
+    assertThrows(UsernameNotFoundException.class, () -> svc.addRole(dto.getId(), dto));
 
     // verify
-    assertTrue(ret.isEmpty());
     verify(repoMock).findById(dto.getId());
     verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);
   }

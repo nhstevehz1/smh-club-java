@@ -81,20 +81,20 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
   }
 
   @Override
-  public void deleteRole(long userId, long authId) {
+  public void deleteRole(long userId, long roleId) {
     userRepo.findById(userId)
-        .ifPresent(u -> u.removeGrantedAuthorityById(authId));
+        .ifPresent(u -> u.removeGrantedAuthorityById(roleId));
   }
 
   @Override
-  public Optional<RoleDto> addRole(long userId, RoleDto roleDto) {
+  public RoleDto addRole(long userId, RoleDto roleDto) {
     return userRepo.findById(userId)
         .map(u -> {
           var ga = userMapper.toGrantedAuthorityEntity(roleDto);
           u.addGrantedAuthority(ga);
           userRepo.save(u);
           return userMapper.toRoleDto(ga);
-        });
+        }).orElseThrow(() -> new UsernameNotFoundException("User with id: " + userId + " not found"));
   }
 
   @Override
