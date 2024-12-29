@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
   private final UserRepository userRepo;
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
+
+  // TODO: Come up with a better scheme
+  private final String DEFAULT_PWD = "ChangeMeNow1234";
 
   @Override
   public PagedDto<UserDto> getUserPage(Pageable pageable) {
@@ -51,6 +55,8 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
   @Override
   public UserDetailsDto createUser(CreateUserDto createUserDto) {
     var entity = userMapper.toUserDetailsEntity(createUserDto);
+    var password = passwordEncoder.encode(DEFAULT_PWD);
+    entity.setPassword(password);
     return userMapper.toUserDetailsDto(userRepo.save(entity));
   }
 
@@ -60,8 +66,11 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
   }
 
   @Override
-  public void updatePassword(long userId, String password) {
-    userRepo.updatePassword(userId, passwordEncoder.encode(password));
+  public void resetPassword(long userId) {
+    if (!userRepo.existsById(userId)) {
+      throw new UsernameNotFoundException("User with id: " + userId + " not found");
+    }
+    userRepo.updatePassword(userId, passwordEncoder.encode(DEFAULT_PWD));
   }
 
   @Override

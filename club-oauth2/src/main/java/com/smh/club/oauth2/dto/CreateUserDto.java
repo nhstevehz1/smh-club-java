@@ -1,8 +1,6 @@
 package com.smh.club.oauth2.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
@@ -18,27 +16,22 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateUserDto {
 
-  private long id;
-
   @Size(min = 8, max = 30)
   @NotBlank
   private String username;
 
-  @JsonIgnore
-  private String password;
-
-  @Max(30)
+  @Size(min = 1, max = 30)
   @NotBlank
   private String firstName;
 
-  @Max(25)
+  @Size(min = 1, max = 25)
   private String middleName;
 
-  @Max(30)
+  @Size(min = 1, max = 30)
   @NotBlank
   private String lastName;
 
-  @Max(40)
+  @Size(min = 7, max = 40)
   @NotBlank
   @Email
   private String email;

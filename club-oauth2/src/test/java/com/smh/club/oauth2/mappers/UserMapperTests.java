@@ -70,16 +70,13 @@ public class UserMapperTests {
   @Test
   public void from_createUserDto_to_userDetailsEntity() {
     // setup
-    var create = Instancio.of(CreateUserDto.class).ignore(
-        field(CreateUserDto::getId))
-        .create();
+    var create = Instancio.create(CreateUserDto.class);
 
     // execute
     var entity = userMapper.toUserDetailsEntity (create);
 
     // verify
     assertNotNull(entity);
-    assertEquals(create.getId(), entity.getId());
     assertEquals(create.getUsername(), entity.getUsername());
     assertNull(entity.getPassword());
     assertEquals(create.getEmail(), entity.getEmail());

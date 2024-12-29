@@ -153,7 +153,7 @@ public class UserServiceTests {
     doNothing().when(repoMock).updatePassword(id, password);
 
     // execute
-    svc.updatePassword(id, password);
+    svc.resetPassword(id);
 
     // verify
     verify(encoderMock).encode(password);

@@ -30,7 +30,6 @@ public class ModelMapperConfig {
         = modelMapper.createTypeMap(CreateUserDto.class, UserDetailsEntity.class);
 
     createTypeMap.addMappings(m -> {
-      m.skip(UserDetailsEntity::setId);
       m.skip(UserDetailsEntity::setAuthorities);
     });
 

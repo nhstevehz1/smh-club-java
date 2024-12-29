@@ -1,7 +1,6 @@
 package com.smh.club.oauth2.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
@@ -23,18 +22,18 @@ public class UserDetailsDto {
   @NotBlank
   private String username;
 
-  @Max(30)
+  @Size(min = 1, max = 30)
   @NotBlank
   private String firstName;
 
-  @Max(25)
+  @Size(min = 1, max = 30)
   private String middleName;
 
-  @Max(30)
+  @Size(min = 1, max = 30)
   @NotBlank
   private String lastName;
 
-  @Max(40)
+  @Size(min = 7, max = 40)
   @NotBlank
   @Email
   private String email;

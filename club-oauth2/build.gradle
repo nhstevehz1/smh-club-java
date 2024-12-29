@@ -28,6 +28,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation "org.htmlunit:htmlunit"
 
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// Dependencies managed by a catalog

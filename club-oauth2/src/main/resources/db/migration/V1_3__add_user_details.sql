@@ -2,9 +2,9 @@ CREATE TABLE auth.users
 (
     id                      bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     username                varchar(30) NOT NULL,
-    password                varchar(30) NOT NULL,
-    first_name              varchar(25) NOT NULL,
-    middle_name             varchar(30  ) DEFAULT NULL,
+    password                varchar(150) NOT NULL,
+    first_name              varchar(30) NOT NULL,
+    middle_name             varchar(25) DEFAULT NULL,
     last_name               varchar(25) NOT NULL,
     email                   varchar(40) NOT NULL,
     account_non_expired     boolean DEFAULT FALSE,

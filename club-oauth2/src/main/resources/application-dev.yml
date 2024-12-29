@@ -5,15 +5,19 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:dev-db;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    url: jdbc:h2:mem:test-db;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
     driverClassName: org.h2.Driver
     username: sa
     password: password
+
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
     properties:
       hibernate:
       format_sql: true
+    open-in-view: false
 
-  flyway:
-    enabled: false
+springdoc:
+  api-docs:
+    version: openapi_3_1

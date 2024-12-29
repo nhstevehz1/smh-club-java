@@ -14,7 +14,7 @@ public interface UserService {
   Optional<UserDetailsDto> getUserDetails(long userId);
   UserDetailsDto createUser(CreateUserDto createUserDto);
   void deleteUser(long userid);
-  void updatePassword(long userId, String password);
+  void resetPassword(long userId);
   Optional<UserDetailsDto> updateUserDetails(long id, UserDetailsDto userDetailsDto);
   void deleteRole(long userId, long authId);
   Optional<RoleDto> addRole(long userId, RoleDto roleDto);
