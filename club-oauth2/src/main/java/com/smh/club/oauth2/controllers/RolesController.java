@@ -1,7 +1,6 @@
 package com.smh.club.oauth2.controllers;
 
 import com.smh.club.oauth2.contracts.services.GrantedAuthorityService;
-import com.smh.club.oauth2.contracts.services.UserService;
 import com.smh.club.oauth2.dto.RoleDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/v1/users/{userId}/roles")
 public class RolesController {
 
-  private final UserService userSvc;
   private final GrantedAuthorityService gaSvc;
 
   @Operation(summary = "Deletes a user's role")

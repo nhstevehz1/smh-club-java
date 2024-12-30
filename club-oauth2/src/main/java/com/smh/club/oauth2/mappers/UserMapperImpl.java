@@ -50,7 +50,7 @@ public class UserMapperImpl implements UserMapper {
     modelMapper.map(userDetailsDto, userEntity);
 
     while (!userEntity.getAuthorities().isEmpty()) {
-      var auth = userEntity.getAuthorities().iterator().next();;
+      var auth = userEntity.getAuthorities().iterator().next();
       userEntity.removeGrantedAuthority(auth);
     }
 

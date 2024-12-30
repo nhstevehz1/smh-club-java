@@ -85,11 +85,6 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
   }
 
   @Override
-  public boolean userExists(long userId) {
-    return userRepo.existsById(userId);
-  }
-
-  @Override
   protected Sort getSort(Sort sort) {
     if (sort.isUnsorted()) {
       return sort;

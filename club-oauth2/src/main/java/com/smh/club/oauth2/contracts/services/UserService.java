@@ -15,5 +15,4 @@ public interface UserService {
   void deleteUser(long userid);
   void resetPassword(long userId);
   Optional<UserDetailsDto> updateUserDetails(long id, UserDetailsDto userDetailsDto);
-  boolean userExists(long userId);
 }
