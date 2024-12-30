@@ -1,4 +1,4 @@
-package com.smh.club.oauth2.config.mappers;
+package com.smh.club.oauth2.config;
 
 import com.smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;

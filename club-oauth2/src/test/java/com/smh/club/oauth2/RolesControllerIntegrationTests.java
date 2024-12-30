@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
+@WithMockUser
 @ActiveProfiles({"tests"})
 @ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -88,7 +89,6 @@ public class RolesControllerIntegrationTests {
     RestAssuredMockMvc.reset();
   }
 
-  @WithMockUser
   @Test
   public void add_role_returns_roleDto_status_created() throws Exception {
     // setup
@@ -120,7 +120,6 @@ public class RolesControllerIntegrationTests {
     assertEquals(role, actual.get().getAuthority());
   }
 
-  @WithMockUser
   @Test
   public void add_role_user_not_found_returns_status_bad_request() throws Exception {
     // setup
@@ -144,7 +143,6 @@ public class RolesControllerIntegrationTests {
         .status(HttpStatus.NOT_FOUND);
   }
 
-  @WithMockUser
   @Test
   public void delete_returns_void_status_no_content() throws Exception {
     // setup

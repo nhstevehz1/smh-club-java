@@ -1,4 +1,4 @@
-package com.smh.club.oauth2.config.auth;
+package com.smh.club.oauth2.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -55,6 +55,8 @@ public class AuthServerConfig {
         .authorizeHttpRequests(authorize ->
             authorize
                 .requestMatchers("/jwks", "/logged-out", "/").permitAll()
+                .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/profiles/**").hasAnyRole("ADMIN","USER")
                 .anyRequest().authenticated()
         )
         .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
