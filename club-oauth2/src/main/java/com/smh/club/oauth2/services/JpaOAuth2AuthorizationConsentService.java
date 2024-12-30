@@ -7,7 +7,6 @@ import com.smh.club.oauth2.domain.repos.ClientRepository;
 import jakarta.transaction.Transactional;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsent;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @RequiredArgsConstructor
-@Profile("prod")
 @Transactional
 @Service
 public class JpaOAuth2AuthorizationConsentService implements OAuth2AuthorizationConsentService {

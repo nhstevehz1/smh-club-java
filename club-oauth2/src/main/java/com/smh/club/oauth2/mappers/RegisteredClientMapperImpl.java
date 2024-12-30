@@ -36,8 +36,12 @@ public class RegisteredClientMapperImpl extends OAuth2MapperBase implements Regi
           AuthorizationGrantType.CLIENT_CREDENTIALS.getValue(), AuthorizationGrantType.CLIENT_CREDENTIALS
       );
 
-  public RegisteredClientMapperImpl(ObjectMapper mapper) {
+  protected RegisteredClientMapperImpl(ObjectMapper mapper) {
     super(mapper);
+  }
+
+  public RegisteredClientMapperImpl() {
+    super();
   }
 
   @Override

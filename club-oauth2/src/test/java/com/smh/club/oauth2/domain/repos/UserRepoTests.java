@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
@@ -24,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("tests")
 @Transactional
 @ExtendWith(InstancioExtension.class)
-// Can't use @JPADataTest.  Some of the converters need an injected ObjectMapper
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DataJpaTest
 @AutoConfigureEmbeddedDatabase(
     provider = ZONKY,
     type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,

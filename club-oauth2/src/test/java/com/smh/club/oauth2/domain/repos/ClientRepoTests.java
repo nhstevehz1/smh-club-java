@@ -12,7 +12,7 @@ import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,11 +22,10 @@ import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ActiveProfiles("tests")
+@ActiveProfiles("tests, prod")
 @Transactional
 @ExtendWith(InstancioExtension.class)
-// Can't use @DataJpaTest due to some converters need an injected ObjectMapper
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DataJpaTest
 @AutoConfigureEmbeddedDatabase(
     provider = ZONKY,
     type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,

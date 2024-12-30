@@ -4,14 +4,12 @@ import com.smh.club.oauth2.contracts.mappers.RegisteredClientMapper;
 import com.smh.club.oauth2.domain.repos.ClientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @RequiredArgsConstructor
-@Profile("prod")
 @Transactional
 @Service
 public class JpaRegisteredClientService implements RegisteredClientRepository {

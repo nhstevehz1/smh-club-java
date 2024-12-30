@@ -10,9 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface AuthorizationRepository extends JpaRepository<AuthorizationEntity, String> {
   Optional<AuthorizationEntity> findByState(String state);
 
-  Optional<AuthorizationEntity>
-    findByTokensTokenTypeAndTokensTokenValue(TokenType tokenType, String tokenValue);
+  Optional<AuthorizationEntity> findByTokensTokenTypeAndTokensTokenValue(
+      TokenType tokenType, String tokenValue);
 
-  Optional<AuthorizationEntity>
-  findByTokensTokenValue(String tokenValue);
+  Optional<AuthorizationEntity> findByTokensTokenValue(String tokenValue);
 }

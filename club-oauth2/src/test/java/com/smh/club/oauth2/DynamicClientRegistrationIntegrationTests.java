@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.domain.repos.UserRepository;
+import com.smh.club.oauth2.helpers.TestUtils;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.http.Header;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +25,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -59,8 +60,9 @@ public class DynamicClientRegistrationIntegrationTests {
   private final ObjectMapper mapper;
 
   @Autowired
-  public DynamicClientRegistrationIntegrationTests(MockMvc mockMvc, ObjectMapper withOauth2) {
-    this.mapper =  new Jackson2ObjectMapperBuilder().build();
+  public DynamicClientRegistrationIntegrationTests(MockMvc mockMvc,
+                                                   ObjectMapper withoutOauth2) {
+    this.mapper =  withoutOauth2;
 
     // setup RestAssured to use the MockMvc Context
     RestAssuredMockMvc.mockMvc(mockMvc);
@@ -68,7 +70,7 @@ public class DynamicClientRegistrationIntegrationTests {
     // Configure RestAssured to use the injected Object mapper.
     RestAssuredMockMvc.config =
         RestAssuredMockMvcConfig.config().objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
-            (type, s) -> withOauth2));
+            (type, s) -> TestUtils.getObjectMapper()));
   }
 
   @BeforeEach
@@ -219,6 +221,9 @@ public class DynamicClientRegistrationIntegrationTests {
       var user = UserDetailsEntity.builder()
           .username("user1")
           .password("{noop}password")
+          .firstName(Instancio.create(String.class))
+          .lastName(Instancio.create(String.class))
+          .email(Instancio.create(String.class))
           .enabled(true)
           .build();
 

@@ -1,4 +1,4 @@
-CREATE TABLE auth.authorization (
+CREATE TABLE auth.authorizations (
     id                            varchar(50) NOT NULL,
     registered_client_id          varchar(50) NOT NULL,
     principal_name                varchar(50) NOT NULL,
@@ -6,15 +6,16 @@ CREATE TABLE auth.authorization (
     state                         varchar(500)  DEFAULT NULL,
     attributes                    varchar(4000) DEFAULT NULL,
 
-    CONSTRAINT pk_auth PRIMARY KEY (id)
+    CONSTRAINT pk_authorization
+        PRIMARY KEY (id)
 );
 
 CREATE TABLE auth.authorization_scopes_set (
     auth_id varchar(50)   NOT NULL,
     scope varchar(30)     NOT NULL,
 
-    CONSTRAINT fk_authorization_scopes_set__authorization
-       FOREIGN KEY (auth_id) REFERENCES auth.authorization (id)
+    CONSTRAINT fk_authorization_scopes_set__authorizations
+       FOREIGN KEY (auth_id) REFERENCES auth.authorizations (id)
 );
 
 
@@ -28,8 +29,10 @@ CREATE TABLE auth.authorization_token (
     metadata varchar(1000) NOT NULL,
     claims varchar(1000) DEFAULT NULL,
 
-    CONSTRAINT pk_authorization_token PRIMARY KEY (id),
-       FOREIGN KEY (auth_id) REFERENCES auth.authorization (id)
+    CONSTRAINT pk_authorization_token
+        PRIMARY KEY (id),
+    CONSTRAINT fk_authorization_token__authorizations
+        FOREIGN KEY (auth_id) REFERENCES auth.authorizations (id)
 );
 
 

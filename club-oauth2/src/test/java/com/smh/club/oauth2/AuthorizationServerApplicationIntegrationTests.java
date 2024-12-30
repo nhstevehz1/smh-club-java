@@ -14,6 +14,7 @@ import org.htmlunit.html.HtmlButton;
 import org.htmlunit.html.HtmlElement;
 import org.htmlunit.html.HtmlInput;
 import org.htmlunit.html.HtmlPage;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -163,6 +164,9 @@ public class AuthorizationServerApplicationIntegrationTests {
     var user = UserDetailsEntity.builder()
         .username("user1")
         .password("{noop}password")
+        .firstName(Instancio.create(String.class))
+        .lastName(Instancio.create(String.class))
+        .email(Instancio.create(String.class))
         .enabled(true)
         .build();
 

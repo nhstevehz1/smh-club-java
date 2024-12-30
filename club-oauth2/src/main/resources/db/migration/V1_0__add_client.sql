@@ -5,7 +5,7 @@ CREATE TABLE auth.client
     id                            varchar(50)   NOT NULL,
     client_id                     varchar(50)   NOT NULL,
     client_id_issued_at           timestamp     DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    client_secret                 varchar(100)  DEFAULT NULL,
+    client_secret                 varchar(250)  DEFAULT NULL,
     client_secret_expires_at      timestamp     DEFAULT NULL,
     client_name                   varchar(50)   NOT NULL,
     client_settings               varchar(500) NOT NULL, -- holds JSON

@@ -20,8 +20,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationMapperImpl extends OAuth2MapperBase implements AuthorizationMapper {
 
-  public AuthorizationMapperImpl (ObjectMapper mapper) {
+  protected AuthorizationMapperImpl (ObjectMapper mapper) {
     super(mapper);
+  }
+
+  public AuthorizationMapperImpl () {
+    super();
   }
 
   @Override
