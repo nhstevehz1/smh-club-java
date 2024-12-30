@@ -18,4 +18,12 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	mockitoAgent('org.mockito:mockito-core') { transitive = false}
+}
+
+tasks {
+	test {
+		jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}" // need double quotes here
+	}
 }
