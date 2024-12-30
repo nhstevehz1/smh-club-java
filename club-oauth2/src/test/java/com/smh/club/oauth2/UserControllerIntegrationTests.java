@@ -46,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
+@WithMockUser
 @ActiveProfiles({"tests"})
 @ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -92,8 +93,7 @@ public class UserControllerIntegrationTests {
   public void tearDown() {
     RestAssuredMockMvc.reset();
   }
-
-  @WithMockUser
+  
   @RepeatedTest(5)
   public void get_returns_dto_status_ok() {
     // setup
@@ -116,7 +116,6 @@ public class UserControllerIntegrationTests {
     verify(expected, actual);
   }
 
-  @WithMockUser
   @Test
   public void get_returns_status_not_found() {
     // Setup
@@ -137,7 +136,6 @@ public class UserControllerIntegrationTests {
 
   }
 
-  @WithMockUser
   @RepeatedTest(5)
   public void get_details_returns_dto_status_ok() {
     // setup
@@ -160,7 +158,6 @@ public class UserControllerIntegrationTests {
     verify(expected, actual);
   }
 
-  @WithMockUser
   @Test
   public void getDetails_returns_not_found() {
     // Setup
@@ -180,7 +177,6 @@ public class UserControllerIntegrationTests {
         .status(HttpStatus.NOT_FOUND);
   }
 
-  @WithMockUser
   @Test
   public void create_returns_dto_status_created() throws Exception {
     // setup
@@ -214,7 +210,6 @@ public class UserControllerIntegrationTests {
         arguments(field(CreateUserDto::getLastName)));
   }
 
-  @WithMockUser
   @ParameterizedTest
   @MethodSource("createNonNullableFields")
   public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
@@ -237,7 +232,6 @@ public class UserControllerIntegrationTests {
         arguments(field(CreateUserDto::getMiddleName)));
   }
 
-  @WithMockUser
   @ParameterizedTest
   @MethodSource("createNullableFields")
   public void create_nullableField_returns_dto_status_created(Selector nullableField) throws Exception {
@@ -266,7 +260,6 @@ public class UserControllerIntegrationTests {
     verify(create, entity.get());
   }
 
-  @WithMockUser
   @Test
   public void update_returns_dto_with_status_ok() throws Exception {
     // setup
@@ -297,7 +290,6 @@ public class UserControllerIntegrationTests {
     verify(update, user.get());
   }
 
-  @WithMockUser
   @Test
   public void update_status_not_found() throws Exception {
     // setup
@@ -315,7 +307,6 @@ public class UserControllerIntegrationTests {
         .status(HttpStatus.BAD_REQUEST);
   }
 
-  @WithMockUser
   @Test
   public void reset_password_returns_ok()  {
     // setup
@@ -338,7 +329,6 @@ public class UserControllerIntegrationTests {
 
   }
 
-  @WithMockUser
   @Test
   public void reset_password_user_not_found_returns_notFound()  {
     // setup
@@ -366,7 +356,6 @@ public class UserControllerIntegrationTests {
         arguments(field(UserDetailsDto::getLastName)));
   }
 
-  @WithMockUser
   @ParameterizedTest
   @MethodSource("updateNonNullableFields")
   public void update_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
@@ -395,7 +384,6 @@ public class UserControllerIntegrationTests {
         arguments(field(UserDetailsDto::getMiddleName)));
   }
 
-  @WithMockUser
   @ParameterizedTest
   @MethodSource("updateNullableFields")
   public void update_with_nullable_files_returns_dto_status_ok(Selector nullableField) throws Exception {
@@ -428,7 +416,6 @@ public class UserControllerIntegrationTests {
     verify(user.get(), actual);
   }
 
-  @WithMockUser
   @Test
   public void delete_returns_no_content() {
     // setup

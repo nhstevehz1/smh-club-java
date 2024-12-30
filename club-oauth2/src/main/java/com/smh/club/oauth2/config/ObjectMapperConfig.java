@@ -1,4 +1,4 @@
-package com.smh.club.oauth2.config.mappers;
+package com.smh.club.oauth2.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;

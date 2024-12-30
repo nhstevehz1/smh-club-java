@@ -1,6 +1,6 @@
 package com.smh.club.oauth2.mappers;
 
-import com.smh.club.oauth2.config.mappers.ModelMapperConfig;
+import com.smh.club.oauth2.config.ModelMapperConfig;
 import com.smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.dto.CreateUserDto;

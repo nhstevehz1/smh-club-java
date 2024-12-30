@@ -2,7 +2,7 @@ package com.smh.club.oauth2.mappers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.oauth2.config.mappers.ObjectMapperConfig;
+import com.smh.club.oauth2.config.ObjectMapperConfig;
 import java.util.Map;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.jackson2.SecurityJackson2Modules;

@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @ActiveProfiles({"tests"})
 @ExtendWith(InstancioExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -90,7 +91,6 @@ public class UserControllerPageIntegrationTests {
             (type, s) -> mapper));
   }
 
-  @WithMockUser
   @ParameterizedTest
   @ValueSource(ints = {1, 5, 20, 50})
   public void getPage_returns_no_params(int entitySize) {
@@ -112,7 +112,6 @@ public class UserControllerPageIntegrationTests {
     verify(expected, actual);
   }
 
-  @WithMockUser
   @ParameterizedTest
   @ValueSource(ints = {1, 5, 20, 50})
   public void getPage_sortDir_desc(int entitySize) {
@@ -136,7 +135,6 @@ public class UserControllerPageIntegrationTests {
     verify(expected, actual);
   }
 
-  @WithMockUser
   @ParameterizedTest
   @ValueSource(ints = {2,5,8,10})
   public void getListPage_pageSize(int pageSize) {
@@ -160,7 +158,6 @@ public class UserControllerPageIntegrationTests {
     verify(expected, actual);
   }
 
-  @WithMockUser
   @ParameterizedTest
   @ValueSource(ints = {1, 5, 8})
   public void getListPage_page(int page) {
@@ -186,7 +183,6 @@ public class UserControllerPageIntegrationTests {
     verify(expected, actual);
   }
 
-  @WithMockUser
   @ParameterizedTest
   @ValueSource(strings = {"id", "username", "firstName", "middleName", "lastName", "email" })
   public void getListPage_sortColumn(String sort) {
@@ -211,7 +207,6 @@ public class UserControllerPageIntegrationTests {
     var expected = sorted.stream().limit(defaultPageSize).toList();
     verify(expected, actual);
   }
-
 
   private void addEntitiesToDb(int size) {
     var entities = Instancio.ofList(UserDetailsEntity.class)
