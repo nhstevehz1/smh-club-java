@@ -48,9 +48,12 @@ public class UserMapperImpl implements UserMapper {
   @Override
   public UserDetailsEntity updateUserEntity(UserDetailsDto userDetailsDto, UserDetailsEntity userEntity) {
     modelMapper.map(userDetailsDto, userEntity);
-    for (GrantedAuthorityEntity grantedAuthorityEntity : userEntity.getAuthorities()) {
-      userEntity.removeGrantedAuthority(grantedAuthorityEntity);
+
+    while (!userEntity.getAuthorities().isEmpty()) {
+      var auth = userEntity.getAuthorities().iterator().next();;
+      userEntity.removeGrantedAuthority(auth);
     }
+
     userDetailsDto.getRoles().forEach(
         r -> userEntity.addGrantedAuthority(modelMapper.map(r, GrantedAuthorityEntity.class)));
     return userEntity;

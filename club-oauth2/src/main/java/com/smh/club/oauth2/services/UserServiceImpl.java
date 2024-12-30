@@ -8,13 +8,13 @@ import com.smh.club.oauth2.dto.CreateUserDto;
 import com.smh.club.oauth2.dto.UserDetailsDto;
 import com.smh.club.oauth2.dto.UserDto;
 import com.smh.club.oauth2.responses.PagedDto;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,16 +60,21 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
   }
 
   @Override
-  public void deleteUser(long userid) {
-    userRepo.deleteById(userid);
+  public void deleteUser(long userId) {
+    if (userRepo.existsById(userId)) {
+      userRepo.deleteById(userId);
+    } else {
+      throw new EntityNotFoundException("User with id " + userId + " not found");
+    }
   }
 
   @Override
   public void resetPassword(long userId) {
-    if (!userRepo.existsById(userId)) {
-      throw new UsernameNotFoundException("User with id: " + userId + " not found");
+    if (userRepo.existsById(userId)) {
+      userRepo.updatePassword(userId, passwordEncoder.encode(DEFAULT_PWD));
+    } else {
+      throw new EntityNotFoundException("User with id " + userId + " not found");
     }
-    userRepo.updatePassword(userId, passwordEncoder.encode(DEFAULT_PWD));
   }
 
   @Override
@@ -77,6 +82,11 @@ public class UserServiceImpl extends AbstractServiceBase implements UserService 
     var user = userRepo.findById(id);
     return user.map(u -> userMapper.updateUserEntity(userDetailsDto, u))
         .map(userMapper::toUserDetailsDto);
+  }
+
+  @Override
+  public boolean userExists(long userId) {
+    return userRepo.existsById(userId);
   }
 
   @Override

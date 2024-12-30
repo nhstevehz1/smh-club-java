@@ -5,6 +5,7 @@ import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.domain.repos.UserRepository;
 import com.smh.club.oauth2.dto.UserDetailsDto;
 import com.smh.club.oauth2.dto.UserDto;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -134,6 +134,7 @@ public class UserServiceTests {
   public void deleteUser_returns_void() {
     // setup
     long id = 100;
+    when(repoMock.existsById(id)).thenReturn(true);
     doNothing().when(repoMock).deleteById(id);
 
     // execute
@@ -171,7 +172,7 @@ public class UserServiceTests {
     when(repoMock.existsById(id)).thenReturn(false);
 
     // execute
-    assertThrows(UsernameNotFoundException.class, () -> svc.resetPassword(id));
+    assertThrows(EntityNotFoundException.class, () -> svc.resetPassword(id));
 
     // verify
     verifyNoMoreInteractions(repoMock, mapperMock, encoderMock);

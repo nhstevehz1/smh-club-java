@@ -338,6 +338,26 @@ public class UserControllerIntegrationTests {
 
   }
 
+  @WithMockUser
+  @Test
+  public void reset_password_user_not_found_returns_notFound()  {
+    // setup
+    var entities = addEntitiesToDb(5);
+    var highest = entities.stream()
+        .max(comparingLong(UserDetailsEntity::getId))
+        .map(UserDetailsEntity::getId).orElseThrow();
+    var id = highest + 100;
+
+    // execute
+    given()
+        .pathParam("id", id)
+        .when()
+        .put(path + "/{id}/pwd")
+        .then()
+        .status(HttpStatus.NOT_FOUND);
+
+  }
+
   // used with test that follows
   private static Stream<Arguments> updateNonNullableFields() {
     return Stream.of(
@@ -433,6 +453,7 @@ public class UserControllerIntegrationTests {
     var entities = Instancio.ofList(UserDetailsEntity.class)
         .size(size)
         .ignore(field(UserDetailsEntity::getId))
+        .withUnique(field(UserDetailsEntity::getUsername))
         .create();
 
     return repo.saveAllAndFlush(entities);

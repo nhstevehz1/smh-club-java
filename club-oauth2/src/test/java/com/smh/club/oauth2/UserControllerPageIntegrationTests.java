@@ -217,6 +217,7 @@ public class UserControllerPageIntegrationTests {
     var entities = Instancio.ofList(UserDetailsEntity.class)
         .size(size)
         .ignore(field(UserDetailsEntity::getId))
+        .withUnique(field(UserDetailsEntity::getUsername))
         .create();
 
     repo.saveAllAndFlush(entities);

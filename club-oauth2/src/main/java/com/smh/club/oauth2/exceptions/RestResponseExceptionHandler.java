@@ -1,5 +1,6 @@
 package com.smh.club.oauth2.exceptions;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,14 +16,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ValidationErrorResponse>  handleConstraintViolation(ConstraintViolationException ex) {
-      var violations =
-          ex.getConstraintViolations().stream()
-              .map(v -> ValidationError.of(v.getPropertyPath().toString(), v.getMessage()))
-              .toList();
-      return ResponseEntity.badRequest().body(ValidationErrorResponse.of(violations));
-    }
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ValidationErrorResponse>  handleConstraintViolation(ConstraintViolationException ex) {
+    var violations =
+        ex.getConstraintViolations().stream()
+            .map(v -> ValidationError.of(v.getPropertyPath().toString(), v.getMessage()))
+            .toList();
+    return ResponseEntity.badRequest().body(ValidationErrorResponse.of(violations));
+  }
 
   @Override
   protected ResponseEntity<Object>  handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -30,23 +31,33 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
                                                                  @NonNull HttpStatusCode status,
                                                                  @NonNull WebRequest request) {
 
-      if (!ex.getBindingResult().getFieldErrors().isEmpty()) {
-        var fieldErrors =
-            ex.getBindingResult().getFieldErrors().stream()
-                .map(v -> ValidationError.of(v.getField(), v.getDefaultMessage()))
-                .toList();
-        return handleExceptionInternal(ex, ValidationErrorResponse.of(fieldErrors), headers, status, request);
-      } else {
-        var errors =
-            ex.getBindingResult().getAllErrors().stream()
-                .map(v -> ValidationError.of(null, v.getDefaultMessage()))
-                .toList();
-        return handleExceptionInternal(ex, ValidationErrorResponse.of(errors), headers, status, request);
-      }
+    if (!ex.getBindingResult().getFieldErrors().isEmpty()) {
+      var fieldErrors =
+          ex.getBindingResult().getFieldErrors().stream()
+              .map(v -> ValidationError.of(v.getField(), v.getDefaultMessage()))
+              .toList();
+      return handleExceptionInternal(ex, ValidationErrorResponse.of(fieldErrors), headers, status, request);
+    } else {
+      var errors =
+          ex.getBindingResult().getAllErrors().stream()
+              .map(v -> ValidationError.of(null, v.getDefaultMessage()))
+              .toList();
+      return handleExceptionInternal(ex, ValidationErrorResponse.of(errors), headers, status, request);
+    }
   }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> onException(RuntimeException ex) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-    }
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<String>  handleIllegalArgument(IllegalArgumentException ex) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<String> onException(RuntimeException ex) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+  }
 }

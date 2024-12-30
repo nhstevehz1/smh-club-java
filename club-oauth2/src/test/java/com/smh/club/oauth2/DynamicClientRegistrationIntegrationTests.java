@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.domain.repos.UserRepository;
+import com.smh.club.oauth2.helpers.TestUtils;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.http.Header;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -61,8 +61,7 @@ public class DynamicClientRegistrationIntegrationTests {
 
   @Autowired
   public DynamicClientRegistrationIntegrationTests(MockMvc mockMvc,
-                                                   ObjectMapper withOauth2,
-                                                   @Qualifier("without-oauth2") ObjectMapper withoutOauth2) {
+                                                   ObjectMapper withoutOauth2) {
     this.mapper =  withoutOauth2;
 
     // setup RestAssured to use the MockMvc Context
@@ -71,7 +70,7 @@ public class DynamicClientRegistrationIntegrationTests {
     // Configure RestAssured to use the injected Object mapper.
     RestAssuredMockMvc.config =
         RestAssuredMockMvcConfig.config().objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
-            (type, s) -> withOauth2));
+            (type, s) -> TestUtils.getObjectMapper()));
   }
 
   @BeforeEach
