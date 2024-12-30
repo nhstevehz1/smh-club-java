@@ -3,15 +3,18 @@ plugins {
     id 'java'
 }
 
+configurations {
+    mockitoAgent
+}
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
-
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(22)
     }
 }
 

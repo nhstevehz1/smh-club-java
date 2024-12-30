@@ -37,5 +37,11 @@ dependencies {
     testImplementation libs.io.rest.assured.spring.mock.mvc
     testImplementation enforcedPlatform(libs.io.zonky.test.posgres.binaries17)
 
+    mockitoAgent('org.mockito:mockito-core') { transitive = false}
+}
 
+tasks {
+    test {
+        jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}" // need double quotes here
+    }
 }
