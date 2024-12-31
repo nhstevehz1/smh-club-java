@@ -4,6 +4,7 @@ import com.smh.club.oauth2.config.ModelMapperConfig;
 import com.smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
 import com.smh.club.oauth2.dto.CreateUserDto;
+import com.smh.club.oauth2.dto.ProfileDto;
 import com.smh.club.oauth2.dto.UserDetailsDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -143,7 +144,7 @@ public class UserMapperTests {
   }
 
   @Test
-  public void update_userDetailsEntity_from_userDto() {
+  public void update_userDetailsEntity_from_userDetailsDto() {
     // setup
     var dto = Instancio.create(UserDetailsDto.class);
     var entity = Instancio.of(UserDetailsEntity.class)
@@ -168,6 +169,28 @@ public class UserMapperTests {
     assertEquals(dto.isEnabled(), ret.isEnabled());
     assertEquals(dto.isAccountNonLocked(), ret.isAccountNonLocked());
 
+  }
+
+  @Test
+  public void update_userDetailsEntity_from_profileDto() {
+    // setup
+    var dto = Instancio.create(ProfileDto.class);
+    var entity = Instancio.of(UserDetailsEntity.class)
+        .create();
+    var id = entity.getId();
+
+    // execute
+    var ret = userMapper.updateUserEntity(dto, entity);
+
+    // verify
+    assertNotNull(ret);
+    assertEquals(dto.getEmail(), ret.getEmail());
+    assertEquals(id, ret.getId());
+    assertEquals(dto.getUsername(), ret.getUsername());
+    assertEquals(dto.getEmail(), ret.getEmail());
+    assertEquals(dto.getFirstName(), ret.getFirstName());
+    assertEquals(dto.getMiddleName(), ret.getMiddleName());
+    assertEquals(dto.getLastName(), ret.getLastName());
   }
 
   @Test
