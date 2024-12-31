@@ -3,10 +3,7 @@ package com.smh.club.oauth2.mappers;
 import com.smh.club.oauth2.contracts.mappers.UserMapper;
 import com.smh.club.oauth2.domain.entities.GrantedAuthorityEntity;
 import com.smh.club.oauth2.domain.entities.UserDetailsEntity;
-import com.smh.club.oauth2.dto.CreateUserDto;
-import com.smh.club.oauth2.dto.RoleDto;
-import com.smh.club.oauth2.dto.UserDetailsDto;
-import com.smh.club.oauth2.dto.UserDto;
+import com.smh.club.oauth2.dto.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +38,11 @@ public class UserMapperImpl implements UserMapper {
   }
 
   @Override
+  public ProfileDto toProfileDto(UserDetailsEntity userEntity) {
+    return modelMapper.map(userEntity, ProfileDto.class);
+  }
+
+  @Override
   public Page<UserDto> toPage(Page<UserDetailsEntity> page) {
     return page.map(this::toUserDto);
   }
@@ -56,6 +58,12 @@ public class UserMapperImpl implements UserMapper {
 
     userDetailsDto.getRoles().forEach(
         r -> userEntity.addGrantedAuthority(modelMapper.map(r, GrantedAuthorityEntity.class)));
+    return userEntity;
+  }
+
+  @Override
+  public UserDetailsEntity updateUserEntity(ProfileDto profileDto, UserDetailsEntity userEntity) {
+    modelMapper.map(profileDto, userEntity);
     return userEntity;
   }
 
