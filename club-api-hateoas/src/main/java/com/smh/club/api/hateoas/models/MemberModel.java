@@ -1,11 +1,11 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.entities.MemberEntity;
+import com.smh.club.api.hateoas.domain.annotations.SortExclude;
+import com.smh.club.api.hateoas.domain.annotations.SortTarget;
+import com.smh.club.api.hateoas.domain.entities.MemberEntity;
+import com.smh.club.api.hateoas.validation.constraints.BirthDate;
 import com.smh.club.api.hateoas.validation.constraints.ValidMember;
-import com.smh.club.api.shared.annotations.SortExclude;
-import com.smh.club.api.shared.annotations.SortTarget;
-import com.smh.club.api.shared.validators.constraints.BirthDate;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

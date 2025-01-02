@@ -1,8 +1,8 @@
 package com.smh.club.api.hateoas.mappers;
 
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.hateoas.config.MapperConfig;
+import com.smh.club.api.hateoas.domain.entities.MemberEntity;
+import com.smh.club.api.hateoas.domain.entities.PhoneEntity;
 import com.smh.club.api.hateoas.models.PhoneModel;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;

@@ -1,10 +1,10 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.entities.RenewalEntity;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.RenewalsRepo;
 import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
+import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.rest.domain.entities.RenewalEntity;
+import com.smh.club.api.rest.domain.repos.MembersRepo;
+import com.smh.club.api.rest.domain.repos.RenewalsRepo;
 import com.smh.club.api.rest.dto.RenewalDto;
 import java.util.Optional;
 import org.instancio.Instancio;

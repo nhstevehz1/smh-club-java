@@ -1,9 +1,8 @@
 package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.entities.RenewalEntity;
 import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
+import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.dto.RenewalDto;
-import com.smh.club.api.shared.mappers.DomainDataMapper;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

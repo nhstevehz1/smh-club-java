@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.contracts.mappers;
 
-import com.smh.club.api.data.entities.PhoneEntity;
+import com.smh.club.api.hateoas.domain.entities.PhoneEntity;
 import com.smh.club.api.hateoas.models.PhoneModel;
 import java.util.List;
 

@@ -1,13 +1,13 @@
 package com.smh.club.api.hateoas.services;
 
-import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.data.repos.AddressRepo;
-import com.smh.club.api.data.repos.MembersRepo;
+
 import com.smh.club.api.hateoas.contracts.assemblers.AddressAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
 import com.smh.club.api.hateoas.contracts.services.AddressService;
+import com.smh.club.api.hateoas.domain.entities.AddressEntity;
+import com.smh.club.api.hateoas.domain.repos.AddressRepo;
+import com.smh.club.api.hateoas.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.models.AddressModel;
-import com.smh.club.api.shared.services.AbstractServiceBase;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

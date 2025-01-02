@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.instancio;
 
-import com.smh.club.api.shared.validators.constraints.BirthDate;
+import com.smh.club.api.hateoas.validation.constraints.BirthDate;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import org.instancio.Node;

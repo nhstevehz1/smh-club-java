@@ -3,10 +3,10 @@ package com.smh.club.api.rest.integrationtests;
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.repos.AddressRepo;
-import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.rest.domain.entities.AddressEntity;
+import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.rest.domain.repos.AddressRepo;
+import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;

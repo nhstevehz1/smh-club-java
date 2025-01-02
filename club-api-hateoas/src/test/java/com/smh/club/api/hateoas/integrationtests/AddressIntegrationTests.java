@@ -4,10 +4,10 @@ import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.repos.AddressRepo;
-import com.smh.club.api.data.repos.MembersRepo;
+import com.smh.club.api.hateoas.domain.entities.AddressEntity;
+import com.smh.club.api.hateoas.domain.entities.MemberEntity;
+import com.smh.club.api.hateoas.domain.repos.AddressRepo;
+import com.smh.club.api.hateoas.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.models.AddressModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;

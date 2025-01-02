@@ -3,10 +3,10 @@ package com.smh.club.api.hateoas.integrationtests;
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.entities.RenewalEntity;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.RenewalsRepo;
+import com.smh.club.api.hateoas.domain.entities.MemberEntity;
+import com.smh.club.api.hateoas.domain.entities.RenewalEntity;
+import com.smh.club.api.hateoas.domain.repos.MembersRepo;
+import com.smh.club.api.hateoas.domain.repos.RenewalsRepo;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import com.smh.club.api.hateoas.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;

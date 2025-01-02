@@ -1,10 +1,10 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.entities.EmailEntity;
-import com.smh.club.api.data.entities.MemberEntity;
-import com.smh.club.api.data.repos.EmailRepo;
-import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.rest.contracts.mappers.EmailMapper;
+import com.smh.club.api.rest.domain.entities.EmailEntity;
+import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.rest.domain.repos.EmailRepo;
+import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.EmailDto;
 import java.util.Optional;
 import org.instancio.Instancio;

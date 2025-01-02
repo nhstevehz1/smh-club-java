@@ -1,10 +1,10 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.entities.PhoneEntity;
-import com.smh.club.api.shared.annotations.SortExclude;
-import com.smh.club.api.shared.annotations.SortTarget;
-import com.smh.club.api.shared.domain.PhoneType;
+import com.smh.club.api.hateoas.domain.annotations.SortExclude;
+import com.smh.club.api.hateoas.domain.annotations.SortTarget;
+import com.smh.club.api.hateoas.domain.entities.PhoneEntity;
+import com.smh.club.api.hateoas.domain.entities.PhoneType;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,9 +1,9 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.entities.AddressEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.AddressAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.AddressMapper;
 import com.smh.club.api.hateoas.controllers.AddressController;
+import com.smh.club.api.hateoas.domain.entities.AddressEntity;
 import com.smh.club.api.hateoas.models.AddressModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

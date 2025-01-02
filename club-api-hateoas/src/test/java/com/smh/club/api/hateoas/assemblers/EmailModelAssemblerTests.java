@@ -1,8 +1,8 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.hateoas.config.MapperConfig;
 import com.smh.club.api.hateoas.contracts.mappers.EmailMapper;
+import com.smh.club.api.hateoas.domain.entities.EmailEntity;
 import com.smh.club.api.hateoas.mappers.EmailMapperImpl;
 import com.smh.club.api.hateoas.models.EmailModel;
 import org.instancio.Instancio;

@@ -1,10 +1,10 @@
 package com.smh.club.api.hateoas.services;
 
-import com.smh.club.api.data.entities.PhoneEntity;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.PhoneRepo;
 import com.smh.club.api.hateoas.contracts.assemblers.PhoneAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.PhoneMapper;
+import com.smh.club.api.hateoas.domain.entities.PhoneEntity;
+import com.smh.club.api.hateoas.domain.repos.MembersRepo;
+import com.smh.club.api.hateoas.domain.repos.PhoneRepo;
 import com.smh.club.api.hateoas.models.PhoneModel;
 import java.util.Optional;
 import org.instancio.Instancio;
