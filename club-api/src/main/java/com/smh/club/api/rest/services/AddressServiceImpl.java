@@ -1,13 +1,12 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.data.repos.AddressRepo;
-import com.smh.club.api.data.repos.MembersRepo;
 import com.smh.club.api.rest.contracts.mappers.AddressMapper;
 import com.smh.club.api.rest.contracts.services.AddressService;
+import com.smh.club.api.rest.domain.entities.AddressEntity;
+import com.smh.club.api.rest.domain.repos.AddressRepo;
+import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.response.PagedDto;
-import com.smh.club.api.shared.services.AbstractServiceBase;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,11 +1,11 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.shared.annotations.SortExclude;
-import com.smh.club.api.shared.annotations.SortTarget;
-import com.smh.club.api.shared.domain.AddressType;
-import com.smh.club.api.shared.validators.constraints.PostalCode;
+import com.smh.club.api.hateoas.domain.annotations.SortExclude;
+import com.smh.club.api.hateoas.domain.annotations.SortTarget;
+import com.smh.club.api.hateoas.domain.entities.AddressEntity;
+import com.smh.club.api.hateoas.domain.entities.AddressType;
+import com.smh.club.api.hateoas.validation.constraints.PostalCode;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;

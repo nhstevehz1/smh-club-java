@@ -5,6 +5,6 @@ spring:
       hibernate:
       format_sql: true
 
-  logging:
-    level:
-      ROOT: DEBUG
+logging:
+  level:
+    root: debug

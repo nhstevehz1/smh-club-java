@@ -4,7 +4,7 @@ import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.dto.EmailDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
-import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import com.smh.club.api.rest.validation.constraints.SortConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.contracts.mappers;
 
-import com.smh.club.api.data.entities.AddressEntity;
-import com.smh.club.api.data.entities.EmailEntity;
+import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.dto.EmailDto;
 import java.util.List;

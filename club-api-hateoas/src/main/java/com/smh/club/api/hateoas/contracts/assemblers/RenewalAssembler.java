@@ -1,6 +1,6 @@
 package com.smh.club.api.hateoas.contracts.assemblers;
 
-import com.smh.club.api.data.entities.RenewalEntity;
+import com.smh.club.api.hateoas.domain.entities.RenewalEntity;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;

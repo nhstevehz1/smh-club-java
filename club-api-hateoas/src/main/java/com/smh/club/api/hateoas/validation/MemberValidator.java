@@ -3,8 +3,8 @@ package com.smh.club.api.hateoas.validation;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import com.smh.club.api.hateoas.models.MemberModel;
+import com.smh.club.api.hateoas.validation.constraints.BirthDate;
 import com.smh.club.api.hateoas.validation.constraints.ValidMember;
-import com.smh.club.api.shared.validators.constraints.BirthDate;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDate;

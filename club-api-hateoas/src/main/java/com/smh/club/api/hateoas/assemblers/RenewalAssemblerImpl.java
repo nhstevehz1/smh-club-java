@@ -1,9 +1,9 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.entities.RenewalEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.RenewalAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.RenewalMapper;
 import com.smh.club.api.hateoas.controllers.RenewalController;
+import com.smh.club.api.hateoas.domain.entities.RenewalEntity;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -3,8 +3,8 @@ package com.smh.club.api.rest.validation;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.validation.constraints.BirthDate;
 import com.smh.club.api.rest.validation.constraints.ValidMember;
-import com.smh.club.api.shared.validators.constraints.BirthDate;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDate;

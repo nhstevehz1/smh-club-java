@@ -1,8 +1,8 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.entities.RenewalEntity;
 import com.smh.club.api.hateoas.config.MapperConfig;
 import com.smh.club.api.hateoas.contracts.mappers.RenewalMapper;
+import com.smh.club.api.hateoas.domain.entities.RenewalEntity;
 import com.smh.club.api.hateoas.mappers.RenewalMapperImpl;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import org.instancio.Instancio;

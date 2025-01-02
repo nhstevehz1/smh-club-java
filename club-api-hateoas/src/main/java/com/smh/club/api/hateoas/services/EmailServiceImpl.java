@@ -1,13 +1,13 @@
 package com.smh.club.api.hateoas.services;
 
-import com.smh.club.api.data.entities.EmailEntity;
-import com.smh.club.api.data.repos.EmailRepo;
-import com.smh.club.api.data.repos.MembersRepo;
+
 import com.smh.club.api.hateoas.contracts.assemblers.EmailAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.EmailMapper;
 import com.smh.club.api.hateoas.contracts.services.EmailService;
+import com.smh.club.api.hateoas.domain.entities.EmailEntity;
+import com.smh.club.api.hateoas.domain.repos.EmailRepo;
+import com.smh.club.api.hateoas.domain.repos.MembersRepo;
 import com.smh.club.api.hateoas.models.EmailModel;
-import com.smh.club.api.shared.services.AbstractServiceBase;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

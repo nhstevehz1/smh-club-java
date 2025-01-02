@@ -1,9 +1,9 @@
 package com.smh.club.api.hateoas.assemblers;
 
-import com.smh.club.api.data.entities.EmailEntity;
 import com.smh.club.api.hateoas.contracts.assemblers.EmailAssembler;
 import com.smh.club.api.hateoas.contracts.mappers.EmailMapper;
 import com.smh.club.api.hateoas.controllers.EmailController;
+import com.smh.club.api.hateoas.domain.entities.EmailEntity;
 import com.smh.club.api.hateoas.models.EmailModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,13 +1,12 @@
 package com.smh.club.api.rest.services;
 
-import com.smh.club.api.data.entities.RenewalEntity;
-import com.smh.club.api.data.repos.MembersRepo;
-import com.smh.club.api.data.repos.RenewalsRepo;
 import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.rest.contracts.services.RenewalService;
+import com.smh.club.api.rest.domain.entities.RenewalEntity;
+import com.smh.club.api.rest.domain.repos.MembersRepo;
+import com.smh.club.api.rest.domain.repos.RenewalsRepo;
 import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.response.PagedDto;
-import com.smh.club.api.shared.services.AbstractServiceBase;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

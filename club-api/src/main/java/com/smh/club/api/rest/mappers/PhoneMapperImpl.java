@@ -1,9 +1,8 @@
 package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.entities.PhoneEntity;
 import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
+import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.PhoneDto;
-import com.smh.club.api.shared.mappers.DomainDataMapper;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

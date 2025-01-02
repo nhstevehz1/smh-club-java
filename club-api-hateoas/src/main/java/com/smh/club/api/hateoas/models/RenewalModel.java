@@ -1,10 +1,10 @@
 package com.smh.club.api.hateoas.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.data.entities.RenewalEntity;
+import com.smh.club.api.hateoas.domain.annotations.SortExclude;
+import com.smh.club.api.hateoas.domain.annotations.SortTarget;
+import com.smh.club.api.hateoas.domain.entities.RenewalEntity;
 import com.smh.club.api.hateoas.validation.constraints.ValidRenewal;
-import com.smh.club.api.shared.annotations.SortExclude;
-import com.smh.club.api.shared.annotations.SortTarget;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
 package com.smh.club.api.rest.mappers;
 
-import com.smh.club.api.data.entities.MemberEntity;
 import com.smh.club.api.rest.config.MapperConfig;
+import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.dto.MemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;

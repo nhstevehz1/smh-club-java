@@ -3,7 +3,7 @@ package com.smh.club.api.hateoas.controllers;
 import com.smh.club.api.hateoas.contracts.services.RenewalService;
 import com.smh.club.api.hateoas.models.RenewalModel;
 import com.smh.club.api.hateoas.response.CountResponse;
-import com.smh.club.api.shared.validators.constraints.SortConstraint;
+import com.smh.club.api.hateoas.validation.constraints.SortConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,5 @@
 package com.smh.club.api.hateoas.exceptionhandlers;
 
-import com.smh.club.api.shared.exceptionhandlers.ValidationError;
-import com.smh.club.api.shared.exceptionhandlers.ValidationErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

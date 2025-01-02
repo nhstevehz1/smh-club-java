@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.instancio;
 
-import com.smh.club.api.shared.validators.constraints.PostalCode;
+import com.smh.club.api.rest.validation.constraints.PostalCode;
 import java.lang.reflect.Field;
 import org.instancio.Node;
 import org.instancio.generator.GeneratorSpec;
