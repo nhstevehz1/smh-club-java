@@ -7,7 +7,6 @@ import {MatIconButton} from "@angular/material/button";
 import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
 import {NgIf} from "@angular/common";
-import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-header',
@@ -34,7 +33,7 @@ export class HeaderComponent {
   isAuthed: boolean = false;
 
   @Input('lastLogin')
-  lastLogin: string = DateTime.now().toISODate();
+  lastLogin: string | null = null;
 
   @Output()
   profileClick = new EventEmitter<void>();

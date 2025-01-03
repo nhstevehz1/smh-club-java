@@ -33,16 +33,36 @@ export class MenuListItemComponent {
 
   expanded: boolean = false;
   @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
-  @Input() item: NavItem = new NavItem();
+  @Input() item: NavItem = NavItem.Empty()!;
   @Input() depth: number = 0;
+
+  get displayName(): string {
+    return this.item!.displayName;
+  }
+
+  get iconName(): string {
+    return this.item!.iconName;
+  }
+
+  get routeName(): string {
+    return this.item!.route;
+  }
+
+  get hasChildren(): boolean {
+    return this.item!.children.length > 0;
+  }
+
+  get children(): NavItem[] {
+    return this.item!.children;
+  }
 
   constructor(public router: Router,
               private navService: NavService) {}
 
-  onItemSelected(item: NavItem) {
-    if (item.children.length == 0) {
-      this.router.navigate([item.route]).then(r => {
-        if(r) {
+  onItemSelected() {
+    if (this.item.children.length == 0) {
+      this.router.navigate([this.item.route]).then(r => {
+        if (r) {
           this.navService.closeNav();
         }
       });

@@ -1,4 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
 
+/*  Material icon customization */
+.material-icons.md-blue {
+  color: blue;
+}
+
+.material-icons.md-green {
+  color: green;
+}
+
+.material-icons.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+.material-icons.md-red {
+  color: red;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+button:disabled mat-icon {
+  color: gray;
+}
+
+.transparent .mat-dialog-container {
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.0);
+}
+
+.hidden-input {
+  display: none;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -9,7 +9,8 @@ import {Router, RouterOutlet} from "@angular/router";
 import {NavService} from "../services/nav.service";
 import {NavItem} from "../menu-list-item/nav-item";
 import {AuthService} from "../../auth/services/auth.service";
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
+import {AuthUser} from "../../auth/models/auth-user";
 
 @Component({
   selector: 'app-main-layout',
@@ -22,7 +23,8 @@ import {NgIf} from "@angular/common";
     MatDivider,
     RouterOutlet,
     MatSidenav,
-    NgIf
+    NgIf,
+    NgForOf
   ],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
@@ -30,9 +32,19 @@ import {NgIf} from "@angular/common";
 export class MainLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatSidenav, {static: true}) sidenav!: MatSidenav;
 
-  name: string = '';
-  isAuthed: boolean = false;
-  lastLogin: string = '';
+  get isAuthed(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  get name(): string {
+    return this.authUser!.username
+  }
+
+  get lastLogin(): string | null{
+    return this.authUser!.lastLogin
+  }
+
+  private authUser: AuthUser | null = null;
 
   private userSubscription: Subscription | null = null;
 
@@ -46,13 +58,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       console.info("Main layout sub fired: " + u );
 
       if (u) {
-        this.name = u.username;
-        this.isAuthed = this.authService.isAuthenticated();
-        this.lastLogin = u.lastLogin;
-      } else {
-        this.name = '';
-        this.isAuthed = false;
-        this.lastLogin = '';
+        this.authUser = u;
       }
     })
   }
@@ -74,7 +80,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isManager(): boolean {
-    return false;
+    return true;
     /*return this.auth.isAuthenticated
         && this.auth.isInRoles(RoleType.Manager);*/
   }
