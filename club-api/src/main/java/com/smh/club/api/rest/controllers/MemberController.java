@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MemberController {
 
-    private final String DEFAULT_SORT = "member-number";
+    private final String DEFAULT_SORT = "memberNumber";
 
     private final MemberService memberSvc;
 

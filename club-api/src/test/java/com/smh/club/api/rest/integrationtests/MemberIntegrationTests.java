@@ -116,7 +116,7 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
 
         Map<String, String> map = new HashMap<>();
-        map.put(sortParamName,  "member-number,desc");
+        map.put(sortParamName,  "member_number,desc");
 
         var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
@@ -178,7 +178,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date" })
+    @ValueSource(strings = {"id", "member_number", "first_name", "last_name", "birth_date", "joined_date" })
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
@@ -203,7 +203,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"middle-name", "suffix"})
+    @ValueSource(strings = {"middle_name", "suffix"})
     public void getListPage_excluded_fields_returns_bad_request(String sort) {
         // setup
         Map<String, String > map = new HashMap<>();
@@ -617,25 +617,25 @@ public class MemberIntegrationTests extends IntegrationTests {
         map.put("id", SortFields.of(Comparator.comparingInt(MemberEntity::getId),
             Comparator.comparingInt(MemberDto::getId)));
 
-        map.put("member-number", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+        map.put("member_number", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
             Comparator.comparingInt(MemberDto::getMemberNumber)));
 
-        map.put("first-name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
+        map.put("first_name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
             Comparator.comparing(MemberDto::getFirstName)));
 
-        map.put("middle-name", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+        map.put("middle_name", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
             Comparator.comparingInt(MemberDto::getMemberNumber)));
 
-        map.put("last-name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
+        map.put("last_name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
             Comparator.comparing(MemberDto::getLastName)));
 
         map.put("suffix", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
             Comparator.comparingInt(MemberDto::getMemberNumber)));
 
-        map.put("birth-date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
+        map.put("birth_date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
             Comparator.comparing(MemberDto::getBirthDate)));
 
-        map.put("joined-date", SortFields.of(Comparator.comparing(MemberEntity::getJoinedDate),
+        map.put("joined_date", SortFields.of(Comparator.comparing(MemberEntity::getJoinedDate),
             Comparator.comparing(MemberDto::getJoinedDate)));
 
         return map;
