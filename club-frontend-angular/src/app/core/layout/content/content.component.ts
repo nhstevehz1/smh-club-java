@@ -30,7 +30,7 @@ export class ContentComponent {
     }
 
     onMenuClicked(route: string): void {
-        this.router.navigate([route]).then(r =>
+        this.router.navigate([route]).then(() =>
             this.sidenav.toggle()
         );
     }

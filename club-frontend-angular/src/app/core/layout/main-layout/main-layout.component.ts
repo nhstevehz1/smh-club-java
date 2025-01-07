@@ -72,7 +72,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   profileHandler(): void {
-    this.router.navigate(['p/profile']).then(r =>
+    this.router.navigate(['p/profile']).then(() =>
     console.log("Profile menu clicked"));
   }
 

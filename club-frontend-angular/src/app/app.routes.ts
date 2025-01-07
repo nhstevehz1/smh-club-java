@@ -13,13 +13,13 @@ export const routes: Routes = [
     },
     {
         path: 'p/addresses',
-        loadComponent: () => import('./features/addresses/addresses.component')
-            .then(mod => mod.AddressesComponent)
+        loadComponent: () => import('./features/addresses/list-addresses/list-addresses.component')
+            .then(mod => mod.ListAddressesComponent)
     },
     {
         path: 'p/emails',
-        loadComponent: () => import('./features/emails/emails.component')
-            .then(mod => mod.EmailsComponent)
+        loadComponent: () => import('./features/emails/list-emails/list-emails.component')
+            .then(mod => mod.ListEmailsComponent)
     },
     {
         path: '',
