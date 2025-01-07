@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, inject, ViewChild} from '@angular/core';
 import {
-  MatCell,
+  MatCell, MatCellDef,
   MatColumnDef,
-  MatHeaderCell,
-  MatHeaderRow,
-  MatRow,
+  MatHeaderCell, MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef,
+  MatRow, MatRowDef,
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
@@ -30,6 +30,10 @@ import {ConcatStringsPipe} from "../../../shared/pipes/strings/concat-strings.pi
     MatPaginator,
     MatCell,
     ConcatStringsPipe,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatHeaderRowDef,
+    MatRowDef,
 
   ],
   providers: [MembersService],
