@@ -1,6 +1,7 @@
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
+  text-align: center;
+  background-color: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-primary);
+  font-size: var(--mat-sys-label-medium-large);
 }

@@ -1,33 +1,35 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatToolbar} from "@angular/material/toolbar";
-import {MatLabel} from "@angular/material/form-field";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
-import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
-import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
-import {NgIf} from "@angular/common";
+import {DOCUMENT} from "@angular/common";
+import {MatDivider} from "@angular/material/divider";
+import {RouterLink} from "@angular/router";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
 
 @Component({
   selector: 'app-header',
-  imports: [
-    MatToolbar,
-    MatLabel,
-    MatMenu,
-    MatIcon,
-    MatMenuItem,
-    MatIconButton,
-    MatMenuTrigger,
-    DateTimeFromIsoPipe,
-    DateTimeToFormatPipe,
-    NgIf
-  ],
+    imports: [
+        MatToolbar,
+        MatMenu,
+        MatIcon,
+        MatMenuItem,
+        MatIconButton,
+        MatMenuTrigger,
+        MatDivider,
+        RouterLink,
+        MatTooltip,
+        MatSlideToggle
+    ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  @Input('name')
-  name: string = '';
+    private document: Document = inject(DOCUMENT);
+
+    @Input('name') name: string = '';
 
   @Input('isAuthed')
   isAuthed: boolean = false;
@@ -50,5 +52,9 @@ export class HeaderComponent {
 
   logout() {
     this.logoutClick.next();
+  }
+
+  onThemeChanged(event: MatSlideToggleChange): void {
+      this.document.body.classList.toggle('dark-mode', event.checked);
   }
 }

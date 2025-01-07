@@ -1,31 +1,28 @@
-<mat-toolbar>
-    <span>Social Club Members</span>
+<header>
+<mat-toolbar class="header-toolbar">
+    <button mat-icon-button (click)="toggleSidenav.emit()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>Social Club</span>
     <span class="header-spacer"></span>
-    <ng-container *ngIf="isAuthed">
-        <mat-label class="header-user-label">
-            ({{name}})
-        </mat-label>
-        <mat-label class="header-user-label">
-            Last login: {{lastLogin | dateTimeFromIso | dateTimeToFormat: 'D T'}}
-        </mat-label>
-
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>person</mat-icon>
+    <mat-slide-toggle (change)="onThemeChanged($event)">dark</mat-slide-toggle>
+    <button mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
+        <button mat-menu-item routerLink="#">
+            <mat-icon>person</mat-icon><span>My Account</span>
         </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="profile()">
-                <mat-icon>settings</mat-icon>
-                <span>Profile</span>
-            </button>
-            <button mat-menu-item (click)="logout()">
-                <mat-icon>logout</mat-icon>
-                <span>Log Out</span>
-            </button>
-        </mat-menu>
-
-        <button mat-icon-button (click)="toggleSidenav.emit()">
-            <mat-icon>menu</mat-icon>
+        <button mat-menu-item routerLink="#">
+            <mat-icon>settings</mat-icon><span>Settings</span>
         </button>
-    </ng-container>
-
+        <button mat-menu-item routerLink="#">
+            <mat-icon>help</mat-icon><span>Help</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="#">
+            <mat-icon>exit_to_app</mat-icon><span>Logout</span>
+        </button>
+    </mat-menu>
 </mat-toolbar>
+</header>

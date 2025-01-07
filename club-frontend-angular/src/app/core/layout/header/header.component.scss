@@ -1,18 +1,17 @@
-
-mat-toolbar {
-  background: #004a9f;
-  color: white;
-  display: flex;
-  padding: 0 16px;
-  white-space: nowrap;
-  height: 50px;
-  align-items: center;
-}
-
+@use '@angular/material' as mat;
 .header-spacer {
   flex: 1 1 auto;
 }
 
-.header-user-label {
-  font-size: 12px;
+mat-toolbar {
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-surface-container-highest),
+    container-text-color: var(--mat-sys-primary),
+  ));
+}
+
+mat-slide-toggle {
+  @include mat.slide-toggle-overrides((
+    label-text-color: var(--mat-sys-primary)
+  ))
 }

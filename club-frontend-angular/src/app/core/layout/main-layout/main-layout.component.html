@@ -1,29 +1,14 @@
-<app-header (toggleSidenav)="sidenav.toggle()"
-            (logoutClick)="logoutHandler()"
-            (profileClick)="profileHandler()"
-            [name]="name"
-            [isAuthed]="isAuthed"
-            [lastLogin]="lastLogin"></app-header>
-
-<mat-sidenav-container>
-    <mat-sidenav class="mat-elevation-z8" position="end" mode="over" closed>
-        <mat-nav-list dense>
-            <ng-container *ngIf="isUser()">
-                <app-menu-list-item *ngFor="let item of userNav" [item]="item"></app-menu-list-item>
-            </ng-container>
-            <ng-container *ngIf="isManager()">
-                <mat-divider></mat-divider>
-                <app-menu-list-item *ngFor="let item of mgrNav" [item]="item"></app-menu-list-item>
-            </ng-container>
-            <ng-container *ngIf="isAdmin()">
-                <mat-divider></mat-divider>
-                <app-menu-list-item *ngFor="let item of adminNav" [item]="item" ></app-menu-list-item>
-            </ng-container>
-        </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <div class="content">
-            <router-outlet></router-outlet>
-        </div>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="app-container">
+    <app-header class="app-header"
+                (toggleSidenav)="sideNaveHandler()"
+                (logoutClick)="logoutHandler()"
+                (profileClick)="profileHandler()"
+                [name]="name"
+                [isAuthed]="isAuthed"
+                [lastLogin]="lastLogin">
+    </app-header>
+    <mat-divider></mat-divider>
+    <app-content class="app-content"></app-content>
+    <mat-divider></mat-divider>
+    <app-footer class="app-footer"></app-footer>
+</div>
