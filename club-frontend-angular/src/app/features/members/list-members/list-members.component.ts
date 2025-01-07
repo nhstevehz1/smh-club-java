@@ -30,6 +30,7 @@ import {ConcatStringsPipe} from "../../../shared/pipes/strings/concat-strings.pi
     MatPaginator,
     MatCell,
     ConcatStringsPipe,
+
   ],
   providers: [MembersService],
   templateUrl: './list-members.component.html',
