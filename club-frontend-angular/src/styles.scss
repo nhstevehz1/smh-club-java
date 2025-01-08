@@ -17,6 +17,10 @@ html {
       header-headline-size: var(--mat-sys-title-medium-size),
   ));
 
+  @include mat.paginator-overrides((
+      container-text-color: var(--mat-sys-primary),
+  ));
+
 }
 
 body.dark-mode {

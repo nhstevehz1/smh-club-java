@@ -67,7 +67,7 @@ export class AuthService implements OnInit, OnDestroy {
     console.info("AuthService: logout called");
     return this.http.post<string>('/api/auth/logout', null )
         .pipe(tap(() => {
-          sessionStorage.clear();
+          //sessionStorage.clear();
           this.userSubject.next(null);
         }));
 

@@ -8,7 +8,8 @@ export const routes: Routes = [
     },
     {
         path: 'p/members',
-        loadComponent: () => import('./features/members/list-members/list-members.component')
+        loadComponent: () =>
+            import('./features/members/list-members/list-members.component')
             .then(mod => mod.ListMembersComponent)
     },
     {

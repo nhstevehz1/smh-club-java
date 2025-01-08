@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
   selector: 'app-construction',
   imports: [],
   templateUrl: './construction.component.html',
-  styleUrl: './construction.component.css'
+  styleUrl: './construction.component.scss'
 })
 export class ConstructionComponent {
 

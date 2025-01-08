@@ -1,0 +1,24 @@
+<table mat-table matSort matSortDisableClear [dataSource]="dataSource">
+    @for (column of columns; track column) {
+        <ng-container [matColumnDef]="column.name">
+            @if (column.isSortable) {
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{column.displayName}}
+                </th>
+            } @else {
+                <th mat-header-cell *matHeaderCellDef>
+                    {{column.displayName}}
+                </th>
+            }
+            <td mat-cell *matCellDef="let row">{{column.cell(row)}}</td>
+        </ng-container>
+    }
+    <tr mat-header-row *matHeaderRowDef="columnNames; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row;  columns: columnNames"></tr>
+</table>
+<mat-paginator
+    [pageSizeOptions]="pageSizes"
+    [length]="resultsLength"
+    [pageSize]="pageSize"
+    showFirstLastButtons>
+</mat-paginator>
