@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MainLayoutComponent} from "./core/layout/main-layout/main-layout.component";
 import {LoadingSpinnerService} from "./core/loading/loading-spinner.service";
 
