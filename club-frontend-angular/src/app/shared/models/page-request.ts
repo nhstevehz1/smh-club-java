@@ -1,5 +1,4 @@
 import {SortDirection} from "@angular/material/sort";
-import {Observable} from "rxjs";
 
 export class PageRequest {
     page: number | undefined;

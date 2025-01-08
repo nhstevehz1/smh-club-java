@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {ColumnDef} from "./models/column-def";
 import {
   MatCell, MatCellDef,
@@ -10,7 +10,6 @@ import {
 } from "@angular/material/table";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {ConcatStringsPipe} from "../../pipes/strings/concat-strings.pipe";
 
 @Component({
   selector: 'app-sortable-pageable-table',
@@ -19,15 +18,16 @@ import {ConcatStringsPipe} from "../../pipes/strings/concat-strings.pipe";
     MatColumnDef,
     MatHeaderCell,
     MatSortHeader,
-    MatHeaderCellDef,
     MatCell,
-    MatCellDef,
     MatPaginator,
     MatHeaderRow,
-    MatHeaderRowDef,
     MatRow,
+    MatSort,
+    // do not remove list below.  Intellij IDE thinks they are not being used.
+    MatHeaderCellDef,
+    MatCellDef,
+    MatHeaderRowDef,
     MatRowDef,
-    MatSort
   ],
   templateUrl: './sortable-pageable-table.component.html',
   styleUrl: './sortable-pageable-table.component.scss'

@@ -6,8 +6,6 @@ import {EventBusService} from "./event-bus.service";
 import {RoleType} from "../models/role-type";
 import {DateTime} from "luxon";
 
-const USER_KEY = 'auth-user';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -42,12 +40,6 @@ export class AuthService implements OnInit, OnDestroy {
   }
 
   getUser(): AuthUser | null {
-    /*const fromStorage = sessionStorage.getItem(USER_KEY);
-    if (fromStorage) {
-      return JSON.parse(fromStorage);
-    }
-    return null;*/
-
     return {
       id: 'abc',
       username: 'user',
