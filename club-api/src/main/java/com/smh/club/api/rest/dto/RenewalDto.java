@@ -28,14 +28,14 @@ public class RenewalDto {
     private int id;
 
     @SortExclude
-    @JsonProperty("member-id")
+    @JsonProperty("member_id")
     private int memberId;
 
     @NotNull
     @PastOrPresent
-    @JsonProperty("renewal-date")
+    @JsonProperty("renewal_date")
     private LocalDate renewalDate;
 
-    @JsonProperty("renewal-year")
+    @JsonProperty("renewal_year")
     private int renewalYear;
 }
