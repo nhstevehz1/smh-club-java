@@ -3,12 +3,10 @@ package com.smh.club.api.rest.config;
 import com.smh.club.api.rest.domain.entities.*;
 import com.smh.club.api.rest.dto.*;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class MapperConfig {

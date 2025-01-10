@@ -1,6 +1,5 @@
 package com.smh.club.api.rest.domain.entities;
 
-import com.smh.club.api.rest.domain.annotations.SortExclude;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -21,10 +21,9 @@ import org.springframework.context.annotation.Profile;
 public class DevSetup implements CommandLineRunner {
   private final MembersRepo repo;
 
-
   @Transactional
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     var list = new ArrayList<MemberEntity>();
     var multi = 100;
     var random = new Random();
