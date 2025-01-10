@@ -6,6 +6,7 @@ import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.repos.AddressRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,22 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
 
         return PagedDto.of(page);
     }
+
+    @Override
+    public PagedDto<AddressMemberDto> getMemberPage(Pageable pageable) {
+        var pageRequest = PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            getSort(pageable.getSort()));
+
+        log.debug("Created pageable: {}", pageRequest);
+
+        //var page = addressMapper.toPage(addressRepo.findAll(pageRequest));
+        var page = addressRepo.findAll(pageRequest).map(addressMapper::toAddressMemberDto);
+
+        return PagedDto.of(page);
+    }
+
 
     /**
      * {@inheritDoc}
@@ -115,7 +132,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), AddressDto.class, AddressEntity.class)
+                    getSort(o.getProperty(), AddressMemberDto.class, AddressEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

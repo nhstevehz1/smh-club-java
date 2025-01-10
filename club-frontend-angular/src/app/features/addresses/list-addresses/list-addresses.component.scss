@@ -1,0 +1,17 @@
+@use "@angular/material" as mat;
+
+.table-container{
+  margin: 10px;
+  width: 100%;
+  box-shadow: var(--mat-sys-level3);
+}
+
+.table-child {
+  .mat-column-member_number {
+    border-right: black solid 1px;
+    //text-align: center;
+  }
+  .mat-column-full_name {
+    width:350px;
+  }
+}

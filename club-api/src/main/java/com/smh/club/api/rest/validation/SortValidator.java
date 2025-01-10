@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.validation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.rest.domain.annotations.SortAlias;
 import com.smh.club.api.rest.domain.annotations.SortExclude;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -9,6 +10,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,6 +42,12 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
    * if a field has both an @SortTarget and an @JsonProperty
    *   then use the @JsonProperty value if the @SortTarget value exists in the entity name list.
    * </p>
+   * <p>
+   * if a field has both an @SortAlias
+   *   then include the @SortAlias value, the @JsonProperty value (if one exists), and the underlying field name
+   *   in the allowed list.
+   *  </p>
+   *
    *
    * @param constraintAnnotation An instance of the {@link SortConstraint} annotation.
    */
@@ -57,12 +65,19 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
     var dtoFields = Arrays.stream(constraintAnnotation.value().getDeclaredFields())
         .map(DtoSortField::of).toList();
 
+    var sortAliases =
+        dtoFields
+            .stream()
+            .map(DtoSortField::getSortAliasName)
+            .filter(Objects::nonNull).toList();
+
     // Gather a list of allowed fields based on the criteria described above
     var mappedNames =
         dtoFields
           .stream()
           .filter(sf ->
-              sf.isNotExcluded() && entityFields.contains(sf.getDtoFieldName()))
+              // filter not excluded and either the entity contains the filed or a sort alias exists
+              sf.isNotExcluded() && (entityFields.contains(sf.getDtoFieldName())) || sf.sortAliasName != null)
           .map(sf -> sf.getJsonPropName() !=null ? sf.getJsonPropName() : sf.getDtoFieldName())
           .toList();
 
@@ -74,7 +89,9 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
             .map(DtoSortField::getDtoFieldName).toList();
 
     // concatenate the two lists while removing duplicates
-    allowedSortNames = Stream.concat(mappedNames.stream(), dtoNames.stream()).distinct().toList();
+    var mappedAndDto = Stream.concat(mappedNames.stream(), dtoNames.stream()).distinct().toList();
+    allowedSortNames = Stream.concat(mappedAndDto.stream(), sortAliases.stream()).toList();
+
   }
 
   /**
@@ -103,17 +120,23 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
   private static class DtoSortField {
     private final String jsonPropName;
     private final String dtoFieldName;
+    private final String sortAliasName;
     private final boolean isNotExcluded;
 
     public static DtoSortField of(Field field) {
+
+      var notExcluded = field.getAnnotation(SortExclude.class) == null;
+
+      var sortAliasProp = field.getAnnotation(SortAlias.class);
+      var sortAliasValue = sortAliasProp != null ? sortAliasProp.value() : null;
+
       var jsonProp = field.getAnnotation(JsonProperty.class);
       var jsonPropValue = jsonProp != null ? jsonProp.value() : null;
 
       var fieldName = field.getName();
 
-      var notExcluded = field.getAnnotation(SortExclude.class) == null;
+      return new DtoSortField(jsonPropValue, fieldName, sortAliasValue, notExcluded );
 
-      return new DtoSortField(jsonPropValue, fieldName, notExcluded );
     }
   }
 }

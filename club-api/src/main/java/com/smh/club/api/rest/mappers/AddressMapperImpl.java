@@ -3,6 +3,7 @@ package com.smh.club.api.rest.mappers;
 import com.smh.club.api.rest.contracts.mappers.AddressMapper;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,11 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
     @Override
     public AddressDto toDto(AddressEntity entity) {
         return modelMapper.map(entity, AddressDto.class);
+    }
+
+    @Override
+    public AddressMemberDto toAddressMemberDto(AddressEntity entity) {
+        return modelMapper.map(entity, AddressMemberDto.class);
     }
 
     /**

@@ -1,7 +1,7 @@
 @use "@angular/material" as mat;
 
-.list-members-container {
+.table-container{
   margin: 10px;
   width: 100%;
-  @include mat.elevation(4, var(--mat-sys-secondary));
+  box-shadow: var(--mat-sys-level3);
 }

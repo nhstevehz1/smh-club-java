@@ -39,7 +39,6 @@ public class AddressEntity {
     @Column(name = "address_type", nullable = false)
     private AddressType addressType = AddressType.Home;
 
-    @SortExclude
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

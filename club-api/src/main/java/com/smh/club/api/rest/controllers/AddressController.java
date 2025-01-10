@@ -2,6 +2,7 @@ package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -38,7 +39,7 @@ public class AddressController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing a page of {@link AddressDto}.
      */
-    @GetMapping
+    //@GetMapping
     public ResponseEntity<PagedDto<AddressDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(AddressDto.class)
@@ -46,6 +47,16 @@ public class AddressController {
 
         var page = addressSvc.getPage(pageable);
 
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping
+    public ResponseEntity<PagedDto<AddressMemberDto>> pageMember(
+        @PageableDefault(sort = {DEFAULT_SORT})
+        @SortConstraint(AddressMemberDto.class)
+        Pageable pageable) {
+
+        var page = addressSvc.getMemberPage(pageable);
         return ResponseEntity.ok(page);
     }
 

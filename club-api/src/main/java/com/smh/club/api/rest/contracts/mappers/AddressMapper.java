@@ -2,6 +2,7 @@ package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -25,6 +26,8 @@ public interface AddressMapper {
      * @return The resulting {@link AddressDto}.
      */
     AddressDto toDto(AddressEntity entity);
+
+    AddressMemberDto toAddressMemberDto(AddressEntity entity);
 
     /**
      * Updates an address object

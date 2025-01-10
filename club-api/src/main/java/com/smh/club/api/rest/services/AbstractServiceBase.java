@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.rest.domain.annotations.SortAlias;
 import com.smh.club.api.rest.domain.annotations.SortExclude;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -29,15 +30,24 @@ public abstract class AbstractServiceBase {
      * @return An {@link Optional} {@link String} representing the sort column name.
      */
     protected <S, T> Optional<String> getSort(String key, Class<S> source, Class<T> target) {
-        var sourceField = getSourceField(key, source);
-        return sourceField.flatMap(field -> getSortFieldName(target, field));
+        var sourceField = getSortFieldData(key, source);
+        return sourceField.flatMap(field ->
+            field.sortAlias == null
+                ? getSortFieldName(target, field.fieldName)
+                : Optional.of(field.sortAlias));
     }
 
-    private <S> Optional<String> getSourceField(String key, Class<S> source) {
+    private <S> Optional<SortFieldData> getSortFieldData(String key, Class<S> source) {
         return Arrays.stream(source.getDeclaredFields())
             .filter(f -> isNotExcluded(f) &&
-                (Objects.equals(getJsonPropValue(f), key) || f.getName().equals(key)))
-            .map(Field::getName)
+                (Objects.equals(getJsonPropValue(f), key)
+                    || f.getName().equals(key))
+                    || Objects.equals(getSortAliasValue(f), key))
+            .map(f -> {
+              var alias = getSortAliasValue(f);
+              var jsonProp = getJsonPropValue(f);
+              return new SortFieldData(alias, jsonProp, f.getName());
+            })
             .findFirst();
     }
 
@@ -56,4 +66,14 @@ public abstract class AbstractServiceBase {
         var jsonProp = field.getAnnotation(JsonProperty.class);
         return jsonProp != null ? jsonProp.value() : null;
     }
+
+    private String getSortAliasValue(Field field) {
+        var aliasProp = field.getAnnotation(SortAlias.class);
+        return aliasProp != null ? aliasProp.value() : null;
+    }
+
+    private record SortFieldData(
+        String sortAlias,
+        String jsonProp,
+        String fieldName) { }
 }
