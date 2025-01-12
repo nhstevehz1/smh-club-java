@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Defines REST endpoints that targets address objects in the database.
  */
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v1/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,26 +37,15 @@ public class AddressController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link AddressDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link AddressMemberDto}.
      */
-    //@GetMapping
-    public ResponseEntity<PagedDto<AddressDto>> page(
-        @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(AddressDto.class)
-        Pageable pageable) {
-
-        var page = addressSvc.getPage(pageable);
-
-        return ResponseEntity.ok(page);
-    }
-
     @GetMapping
-    public ResponseEntity<PagedDto<AddressMemberDto>> pageMember(
+    public ResponseEntity<PagedDto<AddressMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(AddressMemberDto.class)
         Pageable pageable) {
 
-        var page = addressSvc.getMemberPage(pageable);
+        var page = addressSvc.getPage(pageable);
         return ResponseEntity.ok(page);
     }
 

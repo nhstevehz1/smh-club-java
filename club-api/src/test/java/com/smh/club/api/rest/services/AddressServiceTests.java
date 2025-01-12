@@ -6,6 +6,7 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.AddressRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -58,7 +59,8 @@ public class AddressServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @CsvSource({"id, id", "address1, address1", "city, city", "state, state",
-            "zip, zip", "address-type, addressType"})
+            "zip, zip", "address_type, addressType",
+            "member_number, member.memberNumber", "full_name, member.lastName"})
     public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
@@ -67,7 +69,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressDto.class)
+        var list = Instancio.ofList(AddressMemberDto.class)
             .size(20)
             .create();
 
@@ -91,7 +93,6 @@ public class AddressServiceTests extends ServiceTests {
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(actual, order.getProperty());
         verify(addRepoMock).findAll(any(PageRequest.class));
-
 
         verifyNoMoreInteractions(addRepoMock, addMapMock);
     }
@@ -138,7 +139,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressDto.class)
+        var list = Instancio.ofList(AddressMemberDto.class)
             .size(20)
             .create();
 
@@ -178,7 +179,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressDto.class)
+        var list = Instancio.ofList(AddressMemberDto.class)
             .size(pageSize)
             .create();
 

@@ -27,6 +27,12 @@ public interface AddressMapper {
      */
     AddressDto toDto(AddressEntity entity);
 
+    /**
+     * Maps an {@link AddressEntity} to an {@link AddressMemberDto}
+     *      *
+     *      * @param entity {@link AddressEntity} to map.
+     *      * @return The resulting {@link AddressMemberDto}.
+     */
     AddressMemberDto toAddressMemberDto(AddressEntity entity);
 
     /**
@@ -50,7 +56,7 @@ public interface AddressMapper {
      * Maps a page of address entities to a page of DTOs.
      *
      * @param page The {@link Page} of {@link AddressEntity} to map.
-     * @return A page of {@link AddressDto}
+     * @return A page of {@link AddressMemberDto}
      */
-    Page<AddressDto> toPage(Page<AddressEntity> page);
+    Page<AddressMemberDto> toPage(Page<AddressEntity> page);
 }

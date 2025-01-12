@@ -8,7 +8,9 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.AddressRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -110,12 +112,12 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
-        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -134,13 +136,13 @@ public class AddressIntegrationTests extends IntegrationTests {
         Map<String, String> map = new HashMap<>();
         map.put(sortParamName,  "id,desc");
 
-        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(AddressDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(AddressMemberDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -158,13 +160,13 @@ public class AddressIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(sizeParamName, String.valueOf(pageSize));
 
-        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             0, pageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(AddressMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -185,13 +187,13 @@ public class AddressIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(pageParamName, String.valueOf(page));
 
-        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             page, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(AddressDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(AddressMemberDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -200,7 +202,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "address1", "city", "state", "zip", "address-type" })
+    @ValueSource(strings = {"id", "address1", "city", "state", "zip", "address_type", "member_number", "full_name" })
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
@@ -212,7 +214,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         var map = new HashMap<String, String>();
         map.put(sortParamName, sort);
 
-        var testParams = PageTestParams.of(AddressDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
@@ -224,7 +226,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"member-id", "address2"})
+    @ValueSource(strings = {"address2"})
     public void getListPage_excluded_fields_returns_bad_request(String sort) {
         // setup
         Map<String, String > map = new HashMap<>();
@@ -502,7 +504,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertTrue(address.isEmpty());
     }
 
-    private List<AddressEntity> addEntitiesToDb(int size) {
+    public List<AddressEntity> addEntitiesToDb(int size) {
         var members = memberRepo.findAll();
 
         var entities = Instancio.ofList(AddressEntity.class)
@@ -511,7 +513,7 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .generate(field(AddressEntity::getMember), g -> g.oneOf(members))
                 .create();
 
-        return repo.saveAll(entities);
+        return repo.saveAllAndFlush(entities);
     }
 
     private void verify(AddressDto expected, AddressEntity actual) {
@@ -534,7 +536,20 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getAddressType(), actual.getAddressType());
     }
 
-    private void verify(List<AddressEntity> expected, List<AddressDto> actual) {
+    private void verify(AddressEntity expected, AddressMemberDto actual) {
+        assertEquals(expected.getMember().getFirstName(), actual.getFullName().getFirstName());
+        assertEquals(expected.getMember().getMiddleName(), actual.getFullName().getMiddleName());
+        assertEquals(expected.getMember().getLastName(), actual.getFullName().getLastName());
+        assertEquals(expected.getMember().getSuffix(), actual.getFullName().getSuffix());
+        assertEquals(expected.getAddress1(), actual.getAddress1());
+        assertEquals(expected.getAddress2(), actual.getAddress2());
+        assertEquals(expected.getCity(), actual.getCity());
+        assertEquals(expected.getState(), actual.getState());
+        assertEquals(expected.getZip(), actual.getZip());
+        assertEquals(expected.getAddressType(), actual.getAddressType());
+    }
+
+    private void verify(List<AddressEntity> expected, List<AddressMemberDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
@@ -542,32 +557,35 @@ public class AddressIntegrationTests extends IntegrationTests {
         });
     }
 
-    private Map<String, SortFields<AddressEntity, AddressDto>> getSorts() {
+    private Map<String, SortFields<AddressEntity, AddressMemberDto>> getSorts() {
 
-        Map<String, SortFields<AddressEntity, AddressDto>> map = new HashMap<>();
+        Map<String, SortFields<AddressEntity, AddressMemberDto>> map = new HashMap<>();
         map.put("id", SortFields.of(Comparator.comparingInt(AddressEntity::getId),
-            Comparator.comparingInt(AddressDto::getId)));
-
-        map.put("member-id", SortFields.of(Comparator.comparingInt(AddressEntity::getId),
-            Comparator.comparingInt(AddressDto::getId)));
+            Comparator.comparingInt(AddressMemberDto::getId)));
 
         map.put("address1", SortFields.of(Comparator.comparing(AddressEntity::getAddress1),
-            Comparator.comparing(AddressDto::getAddress1)));
+            Comparator.comparing(AddressMemberDto::getAddress1)));
 
         map.put("address2", SortFields.of(Comparator.comparing(AddressEntity::getId),
-            Comparator.comparing(AddressDto::getId)));
+            Comparator.comparing(AddressMemberDto::getId)));
 
         map.put("city", SortFields.of(Comparator.comparing(AddressEntity::getCity),
-            Comparator.comparing(AddressDto::getCity)));
+            Comparator.comparing(AddressMemberDto::getCity)));
 
         map.put("state", SortFields.of(Comparator.comparing(AddressEntity::getState),
-            Comparator.comparing(AddressDto::getState)));
+            Comparator.comparing(AddressMemberDto::getState)));
 
         map.put("zip", SortFields.of(Comparator.comparing(AddressEntity::getZip),
-            Comparator.comparing(AddressDto::getZip)));
+            Comparator.comparing(AddressMemberDto::getZip)));
 
-        map.put("address-type", SortFields.of(Comparator.comparing(AddressEntity::getAddressType),
-            Comparator.comparing(AddressDto::getAddressType)));
+        map.put("address_type", SortFields.of(Comparator.comparing(AddressEntity::getAddressType),
+            Comparator.comparing(AddressMemberDto::getAddressType)));
+
+        map.put("member_number", SortFields.of(Comparator.comparing(e -> e.getMember().getMemberNumber()),
+            Comparator.comparing(AddressMemberDto::getMemberNumber)));
+
+        map.put("full_name", SortFields.of(Comparator.comparing(e -> e.getMember().getLastName()),
+            Comparator.comparing(d -> d.getFullName().getLastName())));
 
         return map;
     }

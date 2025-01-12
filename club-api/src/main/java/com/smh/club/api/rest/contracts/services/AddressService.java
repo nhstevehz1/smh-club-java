@@ -15,11 +15,9 @@ public interface AddressService {
      * Retrieves a page of addresses from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link AddressDto}.
+     * @return A {@link PagedDto} of type {@link AddressMemberDto}.
      */
-    PagedDto<AddressDto> getPage(Pageable pageable);
-
-    PagedDto<AddressMemberDto> getMemberPage(Pageable pageable);
+    PagedDto<AddressMemberDto> getPage(Pageable pageable);
 
     /**
      * Retrieves an address from the database.

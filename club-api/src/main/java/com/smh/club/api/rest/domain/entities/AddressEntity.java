@@ -40,7 +40,7 @@ public class AddressEntity {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
 }

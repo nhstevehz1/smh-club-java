@@ -39,6 +39,9 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
         return modelMapper.map(entity, AddressDto.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AddressMemberDto toAddressMemberDto(AddressEntity entity) {
         return modelMapper.map(entity, AddressMemberDto.class);
@@ -65,7 +68,7 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
      * {@inheritDoc}
      */
     @Override
-    public Page<AddressDto> toPage(Page<AddressEntity> page) {
-        return page.map(this::toDto);
+    public Page<AddressMemberDto> toPage(Page<AddressEntity> page) {
+        return page.map(this::toAddressMemberDto);
     }
 }

@@ -36,22 +36,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<AddressDto> getPage(Pageable pageable) {
-
-        var pageRequest = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                getSort(pageable.getSort()));
-
-        log.debug("Created pageable: {}", pageRequest);
-
-        var page = addressMapper.toPage(addressRepo.findAll(pageRequest));
-
-        return PagedDto.of(page);
-    }
-
-    @Override
-    public PagedDto<AddressMemberDto> getMemberPage(Pageable pageable) {
+    public PagedDto<AddressMemberDto> getPage(Pageable pageable) {
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
@@ -59,12 +44,10 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
 
         log.debug("Created pageable: {}", pageRequest);
 
-        //var page = addressMapper.toPage(addressRepo.findAll(pageRequest));
-        var page = addressRepo.findAll(pageRequest).map(addressMapper::toAddressMemberDto);
+        var page = addressMapper.toPage(addressRepo.findAll(pageRequest));
 
         return PagedDto.of(page);
     }
-
 
     /**
      * {@inheritDoc}

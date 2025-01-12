@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
  * Validation annotations exist as a convenience.
  * The intended use of this DTO is with a controller GET method.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
