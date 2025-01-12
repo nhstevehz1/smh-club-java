@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {PagedData} from "../../../shared/models/paged-data";
 import {AddressMember} from "../models/address-member";
 
