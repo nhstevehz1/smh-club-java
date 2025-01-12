@@ -10,7 +10,6 @@ import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.AddressDto;
 import com.smh.club.api.rest.dto.AddressMemberDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
