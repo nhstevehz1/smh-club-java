@@ -1,5 +1,6 @@
 package com.smh.club.api.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.rest.domain.annotations.SortAlias;
 import com.smh.club.api.rest.domain.annotations.SortExclude;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
  * Validation annotations exist as a convenience.
  * The intended use of this DTO is with a controller GET method.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

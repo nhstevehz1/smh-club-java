@@ -1,0 +1,1202 @@
+[
+  {
+    "address": "86 Harvard Rd.",
+    "city": "Amarillo",
+    "state": "TX",
+    "zip": "79106"
+  },
+  {
+    "address": "20 Summit Road",
+    "city": "Kings Mountain",
+    "state": "NC",
+    "zip": "28086"
+  },
+  {
+    "address": "122 Carpenter St.",
+    "city": "Massapequa",
+    "state": "NY",
+    "zip": "11758"
+  },
+  {
+    "address": "94 Carson Drive",
+    "city": "Salisbury",
+    "state": "MD",
+    "zip": "21801"
+  },
+  {
+    "address": "9601 Tarkiln Hill Street",
+    "city": "Vincentown",
+    "state": "NJ",
+    "zip": "08088"
+  },
+  {
+    "address": "346 Belmont Drive",
+    "city": "Hollywood",
+    "state": "FL",
+    "zip": "33020"
+  },
+  {
+    "address": "430 Sherman Drive",
+    "city": "Grand Island",
+    "state": "NE",
+    "zip": "68801"
+  },
+  {
+    "address": "65 High Ridge Ave.",
+    "city": "Garden City",
+    "state": "NY",
+    "zip": "11530"
+  },
+  {
+    "address": "789 Longfellow Dr.",
+    "city": "Oak Forest",
+    "state": "IL",
+    "zip": "60452"
+  },
+  {
+    "address": "467 Hilltop St.",
+    "city": "Brentwood",
+    "state": "NY",
+    "zip": "11717"
+  },
+  {
+    "address": "9404 Van Dyke St.",
+    "city": "Hephzibah",
+    "state": "GA",
+    "zip": "30815"
+  },
+  {
+    "address": "8277 Fairway Ave.",
+    "city": "Ooltewah",
+    "state": "TN",
+    "zip": "37363"
+  },
+  {
+    "address": "31 Glenholme St.",
+    "city": "Centereach",
+    "state": "NY",
+    "zip": "11720"
+  },
+  {
+    "address": "9371 River Street",
+    "city": "Fullerton",
+    "state": "CA",
+    "zip": "92831"
+  },
+  {
+    "address": "9224 S. Green Hill Lane",
+    "city": "Columbia",
+    "state": "MD",
+    "zip": "21044"
+  },
+  {
+    "address": "8000 Newport Street",
+    "city": "Bel Air",
+    "state": "MD",
+    "zip": "21014"
+  },
+  {
+    "address": "68 N. Morris Street",
+    "city": "Stow",
+    "state": "OH",
+    "zip": "44224"
+  },
+  {
+    "address": "9640 W. Creek Drive",
+    "city": "Oshkosh",
+    "state": "WI",
+    "zip": "54901"
+  },
+  {
+    "address": "732 Glen Ridge Rd.",
+    "city": "Champaign",
+    "state": "IL",
+    "zip": "61821"
+  },
+  {
+    "address": "9260 3rd Circle",
+    "city": "Piedmont",
+    "state": "SC",
+    "zip": "29673"
+  },
+  {
+    "address": "452 S. Cross St.",
+    "city": "Massapequa Park",
+    "state": "NY",
+    "zip": "11762"
+  },
+  {
+    "address": "251 Parker Street",
+    "city": "Coraopolis",
+    "state": "PA",
+    "zip": "15108"
+  },
+  {
+    "address": "7060 High Ridge Ave.",
+    "city": "Millville",
+    "state": "NJ",
+    "zip": "08332"
+  },
+  {
+    "address": "9460 Leatherwood Drive",
+    "city": "Wenatchee",
+    "state": "WA",
+    "zip": "98801"
+  },
+  {
+    "address": "9176 North Myrtle Road",
+    "city": "Goose Creek",
+    "state": "SC",
+    "zip": "29445"
+  },
+  {
+    "address": "70 Old Delaware St.",
+    "city": "Bangor",
+    "state": "ME",
+    "zip": "04401"
+  },
+  {
+    "address": "6 E. Wilson Ave.",
+    "city": "Delaware",
+    "state": "OH",
+    "zip": "43015"
+  },
+  {
+    "address": "236 Strawberry Road",
+    "city": "West Lafayette",
+    "state": "IN",
+    "zip": "47906"
+  },
+  {
+    "address": "9108 West Roehampton Street",
+    "city": "Highland",
+    "state": "IN",
+    "zip": "46322"
+  },
+  {
+    "address": "322 Fremont Court",
+    "city": "Winston Salem",
+    "state": "NC",
+    "zip": "27103"
+  },
+  {
+    "address": "8169 Corona Drive",
+    "city": "Temple Hills",
+    "state": "MD",
+    "zip": "20748"
+  },
+  {
+    "address": "575 Hall Ave.",
+    "city": "El Paso",
+    "state": "TX",
+    "zip": "79930"
+  },
+  {
+    "address": "13 Sugar Street",
+    "city": "Niles",
+    "state": "MI",
+    "zip": "49120"
+  },
+  {
+    "address": "8787 Livingston Rd.",
+    "city": "Gainesville",
+    "state": "VA",
+    "zip": "20155"
+  },
+  {
+    "address": "28 Indian Spring Street",
+    "city": "Bear",
+    "state": "DE",
+    "zip": "19701"
+  },
+  {
+    "address": "932 N. Sugar Rd.",
+    "city": "Miami Gardens",
+    "state": "FL",
+    "zip": "33056"
+  },
+  {
+    "address": "2 Marvon Street",
+    "city": "Harleysville",
+    "state": "PA",
+    "zip": "19438"
+  },
+  {
+    "address": "9590 4th Ave.",
+    "city": "Bardstown",
+    "state": "KY",
+    "zip": "40004"
+  },
+  {
+    "address": "653 Roosevelt St.",
+    "city": "Durham",
+    "state": "NC",
+    "zip": "27703"
+  },
+  {
+    "address": "138 Proctor Ave.",
+    "city": "Yorktown Heights",
+    "state": "NY",
+    "zip": "10598"
+  },
+  {
+    "address": "584 Stillwater Street",
+    "city": "Middleton",
+    "state": "WI",
+    "zip": "53562"
+  },
+  {
+    "address": "318 Lees Creek Ave.",
+    "city": "Potomac",
+    "state": "MD",
+    "zip": "20854"
+  },
+  {
+    "address": "4 Iroquois Dr.",
+    "city": "Sioux City",
+    "state": "IA",
+    "zip": "51106"
+  },
+  {
+    "address": "82 Foxrun Drive",
+    "city": "Garfield",
+    "state": "NJ",
+    "zip": "07026"
+  },
+  {
+    "address": "8514 Meadowbrook Dr.",
+    "city": "Chattanooga",
+    "state": "TN",
+    "zip": "37421"
+  },
+  {
+    "address": "304 Wayne Ave.",
+    "city": "Villa Park",
+    "state": "IL",
+    "zip": "60181"
+  },
+  {
+    "address": "36 Lake Forest Court",
+    "city": "Powhatan",
+    "state": "VA",
+    "zip": "23139"
+  },
+  {
+    "address": "9208 Madison St.",
+    "city": "Oxford",
+    "state": "MS",
+    "zip": "38655"
+  },
+  {
+    "address": "2 Homestead Court",
+    "city": "Natick",
+    "state": "MA",
+    "zip": "01760"
+  },
+  {
+    "address": "774 1st Street",
+    "city": "New Albany",
+    "state": "IN",
+    "zip": "47150"
+  },
+  {
+    "address": "37 Ann Ave.",
+    "city": "Ephrata",
+    "state": "PA",
+    "zip": "17522"
+  },
+  {
+    "address": "9098 Rock Maple St.",
+    "city": "Dedham",
+    "state": "MA",
+    "zip": "02026"
+  },
+  {
+    "address": "872 South El Dorado Drive",
+    "city": "Battle Creek",
+    "state": "MI",
+    "zip": "49015"
+  },
+  {
+    "address": "125 Wellington Drive",
+    "city": "New Philadelphia",
+    "state": "OH",
+    "zip": "44663"
+  },
+  {
+    "address": "34 Lawrence Drive",
+    "city": "Elk Grove Village",
+    "state": "IL",
+    "zip": "60007"
+  },
+  {
+    "address": "91 Cherry Hill Dr.",
+    "city": "Mount Laurel",
+    "state": "NJ",
+    "zip": "08054"
+  },
+  {
+    "address": "8311 Sherwood Dr.",
+    "city": "El Dorado",
+    "state": "AR",
+    "zip": "71730"
+  },
+  {
+    "address": "11 Division Street",
+    "city": "Evansville",
+    "state": "IN",
+    "zip": "47711"
+  },
+  {
+    "address": "68 Parker Dr.",
+    "city": "Livonia",
+    "state": "MI",
+    "zip": "48150"
+  },
+  {
+    "address": "927 Hill Field Street",
+    "city": "Kennesaw",
+    "state": "GA",
+    "zip": "30144"
+  },
+  {
+    "address": "20 Wrangler Avenue",
+    "city": "Bellmore",
+    "state": "NY",
+    "zip": "11710"
+  },
+  {
+    "address": "672 Eagle Road",
+    "city": "Phillipsburg",
+    "state": "NJ",
+    "zip": "08865"
+  },
+  {
+    "address": "8009 Newbridge St.",
+    "city": "Miami Gardens",
+    "state": "FL",
+    "zip": "33056"
+  },
+  {
+    "address": "628 East Manchester Ave.",
+    "city": "Wake Forest",
+    "state": "NC",
+    "zip": "27587"
+  },
+  {
+    "address": "5 Paris Hill Street",
+    "city": "Madison",
+    "state": "AL",
+    "zip": "35758"
+  },
+  {
+    "address": "9292 Mammoth Dr.",
+    "city": "Catonsville",
+    "state": "MD",
+    "zip": "21228"
+  },
+  {
+    "address": "517 3rd St.",
+    "city": "Rosedale",
+    "state": "NY",
+    "zip": "11422"
+  },
+  {
+    "address": "793 E. Wellington St.",
+    "city": "Mount Holly",
+    "state": "NJ",
+    "zip": "08060"
+  },
+  {
+    "address": "833 Jones Road",
+    "city": "Ottumwa",
+    "state": "IA",
+    "zip": "52501"
+  },
+  {
+    "address": "31 N. Constitution Ave.",
+    "city": "Indianapolis",
+    "state": "IN",
+    "zip": "46201"
+  },
+  {
+    "address": "94 West Arch Street",
+    "city": "Danville",
+    "state": "VA",
+    "zip": "24540"
+  },
+  {
+    "address": "7386 N. Vale St.",
+    "city": "Clover",
+    "state": "SC",
+    "zip": "29710"
+  },
+  {
+    "address": "7355 Proctor Street",
+    "city": "Mount Juliet",
+    "state": "TN",
+    "zip": "37122"
+  },
+  {
+    "address": "3 Lake View St.",
+    "city": "Sheboygan",
+    "state": "WI",
+    "zip": "53081"
+  },
+  {
+    "address": "8988 Valley View Road",
+    "city": "Erlanger",
+    "state": "KY",
+    "zip": "41018"
+  },
+  {
+    "address": "8847 Studebaker Rd.",
+    "city": "Wallingford",
+    "state": "CT",
+    "zip": "06492"
+  },
+  {
+    "address": "101 E. Carson St.",
+    "city": "Stevens Point",
+    "state": "WI",
+    "zip": "54481"
+  },
+  {
+    "address": "915 N. Cherry Hill Lane",
+    "city": "Tiffin",
+    "state": "OH",
+    "zip": "44883"
+  },
+  {
+    "address": "105 Halifax Dr.",
+    "city": "Maryville",
+    "state": "TN",
+    "zip": "37803"
+  },
+  {
+    "address": "733 Holly Dr.",
+    "city": "Grand Island",
+    "state": "NE",
+    "zip": "68801"
+  },
+  {
+    "address": "916 Williams Ave.",
+    "city": "Saratoga Springs",
+    "state": "NY",
+    "zip": "12866"
+  },
+  {
+    "address": "8009 Windfall St.",
+    "city": "Chandler",
+    "state": "AZ",
+    "zip": "85224"
+  },
+  {
+    "address": "38 County St.",
+    "city": "Glen Allen",
+    "state": "VA",
+    "zip": "23059"
+  },
+  {
+    "address": "7119 Constitution Ave.",
+    "city": "Natchez",
+    "state": "MS",
+    "zip": "39120"
+  },
+  {
+    "address": "7644 Prince Ave.",
+    "city": "Hicksville",
+    "state": "NY",
+    "zip": "11801"
+  },
+  {
+    "address": "9899 Gregory St.",
+    "city": "Galloway",
+    "state": "OH",
+    "zip": "43119"
+  },
+  {
+    "address": "468 White Dr.",
+    "city": "Niles",
+    "state": "MI",
+    "zip": "49120"
+  },
+  {
+    "address": "324 Armstrong St.",
+    "city": "Sioux City",
+    "state": "IA",
+    "zip": "51106"
+  },
+  {
+    "address": "8233 Roberts Avenue",
+    "city": "Thomasville",
+    "state": "NC",
+    "zip": "27360"
+  },
+  {
+    "address": "967 Schoolhouse Lane",
+    "city": "Smyrna",
+    "state": "GA",
+    "zip": "30080"
+  },
+  {
+    "address": "15 W. Pendergast St.",
+    "city": "Salt Lake City",
+    "state": "UT",
+    "zip": "84119"
+  },
+  {
+    "address": "715 Edgewood Ave.",
+    "city": "New Brunswick",
+    "state": "NJ",
+    "zip": "08901"
+  },
+  {
+    "address": "341 8th Street",
+    "city": "Framingham",
+    "state": "MA",
+    "zip": "01701"
+  },
+  {
+    "address": "8 Randall Mill Drive",
+    "city": "Morrisville",
+    "state": "PA",
+    "zip": "19067"
+  },
+  {
+    "address": "4 East Myrtle Dr.",
+    "city": "Cedar Rapids",
+    "state": "IA",
+    "zip": "52402"
+  },
+  {
+    "address": "55 W. Cambridge Dr.",
+    "city": "Peachtree City",
+    "state": "GA",
+    "zip": "30269"
+  },
+  {
+    "address": "505 Ryan St.",
+    "city": "Deerfield",
+    "state": "IL",
+    "zip": "60015"
+  },
+  {
+    "address": "483 West Sheffield St.",
+    "city": "Eden Prairie",
+    "state": "MN",
+    "zip": "55347"
+  },
+  {
+    "address": "7610 Pumpkin Hill Road",
+    "city": "Roanoke Rapids",
+    "state": "NC",
+    "zip": "27870"
+  },
+  {
+    "address": "1 S. Bay Drive",
+    "city": "Chesterfield",
+    "state": "VA",
+    "zip": "23832"
+  },
+  {
+    "address": "724 Silver Spear St.",
+    "city": "Chillicothe",
+    "state": "OH",
+    "zip": "45601"
+  },
+  {
+    "address": "8770 Franklin Circle",
+    "city": "West Fargo",
+    "state": "ND",
+    "zip": "58078"
+  },
+  {
+    "address": "581 Gates St.",
+    "city": "Eugene",
+    "state": "OR",
+    "zip": "97402"
+  },
+  {
+    "address": "9626 Broad Street",
+    "city": "Barberton",
+    "state": "OH",
+    "zip": "44203"
+  },
+  {
+    "address": "318 Sunnyslope Circle",
+    "city": "Ooltewah",
+    "state": "TN",
+    "zip": "37363"
+  },
+  {
+    "address": "7413 North Arcadia Court",
+    "city": "Riverside",
+    "state": "NJ",
+    "zip": "08075"
+  },
+  {
+    "address": "8685 Trenton Road",
+    "city": "Stafford",
+    "state": "VA",
+    "zip": "22554"
+  },
+  {
+    "address": "84 Broad Avenue",
+    "city": "New Castle",
+    "state": "PA",
+    "zip": "16101"
+  },
+  {
+    "address": "48 Glenholme Ave.",
+    "city": "Phoenixville",
+    "state": "PA",
+    "zip": "19460"
+  },
+  {
+    "address": "164 Homestead Street",
+    "city": "Norwood",
+    "state": "MA",
+    "zip": "02062"
+  },
+  {
+    "address": "295 West Bradford St.",
+    "city": "Burke",
+    "state": "VA",
+    "zip": "22015"
+  },
+  {
+    "address": "879 South School Ave.",
+    "city": "Derby",
+    "state": "KS",
+    "zip": "67037"
+  },
+  {
+    "address": "7930 Grove St.",
+    "city": "Lake Jackson",
+    "state": "TX",
+    "zip": "77566"
+  },
+  {
+    "address": "8 Brown St.",
+    "city": "Corona",
+    "state": "NY",
+    "zip": "11368"
+  },
+  {
+    "address": "7817 Homestead Lane",
+    "city": "Palm Harbor",
+    "state": "FL",
+    "zip": "34683"
+  },
+  {
+    "address": "7596 Country Club Drive",
+    "city": "Bozeman",
+    "state": "MT",
+    "zip": "59715"
+  },
+  {
+    "address": "421 W. Glen Creek Street",
+    "city": "Sun Prairie",
+    "state": "WI",
+    "zip": "53590"
+  },
+  {
+    "address": "998 South Pearl Rd.",
+    "city": "Mooresville",
+    "state": "NC",
+    "zip": "28115"
+  },
+  {
+    "address": "414 Virginia St.",
+    "city": "Union City",
+    "state": "NJ",
+    "zip": "07087"
+  },
+  {
+    "address": "83 Princess St.",
+    "city": "Belleville",
+    "state": "NJ",
+    "zip": "07109"
+  },
+  {
+    "address": "5 Rockville St.",
+    "city": "Westport",
+    "state": "CT",
+    "zip": "06880"
+  },
+  {
+    "address": "9638 North Pearl Street",
+    "city": "Woodhaven",
+    "state": "NY",
+    "zip": "11421"
+  },
+  {
+    "address": "563 Lakewood Drive",
+    "city": "Glasgow",
+    "state": "KY",
+    "zip": "42141"
+  },
+  {
+    "address": "67 Pennington St.",
+    "city": "Holland",
+    "state": "MI",
+    "zip": "49423"
+  },
+  {
+    "address": "7419 Southampton Lane",
+    "city": "Valley Stream",
+    "state": "NY",
+    "zip": "11580"
+  },
+  {
+    "address": "372 South Branch St.",
+    "city": "Stone Mountain",
+    "state": "GA",
+    "zip": "30083"
+  },
+  {
+    "address": "164 Pleasant Court",
+    "city": "New Berlin",
+    "state": "WI",
+    "zip": "53151"
+  },
+  {
+    "address": "518 West Gulf Rd.",
+    "city": "Fitchburg",
+    "state": "MA",
+    "zip": "01420"
+  },
+  {
+    "address": "36 Grove Rd.",
+    "city": "New Haven",
+    "state": "CT",
+    "zip": "06511"
+  },
+  {
+    "address": "48 Miles St.",
+    "city": "Bonita Springs",
+    "state": "FL",
+    "zip": "34135"
+  },
+  {
+    "address": "7975 Cherry Hill Ave.",
+    "city": "Lakewood",
+    "state": "NJ",
+    "zip": "08701"
+  },
+  {
+    "address": "2 Beach Court",
+    "city": "Norcross",
+    "state": "GA",
+    "zip": "30092"
+  },
+  {
+    "address": "96 Pawnee Lane",
+    "city": "Naugatuck",
+    "state": "CT",
+    "zip": "06770"
+  },
+  {
+    "address": "464 Delaware St.",
+    "city": "Danbury",
+    "state": "CT",
+    "zip": "06810"
+  },
+  {
+    "address": "66 Green Hill St.",
+    "city": "Cumming",
+    "state": "GA",
+    "zip": "30040"
+  },
+  {
+    "address": "998 Pacific St.",
+    "city": "Mcallen",
+    "state": "TX",
+    "zip": "78501"
+  },
+  {
+    "address": "81 Monroe St.",
+    "city": "Shepherdsville",
+    "state": "KY",
+    "zip": "40165"
+  },
+  {
+    "address": "54 West Locust Ave.",
+    "city": "Port Saint Lucie",
+    "state": "FL",
+    "zip": "34952"
+  },
+  {
+    "address": "104 Cactus St.",
+    "city": "Media",
+    "state": "PA",
+    "zip": "19063"
+  },
+  {
+    "address": "7745 Fairview Street",
+    "city": "Tacoma",
+    "state": "WA",
+    "zip": "98444"
+  },
+  {
+    "address": "5 Carson St.",
+    "city": "Yorktown Heights",
+    "state": "NY",
+    "zip": "10598"
+  },
+  {
+    "address": "8202A South Maiden Ave.",
+    "city": "Rochester",
+    "state": "NY",
+    "zip": "14606"
+  },
+  {
+    "address": "6 Pennsylvania Street",
+    "city": "Bloomfield",
+    "state": "NJ",
+    "zip": "07003"
+  },
+  {
+    "address": "684 Grand Lane",
+    "city": "West Babylon",
+    "state": "NY",
+    "zip": "11704"
+  },
+  {
+    "address": "8907 W. Fremont St.",
+    "city": "Summerfield",
+    "state": "FL",
+    "zip": "34491"
+  },
+  {
+    "address": "951 Paris Hill Ave.",
+    "city": "Satellite Beach",
+    "state": "FL",
+    "zip": "32937"
+  },
+  {
+    "address": "7640 West Surrey Ave.",
+    "city": "Chapel Hill",
+    "state": "NC",
+    "zip": "27516"
+  },
+  {
+    "address": "3 Philmont Ave.",
+    "city": "Santa Clara",
+    "state": "CA",
+    "zip": "95050"
+  },
+  {
+    "address": "2 Olive Ave.",
+    "city": "Dundalk",
+    "state": "MD",
+    "zip": "21222"
+  },
+  {
+    "address": "621 San Juan Drive",
+    "city": "Camden",
+    "state": "NJ",
+    "zip": "08105"
+  },
+  {
+    "address": "7925 Hilltop Road",
+    "city": "Everett",
+    "state": "MA",
+    "zip": "02149"
+  },
+  {
+    "address": "1 North Blackburn Road",
+    "city": "Forney",
+    "state": "TX",
+    "zip": "75126"
+  },
+  {
+    "address": "248 Heritage Dr.",
+    "city": "Severn",
+    "state": "MD",
+    "zip": "21144"
+  },
+  {
+    "address": "14 Beaver Ridge St.",
+    "city": "Wisconsin Rapids",
+    "state": "WI",
+    "zip": "54494"
+  },
+  {
+    "address": "8615 SW. Lake View Street",
+    "city": "Watertown",
+    "state": "MA",
+    "zip": "02472"
+  },
+  {
+    "address": "7958 Old Meadow Street",
+    "city": "Windsor",
+    "state": "CT",
+    "zip": "06095"
+  },
+  {
+    "address": "37 W. Willow Court",
+    "city": "King Of Prussia",
+    "state": "PA",
+    "zip": "19406"
+  },
+  {
+    "address": "9556 SW. Deerfield Street",
+    "city": "Jackson Heights",
+    "state": "NY",
+    "zip": "11372"
+  },
+  {
+    "address": "8863 6th Ave.",
+    "city": "Park Ridge",
+    "state": "IL",
+    "zip": "60068"
+  },
+  {
+    "address": "65 William Ave.",
+    "city": "Albany",
+    "state": "NY",
+    "zip": "12203"
+  },
+  {
+    "address": "999 San Pablo Street",
+    "city": "Littleton",
+    "state": "CO",
+    "zip": "80123"
+  },
+  {
+    "address": "3 Gulf Lane",
+    "city": "Waldorf",
+    "state": "MD",
+    "zip": "20601"
+  },
+  {
+    "address": "8307 Ridgewood Street",
+    "city": "Henrico",
+    "state": "VA",
+    "zip": "23228"
+  },
+  {
+    "address": "35 Bayberry Avenue",
+    "city": "Defiance",
+    "state": "OH",
+    "zip": "43512"
+  },
+  {
+    "address": "931 E. Courtland Ave.",
+    "city": "Lake Charles",
+    "state": "LA",
+    "zip": "70605"
+  },
+  {
+    "address": "96 Indian Summer Avenue",
+    "city": "Meadville",
+    "state": "PA",
+    "zip": "16335"
+  },
+  {
+    "address": "52 Sussex Ave.",
+    "city": "Wakefield",
+    "state": "MA",
+    "zip": "01880"
+  },
+  {
+    "address": "66 Tunnel St.",
+    "city": "Hobart",
+    "state": "IN",
+    "zip": "46342"
+  },
+  {
+    "address": "169 Sugar Street",
+    "city": "Rossville",
+    "state": "GA",
+    "zip": "30741"
+  },
+  {
+    "address": "714 Beechwood Dr.",
+    "city": "Port Jefferson Station",
+    "state": "NY",
+    "zip": "11776"
+  },
+  {
+    "address": "707 Cobblestone Lane",
+    "city": "Anderson",
+    "state": "SC",
+    "zip": "29621"
+  },
+  {
+    "address": "369 Shirley St.",
+    "city": "Westbury",
+    "state": "NY",
+    "zip": "11590"
+  },
+  {
+    "address": "315 Johnson St.",
+    "city": "Haines City",
+    "state": "FL",
+    "zip": "33844"
+  },
+  {
+    "address": "384 Bald Hill Ave.",
+    "city": "Port Charlotte",
+    "state": "FL",
+    "zip": "33952"
+  },
+  {
+    "address": "321 Princeton Ave.",
+    "city": "Middleton",
+    "state": "WI",
+    "zip": "53562"
+  },
+  {
+    "address": "9893 Blackburn Street",
+    "city": "Beachwood",
+    "state": "OH",
+    "zip": "44122"
+  },
+  {
+    "address": "9078 North Gates St.",
+    "city": "Helotes",
+    "state": "TX",
+    "zip": "78023"
+  },
+  {
+    "address": "8881 Railroad Street",
+    "city": "Suwanee",
+    "state": "GA",
+    "zip": "30024"
+  },
+  {
+    "address": "331 Paris Hill Ave.",
+    "city": "Pasadena",
+    "state": "MD",
+    "zip": "21122"
+  },
+  {
+    "address": "342 E. Arlington Ave.",
+    "city": "Owatonna",
+    "state": "MN",
+    "zip": "55060"
+  },
+  {
+    "address": "8699 Pearl Lane",
+    "city": "Lake Zurich",
+    "state": "IL",
+    "zip": "60047"
+  },
+  {
+    "address": "9210 Cottage St.",
+    "city": "Madison Heights",
+    "state": "MI",
+    "zip": "48071"
+  },
+  {
+    "address": "1 Thompson St.",
+    "city": "Elgin",
+    "state": "IL",
+    "zip": "60120"
+  },
+  {
+    "address": "86 Academy St.",
+    "city": "Gibsonia",
+    "state": "PA",
+    "zip": "15044"
+  },
+  {
+    "address": "18 Ridgewood St.",
+    "city": "Woodside",
+    "state": "NY",
+    "zip": "11377"
+  },
+  {
+    "address": "297 East Hall Street",
+    "city": "Iowa City",
+    "state": "IA",
+    "zip": "52240"
+  },
+  {
+    "address": "7071 Schoolhouse Ave.",
+    "city": "Conyers",
+    "state": "GA",
+    "zip": "30012"
+  },
+  {
+    "address": "8758 Orchard St.",
+    "city": "Apopka",
+    "state": "FL",
+    "zip": "32703"
+  },
+  {
+    "address": "7759 Princess Ave.",
+    "city": "Lady Lake",
+    "state": "FL",
+    "zip": "32159"
+  },
+  {
+    "address": "99 Branch Dr.",
+    "city": "Leominster",
+    "state": "MA",
+    "zip": "01453"
+  },
+  {
+    "address": "55 Trusel Street",
+    "city": "Owings Mills",
+    "state": "MD",
+    "zip": "21117"
+  },
+  {
+    "address": "9665 Cleveland St.",
+    "city": "Lake In The Hills",
+    "state": "IL",
+    "zip": "60156"
+  },
+  {
+    "address": "664 8th St.",
+    "city": "Bethesda",
+    "state": "MD",
+    "zip": "20814"
+  },
+  {
+    "address": "36 Willow Avenue",
+    "city": "Strongsville",
+    "state": "OH",
+    "zip": "44136"
+  },
+  {
+    "address": "88 Prospect Drive",
+    "city": "West New York",
+    "state": "NJ",
+    "zip": "07093"
+  },
+  {
+    "address": "7105 Glen Eagles Street",
+    "city": "Worcester",
+    "state": "MA",
+    "zip": "01604"
+  },
+  {
+    "address": "7698 Brookside Road",
+    "city": "Garland",
+    "state": "TX",
+    "zip": "75043"
+  },
+  {
+    "address": "199 North Lees Creek Ave.",
+    "city": "Canandaigua",
+    "state": "NY",
+    "zip": "14424"
+  },
+  {
+    "address": "45 W. Court Ave.",
+    "city": "Ypsilanti",
+    "state": "MI",
+    "zip": "48197"
+  },
+  {
+    "address": "62 Birchwood Ave.",
+    "city": "Reno",
+    "state": "NV",
+    "zip": "89523"
+  }
+]

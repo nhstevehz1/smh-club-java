@@ -2,21 +2,20 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  margin-left: 5px;
-  margin-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
   row-gap: 5px;
 }
 
 .app-header {
-  //border: black solid 2px;
+
 }
 
 .app-content {
   flex: 1;
   overflow: auto; // ensures no scrollbars.  We want the page to control the scrollbars.
-  width: 100%;
 }
 
 .app-footer {
-  //border: black solid 2px;
+
 }

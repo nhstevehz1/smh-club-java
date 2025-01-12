@@ -23,16 +23,4 @@ public class FullNameDto {
 
   @JsonProperty("suffix")
   String suffix;
-
-  @JsonGetter("last_first")
-  String getFullNameLastFirst() {
-    var first = String.join(" ", firstName, middleName);
-    var last = String.join(" ", lastName, suffix);
-    return String.join(", ", last, first);
-  }
-
-  @JsonGetter("first_last")
-  String getFullNameFirstLast() {
-    return String.join(" ", firstName, middleName, lastName, suffix);
-  }
 }

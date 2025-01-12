@@ -7,5 +7,5 @@ export interface AddressMember extends ListModelBase {
     city: string;
     state: string;
     zip: string;
-    address_ype: string;
+    address_type: string;
 }

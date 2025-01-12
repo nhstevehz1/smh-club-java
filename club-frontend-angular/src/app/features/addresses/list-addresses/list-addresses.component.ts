@@ -9,6 +9,7 @@ import {AddressMember} from "../models/address-member";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {FullName} from "../../../shared/models/full-name";
 
 @Component({
   selector: 'app-list-addresses',
@@ -64,23 +65,12 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
 
   protected getColumns(): ColumnDef<AddressMember>[] {
     return [
-      {
-        name: 'member_number',
-        displayName: 'No.',
-        isSortable: true,
-        cell: (element: AddressMember) => `${element.member_number}`
-      },
-      {
-        name: 'full_name',
-        displayName: 'Member',
-        isSortable: true,
-        cell: (element: AddressMember) => `${element.full_name.last_first}`
-      },
+
       {
         name: 'address1',
         displayName: 'Address',
         isSortable: true,
-        cell: (element: AddressMember) => (`${element.address1} ${element.address2}`).trim()
+        cell: (element: AddressMember) => this.getStreet(element)
       },
       {
         name: 'city',
@@ -99,8 +89,42 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
         displayName: 'Zip',
         isSortable: true,
         cell: (element: AddressMember) => `${element.zip}`
+      },
+      {
+        name: 'address_type',
+        displayName: 'Type',
+        isSortable: true,
+        cell: (element: AddressMember) => `${element.address_type}`
+      },
+      {
+        name: 'member_number',
+        displayName: 'No.',
+        isSortable: true,
+        cell: (element: AddressMember) => `${element.member_number}`
+      },
+      {
+        name: 'full_name',
+        displayName: 'Member',
+        isSortable: true,
+        cell: (element: AddressMember) =>  this.getFullName(element.full_name) //`${element.full_name.last_first}`
       }
     ];
   }
 
+  private getFullName(fullName: FullName): string {
+    const first = fullName.first_name;
+    const last = fullName.last_name;
+    const middle = fullName.middle_name || '';
+    const suffix = fullName.suffix || '';
+
+    const firstName = `${first} ${middle}`.trim();
+    const lastName = `${last} ${suffix}`.trim();
+    return `${lastName}, ${firstName}`;
+  }
+
+  private getStreet(address: AddressMember): string {
+    const street1 = address.address1;
+    const street2 = address.address2 || ''
+    return street2.length > 0 ? `${street1}, ${street2}` : street1;
+  }
 }
