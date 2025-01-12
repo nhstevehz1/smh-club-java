@@ -20,6 +20,7 @@ public class MapperConfig {
         addressSettings(modelMapper);
         addressMemberSettings(modelMapper);
         emailSettings(modelMapper);
+        emailMemberSettings(modelMapper);
         phoneSettings(modelMapper);
         renewalSetting(modelMapper);
 
@@ -91,6 +92,30 @@ public class MapperConfig {
             m.skip(EmailEntity::setMember);
             m.skip(EmailEntity::setId);
         });
+        modelMapper.validate();
+    }
+
+    private void emailMemberSettings(ModelMapper modelMapper) {
+        // EmailMember settings
+        TypeMap<EmailEntity, EmailMemberDto> dtoTypeMap
+            = modelMapper.createTypeMap(EmailEntity.class, EmailMemberDto.class);
+
+        dtoTypeMap.addMappings(m -> {
+            m.map(src -> src.getMember().getMemberNumber(), EmailMemberDto::setMemberNumber);
+
+            m.map(src -> src.getMember().getFirstName(),
+                (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
+
+            m.map(src -> src.getMember().getMiddleName(),
+                (dest, v) -> dest.getFullName().setMiddleName(String.valueOf(v)));
+
+            m.map(src -> src.getMember().getLastName(),
+                (dest, v) -> dest.getFullName().setLastName(String.valueOf(v)));
+
+            m.map(src -> src.getMember().getSuffix(),
+                (dest, v) -> dest.getFullName().setSuffix(String.valueOf(v)));
+        });
+
         modelMapper.validate();
     }
 

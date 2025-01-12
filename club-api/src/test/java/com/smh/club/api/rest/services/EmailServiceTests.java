@@ -6,6 +6,7 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.EmailRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.dto.EmailDto;
+import com.smh.club.api.rest.dto.EmailMemberDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -57,7 +58,8 @@ public class EmailServiceTests extends ServiceTests {
             .set(Keys.COLLECTION_MAX_SIZE, 0);
 
    @ParameterizedTest
-   @CsvSource({"id, id", "email, email", "email-type, emailType"})
+   @CsvSource({"id, id", "email, email", "email_type, emailType",
+       "member_number, member.memberNumber","full_name, member.lastName"})
     public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
@@ -66,7 +68,7 @@ public class EmailServiceTests extends ServiceTests {
        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-       var list = Instancio.ofList(EmailDto.class)
+       var list = Instancio.ofList(EmailMemberDto.class)
            .size(20)
            .create();
 
@@ -95,20 +97,6 @@ public class EmailServiceTests extends ServiceTests {
         verifyNoMoreInteractions(emailRepoMock, emailMapMock);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"memberId", "member-id"})
-    public void getPage_excludes_throws_exception(String sort) {
-        // setup
-        var pageNumber = 10;
-        var pageSize = 20;
-        var direction = "ASC";
-        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
-        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
-
-        // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
-    }
-
     @Test
     public void gePage_unknown_sortColumn_throws_exception() {
         // setup
@@ -135,7 +123,7 @@ public class EmailServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(EmailDto.class)
+        var list = Instancio.ofList(EmailMemberDto.class)
             .size(20)
             .create();
 
@@ -175,7 +163,7 @@ public class EmailServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(EmailDto.class)
+        var list = Instancio.ofList(EmailMemberDto.class)
             .size(pageSize)
             .create();
 

@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.EmailDto;
+import com.smh.club.api.rest.dto.EmailMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -11,12 +12,12 @@ import org.springframework.data.domain.Pageable;
 public interface EmailService {
 
     /**
-     * Retrieves a page of emailes from the database.
+     * Retrieves a page of emails from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link EmailDto}.
+     * @return A {@link PagedDto} of type {@link EmailMemberDto}.
      */
-    PagedDto<EmailDto> getPage(Pageable pageable);
+    PagedDto<EmailMemberDto> getPage(Pageable pageable);
 
     /**
      * Retrieves an email from the database.
