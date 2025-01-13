@@ -91,9 +91,9 @@ public class AddressIntegrationTests extends IntegrationTests {
 
     @BeforeEach
     public void init() {
-        // there seems to be a bug where @WithSettings is not recognized in before all
+        // there seems to be a bug where @WithSettings is not recognized in @BeforeAll
         var members = Instancio.ofList(MemberEntity.class)
-                .size(5)
+                .size(100)
                 .ignore(field(MemberEntity::getId))
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();
@@ -565,8 +565,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         map.put("address1", SortFields.of(Comparator.comparing(AddressEntity::getAddress1),
             Comparator.comparing(AddressMemberDto::getAddress1)));
 
-        map.put("address2", SortFields.of(Comparator.comparing(AddressEntity::getId),
-            Comparator.comparing(AddressMemberDto::getId)));
+        map.put("address2", SortFields.of(Comparator.comparing(AddressEntity::getAddress2),
+            Comparator.comparing(AddressMemberDto::getAddress2)));
 
         map.put("city", SortFields.of(Comparator.comparing(AddressEntity::getCity),
             Comparator.comparing(AddressMemberDto::getCity)));
@@ -580,10 +580,12 @@ public class AddressIntegrationTests extends IntegrationTests {
         map.put("address_type", SortFields.of(Comparator.comparing(AddressEntity::getAddressType),
             Comparator.comparing(AddressMemberDto::getAddressType)));
 
-        map.put("member_number", SortFields.of(Comparator.comparing(e -> e.getMember().getMemberNumber()),
+        map.put("member_number", SortFields.of(
+            Comparator.comparing(e -> e.getMember().getMemberNumber()),
             Comparator.comparing(AddressMemberDto::getMemberNumber)));
 
-        map.put("full_name", SortFields.of(Comparator.comparing(e -> e.getMember().getLastName()),
+        map.put("full_name", SortFields.of(
+            Comparator.comparing(e -> e.getMember().getLastName()),
             Comparator.comparing(d -> d.getFullName().getLastName())));
 
         return map;
