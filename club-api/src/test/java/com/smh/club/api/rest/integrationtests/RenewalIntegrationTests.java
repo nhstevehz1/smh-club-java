@@ -7,7 +7,6 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.RenewalsRepo;
-import com.smh.club.api.rest.dto.PhoneMemberDto;
 import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
@@ -43,7 +42,6 @@ import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZO
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")

@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.RenewalService;
-import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
