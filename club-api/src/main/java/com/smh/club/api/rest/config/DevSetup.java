@@ -127,6 +127,7 @@ public class DevSetup implements CommandLineRunner {
       var type = phones.get(random.nextInt(phones.size())).getPhoneType();
 
       var entity = PhoneEntity.builder()
+          .countryCode(code)
           .phoneNumber(phone)
           .phoneType(type)
           .build();

@@ -67,7 +67,7 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
         name: 'phone_number',
         displayName: 'Phone',
         isSortable: true,
-        cell: (element: PhoneMember) => `${element.phone_number}`
+        cell: (element: PhoneMember) => this.getPhoneNumber(element)
       },
       {
         name: 'phone_type',
@@ -90,4 +90,14 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
     ];
   }
 
+  private getPhoneNumber(phoneMember: PhoneMember): string {
+    const code = phoneMember.country_code;
+    const number = phoneMember.phone_number;
+
+    // format phone number exp: (555) 555-5555
+    const regex = /^(\d{3})(\d{3})(\d{4})$/;
+    const formated = number.replace(regex, '($1) $2-$3');
+
+    return `+${code} ${formated}`;
+  }
 }

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Defines REST endpoints that targets renewal objects in the database.
  */
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v1/renewals", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Extends an {@link AbstractServiceBase} and implements an {@link EmailService}.
  */
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class EmailServiceImpl extends AbstractServiceBase implements EmailService {

@@ -32,6 +32,11 @@ public class PhoneDto {
     private int memberId;
 
     @NotBlank
+    @Size(min = 1, max = 5)
+    @JsonProperty("country_code")
+    private String countryCode;
+
+    @NotBlank
     @Size(min = 10, max = 10)
     @Digits(integer = 10, fraction = 0)
     @JsonProperty("phone_number")

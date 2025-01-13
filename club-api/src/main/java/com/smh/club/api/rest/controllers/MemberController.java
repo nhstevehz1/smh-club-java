@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  * Defines REST endpoints that targets member objects in the database.
  */
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
