@@ -46,7 +46,6 @@ import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("tests")
@@ -94,7 +93,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void init() {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
-                .size(5)
+                .size(100)
                 .ignore(field(MemberEntity::getId))
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();

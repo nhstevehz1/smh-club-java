@@ -6,6 +6,7 @@ import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.PhoneRepo;
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<PhoneDto> getPage(Pageable pageable) {
+    public PagedDto<PhoneMemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -114,7 +115,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), PhoneDto.class, PhoneEntity.class)
+                    getSort(o.getProperty(), PhoneMemberDto.class, PhoneEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

@@ -17,12 +17,18 @@ public class MapperConfig {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         memberSettings(modelMapper);
+
         addressSettings(modelMapper);
         addressMemberSettings(modelMapper);
+
         emailSettings(modelMapper);
         emailMemberSettings(modelMapper);
+
         phoneSettings(modelMapper);
+        phoneMemberSettings(modelMapper);
+
         renewalSetting(modelMapper);
+        renewalMemberSettings(modelMapper);
 
         return modelMapper;
     }
@@ -64,22 +70,19 @@ public class MapperConfig {
 
         dtoTypeMap.addMappings(m -> {
             m.map(src -> src.getMember().getMemberNumber(), AddressMemberDto::setMemberNumber);
-
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
-
             m.map(src -> src.getMember().getMiddleName(),
                 (dest, v) -> dest.getFullName().setMiddleName(String.valueOf(v)));
-
             m.map(src -> src.getMember().getLastName(),
                 (dest, v) -> dest.getFullName().setLastName(String.valueOf(v)));
-
             m.map(src -> src.getMember().getSuffix(),
                 (dest, v) -> dest.getFullName().setSuffix(String.valueOf(v)));
         });
 
         modelMapper.validate();
     }
+
     private void emailSettings(ModelMapper modelMapper) {
         // Email settings
         TypeMap<EmailEntity, EmailDto> dtoTypeMap
@@ -102,16 +105,12 @@ public class MapperConfig {
 
         dtoTypeMap.addMappings(m -> {
             m.map(src -> src.getMember().getMemberNumber(), EmailMemberDto::setMemberNumber);
-
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
-
             m.map(src -> src.getMember().getMiddleName(),
                 (dest, v) -> dest.getFullName().setMiddleName(String.valueOf(v)));
-
             m.map(src -> src.getMember().getLastName(),
                 (dest, v) -> dest.getFullName().setLastName(String.valueOf(v)));
-
             m.map(src -> src.getMember().getSuffix(),
                 (dest, v) -> dest.getFullName().setSuffix(String.valueOf(v)));
         });
@@ -134,6 +133,26 @@ public class MapperConfig {
         modelMapper.validate();
     }
 
+    private void phoneMemberSettings(ModelMapper modelMapper) {
+        // PhoneMember settings
+        TypeMap<PhoneEntity, PhoneMemberDto> dtoTypeMap
+            = modelMapper.createTypeMap(PhoneEntity.class, PhoneMemberDto.class);
+
+        dtoTypeMap.addMappings(m -> {
+            m.map(src -> src.getMember().getMemberNumber(), PhoneMemberDto::setMemberNumber);
+            m.map(src -> src.getMember().getFirstName(),
+                (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
+            m.map(src -> src.getMember().getMiddleName(),
+                (dest, v) -> dest.getFullName().setMiddleName(String.valueOf(v)));
+            m.map(src -> src.getMember().getLastName(),
+                (dest, v) -> dest.getFullName().setLastName(String.valueOf(v)));
+            m.map(src -> src.getMember().getSuffix(),
+                (dest, v) -> dest.getFullName().setSuffix(String.valueOf(v)));
+        });
+
+        modelMapper.validate();
+    }
+
     private void renewalSetting(ModelMapper modelMapper) {
         // Renewals settings
         TypeMap<RenewalEntity, RenewalDto> dtoTypeMap
@@ -146,6 +165,26 @@ public class MapperConfig {
             m.skip(RenewalEntity::setMember);
             m.skip(RenewalEntity::setId);
         });
+        modelMapper.validate();
+    }
+
+    private void renewalMemberSettings(ModelMapper modelMapper) {
+        // RenewalMember settings
+        TypeMap<RenewalEntity, RenewalMemberDto> dtoTypeMap
+            = modelMapper.createTypeMap(RenewalEntity.class, RenewalMemberDto.class);
+
+        dtoTypeMap.addMappings(m -> {
+            m.map(src -> src.getMember().getMemberNumber(), RenewalMemberDto::setMemberNumber);
+            m.map(src -> src.getMember().getFirstName(),
+                (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
+            m.map(src -> src.getMember().getMiddleName(),
+                (dest, v) -> dest.getFullName().setMiddleName(String.valueOf(v)));
+            m.map(src -> src.getMember().getLastName(),
+                (dest, v) -> dest.getFullName().setLastName(String.valueOf(v)));
+            m.map(src -> src.getMember().getSuffix(),
+                (dest, v) -> dest.getFullName().setSuffix(String.valueOf(v)));
+        });
+
         modelMapper.validate();
     }
 }

@@ -6,6 +6,7 @@ import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.RenewalsRepo;
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<RenewalDto> getPage(Pageable pageable) {
+    public PagedDto<RenewalMemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -114,7 +115,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), RenewalDto.class, RenewalEntity.class)
+                    getSort(o.getProperty(), RenewalMemberDto.class, RenewalEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

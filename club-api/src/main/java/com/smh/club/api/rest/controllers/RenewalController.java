@@ -3,6 +3,7 @@ package com.smh.club.api.rest.controllers;
 import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -36,12 +37,12 @@ public class RenewalController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link PhoneDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link RenewalMemberDto}.
      */
     @GetMapping
-    public ResponseEntity<PagedDto<RenewalDto>> page(
+    public ResponseEntity<PagedDto<RenewalMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(RenewalDto.class)
+        @SortConstraint(RenewalMemberDto.class)
         Pageable pageable) {
 
         var page = renewSvc.getPage(pageable);

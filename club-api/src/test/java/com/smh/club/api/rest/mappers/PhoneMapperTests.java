@@ -68,6 +68,25 @@ public class PhoneMapperTests {
     }
 
     @Test
+    public void from_entity_to_phoneMemberDto() {
+        // setup
+        var entity = Instancio.create(PhoneEntity.class);
+
+        // execute
+        var ret = mapper.toPhoneMemberDto(entity);
+
+        // verify
+        assertEquals(entity.getId(), ret.getId());
+        assertEquals(entity.getPhoneNumber(), ret.getPhoneNumber());
+        assertEquals(entity.getPhoneType(), ret.getPhoneType());
+        assertEquals(entity.getMember().getMemberNumber(), ret.getMemberNumber());
+        assertEquals(entity.getMember().getFirstName(), ret.getFullName().getFirstName());
+        assertEquals(entity.getMember().getMiddleName(), ret.getFullName().getMiddleName());
+        assertEquals(entity.getMember().getLastName(), ret.getFullName().getLastName());
+        assertEquals(entity.getMember().getSuffix(), ret.getFullName().getSuffix());
+    }
+
+    @Test
     public void update_entity_from_updateDto() {
         // setup
         var update = Instancio.create(PhoneDto.class);

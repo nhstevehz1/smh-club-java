@@ -3,6 +3,7 @@ package com.smh.club.api.rest.mappers;
 import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,14 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
      * {@inheritDoc}
      */
     @Override
+    public PhoneMemberDto toPhoneMemberDto(PhoneEntity entity) {
+        return modelMapper.map(entity, PhoneMemberDto.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public PhoneEntity updateEntity(PhoneDto dto, PhoneEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
@@ -59,7 +68,7 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
      * {@inheritDoc}
      */
     @Override
-    public Page<PhoneDto> toPage(Page<PhoneEntity> page) {
-        return page.map(this::toDto);
+    public Page<PhoneMemberDto> toPage(Page<PhoneEntity> page) {
+        return page.map(this::toPhoneMemberDto);
     }
 }

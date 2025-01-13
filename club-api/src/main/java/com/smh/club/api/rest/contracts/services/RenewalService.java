@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +15,9 @@ public interface RenewalService {
      * Retrieves a page of renewals from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link RenewalDto}.
+     * @return A {@link PagedDto} of type {@link RenewalMemberDto}.
      */
-    PagedDto<RenewalDto> getPage(Pageable pageable);
+    PagedDto<RenewalMemberDto> getPage(Pageable pageable);
 
     /**
      * Retrieves a renewal from the database.

@@ -7,7 +7,9 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.RenewalsRepo;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.time.LocalDate;
@@ -88,7 +90,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
     public void init() {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
-                .size(5)
+                .size(100)
                 .ignore(field(MemberEntity::getId))
                 .withUnique(field(MemberEntity::getMemberNumber))
                 .create();
@@ -105,12 +107,12 @@ public class RenewalIntegrationTests extends IntegrationTests {
                 .sorted(Comparator.comparingInt(RenewalEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
-        var testParams = PageTestParams.of(RenewalDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(RenewalMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(RenewalDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(RenewalMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -128,13 +130,13 @@ public class RenewalIntegrationTests extends IntegrationTests {
         Map<String, String> map = new HashMap<>();
         map.put(sortParamName,  "id,desc");
 
-        var testParams = PageTestParams.of(RenewalDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(RenewalMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(RenewalDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(RenewalMemberDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -152,13 +154,13 @@ public class RenewalIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(sizeParamName, String.valueOf(pageSize));
 
-        var testParams = PageTestParams.of(RenewalDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(RenewalMemberDto.class, map, path, sorted.size(),
             0, pageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(RenewalDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(RenewalMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -176,13 +178,13 @@ public class RenewalIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(pageParamName, String.valueOf(page));
 
-        var testParams = PageTestParams.of(RenewalDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(RenewalMemberDto.class, map, path, sorted.size(),
             page, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(RenewalDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(RenewalMemberDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -191,7 +193,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "renewal-date", "renewal-year" })
+    @ValueSource(strings = {"id", "renewal_date", "renewal_year", "member_number", "full_name"})
     public void getListPage_sortColumn(String sort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
@@ -202,7 +204,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var map = new HashMap<String, String>();
         map.put(sortParamName, sort);
 
-        var testParams = PageTestParams.of(RenewalDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(RenewalMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
@@ -211,25 +213,6 @@ public class RenewalIntegrationTests extends IntegrationTests {
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
         verify(expected, actual);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"member-id"})
-    public void getListPage_excluded_fields_returns_bad_request(String sort) {
-        // setup
-        Map<String, String > map = new HashMap<>();
-        map.put(sortParamName, sort);
-
-        // execute and verify
-        given()
-            .auth().none()
-            .params(map)
-            .when()
-            .get(path)
-            .then().assertThat()
-            .status(HttpStatus.BAD_REQUEST)
-            .expect(jsonPath("$.validation-errors").isNotEmpty());
-
     }
 
     @Test
@@ -497,7 +480,17 @@ public class RenewalIntegrationTests extends IntegrationTests {
         assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
     }
 
-    private void verify(List<RenewalEntity> expected, List<RenewalDto> actual) {
+    private void verify(RenewalEntity expected, RenewalMemberDto actual) {
+        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
+        assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
+        assertEquals(expected.getMember().getMemberNumber(), actual.getMemberNumber());
+        assertEquals(expected.getMember().getFirstName(), actual.getFullName().getFirstName());
+        assertEquals(expected.getMember().getMiddleName(), actual.getFullName().getMiddleName());
+        assertEquals(expected.getMember().getLastName(), actual.getFullName().getLastName());
+        assertEquals(expected.getMember().getSuffix(), actual.getFullName().getSuffix());
+    }
+
+    private void verify(List<RenewalEntity> expected, List<RenewalMemberDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
@@ -505,20 +498,25 @@ public class RenewalIntegrationTests extends IntegrationTests {
         });
     }
 
-    private Map<String, SortFields<RenewalEntity, RenewalDto>> getSorts() {
+    private Map<String, SortFields<RenewalEntity, RenewalMemberDto>> getSorts() {
 
-        Map<String, SortFields<RenewalEntity, RenewalDto>> map = new HashMap<>();
+        Map<String, SortFields<RenewalEntity, RenewalMemberDto>> map = new HashMap<>();
         map.put("id", SortFields.of(Comparator.comparingInt(RenewalEntity::getId),
-            Comparator.comparingInt(RenewalDto::getId)));
+            Comparator.comparingInt(RenewalMemberDto::getId)));
 
-        map.put("member-id", SortFields.of(Comparator.comparingInt(RenewalEntity::getId),
-            Comparator.comparingInt(RenewalDto::getId)));
+        map.put("renewal_date", SortFields.of(Comparator.comparing(RenewalEntity::getRenewalDate),
+            Comparator.comparing(RenewalMemberDto::getRenewalDate)));
 
-        map.put("renewal-date", SortFields.of(Comparator.comparing(RenewalEntity::getRenewalDate),
-            Comparator.comparing(RenewalDto::getRenewalDate)));
+        map.put("renewal_year", SortFields.of(Comparator.comparing(RenewalEntity::getRenewalYear),
+            Comparator.comparing(RenewalMemberDto::getRenewalYear)));
 
-        map.put("renewal-year", SortFields.of(Comparator.comparing(RenewalEntity::getRenewalYear),
-            Comparator.comparing(RenewalDto::getRenewalYear)));
+        map.put("member_number", SortFields.of(
+            Comparator.comparing(e -> e.getMember().getMemberNumber()),
+            Comparator.comparing(RenewalMemberDto::getMemberNumber)));
+
+        map.put("full_name", SortFields.of(
+            Comparator.comparing(e -> e.getMember().getLastName()),
+            Comparator.comparing(d -> d.getFullName().getLastName())));
 
         return map;
     }

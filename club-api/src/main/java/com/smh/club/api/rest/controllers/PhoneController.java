@@ -2,6 +2,7 @@ package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -35,12 +36,12 @@ public class PhoneController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link PhoneDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link PhoneMemberDto}.
      */
     @GetMapping
-    public ResponseEntity<PagedDto<PhoneDto>> page(
+    public ResponseEntity<PagedDto<PhoneMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(PhoneDto.class)
+        @SortConstraint(PhoneMemberDto.class)
         Pageable pageable) {
 
         var page = phoneSvc.getPage(pageable);

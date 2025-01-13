@@ -30,7 +30,7 @@ public class RenewalEntity {
     @SortExclude
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private MemberEntity member;
 }
