@@ -9,7 +9,6 @@ import {AddressMember} from "../models/address-member";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {FullName} from "../../../shared/models/full-name";
 
 @Component({
   selector: 'app-list-addresses',
