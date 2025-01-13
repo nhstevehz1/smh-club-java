@@ -21,9 +21,9 @@ import {FullName} from "../../../shared/models/full-name";
 })
 export class ListAddressesComponent extends TableComponentBase<AddressMember> implements OnInit, AfterViewInit {
   @ViewChild(SortablePageableTableComponent, {static: true})
-  private table!: SortablePageableTableComponent;
+  private _table!: SortablePageableTableComponent;
 
-  private svc = inject(AddressService);
+  private _svc = inject(AddressService);
 
   resultsLength = 0;
   datasource = new MatTableDataSource<AddressMember>();
@@ -34,15 +34,15 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
   }
 
   ngAfterViewInit(): void {
-    merge(this.table.sort.sortChange, this.table.paginator.page)
+    merge(this._table.sort.sortChange, this._table.paginator.page)
         .pipe(
             startWith({}),
             switchMap(() => {
               // assemble the dynamic page request
-              let pr = this.getPageRequest(this.table.paginator, this.table.sort);
+              let pr = this.getPageRequest(this._table.paginator, this._table.sort);
 
               // pipe any errors to an Observable of null
-              return this.svc.getAddresses(pr)
+              return this._svc.getAddresses(pr)
                   .pipe(catchError(err => {
                     console.log(err);
                     return observableOf(null);
@@ -109,17 +109,6 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
         cell: (element: AddressMember) =>  this.getFullName(element.full_name) //`${element.full_name.last_first}`
       }
     ];
-  }
-
-  private getFullName(fullName: FullName): string {
-    const first = fullName.first_name;
-    const last = fullName.last_name;
-    const middle = fullName.middle_name || '';
-    const suffix = fullName.suffix || '';
-
-    const firstName = `${first} ${middle}`.trim();
-    const lastName = `${last} ${suffix}`.trim();
-    return `${lastName}, ${firstName}`;
   }
 
   private getStreet(address: AddressMember): string {

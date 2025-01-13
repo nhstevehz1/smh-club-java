@@ -1,9 +1,8 @@
 package com.smh.club.api.rest.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.rest.domain.entities.AddressEntity;
-import com.smh.club.api.rest.domain.entities.AddressType;
-import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.rest.domain.entities.*;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
@@ -36,6 +35,9 @@ public class DevSetup implements CommandLineRunner {
 
     var names = readNames();
     var addresses = readAddresses();
+    var emails = readEmails();
+    var phones = readPhones();
+
     var list = new ArrayList<MemberEntity>();
     var random = new Random();
 
@@ -55,6 +57,14 @@ public class DevSetup implements CommandLineRunner {
 
       for (var address : getRandomAddresses(random, addresses)) {
         member.addAddress(address);
+      }
+
+      for (var email: getRandomEmails(random, emails)) {
+        member.addEmail(email);
+      }
+
+      for (var phone: getRandomPhones(random, phones)) {
+        member.addPhone(phone);
       }
 
       list.add(member);
@@ -89,6 +99,43 @@ public class DevSetup implements CommandLineRunner {
     return results;
   }
 
+  private List<EmailEntity> getRandomEmails(Random random, List<Email> emails) {
+    var size = 3;
+    var results = new ArrayList<EmailEntity>();
+
+    for (int ii = 0; ii < size; ii++) {
+      var email = emails.get(random.nextInt(emails.size())).getEmail();
+      var type = emails.get(random.nextInt(emails.size())).getEmailType();
+      var entity = EmailEntity.builder()
+          .email(email)
+          .emailType(type)
+          .build();
+
+      results.add(entity);
+    }
+
+    return results;
+  }
+
+  private List<PhoneEntity> getRandomPhones(Random random, List<Phone> phones) {
+    var size = 3;
+    var results = new ArrayList<PhoneEntity>();
+
+    for (int ii = 0; ii < size; ii++) {
+      var code = phones.get(random.nextInt(phones.size())).getCountryCode();
+      var phone = phones.get(random.nextInt(phones.size())).getPhoneNumber();
+      var type = phones.get(random.nextInt(phones.size())).getPhoneType();
+
+      var entity = PhoneEntity.builder()
+          .phoneNumber(phone)
+          .phoneType(type)
+          .build();
+      results.add(entity);
+    }
+
+    return results;
+  }
+
   private List<Address> readAddresses() throws IOException {
       var addresses = mapper.readValue(ResourceUtils.getFile("classpath:data/addresses.json"), Address[].class);
       return Arrays.asList(addresses);
@@ -97,6 +144,16 @@ public class DevSetup implements CommandLineRunner {
   private List<Name> readNames() throws IOException {
     var names = mapper.readValue(ResourceUtils.getFile("classpath:data/names.json"), Name[].class);
     return Arrays.asList(names);
+  }
+
+  private List<Email> readEmails() throws IOException {
+    var emails = mapper.readValue(ResourceUtils.getFile("classpath:data/emails.json"), Email[].class);
+    return Arrays.asList(emails);
+  }
+
+  private List<Phone> readPhones() throws IOException {
+    var phones = mapper.readValue(ResourceUtils.getFile("classpath:data/phones.json"), Phone[].class);
+    return Arrays.asList(phones);
   }
 
   @Getter
@@ -114,5 +171,25 @@ public class DevSetup implements CommandLineRunner {
   private static class Name{
     private String first;
     private String last;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  private static class Phone {
+    @JsonProperty("country_code")
+    private String countryCode;
+    @JsonProperty("phone_number")
+    private String phoneNumber;
+    @JsonProperty("phone_type")
+    private PhoneType phoneType;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  private static class Email {
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("email_type")
+    private EmailType emailType;
   }
 }

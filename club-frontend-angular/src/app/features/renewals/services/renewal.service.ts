@@ -3,19 +3,18 @@ import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
 import {PagedData} from "../../../shared/models/paged-data";
-import {AddressMember} from "../models/address-member";
+import {RenewalMember} from "../models/renewal-member";
 
 @Injectable()
-export class AddressService {
-  private  BASE_API = '/api/v1/addresses';
+export class RenewalService {
+  private  BASE_API = '/api/v1/renewals';
 
   private _http: HttpClient = inject(HttpClient);
 
-  getAddresses(pageRequest: PageRequest): Observable<PagedData<AddressMember>> {
+  public getRenewals(pageRequest: PageRequest): Observable<PagedData<RenewalMember>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
-    return this._http.get<PagedData<AddressMember>>(uri);
+    return this._http.get<PagedData<RenewalMember>>(uri);
   }
-
 }

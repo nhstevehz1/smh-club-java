@@ -1,9 +1,10 @@
 import {FullName} from "../../../shared/models/full-name";
+import {DateTime} from "luxon";
 
-export interface EmailMember {
+export interface RenewalMember {
     id: number;
     member_number: number;
     full_name: FullName;
-    email: string;
-    email_type: string;
+    renewal_date: DateTime;
+    renewal_year: number;
 }

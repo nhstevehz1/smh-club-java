@@ -14,7 +14,7 @@ public class PageTestParams<T> {
     @Builder.Default
     private final Map<String, String> query = new HashMap<>();
     private String path;
-    private int totalCount;
+    private long totalCount;
     private int pageNumber;
     @Builder.Default
     private int pageSize = 1;
@@ -23,7 +23,7 @@ public class PageTestParams<T> {
         return "_content.";
     }
 
-    public int getTotalPages() {
+    public long getTotalPages() {
         return (totalCount / pageSize) +
             (totalCount % pageSize == 0 ? 0 : 1);
     }
@@ -45,7 +45,7 @@ public class PageTestParams<T> {
     }
 
     public static <T> PageTestParams<T> of(
-        Class<T> clazz, Map<String, String> query, String path, int totalCount,
+        Class<T> clazz, Map<String, String> query, String path, long totalCount,
         int pageNumber, int pageSize) {
 
         return PageTestParams.<T>builder()

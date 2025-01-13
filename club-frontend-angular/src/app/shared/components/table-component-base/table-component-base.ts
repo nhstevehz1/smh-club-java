@@ -2,6 +2,7 @@ import {ColumnDef} from "../sortable-pageable-table/models/column-def";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {PageRequest, Sort} from "../../models/page-request";
+import {FullName} from "../../models/full-name";
 
 export abstract class TableComponentBase <Type> {
 
@@ -24,4 +25,15 @@ export abstract class TableComponentBase <Type> {
     }
 
     protected abstract getColumns(): ColumnDef<Type>[];
+
+    public getFullName(fullName: FullName): string {
+        const first = fullName.first_name;
+        const last = fullName.last_name;
+        const middle = fullName.middle_name || '';
+        const suffix = fullName.suffix || '';
+
+        const firstName = `${first} ${middle}`.trim();
+        const lastName = `${last} ${suffix}`.trim();
+        return `${lastName}, ${firstName}`;
+    }
 }

@@ -59,9 +59,14 @@ export class ContentComponent {
             route: 'p/addresses',
         },
         {
-            displayName: 'Email',
+            displayName: 'Emails',
             iconName: 'mail',
             route: 'p/emails',
+        },
+        {
+            displayName: 'Phones',
+            iconName: 'phone',
+            route: 'p/phones',
         }
     ];
 

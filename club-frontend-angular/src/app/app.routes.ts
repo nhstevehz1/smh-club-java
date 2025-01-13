@@ -23,6 +23,11 @@ export const routes: Routes = [
             .then(mod => mod.ListEmailsComponent)
     },
     {
+      path: 'p/phones',
+      loadComponent: () => import('./features/phones/list-phones/list-phones.component')
+            .then(mod => mod.ListPhonesComponent)
+    },
+    {
         path: '',
         pathMatch: 'full',
         redirectTo: 'p/home'

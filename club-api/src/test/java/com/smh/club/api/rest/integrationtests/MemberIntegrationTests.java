@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
@@ -31,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -178,28 +181,30 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member_number", "first_name", "last_name", "birth_date", "joined_date" })
-    public void getListPage_sortColumn(String sort) {
+    @CsvSource({"id,id", "member_number,memberNumber", "first_name,firstName",
+        "last_name,lastName", "birth_date,birthDate", "joined_date,joinedDate" })
+    public void getListPage_sortColumn(String sort, String entitySort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
 
-        // sort by id
-        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
+        var pageRequest = PageRequest.of(0, entitySize, Sort.by(entitySort));
+        var expected = repo.findAll(pageRequest);
+        assertEquals(expected.getContent(), expected.getContent().stream().sorted(sortFields.getEntity()).toList());
 
         var map = new HashMap<String, String>();
         map.put(sortParamName, sort);
+        map.put(sizeParamName, String.valueOf(entitySize));
 
-        var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
-            0, defaultPageSize);
+        var testParams = PageTestParams.of(MemberDto.class, map, path, expected.getTotalElements(),
+            0, entitySize);
 
         var actual = executeListPage(testParams);
-
         assertEquals(actual.stream().sorted(sortFields.getDto()).toList(), actual);
 
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
+        for(int ii = 0; ii < entitySize; ii++) {
+            verify(expected.getContent().get(ii), actual.get(ii));
+        }
     }
 
     @ParameterizedTest
