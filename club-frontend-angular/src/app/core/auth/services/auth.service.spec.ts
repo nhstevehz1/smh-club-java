@@ -1,27 +1,18 @@
 import {TestBed} from '@angular/core/testing';
 
 import {AuthService} from './auth.service';
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {HttpClient, provideHttpClient} from "@angular/common/http";
+import {MockBuilder} from "ng-mocks";
+import {HttpClient} from "@angular/common/http";
 
 describe('AuthService', () => {
-  let service: AuthService;
-  let httpClient: HttpClient;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        AuthService,
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
-    });
-    service = TestBed.inject(AuthService);
-    httpClient = TestBed.inject(HttpClient);
+    return MockBuilder(AuthService)
+        .mock(HttpClient);
   });
 
   it('should be created', () => {
+    const service = TestBed.inject(AuthService);
     expect(service).toBeTruthy();
-    expect(httpClient).toBeTruthy();
   });
 });

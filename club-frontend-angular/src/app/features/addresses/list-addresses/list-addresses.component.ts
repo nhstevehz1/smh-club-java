@@ -22,11 +22,13 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent;
 
-  private _svc = inject(AddressService);
-
   resultsLength = 0;
   datasource = new MatTableDataSource<AddressMember>();
   columns: ColumnDef<AddressMember>[] = [];
+
+  constructor(private svc: AddressService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.columns = this.getColumns();
@@ -41,7 +43,7 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
               let pr = this.getPageRequest(this._table.paginator, this._table.sort);
 
               // pipe any errors to an Observable of null
-              return this._svc.getAddresses(pr)
+              return this.svc.getAddresses(pr)
                   .pipe(catchError(err => {
                     console.log(err);
                     return observableOf(null);

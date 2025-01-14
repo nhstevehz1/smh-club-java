@@ -1,32 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ListMembersComponent } from './list-members.component';
-import {provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {MembersService} from "../services/members.service";
-import {provideAnimations} from "@angular/platform-browser/animations";
+import {ListMembersComponent} from './list-members.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MockBuilder, MockRender} from "ng-mocks";
+import {
+    SortablePageableTableComponent
+} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 
 describe('ListMembersComponent', () => {
-  let component: ListMembersComponent;
-  let fixture: ComponentFixture<ListMembersComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ListMembersComponent],
-      providers: [
-          MembersService,
-          provideAnimations(),
-          provideHttpClient(),
-          provideHttpClientTesting()
-      ]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(ListMembersComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    return MockBuilder(ListMembersComponent)
+        .keep(SortablePageableTableComponent)
+        .keep(BrowserAnimationsModule);
   });
 
   it('should create', () => {
+  const fixture = MockRender(ListMembersComponent);
+    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });

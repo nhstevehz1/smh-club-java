@@ -23,11 +23,11 @@ export class ListMembersComponent implements OnInit, AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
     private table!: SortablePageableTableComponent;
 
-    private svc = inject(MembersService);
-
     resultsLength = 0;
     datasource = new MatTableDataSource<Member>();
     columns: ColumnDef<Member>[] = [];
+
+    constructor(private svc: MembersService) {}
 
     ngOnInit(): void {
        this.columns = this.getColumns(); // create column defs

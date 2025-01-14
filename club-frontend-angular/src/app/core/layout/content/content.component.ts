@@ -21,8 +21,7 @@ import {MenuListItemComponent} from "../menu-list-item/menu-list-item.component"
 export class ContentComponent {
     @ViewChild(MatSidenav, {static: true}) sidenav!: MatSidenav;
 
-    constructor(private router: Router) {
-    }
+    constructor(private router: Router) {}
 
     public toggleSideNav(): void {
         this.sidenav.toggle()

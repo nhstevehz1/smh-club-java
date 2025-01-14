@@ -3,25 +3,17 @@ import { TestBed } from '@angular/core/testing';
 import { RenewalService } from './renewal.service';
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {HttpClient, provideHttpClient} from "@angular/common/http";
+import {MockBuilder} from "ng-mocks";
 
 describe('RenewalService', () => {
-  let service: RenewalService;
-  let httpClient: HttpClient;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        RenewalService,
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
-    });
-    service = TestBed.inject(RenewalService);
-    httpClient = TestBed.inject(HttpClient);
+    return MockBuilder(RenewalService)
+        .mock(HttpClient);
   });
 
   it('should be created', () => {
+    const service = TestBed.inject(RenewalService);
     expect(service).toBeTruthy();
-    expect(httpClient).toBeTruthy();
   });
 });

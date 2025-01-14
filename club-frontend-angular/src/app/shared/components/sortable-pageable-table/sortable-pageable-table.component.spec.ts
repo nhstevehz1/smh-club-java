@@ -2,24 +2,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SortablePageableTableComponent } from './sortable-pageable-table.component';
 import {provideAnimations} from "@angular/platform-browser/animations";
+import {MockBuilder, MockRender} from "ng-mocks";
 
 describe('SortablePageableTableComponent', () => {
-  let component: SortablePageableTableComponent;
-  let fixture: ComponentFixture<SortablePageableTableComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SortablePageableTableComponent],
-      providers: [provideAnimations()]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(SortablePageableTableComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    return MockBuilder(SortablePageableTableComponent);
   });
 
   it('should create', () => {
+    const fixture = MockRender(SortablePageableTableComponent);
+    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });

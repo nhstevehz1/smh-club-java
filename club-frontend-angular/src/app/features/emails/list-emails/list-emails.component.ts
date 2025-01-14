@@ -23,11 +23,13 @@ export class ListEmailsComponent
     @ViewChild(SortablePageableTableComponent, {static: true})
     private _table!: SortablePageableTableComponent;
 
-    private _svc = inject(EmailService);
-
     resultsLength = 0;
     datasource = new MatTableDataSource<EmailMember>();
     columns: ColumnDef<EmailMember>[] = [];
+
+    constructor(private svc: EmailService) {
+        super();
+    }
 
     ngOnInit(): void {
         this.columns = this.getColumns();
@@ -42,7 +44,7 @@ export class ListEmailsComponent
                     let pr = this.getPageRequest(this._table.paginator, this._table.sort);
 
                     // pipe any errors to an Observable of null
-                    return this._svc.getEmails(pr)
+                    return this.svc.getEmails(pr)
                         .pipe(catchError(err => {
                             console.log(err);
                             return observableOf(null);

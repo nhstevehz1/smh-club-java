@@ -2,24 +2,17 @@ import {TestBed} from '@angular/core/testing';
 import {EmailService} from "./email.service";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {HttpClient, provideHttpClient} from "@angular/common/http";
+import {MockBuilder, MockRender} from "ng-mocks";
 
 describe('EmailServiceService', () => {
-  let service: EmailService;
-  let httpClient: HttpClient;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        EmailService,
-        provideHttpClient(),
-        provideHttpClientTesting()]
-    });
-    service = TestBed.inject(EmailService);
-    httpClient = TestBed.inject(HttpClient);
+    return MockBuilder(EmailService)
+        .mock(HttpClient)
   });
 
   it('should be created', () => {
+    const service = TestBed.inject(EmailService);
     expect(service).toBeTruthy();
-    expect(httpClient).toBeTruthy();
   });
 });

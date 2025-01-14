@@ -9,6 +9,4 @@ import {LoadingSpinnerService} from "./core/loading/loading-spinner.service";
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
-  title = 'Social Club';
-}
+export class AppComponent {}

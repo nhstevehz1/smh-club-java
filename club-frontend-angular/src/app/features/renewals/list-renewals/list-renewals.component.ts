@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
@@ -23,11 +23,13 @@ export class ListRenewalsComponent
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent;
 
-  private _svc = inject(RenewalService);
-
   resultsLength = 0;
   datasource = new MatTableDataSource<RenewalMember>();
   columns: ColumnDef<RenewalMember>[] = [];
+
+  constructor(private svc: RenewalService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.columns = this.getColumns();
@@ -42,7 +44,7 @@ export class ListRenewalsComponent
               let pr = this.getPageRequest(this._table.paginator, this._table.sort);
 
               // pipe any errors to an Observable of null
-              return this._svc.getRenewals(pr)
+              return this.svc.getRenewals(pr)
                   .pipe(catchError(err => {
                     console.log(err);
                     return observableOf(null);

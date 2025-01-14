@@ -4,34 +4,23 @@ import { ListRenewalsComponent } from './list-renewals.component';
 import {HttpClient, provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {RenewalService} from "../services/renewal.service";
-import {provideAnimations} from "@angular/platform-browser/animations";
+import {BrowserAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
+import {MockBuilder, MockRender} from "ng-mocks";
+import {
+  SortablePageableTableComponent
+} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 
 describe('ListRenewalsComponent', () => {
-  let component: ListRenewalsComponent;
-  let fixture: ComponentFixture<ListRenewalsComponent>;
-  let service: RenewalService;
-  let httpClient: HttpClient;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ListRenewalsComponent],
-      providers: [
-        RenewalService,
-        provideAnimations(),
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(ListRenewalsComponent);
-    service = TestBed.inject(RenewalService);
-    httpClient = TestBed.inject(HttpClient);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    return MockBuilder(ListRenewalsComponent)
+        .keep(SortablePageableTableComponent)
+        .keep(BrowserAnimationsModule);
   });
 
   it('should create', () => {
+    const fixture = MockRender(ListRenewalsComponent);
+    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });

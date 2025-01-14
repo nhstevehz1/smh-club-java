@@ -9,13 +9,13 @@ import {AddressMember} from "../models/address-member";
 export class AddressService {
   private  BASE_API = '/api/v1/addresses';
 
-  private _http: HttpClient = inject(HttpClient);
+  constructor(private http: HttpClient) {}
 
   getAddresses(pageRequest: PageRequest): Observable<PagedData<AddressMember>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
-    return this._http.get<PagedData<AddressMember>>(uri);
+    return this.http.get<PagedData<AddressMember>>(uri);
   }
 
 }

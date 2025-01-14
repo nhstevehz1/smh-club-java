@@ -18,14 +18,17 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
   styleUrl: './list-phones.component.scss'
 })
 export class ListPhonesComponent extends TableComponentBase<PhoneMember> implements OnInit, AfterViewInit {
+
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent;
-
-  private _svc = inject(PhoneService);
 
   resultsLength = 0;
   datasource = new MatTableDataSource<PhoneMember>();
   columns: ColumnDef<PhoneMember>[] = [];
+
+  constructor(private svc: PhoneService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.columns = this.getColumns();
@@ -40,7 +43,7 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
               let pr = this.getPageRequest(this._table.paginator, this._table.sort);
 
               // pipe any errors to an Observable of null
-              return this._svc.getPhones(pr)
+              return this.svc.getPhones(pr)
                   .pipe(catchError(err => {
                     console.log(err);
                     return observableOf(null);
