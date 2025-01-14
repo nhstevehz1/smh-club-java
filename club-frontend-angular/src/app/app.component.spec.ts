@@ -1,7 +1,5 @@
-import {MockBuilder, MockComponent, MockComponents, MockRender} from "ng-mocks";
+import {MockBuilder, MockRender} from "ng-mocks";
 import {AppComponent} from "./app.component";
-import {TestBed} from "@angular/core/testing";
-import {MainLayoutComponent} from "./core/layout/main-layout/main-layout.component";
 
 describe('AppComponent', () => {
    beforeEach(() => {

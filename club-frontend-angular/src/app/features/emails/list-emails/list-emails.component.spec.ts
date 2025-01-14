@@ -1,10 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ListEmailsComponent } from './list-emails.component';
-import {provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {EmailService} from "../services/email.service";
-import {BrowserAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
+import {ListEmailsComponent} from './list-emails.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MockBuilder, MockRender} from "ng-mocks";
 import {
   SortablePageableTableComponent

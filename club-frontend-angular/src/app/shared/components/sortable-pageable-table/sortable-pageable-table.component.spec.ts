@@ -1,7 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SortablePageableTableComponent } from './sortable-pageable-table.component';
-import {provideAnimations} from "@angular/platform-browser/animations";
+import {SortablePageableTableComponent} from './sortable-pageable-table.component';
 import {MockBuilder, MockRender} from "ng-mocks";
 
 describe('SortablePageableTableComponent', () => {

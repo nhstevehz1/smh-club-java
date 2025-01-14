@@ -1,8 +1,7 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { RenewalService } from './renewal.service';
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {HttpClient, provideHttpClient} from "@angular/common/http";
+import {RenewalService} from './renewal.service';
+import {HttpClient} from "@angular/common/http";
 import {MockBuilder} from "ng-mocks";
 
 describe('RenewalService', () => {

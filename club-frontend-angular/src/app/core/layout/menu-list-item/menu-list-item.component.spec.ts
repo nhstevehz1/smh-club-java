@@ -1,5 +1,3 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {MenuListItemComponent} from './menu-list-item.component';
 import {MockBuilder, MockRender} from "ng-mocks";
 

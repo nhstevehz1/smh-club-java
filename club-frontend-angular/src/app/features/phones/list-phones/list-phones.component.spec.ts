@@ -1,10 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ListPhonesComponent } from './list-phones.component';
-import {HttpClient, provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {PhoneService} from "../services/phone.service";
-import {BrowserAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
+import {ListPhonesComponent} from './list-phones.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MockBuilder, MockRender} from "ng-mocks";
 import {
   SortablePageableTableComponent

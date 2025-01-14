@@ -1,9 +1,8 @@
-import {ComponentFixture, ComponentFixtureAutoDetect, TestBed} from '@angular/core/testing';
+import {ComponentFixtureAutoDetect} from '@angular/core/testing';
 
 import {FooterComponent} from './footer.component';
 import {MockBuilder, MockRender} from "ng-mocks";
 import {DateTime} from "luxon";
-import {AppComponent} from "../../../app.component";
 
 describe('FooterComponent', () => {
 

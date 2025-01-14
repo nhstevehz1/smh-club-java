@@ -1,17 +1,9 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {ContentComponent} from './content.component';
-import {provideAnimations} from "@angular/platform-browser/animations";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatDrawerContentHarness, MatSidenavContentHarness, MatSidenavHarness} from "@angular/material/sidenav/testing";
-import {RouterTestingHarness} from "@angular/router/testing";
-import {provideRouter, Router} from "@angular/router";
 import {MockBuilder, MockRender} from "ng-mocks";
 
 describe('ContentComponent', () => {
 
-  beforeEach(async () => {
+  beforeEach(() => {
     return MockBuilder(ContentComponent)
   });
 

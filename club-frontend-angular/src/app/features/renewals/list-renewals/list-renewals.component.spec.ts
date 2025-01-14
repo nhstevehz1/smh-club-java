@@ -1,10 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ListRenewalsComponent } from './list-renewals.component';
-import {HttpClient, provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {RenewalService} from "../services/renewal.service";
-import {BrowserAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
+import {ListRenewalsComponent} from './list-renewals.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MockBuilder, MockRender} from "ng-mocks";
 import {
   SortablePageableTableComponent
