@@ -28,6 +28,10 @@ export class PageRequest {
         return new PageRequest(page, size);
     }
 
+    public static empty(): PageRequest {
+        return new PageRequest(undefined, undefined);
+    }
+
     private getPageQuery(query: string | null): string | null {
         if (this.page !== undefined) {
             return query == null ? `?page=${this.page}` : query + `&page=${this.page}`;
