@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {HeaderComponent} from "../header/header.component";
 import {Router} from "@angular/router";
@@ -16,14 +16,18 @@ import {MatDivider} from "@angular/material/divider";
         ContentComponent,
         MatDivider
     ],
+  providers: [AuthService],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent implements OnInit, OnDestroy {
+  private _authService = inject(AuthService);
+  private _router = inject(Router);
+
   @ViewChild(ContentComponent, {static: true}) content!: ContentComponent;
 
   get isAuthed(): boolean {
-    return this.authService.isAuthenticated();
+    return this._authService!.isAuthenticated();
   }
 
   get name(): string {
@@ -38,12 +42,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   private userSubscription: Subscription | null = null;
 
-  constructor(private router: Router,
-              private authService: AuthService) {
-  }
-
   ngOnInit() {
-    this.userSubscription = this.authService.user.subscribe(u => {
+    this.userSubscription = this._authService.user.subscribe(u => {
       console.info("Main layout sub fired: " + u );
 
       if (u) {
@@ -72,7 +72,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   profileHandler(): void {
-    this.router.navigate(['p/profile']).then(() =>
+    this._router.navigate(['p/profile']).then(() =>
     console.log("Profile menu clicked"));
   }
 

@@ -27,9 +27,9 @@ import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-togg
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-    private document: Document = inject(DOCUMENT);
+  private document: Document = inject(DOCUMENT);
 
-    @Input('name') name: string = '';
+  @Input('name') name: string = '';
 
   @Input('isAuthed')
   isAuthed: boolean = false;

@@ -33,7 +33,7 @@ import {MatPaginator} from "@angular/material/paginator";
   styleUrl: './sortable-pageable-table.component.scss'
 })
 export class SortablePageableTableComponent implements AfterViewInit {
-  @Input() columns!: ColumnDef<any>[];
+  @Input() columns!: Array<ColumnDef<any>>;
   @Input() dataSource!: MatTableDataSource<any>;
   @Input() pageSizes: number[] = [5,10,25,100];
   @Input() pageSize: number = 5;
@@ -46,7 +46,7 @@ export class SortablePageableTableComponent implements AfterViewInit {
   paginator!: MatPaginator;
 
   get columnNames(): string[] {
-    return this.columns.map(column => column.name);
+    return this.columns?.map(column => column.name);
   }
   ngAfterViewInit() {
     // revert back to page 0 if it had been changed.

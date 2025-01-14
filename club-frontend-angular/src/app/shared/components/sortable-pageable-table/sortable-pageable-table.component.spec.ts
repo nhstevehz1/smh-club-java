@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SortablePageableTableComponent } from './sortable-pageable-table.component';
+import {provideAnimations} from "@angular/platform-browser/animations";
 
 describe('SortablePageableTableComponent', () => {
   let component: SortablePageableTableComponent;
@@ -8,7 +9,8 @@ describe('SortablePageableTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SortablePageableTableComponent]
+      imports: [SortablePageableTableComponent],
+      providers: [provideAnimations()]
     })
     .compileComponents();
 

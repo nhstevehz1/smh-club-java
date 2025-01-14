@@ -1,6 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ListAddressesComponent } from './list-addresses.component';
+import {ListAddressesComponent} from './list-addresses.component';
+import {provideHttpClient} from "@angular/common/http";
+import {provideHttpClientTesting} from "@angular/common/http/testing";
+import {AddressService} from "../services/address.service";
+import {CommonModule} from "@angular/common";
+import {provideAnimations} from "@angular/platform-browser/animations";
 
 describe('ListAddressesComponent', () => {
   let component: ListAddressesComponent;
@@ -8,7 +13,13 @@ describe('ListAddressesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListAddressesComponent]
+      imports: [ListAddressesComponent, CommonModule],
+      providers: [
+        AddressService,
+        provideAnimations(),
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
     })
     .compileComponents();
 

@@ -9,6 +9,7 @@ import {TableComponentBase} from "../../../shared/components/table-component-bas
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @Component({
     selector: 'app-list-emails',

@@ -1,6 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ContentComponent} from './content.component';
+import {provideAnimations} from "@angular/platform-browser/animations";
 
 describe('ContentComponent', () => {
   let component: ContentComponent;
@@ -8,7 +9,8 @@ describe('ContentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContentComponent]
+      imports: [ContentComponent],
+      providers: [provideAnimations()]
     })
     .compileComponents();
 

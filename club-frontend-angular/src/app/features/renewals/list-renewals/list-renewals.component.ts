@@ -9,7 +9,6 @@ import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 import {RenewalMember} from "../models/renewal-member";
-import * as console from "node:console";
 
 @Component({
   selector: 'app-list-renewals',

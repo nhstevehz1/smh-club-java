@@ -11,6 +11,7 @@ import {DateTime} from "luxon";
 })
 export class AuthService implements OnInit, OnDestroy {
 
+
   private userSubject: BehaviorSubject<AuthUser | null>;
   private eventBusSub: Subscription | null = null;
   public user: Observable<AuthUser | null>;

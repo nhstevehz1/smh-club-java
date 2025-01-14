@@ -16,16 +16,16 @@ export class MenuListItemComponent {
   @Input({required: true}) item: NavItem | undefined;
   @Output() menuClicked = new EventEmitter();
 
-  get displayName(): string {
-    return this.item!.displayName;
+  get displayName(): string | undefined {
+    return this.item?.displayName;
   }
 
-  get iconName(): string {
-    return this.item!.iconName;
+  get iconName(): string | undefined {
+    return this.item?.iconName;
   }
 
-  get routeName(): string {
-    return this.item!.route;
+  get routeName(): string | undefined {
+    return this.item?.route;
   }
 
   onItemSelected() {
