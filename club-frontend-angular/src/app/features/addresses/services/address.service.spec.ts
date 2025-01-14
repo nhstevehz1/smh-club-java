@@ -1,8 +1,7 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { AddressService } from './address.service';
+import {AddressService} from './address.service';
 import {HttpClient, provideHttpClient} from "@angular/common/http";
-import {PhoneService} from "../../phones/services/phone.service";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 
 describe('AddressService', () => {
