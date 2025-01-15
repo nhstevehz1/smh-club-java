@@ -3,14 +3,14 @@ import {SortDirection} from "@angular/material/sort";
 export class PageRequest {
     page: number | undefined;
     size: number | undefined;
-    sorts: Sort[] = [];
+    sorts: SortDef[] = [];
 
     private constructor(page?: number, size?: number) {
         this.page = page;
         this.size = size;
     }
 
-    public addSort(sort: Sort ): void {
+    public addSort(sort: SortDef ): void {
         this.sorts.push(sort);
     }
 
@@ -60,7 +60,7 @@ export class PageRequest {
     }
 }
 
-export class Sort {
+export class SortDef {
     sort: string;
     direction: SortDirection | undefined;
 
@@ -77,8 +77,8 @@ export class Sort {
         return query;
     }
 
-    public static of(sort: string, direction?: SortDirection): Sort {
-        return new Sort(sort, direction);
+    public static of(sort: string, direction?: SortDirection): SortDef {
+        return new SortDef(sort, direction);
     }
 
 }

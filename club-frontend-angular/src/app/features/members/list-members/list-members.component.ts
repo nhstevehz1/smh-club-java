@@ -7,8 +7,9 @@ import {Member} from "../models/Member";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MembersService} from "../services/members.service";
 import {merge, of as observableOf} from "rxjs";
-import {PageRequest, Sort} from "../../../shared/models/page-request";
+import {PageRequest, SortDef} from "../../../shared/models/page-request";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 
 @Component({
   selector: 'app-list-members',
@@ -19,27 +20,33 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent implements OnInit, AfterViewInit{
+export class ListMembersComponent
+    extends TableComponentBase<Member> implements OnInit, AfterViewInit{
+
     @ViewChild(SortablePageableTableComponent, {static: true})
-    private table!: SortablePageableTableComponent;
+    private _table!: SortablePageableTableComponent;
 
     resultsLength = 0;
     datasource = new MatTableDataSource<Member>();
     columns: ColumnDef<Member>[] = [];
 
-    constructor(private svc: MembersService) {}
+    constructor(private svc: MembersService) {
+        super();
+    }
 
     ngOnInit(): void {
        this.columns = this.getColumns(); // create column defs
     }
 
     ngAfterViewInit(): void {
-        merge(this.table.sort.sortChange, this.table.paginator.page)
+        merge(this._table.sort.sortChange, this._table.paginator.page)
             .pipe(
                 startWith({}),
                 switchMap(() => {
                     // assemble the dynamic page request
-                    let pr = this.getPageRequest();
+                    let pr = this.getPageRequest(
+                        this._table.paginator.pageIndex, this._table.paginator.pageSize,
+                        this._table.sort.active, this._table.sort.direction);
 
                     // pipe any errors to an Observable of null
                     return this.svc.getMembers(pr)
@@ -63,7 +70,7 @@ export class ListMembersComponent implements OnInit, AfterViewInit{
             ).subscribe(data => this.datasource.data = data!); // set the data source with the new page
     }
 
-    private getPageRequest(): PageRequest {
+    /*private getPageRequest(): PageRequest {
         let page = this.table.paginator?.pageIndex;
         let size = this.table.paginator?.pageSize;
 
@@ -75,14 +82,14 @@ export class ListMembersComponent implements OnInit, AfterViewInit{
         // The dynamic page request supports multiple sort fields.
         // currently, our implementation supports only single column sort
         if(this.table.sort.active !== undefined) {
-            let sort = Sort.of(this.table.sort.active, this.table.sort.direction);
+            let sort = SortDef.of(this.table.sort.active, this.table.sort.direction);
             pr.addSort(sort);
         }
         return  pr;
-    }
+    }*/
 
     // assemble the column defs which will be consumed by the pageable sortable table component
-    private getColumns(): ColumnDef<Member>[] {
+    protected getColumns(): ColumnDef<Member>[] {
         return [
             {
                 name: 'member_number',
