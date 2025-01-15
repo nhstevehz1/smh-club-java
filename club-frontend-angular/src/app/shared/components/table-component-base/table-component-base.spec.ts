@@ -1,4 +1,3 @@
-import {SortDirection} from "@angular/material/sort";
 import {TestTableComponentBase} from "./test-table-component-base";
 import {FullName} from "../../models/full-name";
 

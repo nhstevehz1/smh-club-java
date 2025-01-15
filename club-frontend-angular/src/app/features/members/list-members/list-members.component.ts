@@ -7,7 +7,6 @@ import {Member} from "../models/Member";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MembersService} from "../services/members.service";
 import {merge, of as observableOf} from "rxjs";
-import {PageRequest, SortDef} from "../../../shared/models/page-request";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 

@@ -1,6 +1,5 @@
 import {ColumnDef} from "../sortable-pageable-table/models/column-def";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort, Sort, SortDirection} from "@angular/material/sort";
+import {SortDirection} from "@angular/material/sort";
 import {PageRequest, SortDef} from "../../models/page-request";
 import {FullName} from "../../models/full-name";
 
