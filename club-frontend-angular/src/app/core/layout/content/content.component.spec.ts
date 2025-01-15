@@ -1,6 +1,5 @@
 import {ContentComponent} from './content.component';
 import {MockBuilder, MockRender} from "ng-mocks";
-import {ComponentFixture} from "@angular/core/testing";
 
 describe('ContentComponent', () => {
 
