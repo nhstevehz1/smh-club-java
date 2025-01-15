@@ -1,6 +1,6 @@
 <mat-sidenav-container class="side-nav-container">
     <mat-sidenav [class.mat-elevation-z4]=true mode="over" closed class="side-nav">
-        <mat-nav-list dense>
+        <mat-nav-list>
             @if (isUser()) {
                 @for(item of userNav; track item){
                     <app-menu-list-item

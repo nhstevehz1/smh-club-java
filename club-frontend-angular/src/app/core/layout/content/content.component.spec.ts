@@ -1,5 +1,6 @@
 import {ContentComponent} from './content.component';
 import {MockBuilder, MockRender} from "ng-mocks";
+import {ComponentFixture} from "@angular/core/testing";
 
 describe('ContentComponent', () => {
 
@@ -13,37 +14,57 @@ describe('ContentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  /*it(`should contain a 'mat-sidenav-container`, () => {
-    const nav = fixture.nativeElement.querySelector('mat-sidenav-container');
+
+  it(`should contain a 'mat-sidenav-container`, () => {
+    const fixture = MockRender(ContentComponent);
+    const navContainer = fixture.nativeElement.querySelector('mat-sidenav-container');
+    expect(navContainer).toBeTruthy();
+  });
+
+  it('should contain mat-sidenav component', () => {
+    const fixture = MockRender(ContentComponent);
+    const nav = fixture.nativeElement.querySelector('mat-sidenav');
+    expect(nav).toBeTruthy();
+  });
+
+  it('should contain mat-sidenav component', () => {
+    const fixture = MockRender(ContentComponent);
+    const nav = fixture.nativeElement.querySelector('mat-sidenav');
     expect(nav).toBeTruthy();
   });
 
   it(`'isUser' should return true`, () => {
-    var isUser = component.isUser();
+    const fixture = MockRender(ContentComponent);
+    const isUser = fixture.componentInstance.isUser();
     expect(isUser).toBeTrue();
   });
 
   it(`'isManager' should return true`, () => {
-    var isManager = component.isManager();
+    const fixture = MockRender(ContentComponent);
+    const isManager = fixture.componentInstance.isManager();
     expect(isManager).toBeTrue();
   });
 
   it(`'isAdmin' should return false`, () => {
-    var isAdmin = component.isAdmin();
+    const fixture = MockRender(ContentComponent);
+    var isAdmin = fixture.componentInstance.isAdmin();
     expect(isAdmin).toBeFalse();
   });
 
-  it('should open and close side nav', async () => {
-    const nav = await loader.getHarness(MatSidenavHarness);
+  /*
 
-    // side nav should be closed initially
-    expect(await nav.isOpen()).toBeFalse();
 
-    component.toggleSideNav();
-    expect(await nav.isOpen()).toBeTrue();
+    it('should open and close side nav', async () => {
+      const nav = await loader.getHarness(MatSidenavHarness);
 
-    component.toggleSideNav();
-    expect(await nav.isOpen()).toBeFalse();
-  });*/
+      // side nav should be closed initially
+      expect(await nav.isOpen()).toBeFalse();
+
+      component.toggleSideNav();
+      expect(await nav.isOpen()).toBeTrue();
+
+      component.toggleSideNav();
+      expect(await nav.isOpen()).toBeFalse();
+    });*/
 
 });
