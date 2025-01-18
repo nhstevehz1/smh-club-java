@@ -1,6 +1,6 @@
 <table mat-table matSort matSortDisableClear [dataSource]="dataSource">
-    @for (column of columns; track column) {
-        <ng-container [matColumnDef]="column.name">
+    @for (column of columns; track column.columnName) {
+        <ng-container [matColumnDef]="column.columnName">
             @if (column.isSortable) {
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     {{column.displayName}}
@@ -13,8 +13,8 @@
             <td mat-cell *matCellDef="let row">{{column.cell(row)}}</td>
         </ng-container>
     }
-    <tr mat-header-row *matHeaderRowDef="columnNames; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row;  columns: columnNames"></tr>
+    <tr mat-header-row *matHeaderRowDef="getColumnNames; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row;  columns: getColumnNames"></tr>
 </table>
 <mat-paginator
     [pageSizeOptions]="pageSizes"
