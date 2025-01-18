@@ -14,6 +14,7 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
+      captureConsole: true,
       jasmine: {
         random: false
         // you can add configuration options for Jasmine here
