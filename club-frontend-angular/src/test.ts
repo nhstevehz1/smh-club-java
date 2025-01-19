@@ -5,6 +5,7 @@ import {DefaultTitleStrategy, TitleStrategy} from "@angular/router";
 import {ApplicationModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {BrowserModule} from "@angular/platform-browser";
+import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 ngMocks.autoSpy('jasmine');
 
@@ -21,6 +22,7 @@ ngMocks.defaultMock(TitleStrategy, () => MockService(DefaultTitleStrategy));
 ngMocks.globalKeep(ApplicationModule, true);
 ngMocks.globalKeep(CommonModule, true);
 ngMocks.globalKeep(BrowserModule, true);
+ngMocks.globalReplace(BrowserAnimationsModule, NoopAnimationsModule);
 
 jasmine.getEnv().addReporter({
     specDone: MockInstance.restore,
