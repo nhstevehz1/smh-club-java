@@ -1,15 +1,21 @@
 import {MenuListItemComponent} from './menu-list-item.component';
-import {MockBuilder, MockRender} from "ng-mocks";
+import {ComponentFixture, TestBed} from "@angular/core/testing";
 
 describe('MenuListItemComponent', () => {
+  let fixture: ComponentFixture<MenuListItemComponent>;
+  let component: MenuListItemComponent;
 
   beforeEach(async () => {
-    return MockBuilder(MenuListItemComponent);
+    await TestBed.configureTestingModule({
+      providers: [
+        MenuListItemComponent
+      ]
+    }).compileComponents();
+    fixture = TestBed.createComponent(MenuListItemComponent);
+    component = fixture.componentInstance;
   });
 
   it('should create', () => {
-    const fixture = MockRender(MenuListItemComponent);
-    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });
