@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild} from '@angular/core';
 import {MatListModule} from "@angular/material/list";
 import {MatSidenav, MatSidenavModule} from "@angular/material/sidenav";
 import {Router, RouterOutlet} from "@angular/router";
@@ -7,14 +7,12 @@ import {MenuListItemComponent} from "../menu-list-item/menu-list-item.component"
 
 @Component({
   selector: 'app-content',
-    imports: [
-        MatSidenavModule,
-        MatListModule,
-        RouterOutlet,
-    ],
-    providers: [
-        MenuListItemComponent,
-    ],
+  imports: [
+    MatSidenavModule,
+    MatListModule,
+    RouterOutlet,
+    MenuListItemComponent,
+  ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
