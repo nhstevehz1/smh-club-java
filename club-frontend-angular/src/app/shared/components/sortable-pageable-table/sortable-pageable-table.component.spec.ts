@@ -8,12 +8,7 @@ import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {
-  MatHeaderCellHarness,
-  MatHeaderRowHarness,
-  MatRowHarness,
-  MatTableHarness
-} from "@angular/material/table/testing";
+import {MatHeaderCellHarness, MatHeaderRowHarness, MatTableHarness} from "@angular/material/table/testing";
 import {MatSortHarness, MatSortHeaderHarness} from "@angular/material/sort/testing";
 
 export interface TestModel {

@@ -1,17 +1,8 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {ColumnDef} from "./models/column-def";
-import {
-  MatCell, MatCellDef,
-  MatColumnDef,
-  MatHeaderCell, MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef,
-  MatRow, MatRowDef,
-  MatTable,
-  MatTableDataSource, MatTableModule
-} from "@angular/material/table";
-import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {MatSort, MatSortModule} from "@angular/material/sort";
 import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
-import {CdkColumnDef} from "@angular/cdk/table";
 
 @Component({
   selector: 'app-sortable-pageable-table',
