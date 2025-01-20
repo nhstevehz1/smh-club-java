@@ -1,21 +1,31 @@
 import {ListPhonesComponent} from './list-phones.component';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MockBuilder, MockRender} from "ng-mocks";
-import {
-  SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {PhoneService} from "../services/phone.service";
+import {provideHttpClient} from "@angular/common/http";
+import {provideHttpClientTesting} from "@angular/common/http/testing";
+import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 describe('ListPhonesComponent', () => {
+  let fixture: ComponentFixture<ListPhonesComponent>;
+  let component: ListPhonesComponent;
+  let service: PhoneService;
 
-  beforeEach(() => {
-    return MockBuilder(ListPhonesComponent)
-        .keep(SortablePageableTableComponent)
-        .keep(BrowserAnimationsModule)
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [
+          ListPhonesComponent,
+          PhoneService,
+          provideHttpClient(),
+          provideHttpClientTesting()
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
+    fixture = TestBed.createComponent(ListPhonesComponent);
+    component = fixture.componentInstance;
+    service = TestBed.inject(PhoneService);
   });
 
   it('should create', () => {
-    const fixture = MockRender(ListPhonesComponent);
-    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });

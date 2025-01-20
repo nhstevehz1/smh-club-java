@@ -16,7 +16,7 @@ module.exports = function (config) {
     client: {
       captureConsole: true,
       jasmine: {
-        random: false
+        random: true
         // you can add configuration options for Jasmine here
         // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
         // for example, you can disable the random execution with `random: false`
