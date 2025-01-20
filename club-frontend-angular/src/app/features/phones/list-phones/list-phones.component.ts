@@ -69,25 +69,25 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
   protected getColumns(): ColumnDef<PhoneMember>[] {
     return [
       {
-        name: 'phone_number',
+        columnName: 'phone_number',
         displayName: 'Phone',
         isSortable: true,
         cell: (element: PhoneMember) => this.getPhoneNumber(element)
       },
       {
-        name: 'phone_type',
+        columnName: 'phone_type',
         displayName: 'Type',
         isSortable: true,
         cell: (element: PhoneMember) => `${element.phone_type}`
       },
       {
-        name: 'member_number',
+        columnName: 'member_number',
         displayName: 'No.',
         isSortable: true,
         cell: (element: PhoneMember) => `${element.member_number}`
       },
       {
-        name: 'full_name',
+        columnName: 'full_name',
         displayName: 'Member',
         isSortable: true,
         cell: (element: PhoneMember) => this.getFullName(element.full_name)

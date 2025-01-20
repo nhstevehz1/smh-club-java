@@ -70,43 +70,43 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
     return [
 
       {
-        name: 'address1',
+        columnName: 'address1',
         displayName: 'Address',
         isSortable: true,
         cell: (element: AddressMember) => this.getStreet(element)
       },
       {
-        name: 'city',
+        columnName: 'city',
         displayName: 'City',
         isSortable: true,
         cell: (element: AddressMember) => `${element.city}`
       },
       {
-        name: 'state',
+        columnName: 'state',
         displayName: 'State',
         isSortable: true,
         cell: (element: AddressMember) => `${element.state}`
       },
       {
-        name: 'zip',
+        columnName: 'zip',
         displayName: 'Zip',
         isSortable: true,
         cell: (element: AddressMember) => `${element.zip}`
       },
       {
-        name: 'address_type',
+        columnName: 'address_type',
         displayName: 'Type',
         isSortable: true,
         cell: (element: AddressMember) => `${element.address_type}`
       },
       {
-        name: 'member_number',
+        columnName: 'member_number',
         displayName: 'No.',
         isSortable: true,
         cell: (element: AddressMember) => `${element.member_number}`
       },
       {
-        name: 'full_name',
+        columnName: 'full_name',
         displayName: 'Member',
         isSortable: true,
         cell: (element: AddressMember) =>  this.getFullName(element.full_name) //`${element.full_name.last_first}`

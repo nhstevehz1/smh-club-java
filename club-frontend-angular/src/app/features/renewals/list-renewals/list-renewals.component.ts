@@ -70,25 +70,25 @@ export class ListRenewalsComponent
   protected getColumns(): ColumnDef<RenewalMember>[] {
     return [
       {
-        name: 'renewal_date',
+        columnName: 'renewal_date',
         displayName: 'Renewal',
         isSortable: true,
         cell: (element: RenewalMember) => `${element.renewal_date}`,
       },
       {
-        name: 'renewal_year',
+        columnName: 'renewal_year',
         displayName: 'For Year',
         isSortable: true,
         cell: (element: RenewalMember) => `${element.renewal_year}`
       },
       {
-        name: 'member_number',
+        columnName: 'member_number',
         displayName: 'No.',
         isSortable: true,
         cell: (element: RenewalMember) => `${element.member_number}`
       },
       {
-        name: 'full_name',
+        columnName: 'full_name',
         displayName: 'Member',
         isSortable: true,
         cell: (element: RenewalMember) => this.getFullName(element.full_name)

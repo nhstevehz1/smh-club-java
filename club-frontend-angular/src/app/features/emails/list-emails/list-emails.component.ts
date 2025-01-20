@@ -70,25 +70,25 @@ export class ListEmailsComponent
     protected getColumns(): ColumnDef<EmailMember>[] {
         return [
             {
-                name: 'email',
+                columnName: 'email',
                 displayName: 'Email',
                 isSortable: true,
                 cell:(element: EmailMember) => `${element.email}`
             },
             {
-                name: 'email_type',
+                columnName: 'email_type',
                 displayName: 'Type',
                 isSortable: true,
                 cell:(element: EmailMember) => `${element.email_type}`
             },
             {
-                name: 'member_number',
+                columnName: 'member_number',
                 displayName: 'No.',
                 isSortable: true,
                 cell:(element: EmailMember) => `${element.member_number}`
             },
             {
-                name: 'full_name',
+                columnName: 'full_name',
                 displayName: 'Member',
                 isSortable: true,
                 cell:(element: EmailMember) => this.getFullName(element.full_name)

@@ -91,30 +91,30 @@ export class ListMembersComponent
     protected getColumns(): ColumnDef<Member>[] {
         return [
             {
-                name: 'member_number',
+                columnName: 'member_number',
                 displayName: 'No.',
                 isSortable: true,
                 cell: (element: Member) => `${element.member_number}`},
             {
-                name: 'first_name',
+                columnName: 'first_name',
                 displayName: 'First',
                 isSortable: true,
                 cell: (element: Member) => `${element.first_name} ${element.middle_name}`
             },
             {
-                name: 'last_name',
+                columnName: 'last_name',
                 displayName: 'Last',
                 isSortable: true,
                 cell: (element: Member) => `${element.last_name} ${element.suffix}`,
             },
             {
-                name: 'birth_date',
+                columnName: 'birth_date',
                 displayName: 'Birth Date',
                 isSortable: true,
                 cell: (element: Member) => `${element.birth_date}`
             },
             {
-                name: 'joined_date',
+                columnName: 'joined_date',
                 displayName: 'Joined',
                 isSortable: true,
                 cell: (element: Member) => `${element.joined_date}`
