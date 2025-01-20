@@ -1,69 +1,78 @@
 import {ContentComponent} from './content.component';
-import {MockBuilder, MockRender} from "ng-mocks";
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
+import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {HarnessLoader} from "@angular/cdk/testing";
+import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 
 describe('ContentComponent', () => {
+  let fixture: ComponentFixture<ContentComponent>;
+  let component: ContentComponent;
+  let loader: HarnessLoader;
 
-  beforeEach(() => {
-    return MockBuilder(ContentComponent)
+  beforeEach(async () => {
+   await TestBed.configureTestingModule({
+     providers: [
+         ContentComponent,
+         provideNoopAnimations()
+     ],
+     schemas: [CUSTOM_ELEMENTS_SCHEMA]
+   }).compileComponents();
+   fixture = TestBed.createComponent(ContentComponent);
+   component = fixture.componentInstance;
+   loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
   it('should create', () => {
-    const fixture = MockRender(ContentComponent);
-    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 
-
   it(`should contain a 'mat-sidenav-container`, () => {
-    const fixture = MockRender(ContentComponent);
     const navContainer = fixture.nativeElement.querySelector('mat-sidenav-container');
     expect(navContainer).toBeTruthy();
   });
 
   it('should contain mat-sidenav component', () => {
-    const fixture = MockRender(ContentComponent);
     const nav = fixture.nativeElement.querySelector('mat-sidenav');
     expect(nav).toBeTruthy();
   });
 
   it('should contain mat-sidenav component', () => {
-    const fixture = MockRender(ContentComponent);
     const nav = fixture.nativeElement.querySelector('mat-sidenav');
     expect(nav).toBeTruthy();
   });
 
+  it('should contain mat-nav-list', () => {
+    const navList = fixture.nativeElement.querySelector('mat-nav-list');
+    expect(navList).toBeTruthy();
+  });
+
   it(`'isUser' should return true`, () => {
-    const fixture = MockRender(ContentComponent);
     const isUser = fixture.componentInstance.isUser();
     expect(isUser).toBeTrue();
   });
 
   it(`'isManager' should return true`, () => {
-    const fixture = MockRender(ContentComponent);
     const isManager = fixture.componentInstance.isManager();
     expect(isManager).toBeTrue();
   });
 
   it(`'isAdmin' should return false`, () => {
-    const fixture = MockRender(ContentComponent);
-    var isAdmin = fixture.componentInstance.isAdmin();
+    const isAdmin = fixture.componentInstance.isAdmin();
     expect(isAdmin).toBeFalse();
   });
 
-  /*
+  /*it('should open and close side nav', async () => {
+    const nav = await loader.getHarness(MatSidenavHarness);
 
+    // side nav should be closed initially
+    expect(await nav.isOpen()).toBeFalse();
 
-    it('should open and close side nav', async () => {
-      const nav = await loader.getHarness(MatSidenavHarness);
+    component.toggleSideNav();
+    expect(await nav.isOpen()).toBeTrue();
 
-      // side nav should be closed initially
-      expect(await nav.isOpen()).toBeFalse();
-
-      component.toggleSideNav();
-      expect(await nav.isOpen()).toBeTrue();
-
-      component.toggleSideNav();
-      expect(await nav.isOpen()).toBeFalse();
-    });*/
+    component.toggleSideNav();
+    expect(await nav.isOpen()).toBeFalse();
+  });*/
 
 });

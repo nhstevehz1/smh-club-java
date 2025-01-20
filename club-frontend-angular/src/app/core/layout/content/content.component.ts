@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatNavList} from "@angular/material/list";
-import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {MatSidenav, MatSidenavModule} from "@angular/material/sidenav";
 import {Router, RouterOutlet} from "@angular/router";
 import {NavItem} from "../menu-list-item/nav-item";
 import {MenuListItemComponent} from "../menu-list-item/menu-list-item.component";
@@ -8,12 +8,12 @@ import {MenuListItemComponent} from "../menu-list-item/menu-list-item.component"
 @Component({
   selector: 'app-content',
     imports: [
-        MatNavList,
-        MatSidenav,
-        MatSidenavContainer,
-        MatSidenavContent,
+        MatSidenavModule,
+        MatListModule,
         RouterOutlet,
-        MenuListItemComponent
+    ],
+    providers: [
+        MenuListItemComponent,
     ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
