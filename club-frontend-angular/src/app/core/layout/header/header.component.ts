@@ -1,27 +1,23 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
-import {MatToolbar} from "@angular/material/toolbar";
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatIconModule} from "@angular/material/icon";
 import {DOCUMENT} from "@angular/common";
-import {MatDivider} from "@angular/material/divider";
+import {MatDividerModule} from "@angular/material/divider";
 import {RouterLink} from "@angular/router";
-import {MatTooltip} from "@angular/material/tooltip";
-import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @Component({
   selector: 'app-header',
     imports: [
-        MatToolbar,
-        MatMenu,
-        MatIcon,
-        MatMenuItem,
-        MatIconButton,
-        MatMenuTrigger,
-        MatDivider,
+        MatToolbarModule,
+        MatMenuModule,
+        MatIconModule,
+        MatDividerModule,
         RouterLink,
-        MatTooltip,
-        MatSlideToggle
+        MatTooltipModule,
+        MatSlideToggleModule,
     ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
