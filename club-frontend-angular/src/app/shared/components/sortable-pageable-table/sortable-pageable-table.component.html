@@ -1,21 +1,23 @@
-<table mat-table matSort matSortDisableClear [dataSource]="dataSource">
+<mat-table matSort [dataSource]="dataSource">
     @for (column of columns; track column.columnName) {
-        <ng-container [matColumnDef]="column.columnName">
+        <ng-container [matColumnDef]=column.columnName>
             @if (column.isSortable) {
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <mat-header-cell [attr.id]=column.columnName *matHeaderCellDef mat-sort-header>
                     {{column.displayName}}
-                </th>
+                </mat-header-cell>
             } @else {
-                <th mat-header-cell *matHeaderCellDef>
+                <mat-header-cell [attr.id]=column.columnName *matHeaderCellDef>
                     {{column.displayName}}
-                </th>
+                </mat-header-cell>
             }
-            <td mat-cell *matCellDef="let row">{{column.cell(row)}}</td>
+            <mat-cell *matCellDef="let row">
+                {{column.cell(row)}}
+            </mat-cell>
         </ng-container>
     }
-    <tr mat-header-row *matHeaderRowDef="getColumnNames; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row;  columns: getColumnNames"></tr>
-</table>
+    <mat-header-row *matHeaderRowDef="getColumnNames; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row;  columns: getColumnNames"></mat-row>
+</mat-table>
 <mat-paginator
     [pageSizeOptions]="pageSizes"
     [length]="resultsLength"

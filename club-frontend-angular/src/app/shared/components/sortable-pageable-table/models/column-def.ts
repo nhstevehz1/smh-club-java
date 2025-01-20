@@ -1,11 +1,6 @@
-export interface ColumnDef <Type> {
-    name: string;
+export interface ColumnDef <T> {
+    columnName: string;
     displayName: string;
     isSortable: boolean;
-    cellDelimiter?: string;
-    cell: (element: Type) => any;
-}
-
-export interface ColumnCell <Type> {
-    cell: (element: Type)  => any;
+    cell: (element: T) => any;
 }
