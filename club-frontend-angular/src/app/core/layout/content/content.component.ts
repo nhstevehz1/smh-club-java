@@ -1,4 +1,4 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {MatListModule} from "@angular/material/list";
 import {MatSidenav, MatSidenavModule} from "@angular/material/sidenav";
 import {Router, RouterOutlet} from "@angular/router";
