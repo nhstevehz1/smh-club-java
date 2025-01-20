@@ -6,7 +6,7 @@ import {AuthService} from "../../auth/services/auth.service";
 import {AuthUser} from "../../auth/models/auth-user";
 import {FooterComponent} from "../footer/footer.component";
 import {ContentComponent} from "../content/content.component";
-import {MatDivider} from "@angular/material/divider";
+import {MatDivider, MatDividerModule} from "@angular/material/divider";
 
 @Component({
   selector: 'app-main-layout',
@@ -14,20 +14,23 @@ import {MatDivider} from "@angular/material/divider";
         HeaderComponent,
         FooterComponent,
         ContentComponent,
-        MatDivider
+        MatDividerModule
     ],
   providers: [AuthService],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent implements OnInit, OnDestroy {
-  private _authService = inject(AuthService);
-  private _router = inject(Router);
+  private authUser: AuthUser | null = null;
+  private userSubscription: Subscription | null = null;
 
   @ViewChild(ContentComponent, {static: true}) content!: ContentComponent;
 
+  constructor(private authService: AuthService,
+              private router: Router,) {}
+
   get isAuthed(): boolean {
-    return this._authService!.isAuthenticated();
+    return this.authService!.isAuthenticated();
   }
 
   get name(): string {
@@ -38,18 +41,14 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     return this.authUser!.lastLogin
   }
 
-  private authUser: AuthUser | null = null;
-
-  private userSubscription: Subscription | null = null;
-
   ngOnInit() {
-    this.userSubscription = this._authService.user.subscribe(u => {
+    this.userSubscription = this.authService.user.subscribe(u => {
       console.info("Main layout sub fired: " + u );
 
       if (u) {
         this.authUser = u;
       }
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -72,7 +71,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   profileHandler(): void {
-    this._router.navigate(['p/profile']).then(() =>
+    this.router.navigate(['p/profile']).then(() =>
     console.log("Profile menu clicked"));
   }
 
