@@ -22,8 +22,6 @@ export class AuthService implements OnInit, OnDestroy {
     this.userSubject
         = new BehaviorSubject<AuthUser | null>(<AuthUser>this.getUser());
     this.user = this.userSubject.asObservable();
-
-    console.log("AuthService Created");
   }
 
   ngOnInit() {
