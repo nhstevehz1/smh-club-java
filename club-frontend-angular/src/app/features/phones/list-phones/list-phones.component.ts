@@ -81,12 +81,6 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
         cell: (element: PhoneMember) => `${element.phone_type}`
       },
       {
-        columnName: 'member_number',
-        displayName: 'No.',
-        isSortable: true,
-        cell: (element: PhoneMember) => `${element.member_number}`
-      },
-      {
         columnName: 'full_name',
         displayName: 'Member',
         isSortable: true,
