@@ -7,7 +7,6 @@ import {throwError} from "rxjs";
 import {generateAddressPagedData} from "../test/address-test";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {PageRequest} from "../../../shared/models/page-request";
-import {AddressMember} from '../models/address-member';
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
 
 describe('ListAddressesComponent', () => {

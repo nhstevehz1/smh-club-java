@@ -7,9 +7,8 @@ import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {generateEmailPagedData} from "../test/email-test";
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
 import {PageRequest} from "../../../shared/models/page-request";
-import SpyObj = jasmine.SpyObj;
 import {throwError} from "rxjs";
-import {EmailMember} from "../models/email-member";
+import SpyObj = jasmine.SpyObj;
 
 describe('ListEmailsComponent', () => {
   let fixture: ComponentFixture<ListEmailsComponent>;
