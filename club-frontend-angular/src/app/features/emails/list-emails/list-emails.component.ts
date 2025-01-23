@@ -7,7 +7,7 @@ import {
 import {EmailService} from "../services/email.service";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {merge, of as observableOf} from "rxjs";
+import {delay, merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 
 @Component({
@@ -39,6 +39,7 @@ export class ListEmailsComponent
         merge(this._table.sort.sortChange, this._table.paginator.page)
             .pipe(
                 startWith({}),
+                delay(0),
                 switchMap(() => {
                     // assemble the dynamic page request
                     let pr = this.getPageRequest(
@@ -80,12 +81,6 @@ export class ListEmailsComponent
                 displayName: 'Type',
                 isSortable: true,
                 cell:(element: EmailMember) => `${element.email_type}`
-            },
-            {
-                columnName: 'member_number',
-                displayName: 'No.',
-                isSortable: true,
-                cell:(element: EmailMember) => `${element.member_number}`
             },
             {
                 columnName: 'full_name',

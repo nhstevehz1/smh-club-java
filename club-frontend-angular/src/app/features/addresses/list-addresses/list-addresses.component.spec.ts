@@ -43,7 +43,7 @@ describe('ListAddressesComponent', () => {
     });
   });
 
-  describe('test service interactions on init', async () => {
+  describe('test service interactions on init', () => {
     it('should call AddressService.getAddresses() on init', async () => {
       const data = generateAddressPagedData(0, 5, 100);
       addressSvcMock.getAddresses.and.returnValue(asyncData(data));
@@ -81,8 +81,7 @@ describe('ListAddressesComponent', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const result: Array<AddressMember> = [];
-        expect(component.datasource.data).toEqual(result);
+        expect(component.datasource.data).toEqual([]);
     });
   });
 });
