@@ -6,22 +6,18 @@ import {MatTableDataSource} from "@angular/material/table";
 import {Member} from "../models/Member";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MembersService} from "../services/members.service";
-import {merge, of as observableOf} from "rxjs";
+import {delay, merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 
 @Component({
   selector: 'app-list-members',
-    imports: [
-        SortablePageableTableComponent
-    ],
-    providers: [MembersService, MembersService],
+    imports: [SortablePageableTableComponent],
+    providers: [MembersService],
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent
-    extends TableComponentBase<Member> implements OnInit, AfterViewInit{
-
+export class ListMembersComponent extends TableComponentBase<Member> implements OnInit, AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
     private _table!: SortablePageableTableComponent;
 
@@ -41,6 +37,7 @@ export class ListMembersComponent
         merge(this._table.sort.sortChange, this._table.paginator.page)
             .pipe(
                 startWith({}),
+                delay(0),
                 switchMap(() => {
                     // assemble the dynamic page request
                     let pr = this.getPageRequest(
@@ -68,24 +65,6 @@ export class ListMembersComponent
                 })
             ).subscribe(data => this.datasource.data = data!); // set the data source with the new page
     }
-
-    /*private getPageRequest(): PageRequest {
-        let page = this.table.paginator?.pageIndex;
-        let size = this.table.paginator?.pageSize;
-
-        let pr = PageRequest.of(
-            page,
-            size,
-        )
-
-        // The dynamic page request supports multiple sort fields.
-        // currently, our implementation supports only single column sort
-        if(this.table.sort.active !== undefined) {
-            let sort = SortDef.of(this.table.sort.active, this.table.sort.direction);
-            pr.addSort(sort);
-        }
-        return  pr;
-    }*/
 
     // assemble the column defs which will be consumed by the pageable sortable table component
     protected getColumns(): ColumnDef<Member>[] {

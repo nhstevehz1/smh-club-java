@@ -4,28 +4,40 @@ import {PhoneService} from "../services/phone.service";
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
+import SpyObj = jasmine.SpyObj;
+import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {AddressService} from "../../addresses/services/address.service";
 
 describe('ListPhonesComponent', () => {
   let fixture: ComponentFixture<ListPhonesComponent>;
   let component: ListPhonesComponent;
-  let service: PhoneService;
+  let phoneSvcMock: SpyObj<PhoneService>;
 
   beforeEach(async () => {
+    phoneSvcMock = jasmine.createSpyObj('PhoneService', ['getPhones']);
+
     await TestBed.configureTestingModule({
+      imports: [ListPhonesComponent],
       providers: [
-          ListPhonesComponent,
-          PhoneService,
+          {provide: PhoneService, useValue: {}},
           provideHttpClient(),
-          provideHttpClientTesting()
+          provideHttpClientTesting(),
+          provideNoopAnimations()
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
     fixture = TestBed.createComponent(ListPhonesComponent);
     component = fixture.componentInstance;
-    service = TestBed.inject(PhoneService);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('test component', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should create column list', () => {
+       fixture.detectChanges();
+       expect(component.columns.length).toEqual(3);
+    });
   });
 });
