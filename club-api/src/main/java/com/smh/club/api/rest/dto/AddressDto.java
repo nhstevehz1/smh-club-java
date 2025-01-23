@@ -28,7 +28,7 @@ public class AddressDto {
 
     @Min(1)
     @SortExclude
-    @JsonProperty("member-id")
+    @JsonProperty("member_id")
     private int memberId;
 
     @NotBlank()
@@ -53,6 +53,6 @@ public class AddressDto {
     private String zip;
 
     @NotNull()
-    @JsonProperty("address-type")
+    @JsonProperty("address_type")
     private AddressType addressType;
 }

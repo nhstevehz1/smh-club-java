@@ -6,11 +6,11 @@ import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.PhoneRepo;
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Extends an {@link AbstractServiceBase} and implements an {@link PhoneService}.
  */
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class PhoneServiceImpl extends AbstractServiceBase implements PhoneService {
@@ -35,7 +35,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<PhoneDto> getPage(Pageable pageable) {
+    public PagedDto<PhoneMemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -114,7 +114,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), PhoneDto.class, PhoneEntity.class)
+                    getSort(o.getProperty(), PhoneMemberDto.class, PhoneEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

@@ -1,6 +1,5 @@
 package com.smh.club.api.rest.domain.entities;
 
-import com.smh.club.api.rest.domain.annotations.SortExclude;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,10 +38,9 @@ public class AddressEntity {
     @Column(name = "address_type", nullable = false)
     private AddressType addressType = AddressType.Home;
 
-    @SortExclude
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
 }

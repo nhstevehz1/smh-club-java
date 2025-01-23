@@ -6,6 +6,7 @@ import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.PhoneRepo;
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -57,7 +57,7 @@ public class PhoneServiceTests extends ServiceTests {
             .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @ParameterizedTest
-    @CsvSource({"id, id", "phone-number, phoneNumber", "phone-type, phoneType"})
+    @CsvSource({"id, id", "phone_number, phoneNumber", "phone_type, phoneType"})
     public void getPhoneListPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
@@ -66,7 +66,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneDto.class)
+        var list = Instancio.ofList(PhoneMemberDto.class)
             .size(20)
             .create();
 
@@ -95,20 +95,6 @@ public class PhoneServiceTests extends ServiceTests {
         verifyNoMoreInteractions(phnRepoMock, phnMapMock);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"member-id", "memberId"})
-    public void getPage_excludes_throws_exception(String sort) {
-        // setup
-        var pageNumber = 10;
-        var pageSize = 20;
-        var direction = "ASC";
-        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
-        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
-
-        // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
-    }
-
     @Test
     public void gePage_unknown_sortColumn_throws_exception() {
         // setup
@@ -135,7 +121,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneDto.class)
+        var list = Instancio.ofList(PhoneMemberDto.class)
             .size(20)
             .create();
 
@@ -174,7 +160,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneDto.class)
+        var list = Instancio.ofList(PhoneMemberDto.class)
             .size(pageSize)
             .create();
 

@@ -2,13 +2,13 @@ package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Defines REST endpoints that targets phone objects in the database.
  */
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v1/phones", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,12 +35,12 @@ public class PhoneController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link PhoneDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link PhoneMemberDto}.
      */
     @GetMapping
-    public ResponseEntity<PagedDto<PhoneDto>> page(
+    public ResponseEntity<PagedDto<PhoneMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(PhoneDto.class)
+        @SortConstraint(PhoneMemberDto.class)
         Pageable pageable) {
 
         var page = phoneSvc.getPage(pageable);

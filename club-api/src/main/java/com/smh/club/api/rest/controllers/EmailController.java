@@ -2,13 +2,13 @@ package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.dto.EmailDto;
+import com.smh.club.api.rest.dto.EmailMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Defines REST endpoints that targets email objects in the database.
  */
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v1/emails", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,12 +35,12 @@ public class EmailController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link EmailDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link EmailMemberDto}.
      */
     @GetMapping
-    public ResponseEntity<PagedDto<EmailDto>> page(
+    public ResponseEntity<PagedDto<EmailMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(EmailDto.class)
+        @SortConstraint(EmailMemberDto.class)
         Pageable pageable) {
 
         var page = emailSvc.getPage(pageable);
@@ -84,6 +84,7 @@ public class EmailController {
 
     /**
      * Endpoint for updating an email.
+     *
      * @param id The id of the email to update in the database.
      * @param email The {@link EmailDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing an {@link EmailDto} that represents the updated email.
@@ -99,6 +100,7 @@ public class EmailController {
 
     /**
      * Endpoint for deleting an email from the database.
+     *
      * @param id The id of the email to delete
      * @return an empty {@link ResponseEntity}.
      */

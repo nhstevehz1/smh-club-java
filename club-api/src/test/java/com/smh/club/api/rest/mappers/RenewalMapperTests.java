@@ -68,6 +68,25 @@ public class RenewalMapperTests {
     }
 
     @Test
+    public void from_entity_to_renewalMemberDto() {
+        // setup
+        var entity = Instancio.create(RenewalEntity.class);
+
+        // execute
+        var ret = mapper.toRenewalMemberDto(entity);
+
+        // verify
+        assertEquals(entity.getId(), ret.getId());
+        assertEquals(entity.getRenewalDate(), ret.getRenewalDate());
+        assertEquals(entity.getRenewalYear(), ret.getRenewalYear());
+        assertEquals(entity.getMember().getMemberNumber(), ret.getMemberNumber());
+        assertEquals(entity.getMember().getFirstName(), ret.getFullName().getFirstName());
+        assertEquals(entity.getMember().getMiddleName(), ret.getFullName().getMiddleName());
+        assertEquals(entity.getMember().getLastName(), ret.getFullName().getLastName());
+        assertEquals(entity.getMember().getSuffix(), ret.getFullName().getSuffix());
+    }
+
+    @Test
     public void update_entity_from_createDto() {
         // setup
         var update = Instancio.create(RenewalDto.class);

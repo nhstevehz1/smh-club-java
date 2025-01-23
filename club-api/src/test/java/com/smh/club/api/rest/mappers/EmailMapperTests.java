@@ -68,6 +68,25 @@ public class EmailMapperTests {
     }
 
     @Test
+    public void from_entity_to_emailMemberDto() {
+        // setup
+        var entity = Instancio.create(EmailEntity.class);
+
+        // execute
+        var email = mapper.toEmailMemberDto(entity);
+
+        // verify
+        assertEquals(entity.getId(), email.getId());
+        assertEquals(entity.getMember().getMemberNumber(), email.getMemberNumber());
+        assertEquals(entity.getEmail(), email.getEmail());
+        assertEquals(entity.getEmailType(), email.getEmailType());
+        assertEquals(entity.getMember().getFirstName(), email.getFullName().getFirstName());
+        assertEquals(entity.getMember().getMiddleName(), email.getFullName().getMiddleName());
+        assertEquals(entity.getMember().getLastName(), email.getFullName().getLastName());
+        assertEquals(entity.getMember().getSuffix(), email.getFullName().getSuffix());
+    }
+
+    @Test
     public void update_entity_from_createDto() {
         // setup
         var update = Instancio.create(EmailDto.class);

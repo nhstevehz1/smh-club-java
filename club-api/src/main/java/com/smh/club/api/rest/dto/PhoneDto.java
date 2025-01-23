@@ -28,16 +28,21 @@ public class PhoneDto {
     private int id;
 
     @SortExclude
-    @JsonProperty("member-id")
+    @JsonProperty("member_id")
     private int memberId;
+
+    @NotBlank
+    @Size(min = 1, max = 5)
+    @JsonProperty("country_code")
+    private String countryCode;
 
     @NotBlank
     @Size(min = 10, max = 10)
     @Digits(integer = 10, fraction = 0)
-    @JsonProperty("phone-number")
+    @JsonProperty("phone_number")
     private String phoneNumber;
 
     @NotNull
-    @JsonProperty("phone-type")
+    @JsonProperty("phone_type")
     private PhoneType phoneType;
 }

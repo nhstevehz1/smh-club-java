@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-surface-container-highest),
+    container-text-color: var(--mat-sys-primary),
+  ));
+}
+
+mat-slide-toggle {
+  @include mat.slide-toggle-overrides((
+    label-text-color: var(--mat-sys-primary)
+  ))
+}

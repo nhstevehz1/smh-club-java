@@ -17,12 +17,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -164,6 +166,20 @@ class AddressIntegrationTests extends PersistenceTestsBase {
 
         //verify
         assertTrue(ret.isEmpty());
+    }
+
+    @Test
+    public void sortByMember() {
+        // setup
+        var addresses = addressRepo.saveAllAndFlush(createList(10, members));
+        var sort = Sort.by(Sort.Direction.ASC, "member.memberNumber");
+
+        // execute
+        var result = addressRepo.findAll(sort);
+
+        // verify
+        assertNotNull(result);
+        assertTrue(result.containsAll(addresses));
     }
 
     private AddressEntity createEntity(List<MemberEntity> members) {

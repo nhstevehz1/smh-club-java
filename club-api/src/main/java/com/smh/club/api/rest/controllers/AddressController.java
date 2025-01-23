@@ -2,13 +2,13 @@ package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Defines REST endpoints that targets address objects in the database.
  */
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v1/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,16 +36,15 @@ public class AddressController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link AddressDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link AddressMemberDto}.
      */
     @GetMapping
-    public ResponseEntity<PagedDto<AddressDto>> page(
+    public ResponseEntity<PagedDto<AddressMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(AddressDto.class)
+        @SortConstraint(AddressMemberDto.class)
         Pageable pageable) {
 
         var page = addressSvc.getPage(pageable);
-
         return ResponseEntity.ok(page);
     }
 

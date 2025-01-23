@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.AddressMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +15,9 @@ public interface AddressService {
      * Retrieves a page of addresses from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link AddressDto}.
+     * @return A {@link PagedDto} of type {@link AddressMemberDto}.
      */
-    PagedDto<AddressDto> getPage(Pageable pageable);
+    PagedDto<AddressMemberDto> getPage(Pageable pageable);
 
     /**
      * Retrieves an address from the database.

@@ -1,15 +1,14 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.RenewalService;
-import com.smh.club.api.rest.dto.PhoneDto;
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Defines REST endpoints that targets renewal objects in the database.
  */
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @RestController
 @RequestMapping(value = "/api/v1/renewals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,12 +35,12 @@ public class RenewalController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link PhoneDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link RenewalMemberDto}.
      */
     @GetMapping
-    public ResponseEntity<PagedDto<RenewalDto>> page(
+    public ResponseEntity<PagedDto<RenewalMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(RenewalDto.class)
+        @SortConstraint(RenewalMemberDto.class)
         Pageable pageable) {
 
         var page = renewSvc.getPage(pageable);

@@ -56,8 +56,8 @@ public class MemberServiceTests extends ServiceTests {
             .set(Keys.MAX_DEPTH, 4);
 
     @ParameterizedTest
-    @CsvSource({"id, id", "member-number, memberNumber", "first-name, firstName", "last-name, lastName",
-                "birth-date, birthDate", "joined-date, joinedDate"})
+    @CsvSource({"id, id", "member_number, memberNumber", "first_name, firstName", "last_name, lastName",
+                "birth_date, birthDate", "joined_date, joinedDate"})
     public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
@@ -95,7 +95,7 @@ public class MemberServiceTests extends ServiceTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"middle-name", "middleName", "suffix"})
+    @ValueSource(strings = {"middle_name", "middleName", "suffix"})
     public void getPage_excludes_throws_exception(String sort) {
         // setup
         var pageNumber = 10;

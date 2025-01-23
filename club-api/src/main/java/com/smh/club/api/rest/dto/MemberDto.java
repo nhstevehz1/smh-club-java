@@ -30,19 +30,19 @@ public class MemberDto {
     private int id;
 
     @Min(1)
-    @JsonProperty("member-number")
+    @JsonProperty("member_number")
     private int memberNumber;
 
     @NotBlank
-    @JsonProperty("first-name")
+    @JsonProperty("first_name")
     private String firstName;
 
     @SortExclude
-    @JsonProperty("middle-name")
+    @JsonProperty("middle_name")
     private String middleName;
 
     @NotBlank
-    @JsonProperty("last-name")
+    @JsonProperty("last_name")
     private String lastName;
 
     @SortExclude
@@ -51,12 +51,12 @@ public class MemberDto {
 
     @NotNull
     @BirthDate
-    @JsonProperty("birth-date")
+    @JsonProperty("birth_date")
     private LocalDate birthDate;
 
     @NotNull
     @PastOrPresent
-    @JsonProperty("joined-date")
+    @JsonProperty("joined_date")
     private LocalDate joinedDate;
 
 }

@@ -1,0 +1,8 @@
+@use "@angular/material" as mat;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-shadow: var(--mat-sys-level3);
+}

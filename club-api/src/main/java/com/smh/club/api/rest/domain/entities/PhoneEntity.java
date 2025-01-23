@@ -20,6 +20,9 @@ public class PhoneEntity {
     @Column(name = "id", nullable = false, updatable = false, unique = true )
     private int id;
 
+    @Column(name="country_code", nullable = false, length = 5)
+    private String countryCode;
+
     @Column(name = "phone_number", nullable = false, length = 10)
     private String phoneNumber;
 
@@ -30,7 +33,7 @@ public class PhoneEntity {
     @SortExclude
     @EqualsAndHashCode.Exclude // prevents stack overflow when calling .equals on MemberEntity
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="member_id", referencedColumnName = "id", nullable = false)
     private MemberEntity member;
 

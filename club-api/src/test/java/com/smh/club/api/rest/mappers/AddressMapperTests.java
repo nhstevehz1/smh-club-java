@@ -74,6 +74,29 @@ public class AddressMapperTests {
     }
 
     @Test
+    public void from_entity_to_addressMemberDto() {
+        // setup
+        var entity = Instancio.create(AddressEntity.class);
+
+        // execute
+        var address = mapper.toAddressMemberDto(entity);
+
+        // verify
+        assertEquals(entity.getId(), address.getId());
+        assertEquals(entity.getAddress1(), address.getAddress1());
+        assertEquals(entity.getAddress2(), address.getAddress2());
+        assertEquals(entity.getCity(), address.getCity());
+        assertEquals(entity.getState(), address.getState());
+        assertEquals(entity.getZip(), address.getZip());
+        assertEquals(entity.getAddressType(), address.getAddressType());
+        assertEquals(entity.getMember().getMemberNumber(), address.getMemberNumber());
+        assertEquals(entity.getMember().getFirstName(), address.getFullName().getFirstName());
+        assertEquals(entity.getMember().getLastName(), address.getFullName().getLastName());
+        assertEquals(entity.getMember().getMiddleName(), address.getFullName().getMiddleName());
+        assertEquals(entity.getMember().getSuffix(), address.getFullName().getSuffix());
+    }
+
+    @Test
     public void update_entity_from_updateDto() {
         // setup
         var entity = Instancio.create(AddressEntity.class);

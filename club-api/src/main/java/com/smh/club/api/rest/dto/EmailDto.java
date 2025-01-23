@@ -27,7 +27,7 @@ public class EmailDto {
     private int id;
 
     @SortExclude
-    @JsonProperty("member-id")
+    @JsonProperty("member_id")
     private int memberId;
 
     @NotEmpty
@@ -36,6 +36,6 @@ public class EmailDto {
     private String email;
 
     @NotNull
-    @JsonProperty("email-type")
+    @JsonProperty("email_type")
     private EmailType emailType;
 }

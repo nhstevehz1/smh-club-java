@@ -1,0 +1,38 @@
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette
+    ),
+    typography: Roboto,
+    density: 0
+  ));
+
+  @include mat.table-overrides((
+      row-item-label-text-color: var(--mat-sys-primary),
+      header-headline-weight: var(--mat-sys-title-medium-weight),
+      header-headline-size: var(--mat-sys-title-medium-size),
+  ));
+
+  @include mat.paginator-overrides((
+      container-text-color: var(--mat-sys-primary),
+  ));
+
+}
+
+body.dark-mode {
+  color-scheme: dark;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mat-sys-surface);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

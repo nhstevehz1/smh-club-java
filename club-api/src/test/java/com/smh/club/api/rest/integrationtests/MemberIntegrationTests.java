@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.runner.RunWith;
@@ -31,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -116,7 +119,7 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .stream().sorted(Comparator.comparingInt(MemberEntity::getMemberNumber).reversed()).toList();
 
         Map<String, String> map = new HashMap<>();
-        map.put(sortParamName,  "member-number,desc");
+        map.put(sortParamName,  "member_number,desc");
 
         var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
@@ -178,32 +181,34 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"id", "member-number", "first-name", "last-name", "birth-date", "joined-date" })
-    public void getListPage_sortColumn(String sort) {
+    @CsvSource({"id,id", "member_number,memberNumber", "first_name,firstName",
+        "last_name,lastName", "birth_date,birthDate", "joined_date,joinedDate" })
+    public void getListPage_sortColumn(String sort, String entitySort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
         var sortFields = getSorts().get(sort);
 
-        // sort by id
-        var sorted = repo.findAll().stream().sorted(sortFields.getEntity()).toList();
-        assertEquals(entitySize, sorted.size());
+        var pageRequest = PageRequest.of(0, entitySize, Sort.by(entitySort));
+        var expected = repo.findAll(pageRequest);
+        assertEquals(expected.getContent(), expected.getContent().stream().sorted(sortFields.getEntity()).toList());
 
         var map = new HashMap<String, String>();
         map.put(sortParamName, sort);
+        map.put(sizeParamName, String.valueOf(entitySize));
 
-        var testParams = PageTestParams.of(MemberDto.class, map, path, sorted.size(),
-            0, defaultPageSize);
+        var testParams = PageTestParams.of(MemberDto.class, map, path, expected.getTotalElements(),
+            0, entitySize);
 
         var actual = executeListPage(testParams);
-
         assertEquals(actual.stream().sorted(sortFields.getDto()).toList(), actual);
 
-        var expected = sorted.stream().limit(defaultPageSize).toList();
-        verify(expected, actual);
+        for(int ii = 0; ii < entitySize; ii++) {
+            verify(expected.getContent().get(ii), actual.get(ii));
+        }
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"middle-name", "suffix"})
+    @ValueSource(strings = {"middle_name", "suffix"})
     public void getListPage_excluded_fields_returns_bad_request(String sort) {
         // setup
         Map<String, String > map = new HashMap<>();
@@ -617,25 +622,25 @@ public class MemberIntegrationTests extends IntegrationTests {
         map.put("id", SortFields.of(Comparator.comparingInt(MemberEntity::getId),
             Comparator.comparingInt(MemberDto::getId)));
 
-        map.put("member-number", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+        map.put("member_number", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
             Comparator.comparingInt(MemberDto::getMemberNumber)));
 
-        map.put("first-name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
+        map.put("first_name", SortFields.of(Comparator.comparing(MemberEntity::getFirstName),
             Comparator.comparing(MemberDto::getFirstName)));
 
-        map.put("middle-name", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
+        map.put("middle_name", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
             Comparator.comparingInt(MemberDto::getMemberNumber)));
 
-        map.put("last-name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
+        map.put("last_name", SortFields.of(Comparator.comparing(MemberEntity::getLastName),
             Comparator.comparing(MemberDto::getLastName)));
 
         map.put("suffix", SortFields.of(Comparator.comparingInt(MemberEntity::getMemberNumber),
             Comparator.comparingInt(MemberDto::getMemberNumber)));
 
-        map.put("birth-date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
+        map.put("birth_date", SortFields.of(Comparator.comparing(MemberEntity::getBirthDate),
             Comparator.comparing(MemberDto::getBirthDate)));
 
-        map.put("joined-date", SortFields.of(Comparator.comparing(MemberEntity::getJoinedDate),
+        map.put("joined_date", SortFields.of(Comparator.comparing(MemberEntity::getJoinedDate),
             Comparator.comparing(MemberDto::getJoinedDate)));
 
         return map;

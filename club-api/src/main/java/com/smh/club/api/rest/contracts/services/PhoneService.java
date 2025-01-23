@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.contracts.services;
 
 import com.smh.club.api.rest.dto.PhoneDto;
+import com.smh.club.api.rest.dto.PhoneMemberDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +15,9 @@ public interface PhoneService {
      * Retrieves a page of phones from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link PhoneDto}.
+     * @return A {@link PagedDto} of type {@link PhoneMemberDto}.
      */
-    PagedDto<PhoneDto> getPage(Pageable pageable);
+    PagedDto<PhoneMemberDto> getPage(Pageable pageable);
 
     /**
      * Retrieves a phone from the database.

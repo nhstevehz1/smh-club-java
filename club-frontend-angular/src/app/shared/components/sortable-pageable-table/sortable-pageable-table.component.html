@@ -1,0 +1,26 @@
+<mat-table matSort [dataSource]="dataSource">
+    @for (column of columns; track column.columnName) {
+        <ng-container [matColumnDef]=column.columnName>
+            @if (column.isSortable) {
+                <mat-header-cell [attr.id]=column.columnName *matHeaderCellDef mat-sort-header>
+                    {{column.displayName}}
+                </mat-header-cell>
+            } @else {
+                <mat-header-cell [attr.id]=column.columnName *matHeaderCellDef>
+                    {{column.displayName}}
+                </mat-header-cell>
+            }
+            <mat-cell *matCellDef="let row">
+                {{column.cell(row)}}
+            </mat-cell>
+        </ng-container>
+    }
+    <mat-header-row *matHeaderRowDef="getColumnNames; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row;  columns: getColumnNames"></mat-row>
+</mat-table>
+<mat-paginator
+    [pageSizeOptions]="pageSizes"
+    [length]="resultsLength"
+    [pageSize]="pageSize"
+    showFirstLastButtons>
+</mat-paginator>

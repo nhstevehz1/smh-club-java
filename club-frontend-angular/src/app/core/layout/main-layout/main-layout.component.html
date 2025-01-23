@@ -1,0 +1,14 @@
+<div class="app-container">
+    <app-header class="app-header"
+                (toggleSidenav)="sideNaveHandler()"
+                (logoutClick)="logoutHandler()"
+                (profileClick)="profileHandler()"
+                [name]="name"
+                [isAuthed]="isAuthed"
+                [lastLogin]="lastLogin">
+    </app-header>
+    <mat-divider></mat-divider>
+    <app-content class="app-content"></app-content>
+    <mat-divider></mat-divider>
+    <app-footer class="app-footer"></app-footer>
+</div>

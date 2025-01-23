@@ -1,0 +1,21 @@
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-left: 5px;
+  padding-right: 5px;
+  row-gap: 5px;
+}
+
+.app-header {
+
+}
+
+.app-content {
+  flex: 1;
+  overflow: auto; // ensures no scrollbars.  We want the page to control the scrollbars.
+}
+
+.app-footer {
+
+}

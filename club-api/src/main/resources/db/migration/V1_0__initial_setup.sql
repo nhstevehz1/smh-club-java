@@ -53,6 +53,7 @@ CREATE TABLE member_mgmt.renewal (
 CREATE TABLE member_mgmt.phone (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
+    country_code varchar(5) NOT NULL,
 	phone_number varchar(10) NOT NULL,
 	phone_type smallint NOT NULL,
 

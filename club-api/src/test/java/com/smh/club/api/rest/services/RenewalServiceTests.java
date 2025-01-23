@@ -6,6 +6,7 @@ import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.RenewalsRepo;
 import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.RenewalMemberDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -58,7 +59,7 @@ public class RenewalServiceTests extends ServiceTests {
             .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @ParameterizedTest
-    @CsvSource({"id, id", "renewal-date, renewalDate", "renewal-year, renewalYear"})
+    @CsvSource({"id, id", "renewal_date, renewalDate", "renewal_year, renewalYear"})
     public void getPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
@@ -67,7 +68,7 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalDto.class)
+        var list = Instancio.ofList(RenewalMemberDto.class)
             .size(20)
             .create();
 
@@ -135,7 +136,7 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalDto.class)
+        var list = Instancio.ofList(RenewalMemberDto.class)
             .size(20)
             .create();
 
@@ -174,7 +175,7 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalDto.class)
+        var list = Instancio.ofList(RenewalMemberDto.class)
             .size(pageSize)
             .create();
 
