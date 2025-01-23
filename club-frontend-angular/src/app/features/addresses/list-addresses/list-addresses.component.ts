@@ -100,12 +100,6 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
         cell: (element: AddressMember) => `${element.address_type}`
       },
       {
-        columnName: 'member_number',
-        displayName: 'No.',
-        isSortable: true,
-        cell: (element: AddressMember) => `${element.member_number}`
-      },
-      {
         columnName: 'full_name',
         displayName: 'Member',
         isSortable: true,

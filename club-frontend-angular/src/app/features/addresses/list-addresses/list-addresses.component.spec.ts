@@ -38,7 +38,7 @@ describe('ListAddressesComponent', () => {
 
     it('should create column list', () => {
         fixture.detectChanges();
-        expect(component.columns.length).toEqual(7);
+        expect(component.columns.length).toEqual(6);
     });
   });
 

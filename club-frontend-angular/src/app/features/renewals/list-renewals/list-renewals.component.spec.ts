@@ -39,7 +39,7 @@ describe('ListRenewalsComponent', () => {
 
     it('should create column list', () => {
        fixture.detectChanges();
-       expect(component.columns.length).toEqual(4);
+       expect(component.columns.length).toEqual(3);
     });
   });
 

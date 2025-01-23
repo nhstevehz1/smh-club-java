@@ -82,12 +82,6 @@ export class ListRenewalsComponent
         cell: (element: RenewalMember) => `${element.renewal_year}`
       },
       {
-        columnName: 'member_number',
-        displayName: 'No.',
-        isSortable: true,
-        cell: (element: RenewalMember) => `${element.member_number}`
-      },
-      {
         columnName: 'full_name',
         displayName: 'Member',
         isSortable: true,
