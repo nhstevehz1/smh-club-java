@@ -7,7 +7,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {AddressMember} from "../models/address-member";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
-import {delay, merge, of as observableOf} from "rxjs";
+import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 
 @Component({

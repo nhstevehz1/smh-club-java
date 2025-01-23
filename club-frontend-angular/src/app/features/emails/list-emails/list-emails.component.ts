@@ -7,7 +7,7 @@ import {
 import {EmailService} from "../services/email.service";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {delay, merge, of as observableOf} from "rxjs";
+import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 
 @Component({
