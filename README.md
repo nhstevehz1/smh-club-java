@@ -4,11 +4,11 @@ The purpose of the application is to manage the membership information for a clu
 
 Member information managed includes:
 
-* Name, member number, birth date, joined date, year renewal is active
+* Name, member number, birth date, joined date
 * Addresses (Work, Home, Other)
 * Email addresses (Work, Personal, Other)
 * Phone numbers (Work, Mobile, Other)
-* Yearly renewal information (Renewal date)
+* Yearly renewal information (Renewal date, renewal year)
 
 The data is stored in a relation database and is served through a REST API.  A microservices architecture is used where authentication services are separate from the REST services.
 The project is multi-module Gradle with centralized version management.
@@ -23,6 +23,9 @@ The project is multi-module Gradle with centralized version management.
 * Lombok boilerplate code generator
 * Instancio random data generation for unit and integration testing
 * Rest-assured REST client for integration testing
+* Angular Framework
+* Angular Material Framework
+* Angular Test Framework
 
 ### Project Modules
 #### club-api
@@ -31,11 +34,8 @@ A microservice that exposes REST CRUD endpoints.
 ### club-api-hateoas
 A microservice that exposes the same endpoints as **club-api** but adds resource links to the data.
 
-### club-data
-Contains the domain entity objects as well as the related data repositories.
-
-### club-shared
-Contains code that is shared by other modules. 
+### club-frontend-angular
+A single page application UI that represents the data served by the club-api.
 
 ### club-gateway
 Entry point for the application.  Routes incoming calls to the appropriate microservice. <br>
@@ -43,7 +43,7 @@ _Not started._
 
 ### club-oauth2
 Authentication microservice.<br>
-_Under construction._
+An JPA implementation of the Spring Authentication Server.
 
 ### build-logic
 Provides centralized version management for Spring Boot, Spring Framework, and other the libraries used int he project.  
@@ -68,6 +68,9 @@ Content services utilizing UI frameworks such as Angular or React.
 * [Zonky Embedded Postgres](https://github.com/zonkyio/embedded-postgres)
 * [Flyway](https://documentation.red-gate.com/flyway)
 * [Rest-assured](https://github.com/rest-assured/rest-assured)
+* [Angular Framework](https://angular.dev/)
+* [Angular Material](https://material.angular.io/)
+* [Angular Testing Framework](https://angular.dev/guide/testing)
 
 ## Guides
 The following guides illustrate how to use some features concretely:
