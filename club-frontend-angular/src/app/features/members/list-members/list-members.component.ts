@@ -37,7 +37,6 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
         merge(this._table.sort.sortChange, this._table.paginator.page)
             .pipe(
                 startWith({}),
-                delay(0),
                 switchMap(() => {
                     // assemble the dynamic page request
                     let pr = this.getPageRequest(
