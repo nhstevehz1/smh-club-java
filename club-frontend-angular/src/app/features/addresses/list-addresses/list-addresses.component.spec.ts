@@ -3,29 +3,86 @@ import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {AddressService} from "../services/address.service";
-import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {throwError} from "rxjs";
+import {generateAddressPagedData} from "../test/address-test";
+import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {PageRequest} from "../../../shared/models/page-request";
+import {AddressMember} from '../models/address-member';
+import {asyncData} from "../../../shared/test-helpers/test-helpers";
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;
   let component: ListAddressesComponent;
-  let service: AddressService;
+  let addressSvcMock: jasmine.SpyObj<AddressService>;
 
   beforeEach(async () => {
-   await TestBed.configureTestingModule({
-      providers: [
-          ListAddressesComponent,
-          AddressService,
+    addressSvcMock = jasmine.createSpyObj('AddressService', ['getAddresses']);
+    await TestBed.configureTestingModule({
+      imports: [ListAddressesComponent],
+        providers: [
+          {provide: AddressService, useValue: {}},
           provideHttpClient(),
-          provideHttpClientTesting()
+          provideHttpClientTesting(),
+          provideNoopAnimations()
       ],
-     schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
-    fixture = TestBed.createComponent(ListAddressesComponent);
-    component = fixture.componentInstance;
-    service = TestBed.inject(AddressService);
+    }).overrideComponent(ListAddressesComponent,
+        { set: {providers: [{provide: AddressService, useValue: addressSvcMock}]}}
+    ).compileComponents();
+   fixture = TestBed.createComponent(ListAddressesComponent);
+   component = fixture.componentInstance;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('test component', () => {
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should create column list', () => {
+        fixture.detectChanges();
+        expect(component.columns.length).toEqual(7);
+    });
+  });
+
+  describe('test service interactions on init', async () => {
+    it('should call AddressService.getAddresses() on init', async () => {
+      const data = generateAddressPagedData(0, 5, 100);
+      addressSvcMock.getAddresses.and.returnValue(asyncData(data));
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const request = PageRequest.of(0, 5);
+      expect(addressSvcMock.getAddresses).toHaveBeenCalledWith(request);//With(request);
+    });
+
+    it('length should be set on init', async () => {
+      const data = generateAddressPagedData(0, 5, 100);
+      addressSvcMock.getAddresses.and.returnValue(asyncData(data));
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(component.resultsLength).toEqual(data.page.totalElements);
+    });
+
+    it('datasource.data should be set on init', async () => {
+        const data = generateAddressPagedData(0, 5, 2);
+        addressSvcMock.getAddresses.and.returnValue(asyncData(data));
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.datasource.data).toBe(data._content);
+    });
+
+    it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
+        addressSvcMock.getAddresses.and.returnValue(throwError(() => 'error'));
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const result: Array<AddressMember> = [];
+        expect(component.datasource.data).toEqual(result);
+    });
   });
 });

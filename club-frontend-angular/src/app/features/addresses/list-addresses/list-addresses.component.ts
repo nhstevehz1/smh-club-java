@@ -7,7 +7,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {AddressMember} from "../models/address-member";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
-import {merge, of as observableOf} from "rxjs";
+import {delay, merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 
 @Component({
@@ -38,6 +38,7 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
     merge(this._table.sort.sortChange, this._table.paginator.page)
         .pipe(
             startWith({}),
+            delay(0),
             switchMap(() => {
               // assemble the dynamic page request
               let pr = this.getPageRequest(
