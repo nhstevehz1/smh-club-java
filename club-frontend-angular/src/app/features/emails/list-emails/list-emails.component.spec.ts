@@ -63,7 +63,6 @@ describe('ListEmailsComponent', () => {
          fixture.detectChanges();
          await fixture.whenStable();
 
-         const request = PageRequest.of(0, 5);
          expect(component.resultsLength).toEqual(data.page.totalElements);
       });
 
