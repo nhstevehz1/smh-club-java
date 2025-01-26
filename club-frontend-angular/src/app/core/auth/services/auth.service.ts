@@ -68,8 +68,4 @@ export class AuthService {
     }
     return 'access token not found';
   }
-
-  private decodeAndStringifyToken(token: any) {
-    return JSON.stringify(jwtDecode(token), null, 2);
-  }
 }
