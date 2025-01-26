@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.dto.UserDto;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
