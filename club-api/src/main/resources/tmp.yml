@@ -1,0 +1,15 @@
+security:
+  oauth2:
+    client:
+      provider:
+        keycloak-provider:
+          issuer-uri: http://localhost:8080/realms/smh-club
+      registration:
+        keycloak-client:
+          provider: keycloak-provider
+          client-id: smh-club-api
+          client-secret: ${KEYCLOAK_CLIENT_SECRET}
+          scope: openid,profile,email,offline_access
+          authorization-grant-type: authorization_code
+          redirect-uri: http://localhost:9001/login/oath2/code/smh-club-api
+          client-name: Social Club

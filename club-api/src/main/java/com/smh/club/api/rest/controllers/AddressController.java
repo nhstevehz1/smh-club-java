@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,7 @@ public class AddressController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing a page of {@link AddressMemberDto}.
      */
+    @PreAuthorize("hasRole('ROLE_app-user')")
     @GetMapping
     public ResponseEntity<PagedDto<AddressMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -54,6 +56,7 @@ public class AddressController {
      * @param id The id of the address.
      * @return @return A {@link ResponseEntity} containing a {@link AddressDto}
      */
+    @PreAuthorize("hasRole('ROLE_app-user')")
     @GetMapping("{id}")
     public ResponseEntity<AddressDto> get(@PathVariable int id) {
         var ret = addressSvc.getAddress(id);
@@ -65,6 +68,7 @@ public class AddressController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasRole('ROLE_app-user')")
     @GetMapping("count")
     public ResponseEntity<CountResponse> count() {
 
@@ -77,6 +81,7 @@ public class AddressController {
      * @param address The {@link AddressDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing an {@link AddressDto} representing the newly created object.
      */
+    @PreAuthorize("hasRole('ROLE_app-admin')")
     @PostMapping
     public ResponseEntity<AddressDto> create(
         @NotNull @Valid @RequestBody AddressDto address) {
@@ -91,6 +96,7 @@ public class AddressController {
      * @param address The {@link AddressDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing an {@link AddressDto} that represents the updated address.
      */
+    @PreAuthorize("hasRole('ROLE_app-admin')")
     @PutMapping("{id}")
     public ResponseEntity<AddressDto> update(
         @PathVariable int id,
@@ -106,6 +112,7 @@ public class AddressController {
      * @param id The id of the address to delete
      * @return an empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasRole('ROLE_app-admin')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         addressSvc.deleteAddress(id);
