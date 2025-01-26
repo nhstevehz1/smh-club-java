@@ -2,6 +2,17 @@ import {Routes} from '@angular/router';
 
 export const routes: Routes = [
     {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'p/user'
+    },
+    {
+      path: 'p/user',
+      loadComponent: () =>
+          import('./core/auth/pages/user/user.component')
+              .then(mod => mod.UserComponent)
+    },
+    {
         path: 'p/home',
         loadComponent: () => import('./features/home/home.component')
             .then(mod => mod.HomeComponent)
@@ -26,11 +37,6 @@ export const routes: Routes = [
       path: 'p/phones',
       loadComponent: () => import('./features/phones/list-phones/list-phones.component')
             .then(mod => mod.ListPhonesComponent)
-    },
-    {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'p/home'
     },
     {
         path: '**',

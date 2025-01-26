@@ -30,31 +30,31 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
               private router: Router,) {}
 
   get isAuthed(): boolean {
-    return this.authService!.isAuthenticated();
+    return this.authService!.isAuthenticated
   }
 
   get name(): string {
-    return this.authUser!.username
+    return this.authService!.userName
   }
 
   get lastLogin(): string | null{
-    return this.authUser!.lastLogin
+    return null; //this.authUser!.lastLogin
   }
 
   ngOnInit() {
-    this.userSubscription = this.authService.user.subscribe(u => {
+    /*this.userSubscription = this.authService.user.subscribe(u => {
       console.info("Main layout sub fired: " + u );
 
       if (u) {
         this.authUser = u;
       }
-    });
+    });*/
   }
 
   ngOnDestroy() {
-    if (this.userSubscription) {
+   /* if (this.userSubscription) {
       this.userSubscription.unsubscribe();
-    }
+    }*/
   }
 
   logoutHandler(): void {

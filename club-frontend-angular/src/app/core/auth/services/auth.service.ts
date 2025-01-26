@@ -1,79 +1,85 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable, Subscription, tap} from "rxjs";
+import {async, BehaviorSubject, filter, Observable, Subscription, take, tap} from "rxjs";
 import {AuthUser} from "../models/auth-user";
 import {HttpClient} from "@angular/common/http";
 import {EventBusService} from "./event-bus.service";
 import {RoleType} from "../models/role-type";
 import {DateTime} from "luxon";
+import {OAuthService} from "angular-oauth2-oidc";
+import {authCodeFlowConfig} from "../../../auth.config";
+import {jwtDecode} from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements OnInit, OnDestroy {
+export class AuthService {
 
 
-  private userSubject: BehaviorSubject<AuthUser | null>;
+  /*private userSubject: BehaviorSubject<AuthUser | null>;
   private eventBusSub: Subscription | null = null;
-  public user: Observable<AuthUser | null>;
+  public user: Observable<AuthUser | null>;*/
 
-  constructor(private http: HttpClient,
-              private eventBusService: EventBusService) {
+  constructor(private oauthService: OAuthService) {
+    this.oauthService.configure(authCodeFlowConfig);
 
-    this.userSubject
-        = new BehaviorSubject<AuthUser | null>(<AuthUser>this.getUser());
-    this.user = this.userSubject.asObservable();
+    this.oauthService.loadDiscoveryDocumentAndLogin();
+    this.oauthService.setupAutomaticSilentRefresh();
+
+    this.oauthService.events
+        .pipe(filter(event => event.type === 'token_received'))
+        .subscribe(() => this.oauthService.loadUserProfile());
+
   }
 
-  ngOnInit() {
-    this.eventBusSub = this.eventBusService.on('logout', () => this.logout);
+  signIn() {
+    return this.oauthService.initLoginFlow();
   }
 
-  ngOnDestroy() {
-    if (this.eventBusSub) {
-      this.eventBusSub.unsubscribe();
+  signOut() {
+    return this.oauthService.logOut();
+  }
+
+  get email(): string {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) return 'Email claim not found';
+    return claims['email'];
+  }
+
+  get userName(): string {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) return 'given name claim not found';
+    return claims['given_name'];
+  }
+
+  get isAuthenticated(): boolean {
+    return this.oauthService.hasValidIdToken();
+  }
+
+  get idToken(): string {
+    const token = this.oauthService.getIdToken();
+    if (token) {
+      return jwtDecode(token); //this.decodeAndStringifyToken(token);
     }
+    return 'id token not found';
   }
 
-  public get userValue(): AuthUser | null {
-    return this.userSubject.value;
-  }
-
-  getUser(): AuthUser | null {
-    return {
-      id: 'abc',
-      username: 'user',
-      roles: [
-        RoleType.Admin,
-        RoleType.Manager,
-        RoleType.User,
-      ],
-      lastLogin: DateTime.now().toISODate()
+  get refreshToken(): string {
+    const token = this.oauthService.getRefreshToken();
+    if (token) {
+      return jwtDecode(token); //this.decodeAndStringifyToken(token);
     }
+    return 'refresh token not found';
   }
 
-  logout(): Observable<any> {
-    // remove user from local storage
-    //var logoutRequest = { userId: id };
-
-    console.info("AuthService: logout called");
-    return this.http.post<string>('/api/auth/logout', null )
-        .pipe(tap(() => {
-          //sessionStorage.clear();
-          this.userSubject.next(null);
-        }));
-
-  }
-
-  isInRoles(role: RoleType): boolean {
-    if (this.userValue && this.userValue.roles && role) {
-      return this.userValue.roles.includes(role);
-    } else {
-      return false;
+  get accessToken(): string {
+    const token = this.oauthService.getAccessToken();
+    if (token) {
+      return jwtDecode(token);
     }
+    return 'access token not found';
   }
 
-  isAuthenticated(): boolean {
-    //return true;
-    return (this.getUser() != null);
+  private decodeAndStringifyToken(token: any) {
+    return JSON.stringify(jwtDecode(token), null, 2);
   }
 }
