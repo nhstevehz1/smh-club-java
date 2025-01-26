@@ -1,9 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
 import {HeaderComponent} from "../header/header.component";
 import {Router} from "@angular/router";
 import {AuthService} from "../../auth/services/auth.service";
-import {AuthUser} from "../../auth/models/auth-user";
 import {FooterComponent} from "../footer/footer.component";
 import {ContentComponent} from "../content/content.component";
 import {MatDividerModule} from "@angular/material/divider";
@@ -21,9 +19,6 @@ import {MatDividerModule} from "@angular/material/divider";
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent implements OnInit, OnDestroy {
-  private authUser: AuthUser | null = null;
-  private userSubscription: Subscription | null = null;
-
   @ViewChild(ContentComponent, {static: true}) content!: ContentComponent;
 
   constructor(private authService: AuthService,

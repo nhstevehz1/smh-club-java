@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
-import {MatCard, MatCardContent, MatCardHeader, MatCardModule} from "@angular/material/card";
+import {MatCardModule} from "@angular/material/card";
 import {MatLabel} from "@angular/material/form-field";
 import {MatDivider} from "@angular/material/divider";
 import {JsonPipe} from "@angular/common";

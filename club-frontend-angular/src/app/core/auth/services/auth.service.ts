@@ -1,10 +1,5 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {async, BehaviorSubject, filter, Observable, Subscription, take, tap} from "rxjs";
-import {AuthUser} from "../models/auth-user";
-import {HttpClient} from "@angular/common/http";
-import {EventBusService} from "./event-bus.service";
-import {RoleType} from "../models/role-type";
-import {DateTime} from "luxon";
+import {Injectable} from '@angular/core';
+import {filter} from "rxjs";
 import {OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
@@ -13,11 +8,6 @@ import {jwtDecode} from "jwt-decode";
   providedIn: 'root'
 })
 export class AuthService {
-
-
-  /*private userSubject: BehaviorSubject<AuthUser | null>;
-  private eventBusSub: Subscription | null = null;
-  public user: Observable<AuthUser | null>;*/
 
   constructor(private oauthService: OAuthService) {
     this.oauthService.configure(authCodeFlowConfig);
