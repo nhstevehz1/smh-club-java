@@ -1,9 +1,14 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-title>User: {{userName}}</mat-card-title>
+        <mat-card-title>User Name: {{userName}}</mat-card-title>
         <mat-card-subtitle>Email: {{email}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-label>Roles:</mat-label>
+        @for(role of roles; track role) {
+            <div>{{role}}</div>
+        }
         <mat-divider></mat-divider>
         <mat-label>Id Token:</mat-label>
         <pre><div>{{idToken | json}}</div></pre>

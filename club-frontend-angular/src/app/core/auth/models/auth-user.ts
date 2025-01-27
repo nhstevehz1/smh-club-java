@@ -1,17 +1,9 @@
-import {RoleType} from './role-type';
-
 export interface AuthUser {
-    id: string;
     username: string;
     roles: Array<RoleType>;
-    lastLogin: string;
 }
 
-export interface  AuthData  {
-    id: string;
-    username: string;
-    roles: Array<RoleType>;
-    token: string;
-    refreshToken: string;
-    lastLogin: string;
+export enum RoleType {
+    Admin = 'ROLE_club-admin',
+    User = 'ROLE_club-user',
 }

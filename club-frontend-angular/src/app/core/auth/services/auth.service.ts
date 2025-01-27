@@ -3,6 +3,7 @@ import {filter} from "rxjs";
 import {OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
+import {RealmAccess} from "../models/realm-access";
 
 @Injectable({
   providedIn: 'root'
@@ -41,9 +42,7 @@ export class AuthService {
   }
 
   get roles(): string[] {
-    const claims = this.oauthService.getIdentityClaims();
-    const roles: string[] = claims['realm_access'].roles;
-    return roles.filter(r => r.startsWith('app-'))
+    return this.parseRoles().filter(r => r.startsWith('club-'));
   }
 
   hasRole(role?: string): boolean {
@@ -79,5 +78,13 @@ export class AuthService {
     return 'access token not found';
   }
 
-
+  private parseRoles(): string[] {
+    const token = this.oauthService.getAccessToken();
+    if (token) {
+      const jsonString = JSON.stringify(jwtDecode(token));
+      const realmAccess: RealmAccess = JSON.parse(jsonString)['realm_access'];
+      return realmAccess.roles;
+    }
+    return [];
+  }
 }

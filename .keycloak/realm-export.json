@@ -865,7 +865,7 @@
     {
       "id": "04415f70-5914-4403-a8f6-67fa4dbf635d",
       "clientId": "smh-club-angular",
-      "name": "Social Club Angular Client",
+      "name": "Club Angular Client",
       "description": "",
       "rootUrl": "",
       "adminUrl": "",
@@ -895,6 +895,7 @@
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
         "frontchannel.logout.session.required": "true",
+        "post.logout.redirect.uris": "+",
         "oauth2.device.authorization.grant.enabled": "false",
         "display.on.consent.screen": "false",
         "backchannel.logout.revoke.offline.tokens": "false"
@@ -951,6 +952,7 @@
         "client.secret.creation.time": "1737986189",
         "client.introspection.response.allow.jwt.claim.enabled": "false",
         "frontchannel.logout.session.required": "true",
+        "post.logout.redirect.uris": "+",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",
         "use.refresh.tokens": "true",
@@ -1019,6 +1021,7 @@
         "client.secret.creation.time": "1737986680",
         "backchannel.logout.session.required": "true",
         "frontchannel.logout.session.required": "true",
+        "post.logout.redirect.uris": "+",
         "oauth2.device.authorization.grant.enabled": "false",
         "display.on.consent.screen": "false",
         "backchannel.logout.revoke.offline.tokens": "false"
@@ -1789,14 +1792,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
+            "oidc-usermodel-property-mapper",
             "oidc-address-mapper",
             "saml-user-attribute-mapper",
             "oidc-usermodel-attribute-mapper",
             "oidc-sha256-pairwise-sub-mapper",
-            "oidc-usermodel-property-mapper",
             "saml-user-property-mapper",
-            "saml-role-list-mapper",
-            "oidc-full-name-mapper"
+            "oidc-full-name-mapper",
+            "saml-role-list-mapper"
           ]
         }
       },
@@ -1844,13 +1847,13 @@
         "config": {
           "allowed-protocol-mapper-types": [
             "saml-role-list-mapper",
-            "oidc-full-name-mapper",
-            "saml-user-attribute-mapper",
+            "oidc-usermodel-property-mapper",
+            "oidc-address-mapper",
             "oidc-sha256-pairwise-sub-mapper",
             "oidc-usermodel-attribute-mapper",
-            "oidc-usermodel-property-mapper",
+            "saml-user-attribute-mapper",
             "saml-user-property-mapper",
-            "oidc-address-mapper"
+            "oidc-full-name-mapper"
           ]
         }
       },
