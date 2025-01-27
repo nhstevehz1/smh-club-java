@@ -18,7 +18,6 @@ export class AuthService {
     this.oauthService.events
         .pipe(filter(event => event.type === 'token_received'))
         .subscribe(() => this.oauthService.loadUserProfile());
-
   }
 
   signIn() {
@@ -39,6 +38,17 @@ export class AuthService {
     const claims = this.oauthService.getIdentityClaims();
     if (!claims) return 'given name claim not found';
     return claims['given_name'];
+  }
+
+  get roles(): string[] {
+    const claims = this.oauthService.getIdentityClaims();
+    const roles: string[] = claims['realm_access'].roles;
+    return roles.filter(r => r.startsWith('app-'))
+  }
+
+  hasRole(role?: string): boolean {
+    const val = role || '';
+    return this.roles.includes(val);
   }
 
   get isAuthenticated(): boolean {
@@ -68,4 +78,6 @@ export class AuthService {
     }
     return 'access token not found';
   }
+
+
 }

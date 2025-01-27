@@ -38,4 +38,8 @@ export class UserComponent {
   get email(): string {
     return this.auth.email;
   }
+
+  get roles(): string[] {
+    return this.auth.roles;
+  }
 }

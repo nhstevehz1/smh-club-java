@@ -7,6 +7,7 @@ import {MatDividerModule} from "@angular/material/divider";
 import {RouterLink} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatIconButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,7 @@ import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slid
         RouterLink,
         MatTooltipModule,
         MatSlideToggleModule,
+        MatIconButton,
     ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
