@@ -1,0 +1,16 @@
+## Externalized version of application.yml for production.
+server:
+  port: ${CLUB_HATEOAS_API_PORT}
+
+spring:
+  datasource:
+    url: ${CLUB_HATEOAS_API_DB_URL}
+    username: ${CLUB_HATEOAS_API_DB_USER}
+    password: ${CLUB_HATEOAS_API_DB_PASSWORD}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${CLUB_HATEOAS_API_ISSUER_URI}
+          jwk-set-uri: ${CLUB_HATEOAS_API_JWK_SET_URI}
