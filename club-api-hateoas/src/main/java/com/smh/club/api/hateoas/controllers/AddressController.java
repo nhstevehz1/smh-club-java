@@ -15,6 +15,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,7 @@ public class AddressController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link AddressModel}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedModel<AddressModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -57,6 +59,7 @@ public class AddressController {
      * @param id The id of the address.
      * @return @return A {@link ResponseEntity} containing a {@link AddressModel}
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<AddressModel> get(@PathVariable int id) {
         log.debug("Getting address with id: {}", id);
@@ -69,6 +72,7 @@ public class AddressController {
      * Endpoint for getting the total count of addresses in the database.
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(addressService.getAddressCount()));
@@ -79,6 +83,7 @@ public class AddressController {
      * @param address The {@link AddressModel} used to create the object in the database
      * @return A {@link ResponseEntity} containing an {@link AddressModel} representing the newly created object.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AddressModel> create(
         @NotNull @Valid @RequestBody AddressModel address) {
@@ -95,6 +100,7 @@ public class AddressController {
      * @param address The {@link AddressModel} that contains the updated info.
      * @return A {@link ResponseEntity} containing an {@link AddressModel} that represents the updated address.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AddressModel> update(
         @PathVariable int id,
@@ -111,6 +117,7 @@ public class AddressController {
      * @param id The id of the address to delete
      * @return an empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting address, id: {}", id);

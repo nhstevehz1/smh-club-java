@@ -38,7 +38,7 @@ public class PhoneController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing a page of {@link PhoneMemberDto}.
      */
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedDto<PhoneMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -56,7 +56,7 @@ public class PhoneController {
      * @param id The id of the phone.
      * @return @return A {@link ResponseEntity} containing a {@link PhoneDto}
      */
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<PhoneDto> get(@PathVariable int id) {
         var ret = phoneSvc.getPhone(id);
@@ -68,7 +68,7 @@ public class PhoneController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("count")
     public ResponseEntity<CountResponse> count() {
 
@@ -81,7 +81,7 @@ public class PhoneController {
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} representing the newly created object.
      */
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_app-admin')")
+    @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<PhoneDto> create(
         @NotNull @Valid @RequestBody PhoneDto phone) {
         return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(phone));
@@ -94,7 +94,7 @@ public class PhoneController {
      * @param phone The {@link PhoneDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} that represents the updated phone.
      */
-    @PreAuthorize("hasRole('ROLE_app-admin')")
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping("{id}")
     public ResponseEntity<PhoneDto> update(
         @PathVariable int id,
@@ -110,7 +110,7 @@ public class PhoneController {
      * @param id The id of the phone to delete
      * @return an empty {@link ResponseEntity}.
      */
-    @PreAuthorize("hasRole('ROLE_app-admin')")
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         phoneSvc.deletePhone(id);

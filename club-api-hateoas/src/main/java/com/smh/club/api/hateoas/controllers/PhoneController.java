@@ -15,6 +15,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,7 @@ public class PhoneController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link PhoneModel}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedModel<PhoneModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -58,6 +60,7 @@ public class PhoneController {
      * @param id The id of the phone.
      * @return @return A {@link ResponseEntity} containing a {@link PhoneModel}
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<PhoneModel> get(@PathVariable int id) {
         log.debug("Getting phone with id: {}", id);
@@ -71,6 +74,7 @@ public class PhoneController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(phoneService.getPhoneCount()));
@@ -82,6 +86,7 @@ public class PhoneController {
      * @param phone The {@link PhoneModel} used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link PhoneModel} representing the newly created object.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PhoneModel> create(
         @NotNull @Valid @RequestBody PhoneModel phone) {
@@ -100,6 +105,7 @@ public class PhoneController {
      * @param phone The {@link PhoneModel} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link PhoneModel} that represents the updated phone.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PhoneModel> update(
         @PathVariable int id,
@@ -119,6 +125,7 @@ public class PhoneController {
      * @param id The id of the phone to delete
      * @return an empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting phone, id: {}", id);

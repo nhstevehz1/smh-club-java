@@ -40,7 +40,7 @@ public class MemberController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberDto}.
      */
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedDto<MemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -58,7 +58,7 @@ public class MemberController {
      * @param id The id of the member.
      * @return @return A {@link ResponseEntity} containing a {@link MemberDto}
      */
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<MemberDto> get(@PathVariable int id) {
         var ret = memberSvc.getMember(id);
@@ -70,7 +70,7 @@ public class MemberController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("count")
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(memberSvc.getMemberCount()));
@@ -82,7 +82,7 @@ public class MemberController {
      * @param member The {@link MemberDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link MemberDto} representing the newly created object.
      */
-    @PreAuthorize("hasRole('ROLE_app-admin')")
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MemberDto> create(
         @NotNull @Valid @RequestBody MemberDto member) {
@@ -97,7 +97,7 @@ public class MemberController {
      * @param member The {@link MemberDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link MemberDto} that represents the updated member.
      */
-    @PreAuthorize("hasRole('ROLE_app-admin')")
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MemberDto> update(
         @PathVariable int id,
@@ -113,14 +113,14 @@ public class MemberController {
      * @param id The id of the member to delete
      * @return ab empty {@link ResponseEntity}.
      */
-    @PreAuthorize("hasRole('ROLE_app-admin')")
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         memberSvc.deleteMember(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:write')")
     @GetMapping("{id}/detail")
     public ResponseEntity<MemberDetailDto> detail(@PathVariable int id) {
         var ret = memberSvc.getMemberDetail(id);

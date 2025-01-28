@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.config;
+package com.smh.club.api.hateoas.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @RequiredArgsConstructor
-@EnableMethodSecurity
+@EnableMethodSecurity(jsr250Enabled = true)
 @Configuration
 public class SecurityConfig {
 
@@ -35,5 +35,4 @@ public class SecurityConfig {
 
     return http.build();
   }
-
 }
