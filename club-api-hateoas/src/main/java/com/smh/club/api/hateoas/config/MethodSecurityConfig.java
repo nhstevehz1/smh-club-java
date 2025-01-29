@@ -1,5 +1,6 @@
 package com.smh.club.api.hateoas.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
@@ -7,15 +8,18 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 
+@RequiredArgsConstructor
 @Configuration
 public class MethodSecurityConfig {
+
+  private final UserRoles userRoles;
 
   @Bean
   public RoleHierarchy roleHierarchy() {
     var hierarchy =
-            UserRoles.ADMIN + " > permission:write" +
-            " > " +
-            UserRoles.USER + " > permission:read";
+      userRoles.getAdmin() + " > permission:write" +
+      " > " +
+      userRoles.getUser() + " > permission:read";
 
     return RoleHierarchyImpl.fromHierarchy(hierarchy);
   }
