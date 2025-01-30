@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SystemConfig} from "../models/system-config";
-import {from, mergeAll, mergeMap, Observable, of, tap} from "rxjs";
-import {map, switchMap} from "rxjs/operators";
+import {Observable, tap} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'

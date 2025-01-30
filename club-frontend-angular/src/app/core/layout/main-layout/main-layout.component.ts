@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {HeaderComponent} from "../header/header.component";
 import {Router} from "@angular/router";
 import {AuthService} from "../../auth/services/auth.service";

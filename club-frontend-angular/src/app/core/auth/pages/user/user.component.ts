@@ -4,7 +4,6 @@ import {MatCardModule} from "@angular/material/card";
 import {MatLabel} from "@angular/material/form-field";
 import {MatDivider} from "@angular/material/divider";
 import {JsonPipe} from "@angular/common";
-import {OAuthService, OAuthStorage} from "angular-oauth2-oidc";
 
 @Component({
   selector: 'app-user',
