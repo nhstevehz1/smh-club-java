@@ -15,11 +15,3 @@ spring:
         jwt:
           issuer-uri: ${CLUB_REST_API_ISSUER_URI}
           jwk-set-uri: ${CLUB_REST_API_JWK_SET_URI}
-
-## uncomment below to set the admin and user role names
-## this should match whatever is defined in the OAUTH server
-# if not set, the default values will be used
-#user:
-#  roles:
-#    admin: <admin role> if not set, 'admin' will be used
-#    user: <user role> if not set, 'user' will be used

@@ -18,14 +18,14 @@ import {MatDividerModule} from "@angular/material/divider";
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
-export class MainLayoutComponent implements OnInit, OnDestroy {
+export class MainLayoutComponent {
   @ViewChild(ContentComponent, {static: true}) content!: ContentComponent;
 
   constructor(private authService: AuthService,
               private router: Router,) {}
 
-  get isAuthed(): boolean {
-    return this.authService!.isAuthenticated
+  get isLoggedIn(): boolean {
+    return this.authService!.isLoggedIn
   }
 
   get name(): string {
@@ -33,41 +33,19 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   get lastLogin(): string | null{
-    return null; //this.authUser!.lastLogin
-  }
-
-  ngOnInit() {
-    /*this.userSubscription = this.authService.user.subscribe(u => {
-      console.info("Main layout sub fired: " + u );
-
-      if (u) {
-        this.authUser = u;
-      }
-    });*/
-  }
-
-  ngOnDestroy() {
-   /* if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }*/
-  }
-
-  logoutHandler(): void {
-
-    /*this.auth.logout().subscribe(() => {
-      this.sidenav.close();
-      this.router.navigate(['p/login']);
-    });*/
-
+    // TODO: implement
+    return null;
   }
 
   sideNaveHandler(): void {
     this.content.toggleSideNav();
   }
 
-  profileHandler(): void {
-    this.router.navigate(['p/profile']).then(() =>
-    console.log("Profile menu clicked"));
+  async profileHandler(): Promise<void> {
+    await this.router.navigate(['p/profile']);
   }
 
+  logoutHandler(): void {
+    this.authService.signOut();
+  }
 }

@@ -1,4 +1,4 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -7,6 +7,8 @@ import {loadingSpinnerInterceptor} from "./core/loading/loading-spinner.intercep
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideOAuthClient} from "angular-oauth2-oidc";
 import {oauthInterceptor} from "./core/auth/interceptors/oauth.interceptor";
+import {ConfigService} from "./core/services/config.service";
+import {Observable} from "rxjs";
 
 export let appConfig: ApplicationConfig;
 appConfig = {
@@ -22,8 +24,10 @@ appConfig = {
     ),
     provideOAuthClient({
       resourceServer: {
-        allowedUrls: ['http:/localhost:9001/api/v1'],
-        sendAccessToken: true
+        allowedUrls: [
+            'http:/localhost:9001/api/v1',
+            'https://localhost:9000/api/v1'],
+        sendAccessToken: true,
       }
     })
   ]

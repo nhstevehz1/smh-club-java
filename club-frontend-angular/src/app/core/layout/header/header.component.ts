@@ -4,7 +4,6 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
 import {DOCUMENT} from "@angular/common";
 import {MatDividerModule} from "@angular/material/divider";
-import {RouterLink} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatIconButton} from "@angular/material/button";
@@ -16,7 +15,6 @@ import {MatIconButton} from "@angular/material/button";
         MatMenuModule,
         MatIconModule,
         MatDividerModule,
-        RouterLink,
         MatTooltipModule,
         MatSlideToggleModule,
         MatIconButton,
@@ -29,7 +27,7 @@ export class HeaderComponent {
 
   @Input('name') name: string = '';
 
-  @Input('isAuthed')
+  @Input('isLoggedIn')
   isAuthed: boolean = false;
 
   @Input('lastLogin')

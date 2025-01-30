@@ -20,8 +20,3 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/smh-club
           jwk-set-uri: http://localhost:8080/realms/smh-club/protocol/openid-connect/certs
-
-user:
-  roles: # roles configured in keycloak
-    admin: club-admin
-    user: club-user

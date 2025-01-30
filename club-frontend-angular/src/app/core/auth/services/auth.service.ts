@@ -4,21 +4,22 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
 import {RealmAccess} from "../models/realm-access";
+import {PermissionType} from "../models/permission-type";
+import {Roles} from "../models/roles";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private permissionsMap: Map<PermissionType, string> = new Map();
+
   constructor(private oauthService: OAuthService) {
-    this.oauthService.configure(authCodeFlowConfig);
-
-    this.oauthService.loadDiscoveryDocumentAndLogin();
-    this.oauthService.setupAutomaticSilentRefresh();
-
-    this.oauthService.events
-        .pipe(filter(event => event.type === 'token_received'))
-        .subscribe(() => this.oauthService.loadUserProfile());
+    this.initOauth().then(() => {
+      this.permissionsMap.set(PermissionType.read, Roles.USER);
+      this.permissionsMap.set(PermissionType.write, Roles.ADMIN);
+    });
   }
 
   signIn() {
@@ -45,19 +46,23 @@ export class AuthService {
     return this.parseRoles().filter(r => r.startsWith('club-'));
   }
 
-  hasRole(role?: string): boolean {
-    const val = role || '';
+  private hasRole(role?: string): boolean {
+    const val = role || ''
     return this.roles.includes(val);
   }
 
-  get isAuthenticated(): boolean {
+  hasPermission(permission: PermissionType): boolean {
+    return this.permissionsMap.has(permission) && this.hasRole(this.permissionsMap.get(permission));
+  }
+
+  get isLoggedIn(): boolean {
     return this.oauthService.hasValidIdToken();
   }
 
   get idToken(): string {
     const token = this.oauthService.getIdToken();
     if (token) {
-      return jwtDecode(token); //this.decodeAndStringifyToken(token);
+      return jwtDecode(token);
     }
     return 'id token not found';
   }
@@ -86,5 +91,16 @@ export class AuthService {
       return realmAccess.roles;
     }
     return [];
+  }
+
+  private async initOauth(): Promise<void> {
+    this.oauthService.configure(authCodeFlowConfig);
+
+    await this.oauthService.loadDiscoveryDocumentAndLogin();
+    this.oauthService.setupAutomaticSilentRefresh();
+
+    this.oauthService.events
+        .pipe(filter(event => event.type === 'token_received'))
+        .subscribe(() => this.oauthService.loadUserProfile());
   }
 }

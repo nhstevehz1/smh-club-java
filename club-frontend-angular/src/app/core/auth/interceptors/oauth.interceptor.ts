@@ -3,19 +3,20 @@ import {inject} from "@angular/core";
 import {OAuthModuleConfig, OAuthStorage} from "angular-oauth2-oidc";
 
 export const oauthInterceptor: HttpInterceptorFn = (req, next) => {
-  let authStorage = inject(OAuthStorage);
-  let moduleConfig = inject(OAuthModuleConfig);
+  const authStorage = inject(OAuthStorage);
+  const moduleConfig = inject(OAuthModuleConfig);
 
-  let url = req.url.toLowerCase();
+  const url = req.url.toLowerCase();
+  console.log(url);
   if (!moduleConfig) return next(req);
   if (!moduleConfig.resourceServer) return next(req);
   if (!moduleConfig.resourceServer.allowedUrls) return next(req);
   if (checkUrl(url, moduleConfig)) return next(req);
 
-  let sendAccessToken = moduleConfig.resourceServer.sendAccessToken
+  const sendAccessToken = moduleConfig.resourceServer.sendAccessToken
+  const token = authStorage.getItem('access_token');
 
-  if (sendAccessToken) {
-    let token = authStorage.getItem('access_token');
+  if (sendAccessToken && token) {
     let header = 'Bearer ' + token;
     let headers = req.headers.set('Authorization', header);
     req = req.clone({headers: headers});
@@ -25,6 +26,6 @@ export const oauthInterceptor: HttpInterceptorFn = (req, next) => {
 };
 
 export function checkUrl(url: string, config: OAuthModuleConfig): boolean {
-  let found = config?.resourceServer?.allowedUrls?.find(u => u.indexOf(url) > -1);
+  let found = config?.resourceServer?.allowedUrls?.find(u => u.startsWith(url));
   return !!found;
 }

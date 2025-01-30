@@ -1,26 +1,22 @@
 package com.smh.club.api.rest.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
-@RequiredArgsConstructor
 @Configuration
 public class MethodSecurityConfig {
 
-  private final UserRoles userRoles;
 
   @Bean
   public RoleHierarchy roleHierarchy() {
     var hierarchy =
-            userRoles.getAdmin() + " > permission:write" +
+            "ROLE-club-admin > permission:write" +
             " > " +
-            userRoles.getUser() + " > permission:read";
+            "ROLE_club-user > permission:read";
 
     return RoleHierarchyImpl.fromHierarchy(hierarchy);
   }
