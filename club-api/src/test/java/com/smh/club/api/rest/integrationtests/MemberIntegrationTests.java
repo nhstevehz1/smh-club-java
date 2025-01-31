@@ -27,7 +27,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,8 +35,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
@@ -49,16 +50,20 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser(authorities = {"ROLE_club-admin", "ROLE_club-user"})
 @ActiveProfiles("tests")
-@RunWith(SpringRunner.class)
 @ExtendWith(InstancioExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureEmbeddedDatabase(
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
 public class MemberIntegrationTests extends IntegrationTests {
+
+    // need to mock the decoder otherwise an initialization error is thrown
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
 
     @Value("${spring.data.web.pageable.default-page-size:20}")
     private int defaultPageSize;
@@ -517,8 +522,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var update = Instancio.of(MemberDto.class)
             .set(field(MemberDto::getId), id)
-            .generate(field(MemberDto::getBirthDate),
-                g -> g.temporal().localDate().min(LocalDate.now().minusYears(10)))
+            .set(field(MemberDto::getBirthDate), LocalDate.now().minusYears(10))
             .set(field(MemberDto::getJoinedDate), LocalDate.now())
             .create();
 
@@ -533,8 +537,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var update = Instancio.of(MemberDto.class)
             .set(field(MemberDto::getId), id)
-            .generate(field(MemberDto::getJoinedDate),
-                g -> g.temporal().localDate().min(LocalDate.now().minusYears(10)))
+            .set(field(MemberDto::getBirthDate), entity.getBirthDate())
+            .set(field(MemberDto::getJoinedDate), entity.getBirthDate().minusYears(1))
             .create();
 
         // perform put

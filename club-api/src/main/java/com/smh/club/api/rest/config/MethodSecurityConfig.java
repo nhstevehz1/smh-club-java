@@ -14,7 +14,7 @@ public class MethodSecurityConfig {
   @Bean
   public RoleHierarchy roleHierarchy() {
     var hierarchy =
-            "ROLE-club-admin > permission:write" +
+            "ROLE_club-admin > permission:write" +
             " > " +
             "ROLE_club-user > permission:read";
 

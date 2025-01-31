@@ -39,7 +39,7 @@ public class EmailController {
      * @param pageable A {@link Pageable} that contains the sort criteria.
      * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link EmailModel}.
      */
-    @PreAuthorize("hasRole('ROLE_app-user')")
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedModel<EmailModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
