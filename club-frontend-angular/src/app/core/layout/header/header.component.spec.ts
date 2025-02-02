@@ -2,20 +2,18 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {HeaderComponent} from './header.component';
 import {provideRouter, RouterLink} from "@angular/router";
-import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatMenuItem, MatMenuModule} from "@angular/material/menu";
-import {MatIcon, MatIconModule} from "@angular/material/icon";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {HarnessEnvironment, HarnessLoader} from "@angular/cdk/testing";
+import {HarnessLoader} from "@angular/cdk/testing";
 import {DOCUMENT} from "@angular/common";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatMenuHarness, MatMenuItemHarness} from "@angular/material/menu/testing";
+import {MatMenuHarness} from "@angular/material/menu/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {MatIconButton} from "@angular/material/button";
 import {MatIconHarness} from "@angular/material/icon/testing";
 import {MatSlideToggleHarness} from "@angular/material/slide-toggle/testing";
 

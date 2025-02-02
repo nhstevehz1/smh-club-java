@@ -15,10 +15,10 @@ import {
   MatSidenavContentHarness,
   MatSidenavHarness
 } from "@angular/material/sidenav/testing";
-import {MatListItemHarness, MatNavListHarness} from "@angular/material/list/testing";
+import {MatNavListHarness} from "@angular/material/list/testing";
 import {NavItem} from "./models/nav-item";
-import SpyObj = jasmine.SpyObj;
 import {MatIconHarness} from "@angular/material/icon/testing";
+import SpyObj = jasmine.SpyObj;
 
 describe('ContentComponent', () => {
   let fixture: ComponentFixture<ContentComponent>;

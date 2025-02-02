@@ -3,11 +3,9 @@ import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {AuthService} from './auth.service';
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {OAuthEvent, OAuthService, OAuthSuccessEvent, EventType} from "angular-oauth2-oidc";
-import {of, Subject} from "rxjs";
+import {OAuthEvent, OAuthService, OAuthSuccessEvent} from "angular-oauth2-oidc";
+import {Subject} from "rxjs";
 import {authCodeFlowConfig} from "../../../auth.config";
-import {jwtDecode} from "jwt-decode";
-import {RealmAccess} from "../models/realm-access";
 
 describe('AuthService', () => {
   let service: AuthService;
