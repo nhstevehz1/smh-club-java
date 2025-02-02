@@ -22,44 +22,40 @@ export class AuthService {
     });
   }
 
-  signIn() {
-    return this.oauthService.initLoginFlow();
-  }
-
-  signOut() {
+  logOut() {
     return this.oauthService.logOut();
   }
 
-  get email(): string {
+  getEmail(): string {
     const claims = this.oauthService.getIdentityClaims();
-    if (!claims) return 'Email claim not found';
+    if (!claims) return 'email claim not found';
     return claims['email'];
   }
 
-  get userName(): string {
+  getGivenName(): string {
     const claims = this.oauthService.getIdentityClaims();
-    if (!claims) return 'given name claim not found';
+    if (!claims) return 'given_name claim not found';
     return claims['given_name'];
   }
 
-  get roles(): string[] {
+  getRoles(): string[] {
     return this.parseRoles().filter(r => r.startsWith('club-'));
   }
 
   private hasRole(role?: string): boolean {
     const val = role || ''
-    return this.roles.includes(val);
+    return this.getRoles().includes(val);
   }
 
   hasPermission(permission: PermissionType): boolean {
     return this.permissionsMap.has(permission) && this.hasRole(this.permissionsMap.get(permission));
   }
 
-  get isLoggedIn(): boolean {
+  isLoggedIn(): boolean {
     return this.oauthService.hasValidIdToken();
   }
 
-  get idToken(): string {
+  getIdToken(): string {
     const token = this.oauthService.getIdToken();
     if (token) {
       return jwtDecode(token);
@@ -67,15 +63,15 @@ export class AuthService {
     return 'id token not found';
   }
 
-  get refreshToken(): string {
+  getRefreshToken(): string {
     const token = this.oauthService.getRefreshToken();
     if (token) {
-      return jwtDecode(token); //this.decodeAndStringifyToken(token);
+      return jwtDecode(token);
     }
     return 'refresh token not found';
   }
 
-  get accessToken(): string {
+  getAccessToken(): string {
     const token = this.oauthService.getAccessToken();
     if (token) {
       return jwtDecode(token);

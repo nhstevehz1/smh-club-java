@@ -42,12 +42,16 @@ export class HeaderComponent {
   @Output()
   toggleSidenav = new EventEmitter<void>();
 
-  profile() {
+  profileHandler() {
     this.profileClick.next();
   }
 
-  logout() {
+  logoutHandler() {
     this.logoutClick.next();
+  }
+
+  toggleSideNavHandler() {
+      this.toggleSidenav.next();
   }
 
   onThemeChanged(event: MatSlideToggleChange): void {

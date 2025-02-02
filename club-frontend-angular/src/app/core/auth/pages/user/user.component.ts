@@ -21,25 +21,25 @@ export class UserComponent {
   constructor(private auth: AuthService) {}
 
   get idToken(): string {
-    return this.auth.idToken;
+    return this.auth.getIdToken();
   }
 
-  get userName(): string {
-    return this.auth.userName;
+  get name(): string {
+    return this.auth.getGivenName();
   }
 
   get refreshToken(): string {
-    return this.auth.refreshToken;
+    return this.auth.getRefreshToken();
   }
   get accessToken(): string {
-    return this.auth.accessToken;
+    return this.auth.getAccessToken();
   }
 
   get email(): string {
-    return this.auth.email;
+    return this.auth.getEmail();
   }
 
   get roles(): string[] {
-    return this.auth.roles;
+    return this.auth.getRoles();
   }
 }

@@ -25,11 +25,11 @@ export class MainLayoutComponent {
               private router: Router,) {}
 
   get isLoggedIn(): boolean {
-    return this.authService!.isLoggedIn
+    return this.authService!.isLoggedIn()
   }
 
   get name(): string {
-    return this.authService!.userName
+    return this.authService!.getGivenName()
   }
 
   get lastLogin(): string | null{
@@ -37,15 +37,15 @@ export class MainLayoutComponent {
     return null;
   }
 
-  sideNaveHandler(): void {
+  sideNavHandler(): void {
     this.content.toggleSideNav();
   }
 
-  async profileHandler(): Promise<void> {
-    await this.router.navigate(['p/profile']);
+  profileHandler(): void {
+    this.router.navigate(['p/profile']).then(() => {});
   }
 
   logoutHandler(): void {
-    this.authService.signOut();
+    this.authService.logOut();
   }
 }

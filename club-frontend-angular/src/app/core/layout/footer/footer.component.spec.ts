@@ -2,6 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FooterComponent} from './footer.component';
 import {DateTime} from "luxon";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('FooterComponent', () => {
   let fixture: ComponentFixture<FooterComponent>;
@@ -9,9 +10,7 @@ describe('FooterComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-          FooterComponent
-      ]
+      imports: [FooterComponent]
     }).compileComponents();
     fixture = TestBed.createComponent(FooterComponent);
     component = fixture.componentInstance;
@@ -22,7 +21,7 @@ describe('FooterComponent', () => {
   });
 
   it('should return correct year', () => {
-    const year = component.year;
+    const year = component.getYear();
     expect(year).toBeTruthy();
     expect(year === DateTime.now().toFormat('yyyy')).toBeTrue();
   });
