@@ -69,6 +69,7 @@ describe('MainLayoutComponent', () => {
 
     const result = component.isLoggedIn;
 
+    expect(spy).toHaveBeenCalled();
     expect(result).toBe(false);
   });
 

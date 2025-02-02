@@ -98,7 +98,7 @@ describe('ContentComponent', () => {
   it('onMenuClicked should call router.Navigate', async () => {
     const router = TestBed.inject(Router);
     const spy =
-        spyOn(router, 'navigate').and.callFake((segments: string[]) => Promise.resolve(true));
+        spyOn(router, 'navigate').and.callFake(() => Promise.resolve(true));
 
     component.onMenuClicked("test");
 
