@@ -1,6 +1,6 @@
 <header>
 <mat-toolbar class="header-toolbar">
-    <button mat-icon-button (click)="toggleSidenav.emit()">
+    <button mat-icon-button (click)="toggleSideNavHandler()">
         <mat-icon>menu</mat-icon>
     </button>
     <span>Social Club</span>
@@ -10,17 +10,11 @@
         <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
-        <button mat-menu-item routerLink="#">
-            <mat-icon>person</mat-icon><span>My Account</span>
-        </button>
-        <button mat-menu-item routerLink="#">
-            <mat-icon>settings</mat-icon><span>Settings</span>
-        </button>
-        <button mat-menu-item routerLink="#">
-            <mat-icon>help</mat-icon><span>Help</span>
+        <button mat-menu-item (click)="profileHandler()">
+            <mat-icon>person</mat-icon><span>Profile</span>
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="#">
+        <button mat-menu-item (click)="logoutHandler()">
             <mat-icon>exit_to_app</mat-icon><span>Logout</span>
         </button>
     </mat-menu>

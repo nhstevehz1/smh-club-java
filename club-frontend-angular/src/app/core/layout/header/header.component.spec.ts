@@ -2,14 +2,20 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {HeaderComponent} from './header.component';
 import {provideRouter, RouterLink} from "@angular/router";
-import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {HarnessLoader} from "@angular/cdk/testing";
+import {DOCUMENT} from "@angular/common";
+import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
+import {MatMenuHarness} from "@angular/material/menu/testing";
+import {MatButtonHarness} from "@angular/material/button/testing";
+import {MatIconHarness} from "@angular/material/icon/testing";
+import {MatSlideToggleHarness} from "@angular/material/slide-toggle/testing";
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
@@ -18,6 +24,7 @@ describe('HeaderComponent', () => {
   beforeEach(async() => {
     await TestBed.configureTestingModule({
       imports: [
+        HeaderComponent,
         MatToolbarModule,
         MatMenuModule,
         MatIconModule,
@@ -27,11 +34,9 @@ describe('HeaderComponent', () => {
         MatSlideToggleModule,
       ],
       providers: [
-        HeaderComponent,
         provideNoopAnimations(),
         provideRouter([])
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
+      ]
     }).compileComponents();
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
@@ -40,4 +45,158 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('test event emitters', () => {
+    it('should call profileClick.next()', () => {
+      const spy = spyOn(component.profileClick, 'next');
+      component.profileHandler();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call logoutClick.next()', () => {
+      const spy = spyOn(component.logoutClick, 'next');
+      component.logoutHandler();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call toggleSideNave.next()', () => {
+      const spy = spyOn(component.toggleSidenav, 'next');
+      component.toggleSideNavHandler();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call toggleSideNave.next()', () => {
+      const spy = spyOn(component.toggleSidenav, 'next');
+      component.toggleSideNavHandler();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call document.body.classList.toggle(dark-mode, true)', () => {
+      const classList = TestBed.inject(DOCUMENT).body.classList;
+      const spy = spyOn(classList, 'toggle');
+      const event = {checked: true};
+
+      component.onThemeChanged(event as MatSlideToggleChange)
+
+      component.toggleSideNavHandler();
+      expect(spy).toHaveBeenCalledWith('dark-mode', true);
+    });
+
+    it('should call document.body.classList.toggle(dark-mode, false)', () => {
+      const classList = TestBed.inject(DOCUMENT).body.classList;
+      const spy = spyOn(classList, 'toggle');
+      const event = {checked: false};
+
+      component.onThemeChanged(event as MatSlideToggleChange)
+
+      component.toggleSideNavHandler();
+      expect(spy).toHaveBeenCalledWith('dark-mode', false);
+    });
+  });
+
+  describe('test component interactions', () => {
+    let loader: HarnessLoader;
+
+    beforeEach(() => {
+      loader = TestbedHarnessEnvironment.loader(fixture);
+    });
+
+    it('should contain two mat-icon-buttons', async () => {
+      const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
+
+      expect(buttonHarnesses.length).toBe(2);
+    });
+
+    it('menu button should be first mat-icon-button', async () => {
+      const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
+      const buttonHarness = buttonHarnesses[0];
+      const iconHarness = await buttonHarness.getHarnessOrNull(MatIconHarness.with({name: 'menu'}));
+
+      expect(iconHarness).toBeTruthy();
+    });
+
+    it('account button should be second mat-icon-button', async () => {
+      const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
+      const buttonHarness = buttonHarnesses[1];
+      const iconHarness = await buttonHarness.getHarnessOrNull(MatIconHarness.with({name: 'account_circle'}));
+
+      expect(iconHarness).toBeTruthy();
+    });
+
+    it('menu button click should call toggleSideNavHandler()', async () => {
+      const spy = spyOn(component, 'toggleSideNavHandler');
+      const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
+      const buttonHarness = buttonHarnesses[0];
+
+      await buttonHarness.click();
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('account button click should open menu', async () => {
+      const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
+      const buttonHarness = buttonHarnesses[1];
+      const menuHarness = await loader.getHarness(MatMenuHarness);
+
+      await buttonHarness.click();
+
+      expect(await menuHarness.isOpen()).toBeTrue();
+    });
+
+    it('menu should contain two menu items', async () => {
+      const menuHarness = await loader.getHarness(MatMenuHarness);
+      await menuHarness.open();
+      const harnesses = await menuHarness.getItems();
+
+      expect(menuHarness).toBeTruthy();
+      expect(harnesses.length).toBe(2);
+    });
+
+    it('menu should contain Profile menuitem ', async  () => {
+      const menuHarness = await loader.getHarness(MatMenuHarness);
+      await menuHarness.open();
+
+      const profileHarness = await menuHarness.getItems({text: 'personProfile'});
+
+      expect(profileHarness.length).toEqual(1);
+    });
+
+    it('menu should contain LogOut menu item', async  () => {
+      const menuHarness = await loader.getHarness(MatMenuHarness);
+      await menuHarness.open();
+
+      const logoutHarness = await menuHarness.getItems({text: 'exit_to_appLogout'});
+
+      expect(logoutHarness.length).toEqual(1);
+    });
+
+    it('should call profileHandler()', async  () => {
+      const spy = spyOn(component, 'profileHandler');
+      const menuHarness = await loader.getHarness(MatMenuHarness);
+      await menuHarness.open();
+
+      await menuHarness.clickItem({text: 'personProfile'});
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call logoutHandler()', async  () => {
+      const spy = spyOn(component, 'logoutHandler');
+      const menuHarness = await loader.getHarness(MatMenuHarness);
+      await menuHarness.open();
+
+      await menuHarness.clickItem({text: 'exit_to_appLogout'});
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call onThemChanged', async  () => {
+      const spy = spyOn(component, 'onThemeChanged');
+      const slideToggleHarness = await loader.getHarness(MatSlideToggleHarness);
+
+      await slideToggleHarness.check();
+
+      expect(spy).toHaveBeenCalled();
+    });
+  })
 });

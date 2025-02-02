@@ -8,7 +8,7 @@ import {DateTime} from "luxon";
 })
 export class FooterComponent {
 
-  get year(): string {
+  getYear(): string {
     return DateTime.local().toFormat("yyyy");
   }
 

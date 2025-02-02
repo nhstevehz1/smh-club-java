@@ -1,25 +1,27 @@
 import {AppComponent} from "./app.component";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {provideRouter} from "@angular/router";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {OAuthService} from "angular-oauth2-oidc";
 
 describe('AppComponent', () => {
    let fixture: ComponentFixture<AppComponent>;
    let component: AppComponent;
+   let oAuthServiceMock: jasmine.SpyObj<OAuthService>;
 
     beforeEach(async () => {
+        oAuthServiceMock = jasmine.createSpyObj('OAuthService', ['get']);
        await TestBed.configureTestingModule({
+           imports: [AppComponent],
            providers: [
-               AppComponent,
                provideHttpClient(),
                provideHttpClientTesting(),
                provideRouter([]),
-               provideNoopAnimations()
-           ],
-           schemas: [NO_ERRORS_SCHEMA]
+               provideNoopAnimations(),
+               {provide: OAuthService, useValue: oAuthServiceMock},
+           ]
        }).compileComponents();
        fixture = TestBed.createComponent(AppComponent);
        component = fixture.componentInstance;

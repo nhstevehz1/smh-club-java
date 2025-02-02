@@ -2,16 +2,18 @@ import {Component, ViewChild} from '@angular/core';
 import {MatListModule} from "@angular/material/list";
 import {MatSidenav, MatSidenavModule} from "@angular/material/sidenav";
 import {Router, RouterOutlet} from "@angular/router";
-import {NavItem} from "../menu-list-item/nav-item";
-import {MenuListItemComponent} from "../menu-list-item/menu-list-item.component";
+import {NavItem} from "./models/nav-item";
+import {AuthService} from "../../auth/services/auth.service";
+import {PermissionType} from "../../auth/models/permission-type";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
   selector: 'app-content',
   imports: [
     MatSidenavModule,
     MatListModule,
-    RouterOutlet,
-    MenuListItemComponent,
+    MatIconModule,
+    RouterOutlet
   ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
@@ -19,7 +21,7 @@ import {MenuListItemComponent} from "../menu-list-item/menu-list-item.component"
 export class ContentComponent {
     @ViewChild(MatSidenav, {static: true}) sidenav!: MatSidenav;
 
-    constructor(private router: Router) {}
+    constructor(private router: Router, private authService: AuthService) {}
 
     public toggleSideNav(): void {
         this.sidenav.toggle()
@@ -32,58 +34,34 @@ export class ContentComponent {
         );
     }
 
-    isUser(): boolean {
-        return true;
+    hasPermission(permission: PermissionType): boolean {
+        return this.authService.hasPermission(permission);
     }
 
-    isManager(): boolean {
-        return true;
-    }
-
-    isAdmin(): boolean {
-        return false;
-    }
-
-    userNav: NavItem[] = [
+    navList: NavItem[] = [
         {
             displayName: 'Members',
             iconName: 'group',
             route: 'p/members',
+            permission: PermissionType.read
         },
         {
             displayName: 'Addresses',
             iconName: 'contact_mail',
             route: 'p/addresses',
+            permission: PermissionType.read
         },
         {
             displayName: 'Emails',
             iconName: 'mail',
             route: 'p/emails',
+            permission: PermissionType.read
         },
         {
             displayName: 'Phones',
             iconName: 'phone',
             route: 'p/phones',
+            permission: PermissionType.read
         }
-    ];
-
-    mgrNav: NavItem[] = [
-        {
-            displayName: 'Manage Members',
-            iconName: 'groups',
-            route: 'p/manage/members'},
-        {
-            displayName: 'Utilities',
-            iconName: 'settings',
-            route: 'p/utils',
-        }
-    ];
-
-    adminNav: NavItem[] = [
-        {
-            displayName: 'Manage Users',
-            iconName: 'people',
-            route: 'p/users'
-        },
     ];
 }

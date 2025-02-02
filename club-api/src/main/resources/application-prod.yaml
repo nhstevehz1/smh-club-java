@@ -1,0 +1,17 @@
+## Externalized version of application.yml for production.
+
+server:
+  port: ${CLUB_REST_API_PORT}
+
+spring:
+  datasource:
+    url: ${CLUB_REST_API_DB_URL}
+    username: ${CLUB_REST_API_DB_USER}
+    password: ${CLUB_REST_API_DB_PASSWORD}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${CLUB_REST_API_ISSUER_URI}
+          jwk-set-uri: ${CLUB_REST_API_JWK_SET_URI}

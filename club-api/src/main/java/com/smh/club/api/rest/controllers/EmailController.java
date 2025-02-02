@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class EmailController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing a page of {@link EmailMemberDto}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedDto<EmailMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -54,6 +56,7 @@ public class EmailController {
      * @param id The id of the email.
      * @return @return A {@link ResponseEntity} containing a {@link EmailDto}
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<EmailDto> get(@PathVariable int id) {
         var ret = emailSvc.getEmail(id);
@@ -65,6 +68,7 @@ public class EmailController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("count")
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(emailSvc.getEmailCount()));
@@ -76,6 +80,7 @@ public class EmailController {
      * @param email The {@link EmailDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing an {@link EmailDto} representing the newly created object.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping
     public ResponseEntity<EmailDto> create(
         @NotNull @Valid @RequestBody EmailDto email) {
@@ -89,6 +94,7 @@ public class EmailController {
      * @param email The {@link EmailDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing an {@link EmailDto} that represents the updated email.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping("{id}")
     public ResponseEntity<EmailDto> update(
         @PathVariable int id,
@@ -104,6 +110,7 @@ public class EmailController {
      * @param id The id of the email to delete
      * @return an empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         emailSvc.deleteEmail(id);

@@ -15,6 +15,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,7 @@ public class RenewalController {
      *
      * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link RenewalModel}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedModel<RenewalModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -57,6 +59,7 @@ public class RenewalController {
      * @param id The id of the renewal.
      * @return @return A {@link ResponseEntity} containing a {@link RenewalModel}
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<RenewalModel> get(@PathVariable int id) {
         log.debug("Getting renewal with id: {}", id);
@@ -70,6 +73,7 @@ public class RenewalController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(renewalService.getRenewalCount()));
@@ -81,6 +85,7 @@ public class RenewalController {
      * @param renewal The {@link RenewalModel } used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link RenewalModel} representing the newly created object.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RenewalModel> create(
         @NotNull @Valid @RequestBody RenewalModel renewal) {
@@ -98,6 +103,7 @@ public class RenewalController {
      * @param renewal The {@link RenewalModel} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link RenewalModel} that represents the updated renewal.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RenewalModel> update(
         @PathVariable int id,
@@ -117,6 +123,7 @@ public class RenewalController {
      * @param id The id of the renewal to delete
      * @return an empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting renewal, id: {}", id);

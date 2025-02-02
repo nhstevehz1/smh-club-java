@@ -15,6 +15,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,7 @@ public class MemberController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing an {@link PagedModel} of type {@link MemberModel}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedModel<MemberModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -58,8 +60,8 @@ public class MemberController {
      * @param id The id of the member.
      * @return @return A {@link ResponseEntity} containing a {@link MemberModel}
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
-    //@Override
     public ResponseEntity<MemberModel> get(@PathVariable int id) {
         log.debug("Getting Member with id: {}", id);
         var ret = memberSvc.getMember(id);
@@ -71,8 +73,8 @@ public class MemberController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
-    //@Override
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(memberSvc.getMemberCount()));
     }
@@ -83,8 +85,8 @@ public class MemberController {
      * @param member The {@link MemberModel} used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link MemberModel} representing the newly created object.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    //@Override
     public ResponseEntity<MemberModel> create(
         @NotNull @Valid @RequestBody MemberModel member) {
         log.debug("Creating member data: {}", member);
@@ -101,8 +103,8 @@ public class MemberController {
      * @param member The {@link MemberModel} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link MemberModel} that represents the updated member.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    //@Override
     public ResponseEntity<MemberModel> update(
         @PathVariable int id,
         @NotNull @Valid @RequestBody MemberModel member) {
@@ -121,8 +123,8 @@ public class MemberController {
      * @param id The id of the member to delete
      * @return ab empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping(value = "{id}")
-    //@Override
     public ResponseEntity<Void> delete(@PathVariable int id) {
         log.debug("Deleting member id: {}", id);
 

@@ -35,4 +35,10 @@ export abstract class TableComponentBase <Type> {
         const lastName = `${last} ${suffix}`.trim();
         return `${lastName}, ${firstName}`;
     }
+
+    protected contactStrings(str1: string, str2?: string, delimeter?: string): string {
+        const val2 = str2 || '';
+        const delim = delimeter || ' ';
+        return str1.concat(val2, delim).trim();
+    }
 }

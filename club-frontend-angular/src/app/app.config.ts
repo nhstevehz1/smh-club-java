@@ -5,14 +5,28 @@ import {routes} from './app.routes';
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {loadingSpinnerInterceptor} from "./core/loading/loading-spinner.interceptor";
 import {provideAnimations} from "@angular/platform-browser/animations";
+import {provideOAuthClient} from "angular-oauth2-oidc";
+import {oauthInterceptor} from "./core/auth/interceptors/oauth.interceptor";
 
-export const appConfig: ApplicationConfig = {
+export let appConfig: ApplicationConfig;
+appConfig = {
   providers: [
     provideAnimations(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
     provideHttpClient(
-        withInterceptors([loadingSpinnerInterceptor])
-    )
+        withInterceptors([
+          loadingSpinnerInterceptor,
+          oauthInterceptor
+        ])
+    ),
+    provideOAuthClient({
+      resourceServer: {
+        allowedUrls: [
+            'http:/localhost:9001/api/v1',
+            'https://localhost:9000/api/v1'],
+        sendAccessToken: true,
+      }
+    })
   ]
 };

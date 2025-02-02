@@ -77,13 +77,13 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                 columnName: 'first_name',
                 displayName: 'First',
                 isSortable: true,
-                cell: (element: Member) => `${element.first_name} ${element.middle_name}`
+                cell: (element: Member) => this.contactStrings(element.first_name, element.middle_name)
             },
             {
                 columnName: 'last_name',
                 displayName: 'Last',
                 isSortable: true,
-                cell: (element: Member) => `${element.last_name} ${element.suffix}`,
+                cell: (element: Member) => this.contactStrings(element.last_name, element.suffix),
             },
             {
                 columnName: 'birth_date',

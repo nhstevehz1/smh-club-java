@@ -1,0 +1,22 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>User Name: {{name}}</mat-card-title>
+        <mat-card-subtitle>Email: {{email}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-label>Roles:</mat-label>
+        @for(role of roles; track role) {
+            <div>{{role}}</div>
+        }
+        <mat-divider></mat-divider>
+        <mat-label>Id Token:</mat-label>
+        <pre><div>{{idToken | json}}</div></pre>
+        <mat-divider></mat-divider>
+        <mat-label>Access Token:</mat-label>
+        <pre><div>{{accessToken | json}}</div></pre>
+        <mat-divider></mat-divider>
+        <mat-label>Refresh Token:</mat-label>
+        <pre><div>{{refreshToken | json}}</div></pre>
+    </mat-card-content>
+</mat-card>

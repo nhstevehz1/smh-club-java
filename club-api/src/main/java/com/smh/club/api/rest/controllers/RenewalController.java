@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class RenewalController {
      * @param pageable A {@link Pageable} that describes the sort.
      * @return A {@link ResponseEntity} containing a page of {@link RenewalMemberDto}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedDto<RenewalMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -54,6 +56,7 @@ public class RenewalController {
      * @param id The id of the renewal.
      * @return @return A {@link ResponseEntity} containing a {@link RenewalDto}
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<RenewalDto> get(@PathVariable int id) {
         var ret = renewSvc.getRenewal(id);
@@ -65,6 +68,7 @@ public class RenewalController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("count")
     public ResponseEntity<CountResponse> get() {
 
@@ -77,6 +81,7 @@ public class RenewalController {
      * @param renewal The {@link RenewalDto } used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link RenewalDto} representing the newly created object.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping
     public ResponseEntity<RenewalDto> create(
         @NotNull @Valid @RequestBody RenewalDto renewal) {
@@ -91,6 +96,7 @@ public class RenewalController {
      * @param renewal The {@link RenewalDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link RenewalDto} that represents the updated renewal.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping("{id}")
     public ResponseEntity<RenewalDto> update(
         @PathVariable int id,
@@ -106,6 +112,7 @@ public class RenewalController {
      * @param id The id of the renewal to delete
      * @return an empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         renewSvc.deleteRenewal(id);

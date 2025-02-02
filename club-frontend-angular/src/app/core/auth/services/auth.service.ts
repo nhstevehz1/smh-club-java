@@ -1,79 +1,102 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable, Subscription, tap} from "rxjs";
-import {AuthUser} from "../models/auth-user";
-import {HttpClient} from "@angular/common/http";
-import {EventBusService} from "./event-bus.service";
-import {RoleType} from "../models/role-type";
-import {DateTime} from "luxon";
+import {Injectable} from '@angular/core';
+import {filter} from "rxjs";
+import {OAuthService} from "angular-oauth2-oidc";
+import {authCodeFlowConfig} from "../../../auth.config";
+import {jwtDecode} from "jwt-decode";
+import {RealmAccess} from "../models/realm-access";
+import {PermissionType} from "../models/permission-type";
+import {Roles} from "../models/roles";
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements OnInit, OnDestroy {
+export class AuthService {
 
+  private permissionsMap: Map<PermissionType, string> = new Map();
 
-  private userSubject: BehaviorSubject<AuthUser | null>;
-  private eventBusSub: Subscription | null = null;
-  public user: Observable<AuthUser | null>;
-
-  constructor(private http: HttpClient,
-              private eventBusService: EventBusService) {
-
-    this.userSubject
-        = new BehaviorSubject<AuthUser | null>(<AuthUser>this.getUser());
-    this.user = this.userSubject.asObservable();
+  constructor(private oauthService: OAuthService) {
+    this.initOauth().then(() => {
+      this.permissionsMap.set(PermissionType.read, Roles.USER);
+      this.permissionsMap.set(PermissionType.write, Roles.ADMIN);
+    });
   }
 
-  ngOnInit() {
-    this.eventBusSub = this.eventBusService.on('logout', () => this.logout);
+  logOut() {
+    return this.oauthService.logOut();
   }
 
-  ngOnDestroy() {
-    if (this.eventBusSub) {
-      this.eventBusSub.unsubscribe();
+  getEmail(): string {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) return 'email claim not found';
+    return claims['email'];
+  }
+
+  getGivenName(): string {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) return 'given_name claim not found';
+    return claims['given_name'];
+  }
+
+  getRoles(): string[] {
+    return this.parseRoles().filter(r => r.startsWith('club-'));
+  }
+
+  private hasRole(role?: string): boolean {
+    const val = role || ''
+    return this.getRoles().includes(val);
+  }
+
+  hasPermission(permission: PermissionType): boolean {
+    return this.permissionsMap.has(permission) && this.hasRole(this.permissionsMap.get(permission));
+  }
+
+  isLoggedIn(): boolean {
+    return this.oauthService.hasValidIdToken();
+  }
+
+  getIdToken(): string {
+    const token = this.oauthService.getIdToken();
+    if (token) {
+      return jwtDecode(token);
     }
+    return 'id token not found';
   }
 
-  public get userValue(): AuthUser | null {
-    return this.userSubject.value;
-  }
-
-  getUser(): AuthUser | null {
-    return {
-      id: 'abc',
-      username: 'user',
-      roles: [
-        RoleType.Admin,
-        RoleType.Manager,
-        RoleType.User,
-      ],
-      lastLogin: DateTime.now().toISODate()
+  getRefreshToken(): string {
+    const token = this.oauthService.getRefreshToken();
+    if (token) {
+      return jwtDecode(token);
     }
+    return 'refresh token not found';
   }
 
-  logout(): Observable<any> {
-    // remove user from local storage
-    //var logoutRequest = { userId: id };
-
-    console.info("AuthService: logout called");
-    return this.http.post<string>('/api/auth/logout', null )
-        .pipe(tap(() => {
-          //sessionStorage.clear();
-          this.userSubject.next(null);
-        }));
-
-  }
-
-  isInRoles(role: RoleType): boolean {
-    if (this.userValue && this.userValue.roles && role) {
-      return this.userValue.roles.includes(role);
-    } else {
-      return false;
+  getAccessToken(): string {
+    const token = this.oauthService.getAccessToken();
+    if (token) {
+      return jwtDecode(token);
     }
+    return 'access token not found';
   }
 
-  isAuthenticated(): boolean {
-    //return true;
-    return (this.getUser() != null);
+  private parseRoles(): string[] {
+    const token = this.oauthService.getAccessToken();
+    if (token) {
+      const jsonString = JSON.stringify(jwtDecode(token));
+      const realmAccess: RealmAccess = JSON.parse(jsonString)['realm_access'];
+      return realmAccess.roles;
+    }
+    return [];
+  }
+
+  private async initOauth(): Promise<void> {
+    this.oauthService.configure(authCodeFlowConfig);
+
+    await this.oauthService.loadDiscoveryDocumentAndLogin();
+    this.oauthService.setupAutomaticSilentRefresh();
+
+    this.oauthService.events
+        .pipe(filter(event => event.type === 'token_received'))
+        .subscribe(() => this.oauthService.loadUserProfile());
   }
 }

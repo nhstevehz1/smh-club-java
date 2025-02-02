@@ -15,6 +15,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,7 @@ public class EmailController {
      * @param pageable A {@link Pageable} that contains the sort criteria.
      * @return A {@link ResponseEntity} containing a {@link PagedModel} of type {@link EmailModel}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
     public ResponseEntity<PagedModel<EmailModel>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
@@ -57,6 +59,7 @@ public class EmailController {
      * @param id The id of the email.
      * @return @return A {@link ResponseEntity} containing a {@link EmailModel}
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
     public ResponseEntity<EmailModel> get(@PathVariable int id) {
         log.debug("Getting email with id: {}", id);
@@ -70,6 +73,7 @@ public class EmailController {
      *
      * @return @return A {@link ResponseEntity} containing a {@link CountResponse}.
      */
+    @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CountResponse> count() {
         return ResponseEntity.ok(CountResponse.of(emailService.getEmailCount()));
@@ -81,6 +85,7 @@ public class EmailController {
      * @param email The {@link EmailModel} used to create the object in the database
      * @return A {@link ResponseEntity} containing an {@link EmailModel} representing the newly created object.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmailModel> create(
         @NotNull @Valid @RequestBody EmailModel email) {
@@ -98,6 +103,7 @@ public class EmailController {
      * @param email The {@link EmailModel} that contains the updated info.
      * @return A {@link ResponseEntity} containing an {@link EmailModel} that represents the updated email.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmailModel> update(
         @PathVariable int id,
@@ -116,6 +122,7 @@ public class EmailController {
      * @param id The id of the email to delete
      * @return an empty {@link ResponseEntity}.
      */
+    @PreAuthorize("hasAuthority('permission:write')")
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
 

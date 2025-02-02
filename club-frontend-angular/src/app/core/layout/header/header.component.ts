@@ -4,9 +4,9 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
 import {DOCUMENT} from "@angular/common";
 import {MatDividerModule} from "@angular/material/divider";
-import {RouterLink} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatIconButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-header',
@@ -15,9 +15,9 @@ import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slid
         MatMenuModule,
         MatIconModule,
         MatDividerModule,
-        RouterLink,
         MatTooltipModule,
         MatSlideToggleModule,
+        MatIconButton,
     ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -27,7 +27,7 @@ export class HeaderComponent {
 
   @Input('name') name: string = '';
 
-  @Input('isAuthed')
+  @Input('isLoggedIn')
   isAuthed: boolean = false;
 
   @Input('lastLogin')
@@ -42,12 +42,16 @@ export class HeaderComponent {
   @Output()
   toggleSidenav = new EventEmitter<void>();
 
-  profile() {
+  profileHandler() {
     this.profileClick.next();
   }
 
-  logout() {
+  logoutHandler() {
     this.logoutClick.next();
+  }
+
+  toggleSideNavHandler() {
+      this.toggleSidenav.next();
   }
 
   onThemeChanged(event: MatSlideToggleChange): void {
