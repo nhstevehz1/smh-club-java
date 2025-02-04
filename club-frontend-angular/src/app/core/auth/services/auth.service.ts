@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {filter} from "rxjs";
+import {BehaviorSubject, filter, Subject} from "rxjs";
 import {OAuthErrorEvent, OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
@@ -15,6 +15,9 @@ import {Router} from "@angular/router";
 export class AuthService {
 
   private permissionsMap: Map<PermissionType, string> = new Map();
+
+  private isLoadedSubject$ = new BehaviorSubject<boolean>(false);
+  public isLoaded$ = this.isLoadedSubject$.asObservable();
 
   constructor(private oauthService: OAuthService, private router: Router) {
     this.permissionsMap.set(PermissionType.read, Roles.USER);
@@ -106,6 +109,7 @@ export class AuthService {
 
     this.oauthService.loadDiscoveryDocumentAndLogin().then(() => {
       console.log('Login complete');
+      this.isLoadedSubject$.next(true);
       this.router.navigate(['p/home']).then(() => {});
     });
   }
