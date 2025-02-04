@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, filter, Subject} from "rxjs";
+import {BehaviorSubject, filter} from "rxjs";
 import {OAuthErrorEvent, OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
