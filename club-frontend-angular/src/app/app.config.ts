@@ -23,7 +23,7 @@ appConfig = {
     provideOAuthClient({
       resourceServer: {
         allowedUrls: [
-            'http:/localhost:9001/api/v1',
+            'http://localhost:9001/api/v1',
             'https://localhost:9000/api/v1',
             'http://localhost:4200/api/v1',
         ],
