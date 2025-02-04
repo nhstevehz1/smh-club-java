@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {filter} from "rxjs";
-import {OAuthService} from "angular-oauth2-oidc";
+import {BehaviorSubject, filter, Observable} from "rxjs";
+import {OAuthErrorEvent, OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
 import {RealmAccess} from "../models/realm-access";
 import {PermissionType} from "../models/permission-type";
 import {Roles} from "../models/roles";
+import {ActivatedRouteSnapshot, Router} from "@angular/router";
 
 
 @Injectable({
@@ -15,11 +16,10 @@ export class AuthService {
 
   private permissionsMap: Map<PermissionType, string> = new Map();
 
-  constructor(private oauthService: OAuthService) {
-    this.initOauth().then(() => {
-      this.permissionsMap.set(PermissionType.read, Roles.USER);
-      this.permissionsMap.set(PermissionType.write, Roles.ADMIN);
-    });
+  constructor(private oauthService: OAuthService, private router: Router) {
+    this.permissionsMap.set(PermissionType.read, Roles.USER);
+    this.permissionsMap.set(PermissionType.write, Roles.ADMIN);
+    this.initOauth();
   }
 
   logOut() {
@@ -89,14 +89,24 @@ export class AuthService {
     return [];
   }
 
-  private async initOauth(): Promise<void> {
+  private initOauth(): void {
     this.oauthService.configure(authCodeFlowConfig);
 
-    await this.oauthService.loadDiscoveryDocumentAndLogin();
+    this.oauthService.events.subscribe(event => {
+      if ( event instanceof OAuthErrorEvent) {
+        console.error('OAuthErrorEvent', event);
+      }
+    });
+
     this.oauthService.setupAutomaticSilentRefresh();
 
     this.oauthService.events
         .pipe(filter(event => event.type === 'token_received'))
         .subscribe(() => this.oauthService.loadUserProfile());
+
+    this.oauthService.loadDiscoveryDocumentAndLogin().then(() => {
+      console.log('Login complete');
+      this.router.navigate(['p/home']).then(() => {});
+    });
   }
 }

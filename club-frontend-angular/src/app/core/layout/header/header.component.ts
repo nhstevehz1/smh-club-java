@@ -28,7 +28,7 @@ export class HeaderComponent {
   @Input('name') name: string = '';
 
   @Input('isLoggedIn')
-  isAuthed: boolean = false;
+  isLoggedIn: boolean = false;
 
   @Input('lastLogin')
   lastLogin: string | null = null;

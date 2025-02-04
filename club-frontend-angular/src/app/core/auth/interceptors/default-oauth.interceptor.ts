@@ -2,7 +2,7 @@ import {HttpInterceptorFn} from '@angular/common/http';
 import {inject} from "@angular/core";
 import {OAuthModuleConfig, OAuthStorage} from "angular-oauth2-oidc";
 
-export const oauthInterceptor: HttpInterceptorFn = (req, next) => {
+export const DefaultOAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const authStorage = inject(OAuthStorage);
   const moduleConfig = inject(OAuthModuleConfig);
 
