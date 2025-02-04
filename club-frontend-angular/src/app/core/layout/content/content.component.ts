@@ -40,6 +40,12 @@ export class ContentComponent {
 
     navList: NavItem[] = [
         {
+          displayName: 'Home',
+          iconName: 'home',
+          route: 'p/home',
+          permission: PermissionType.read
+        },
+        {
             displayName: 'Members',
             iconName: 'group',
             route: 'p/members',

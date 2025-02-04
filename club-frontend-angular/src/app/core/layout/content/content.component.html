@@ -4,8 +4,8 @@
             @for(item of navList; track item) {
                 @if(hasPermission(item.permission)) {
                     <mat-list-item (click)="onMenuClicked(item.route)">
-                        <mat-icon>{{item.iconName}}</mat-icon>
-                        <div matListItemTitle>{{item.displayName}}</div>
+                        <mat-icon matListItemIcon>{{item.iconName}}</mat-icon>
+                        <div matListItemLine>{{item.displayName}}</div>
                     </mat-list-item>
                 }
             }

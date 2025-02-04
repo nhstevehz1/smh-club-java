@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpInterceptorFn } from '@angular/common/http';
 
-import { oauthInterceptor } from './oauth.interceptor';
+import { DefaultOAuthInterceptor } from './defaultOAuthInterceptor';
 import {OAuthModuleConfig, OAuthStorage} from "angular-oauth2-oidc";
 
 describe('defaultOauthInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) => 
-    TestBed.runInInjectionContext(() => oauthInterceptor(req, next));
+    TestBed.runInInjectionContext(() => DefaultOAuthInterceptor(req, next));
 
   let authStorageMock: jasmine.SpyObj<OAuthStorage>;
   let autConfigMock: jasmine.SpyObj<OAuthModuleConfig>;
