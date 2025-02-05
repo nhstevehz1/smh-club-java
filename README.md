@@ -73,6 +73,14 @@ Realm Information:
 
 The master realm admin credentials are *admin/admin*. 
 
+## Next steps
+- Add create, update, and delete functionality in the Angular front end app.
+- Add e2e testing to the Angular Front end app.
+- Prepare Angular front end for *zoneless* operation.
+- Create custom themes for the Angular front end app.
+- Complete gateway module.
+- Create frontend for the *smh-club-hateoas* module.
+
 ## Reference Documentation
 
 * [Official Gradle documentation](https://docs.gradle.org)
@@ -92,7 +100,7 @@ The master realm admin credentials are *admin/admin*.
 * [Angular Framework](https://angular.dev/)
 * [Angular Material](https://material.angular.io/)
 * [Angular Testing Framework](https://angular.dev/guide/testing)
-* [angular-oauth2-oidc](https://github.com/manfredsteyer/angular-oauth2-oidc)
+* [Angular OAuth2 OIDC Library](https://github.com/manfredsteyer/angular-oauth2-oidc)
 
 ## Running the development environment
 To run the software 
