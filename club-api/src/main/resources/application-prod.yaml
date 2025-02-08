@@ -1,9 +1,30 @@
-## Externalized version of application.yml for production.
+## Externalized version of application.yaml for production.
 
 server:
   port: ${CLUB_REST_API_PORT}
 
+  ssl:
+    bundle: server
+    enabled-protocols: TLSv1.3
+
 spring:
+  ssl:
+    bundle:
+      jks:
+        server:
+          key:
+            alias: server
+          keystore:
+            location: classpath:keystore/smhclub.p12
+            password: ${CLUB_REST_API_KEYSTORE_PWD}
+            type: PKCS12
+
+      pem:
+        client:
+          truststore:
+            certificate: classpath:keystore/smhclub.cer
+
+
   datasource:
     url: ${CLUB_REST_API_DB_URL}
     username: ${CLUB_REST_API_DB_USER}
