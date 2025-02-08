@@ -15,7 +15,7 @@ spring:
             alias: server
           keystore:
             location: classpath:keystore/smhclub.p12
-            password: ${CLUB_REST_API_KEYSTORE_PWD}
+            password: ${CLUB_HATEOAS_API_KEYSTORE_PWD}
             type: PKCS12
 
       pem:
