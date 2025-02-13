@@ -1,0 +1,33 @@
+<div [formGroup]="formGroup">
+    <div class="flex-column">
+        @if(title) {
+            <div class="flex-row">
+                <mat-label>{{title}}</mat-label>
+            </div>
+            <mat-divider></mat-divider>
+        }
+
+        <div class="flex-row">
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Phone</mat-label>
+                <span matTextPrefix>+1 &nbsp;</span>
+                <input type="tel" matInput formControlName="phone_number">
+                @if (hasError(phoneNumber)) {
+                    <mat-error>Phone number required</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Phone type</mat-label>
+                <mat-select formControlName="phone_type">
+                    @for (option of phoneTypes; track option){
+                        <mat-option>{{option}}</mat-option>
+                    }
+                </mat-select>
+                @if (hasError(phoneType)) {
+                    <mat-error>Phone type required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+    </div>
+</div>

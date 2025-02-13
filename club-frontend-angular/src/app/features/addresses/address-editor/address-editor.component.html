@@ -1,0 +1,61 @@
+<div [formGroup]="formGroup">
+    <div class="flex-column">
+        @if(title) {
+            <div class="flex-row">
+                <mat-label>{{title}}</mat-label>
+            </div>
+            <mat-divider></mat-divider>
+        }
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>Street or PO Box</mat-label>
+            <input type="text" matInput formControlName="address1">
+            @if (hasError(address1)) {
+                <mat-error>Street or PO box required</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>(address continued)</mat-label>
+            <input type="text" matInput formControlName="address2">
+        </mat-form-field>
+
+        <div class="flex-row">
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>City/Town</mat-label>
+                <input type="text" matInput formControlName="city">
+                @if (hasError(city)) {
+                    <mat-error>City/Town required</mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>State/Territory</mat-label>
+                <input type="text" matInput formControlName="state">
+                @if (hasError(state)) {
+                    <mat-error>State required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="flex-row">
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Postal Code</mat-label>
+                <input type="text" matInput formControlName="zip">
+                @if (hasError(zip)) {
+                    <mat-error>ZIP code required</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Address type</mat-label>
+                <mat-select formControlName="address_type">
+                    @for (option of addressTypes; track option){
+                        <mat-option>{{option}}</mat-option>
+                    }
+                </mat-select>
+                @if (hasError(addressType)) {
+                    <mat-error>Address type required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+    </div>
+</div>

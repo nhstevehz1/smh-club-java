@@ -1,4 +1,9 @@
 <div class="container">
+    <div class="action-container">
+        <button mat-mini-fab matTooltip="Add new member" (click)="createMemberHandler()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
     <app-sortable-pageable-table
         [dataSource]="datasource"
         [columns]="columns"

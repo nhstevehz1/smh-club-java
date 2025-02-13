@@ -29,6 +29,13 @@ export const routes: Routes = [
         canActivate: [authGuard], data: { permission: PermissionType.read}
     },
     {
+        path: 'p/members/add',
+        loadComponent: () =>
+            import('./features/members/add-member/add-member.component')
+                .then(mod => mod.AddMemberComponent),
+        canActivate: [authGuard], data: { permission: PermissionType.write}
+    },
+    {
         path: 'p/addresses',
         loadComponent: () =>
             import('./features/addresses/list-addresses/list-addresses.component')

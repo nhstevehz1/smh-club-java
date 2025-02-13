@@ -14,14 +14,14 @@ import {Router} from "@angular/router";
 })
 export class AuthService {
 
-  private permissionsMap: Map<PermissionType, string> = new Map();
+  private permissionsMap: Map<PermissionType, string[]> = new Map();
 
   private isLoadedSubject$ = new BehaviorSubject<boolean>(false);
   public isLoaded$ = this.isLoadedSubject$.asObservable();
 
   constructor(private oauthService: OAuthService, private router: Router) {
-    this.permissionsMap.set(PermissionType.read, Roles.USER);
-    this.permissionsMap.set(PermissionType.write, Roles.ADMIN);
+    this.permissionsMap.set(PermissionType.read, [Roles.USER, Roles.ADMIN]);
+    this.permissionsMap.set(PermissionType.write, [Roles.ADMIN]);
     this.initOauth();
   }
 
@@ -45,9 +45,12 @@ export class AuthService {
     return this.parseRoles().filter(r => r.startsWith('club-'));
   }
 
-  private hasRole(role?: string): boolean {
-    const val = role || ''
-    return this.getRoles().includes(val);
+  private hasRole(roles?: string[]): boolean {
+    if (roles) {
+      return this.getRoles().some((val) => roles.includes(val));
+    } else {
+      return false;
+    }
   }
 
   hasPermission(permission: PermissionType): boolean {

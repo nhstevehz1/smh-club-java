@@ -1,0 +1,31 @@
+<div [formGroup]="formGroup">
+    <div class = flex-column>
+        @if(title) {
+            <div class="flex-row">
+                <mat-label>{{title}}</mat-label>
+            </div>
+            <mat-divider></mat-divider>
+        }
+        <div class="flex-row">
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Email</mat-label>
+                <input type="email" matInput formControlName="email" email>
+                @if (hasError(email)) {
+                    <mat-error>{{getEmailError()}}</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Email type</mat-label>
+                <mat-select formControlName="email_type">
+                    @for (option of emailTypes; track option){
+                        <mat-option>{{option}}</mat-option>
+                    }
+                </mat-select>
+                @if (hasError(emailType)) {
+                    <mat-error>Email type required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+    </div>
+</div>

@@ -9,10 +9,19 @@ import {MembersService} from "../services/members.service";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
+import {MatIcon, MatIconModule} from "@angular/material/icon";
+import {MatButtonModule, MatIconButton} from "@angular/material/button";
+import {Router} from "@angular/router";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-list-members',
-    imports: [SortablePageableTableComponent],
+    imports: [
+        SortablePageableTableComponent,
+        MatIconModule,
+        MatButtonModule,
+        MatTooltip
+    ],
     providers: [MembersService],
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
@@ -25,7 +34,7 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
     datasource = new MatTableDataSource<Member>();
     columns: ColumnDef<Member>[] = [];
 
-    constructor(private svc: MembersService) {
+    constructor(private svc: MembersService, private router: Router) {
         super();
     }
 
@@ -63,6 +72,10 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                     return data._content;
                 })
             ).subscribe(data => this.datasource.data = data!); // set the data source with the new page
+    }
+
+    createMemberHandler(): void {
+        this.router.navigate(['p/members/add']).then(() => {});
     }
 
     // assemble the column defs which will be consumed by the pageable sortable table component
