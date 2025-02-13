@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {PageRequest} from "../../../shared/models/page-request";
 import {PagedData} from "../../../shared/models/paged-data";
-import {Member} from "../models/Member";
+import {Member} from "../models/member";
 
 @Injectable()
 export class MembersService {

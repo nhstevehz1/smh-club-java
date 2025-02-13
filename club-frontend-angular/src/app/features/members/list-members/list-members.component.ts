@@ -3,16 +3,16 @@ import {
     SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {MatTableDataSource} from "@angular/material/table";
-import {Member} from "../models/Member";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MembersService} from "../services/members.service";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
-import {MatIcon, MatIconModule} from "@angular/material/icon";
-import {MatButtonModule, MatIconButton} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
 import {Router} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
+import {Member} from "../models/member";
 
 @Component({
   selector: 'app-list-members',
@@ -74,7 +74,7 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
             ).subscribe(data => this.datasource.data = data!); // set the data source with the new page
     }
 
-    createMemberHandler(): void {
+    addMemberHandler(): void {
         this.router.navigate(['p/members/add']).then(() => {});
     }
 
