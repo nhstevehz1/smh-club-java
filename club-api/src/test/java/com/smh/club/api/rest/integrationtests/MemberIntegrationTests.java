@@ -357,6 +357,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_nullableField_returns_dto_status_created(Selector nullableField) throws Exception {
         // create address
         var create = Instancio.of(CreateMemberDto.class)
+            .setBlank(nullableField)
             .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
