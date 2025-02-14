@@ -2,6 +2,7 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.rest.dto.CreateMemberDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -34,23 +35,42 @@ public class MemberMapperTests {
     @Test
     public void from_create_to_entity() {
         // setup
-        var member = Instancio.create(MemberDto.class);
+        var create = Instancio.create(CreateMemberDto.class);
 
         // execute
-        var entity = mapper.toEntity(member);
+        var entity = mapper.toEntity(create);
 
         // verify
         assertEquals(0, entity.getId());
-        assertEquals(member.getMemberNumber(), entity.getMemberNumber());
-        assertEquals(member.getFirstName(), entity.getFirstName());
-        assertEquals(member.getMiddleName(), entity.getMiddleName());
-        assertEquals(member.getLastName(), entity.getLastName());
-        assertEquals(member.getSuffix(), entity.getSuffix());
-        assertEquals(member.getBirthDate(), entity.getBirthDate());
-        assertEquals(member.getJoinedDate(), entity.getJoinedDate());
-        assertEquals(0, entity.getEmails().size());
-        assertEquals(0, entity.getAddresses().size());
-        assertEquals(0, entity.getPhones().size());
+        assertEquals(create.getMember().getMemberNumber(), entity.getMemberNumber());
+        assertEquals(create.getMember().getFirstName(), entity.getFirstName());
+        assertEquals(create.getMember().getMiddleName(), entity.getMiddleName());
+        assertEquals(create.getMember().getLastName(), entity.getLastName());
+        assertEquals(create.getMember().getSuffix(), entity.getSuffix());
+        assertEquals(create.getMember().getBirthDate(), entity.getBirthDate());
+        assertEquals(create.getMember().getJoinedDate(), entity.getJoinedDate());
+
+
+        assertEquals(1, entity.getAddresses().size());
+        var address = entity.getAddresses().getFirst();
+        assertEquals(create.getAddress().getAddress1(), address.getAddress1());
+        assertEquals(create.getAddress().getAddress2(), address.getAddress2());
+        assertEquals(create.getAddress().getCity(), address.getCity());
+        assertEquals(create.getAddress().getState(), address.getState());
+        assertEquals(create.getAddress().getZip(), address.getZip());
+        assertEquals(create.getAddress().getAddressType(), address.getAddressType());
+
+
+        assertEquals(1, entity.getEmails().size());
+        var email = entity.getEmails().getFirst();
+        assertEquals(create.getEmail().getEmail(), email.getEmail());
+        assertEquals(create.getEmail().getEmailType(), email.getEmailType());
+
+        assertEquals(1, entity.getPhones().size());
+        var phone = entity.getPhones().getFirst();
+        assertEquals(create.getPhone().getPhoneNumber(), phone.getPhoneNumber());
+        assertEquals(create.getPhone().getPhoneType(), phone.getPhoneType());
+
         assertEquals(0, entity.getRenewals().size());
 
         // id should be zero
@@ -98,6 +118,8 @@ public class MemberMapperTests {
         assertEquals(entity.getEmails(), updatedEntity.getEmails());
         assertEquals(entity.getPhones(), updatedEntity.getPhones());
         assertEquals(entity.getRenewals(), updatedEntity.getRenewals());
+
+
     }
 
     @ParameterizedTest

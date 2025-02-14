@@ -4,6 +4,7 @@ import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
+import com.smh.club.api.rest.dto.CreateMemberDto;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import com.smh.club.api.rest.response.PagedDto;
@@ -61,7 +62,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public MemberDto createMember(MemberDto member) {
+    public MemberDto createMember(CreateMemberDto member) {
         log.debug("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);

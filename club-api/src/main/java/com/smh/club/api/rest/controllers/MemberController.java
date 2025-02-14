@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.MemberService;
+import com.smh.club.api.rest.dto.CreateMemberDto;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import com.smh.club.api.rest.response.CountResponse;
@@ -79,13 +80,13 @@ public class MemberController {
     /**
      * Endpoint for creating a member.
      *
-     * @param member The {@link MemberDto} used to create the object in the database
+     * @param member The {@link CreateMemberDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link MemberDto} representing the newly created object.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MemberDto> create(
-        @NotNull @Valid @RequestBody MemberDto member) {
+        @NotNull @Valid @RequestBody CreateMemberDto member) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }

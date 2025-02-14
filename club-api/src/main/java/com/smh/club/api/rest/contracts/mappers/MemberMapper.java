@@ -1,6 +1,7 @@
 package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.rest.dto.CreateMemberDto;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import java.util.List;
@@ -12,11 +13,11 @@ import org.springframework.data.domain.Page;
 public interface MemberMapper {
 
     /**
-     * Maps a {@link MemberDto} to a {@link MemberEntity}.
+     * Maps a {@link CreateMemberDto} to a {@link MemberEntity}.
      * @param dto The {@link MemberDto} to map.
      * @return The resulting {@link MemberEntity}.
      */
-    MemberEntity toEntity(MemberDto dto);
+    MemberEntity toEntity(CreateMemberDto dto);
 
     /**
      * Maps a {@link MemberEntity} to a {@link MemberDto}

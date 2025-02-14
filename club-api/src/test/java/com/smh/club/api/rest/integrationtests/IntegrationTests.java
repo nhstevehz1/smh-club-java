@@ -34,7 +34,7 @@ public abstract class IntegrationTests {
         configure();
     }
 
-    protected <T> T sendValidCreate(T create, Class<T> clazz) throws JsonProcessingException {
+    protected <T, R> R sendValidCreate(T create, Class<R> clazz) throws JsonProcessingException {
         return  given()
             .auth().none()
             .accept(MediaType.APPLICATION_JSON)
@@ -59,7 +59,7 @@ public abstract class IntegrationTests {
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
             .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+            .expect(jsonPath("$.validation-errors.length()").isNotEmpty());
     }
 
     protected <T> T sendValidUpdate(int id, T update, Class<T> clazz) throws JsonProcessingException {

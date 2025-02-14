@@ -26,7 +26,6 @@ public class AddressDto {
     @JsonProperty("id")
     private int id;
 
-    @Min(1)
     @SortExclude
     @JsonProperty("member_id")
     private int memberId;
