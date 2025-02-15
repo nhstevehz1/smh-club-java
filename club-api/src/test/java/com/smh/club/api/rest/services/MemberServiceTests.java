@@ -237,6 +237,7 @@ public class MemberServiceTests extends ServiceTests {
         var entity = Instancio.create(MemberEntity.class);
 
         when(repoMock.save(entity)).thenReturn(entity);
+        when(repoMock.findMinMemberNumber()).thenReturn(Optional.of(1));
         when(mapperMock.toEntity(create)).thenReturn(entity);
         when(mapperMock.toDto(entity)).thenReturn(member);
 

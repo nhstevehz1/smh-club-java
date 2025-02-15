@@ -66,6 +66,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         log.debug("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);
+        memberEntity.setMemberNumber(getNextUnusedMemberNumber());
         return memberMapper.toDto(membersRepo.save(memberEntity));
     }
 
@@ -126,5 +127,27 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);
+    }
+
+    private int getNextUnusedMemberNumber() {
+        // first get the min member number
+        var min = membersRepo.findMinMemberNumber();
+
+        // min.isEmpty indicates no records in the table.  If so return 1.
+        if (min.isEmpty()) {
+            return 1;
+        }
+
+        // if min is greater than 1 return the next lowest unused number
+        if (min.get() > 1) {
+            return min.get() - 1;
+        }
+
+        // lastly if sequence stars with 1, find the last used before the gam
+        var lastUsed = membersRepo.findLastUsedMemberNumberBeforeGap();
+
+        assert lastUsed.isPresent();
+
+        return lastUsed.get() + 1;
     }
 }
