@@ -156,10 +156,10 @@ public class MemberIntegrationTests {
 
         // verify
         assertFalse(memberRepo.existsById(member.getId()));
-        assertFalse(addressRepo.existsById(member.getAddresses().get(0).getId()));
-        assertFalse(emailRepo.existsById(member.getEmails().get(0).getId()));
-        assertFalse(phoneRepo.existsById(member.getPhones().get(0).getId()));
-        assertFalse(renewalsRepo.existsById(member.getRenewals().get(0).getId()));
+        assertFalse(addressRepo.existsById(member.getAddresses().getFirst().getId()));
+        assertFalse(emailRepo.existsById(member.getEmails().getFirst().getId()));
+        assertFalse(phoneRepo.existsById(member.getPhones().getFirst().getId()));
+        assertFalse(renewalsRepo.existsById(member.getRenewals().getFirst().getId()));
     }
 
     @ParameterizedTest
@@ -167,10 +167,10 @@ public class MemberIntegrationTests {
     public void delete_children_save_member(int size) {
         // setup
         var member = memberRepo.saveAllAndFlush(createListWithChildren(size)).get((int)Math.ceil(size / 2d));
-        var address = member.getAddresses().get(0);
-        var email = member.getEmails().get(0);
-        var phone = member.getPhones().get(0);
-        var renewal = member.getRenewals().get(0);
+        var address = member.getAddresses().getFirst();
+        var email = member.getEmails().getFirst();
+        var phone = member.getPhones().getFirst();
+        var renewal = member.getRenewals().getFirst();
 
         member.removeAddress(address);
         member.removeEmail(email);

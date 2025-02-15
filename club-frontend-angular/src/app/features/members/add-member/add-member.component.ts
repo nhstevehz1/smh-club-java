@@ -24,7 +24,6 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatDivider} from "@angular/material/divider";
 import {MembersService} from "../services/members.service";
 import {Router} from "@angular/router";
-import {catchError} from "rxjs/operators";
 
 @Component({
   selector: 'app-create-member',

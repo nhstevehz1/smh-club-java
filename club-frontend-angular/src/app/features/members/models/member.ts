@@ -1,9 +1,7 @@
 import {DateTime} from "luxon";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Address} from "../../addresses/models/address";
 import {Email} from "../../emails/models/email";
 import {Phone} from "../../phones/models/phone";
-import {Renewal} from "../../renewals/models/renewal";
 
 export interface Member {
     id: number;
