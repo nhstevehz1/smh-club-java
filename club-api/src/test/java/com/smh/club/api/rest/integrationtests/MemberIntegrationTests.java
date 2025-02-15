@@ -294,6 +294,53 @@ public class MemberIntegrationTests extends IntegrationTests {
         verify(create, entity.get());
     }
 
+    @Test
+    public void create_returns_memberNumber_equal_to_one() throws Exception {
+        // when table is empty, the member service will assign 1 to the member number
+        // setup
+        var create = Instancio.of(CreateMemberDto.class)
+            .ignore(field(MemberDto::getId))
+            .ignore(field(AddressDto::getMemberId))
+            .ignore(field(EmailDto::getMemberId))
+            .ignore(field(PhoneDto::getMemberId))
+            .set(field(MemberDto::getJoinedDate), LocalDate.now())
+            .set(field(MemberDto::getBirthDate), LocalDate.now().minusYears(22))
+            .create();
+
+        // perform POST
+        var ret = sendValidCreate(create, MemberDto.class);
+
+        // verify
+        var entity =  repo.findById(ret.getId());
+
+        assertTrue(entity.isPresent());
+        assertEquals(1, entity.get().getMemberNumber());
+    }
+
+    @Test
+    public void create_returns_with_memberNumber_equal_to_next_available() throws Exception {
+        // setup
+        // when the available numbers has a gap ex: {1,2,3,5,6,...},
+        // the member service will assign 4 to the member number
+        var create = Instancio.of(CreateMemberDto.class)
+            .ignore(field(MemberDto::getId))
+            .ignore(field(AddressDto::getMemberId))
+            .ignore(field(EmailDto::getMemberId))
+            .ignore(field(PhoneDto::getMemberId))
+            .set(field(MemberDto::getJoinedDate), LocalDate.now())
+            .set(field(MemberDto::getBirthDate), LocalDate.now().minusYears(22))
+            .create();
+
+        // perform POST
+        var ret = sendValidCreate(create, MemberDto.class);
+
+        // verify
+        var entity =  repo.findById(ret.getId());
+
+        assertTrue(entity.isPresent());
+        assertEquals(1, entity.get().getMemberNumber());
+    }
+
     // used with test that follows
     private static Stream<Arguments> nonNullableFields() {
         return Stream.of(
@@ -345,6 +392,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         // perform POST
         sendInvalidCreate(create);
     }
+
+
 
     private static Stream<Arguments> nullableFields() {
         return Stream.of(
@@ -602,7 +651,6 @@ public class MemberIntegrationTests extends IntegrationTests {
     }
 
     private void verify(MemberDto expected, MemberEntity actual) {
-        assertEquals(expected.getMemberNumber(), actual.getMemberNumber());
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getMiddleName(), actual.getMiddleName());
         assertEquals(expected.getLastName(), actual.getLastName());

@@ -1,11 +1,21 @@
-<div [formGroup]=formGroup >
-    @if(title) {
-        <div class="flex-row">
-            <mat-label>{{title}}</mat-label>
+<div [formGroup]=editorForm >
+    @if (showRemoveButton || isTitleDefined()) {
+        <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
+            @if(title) {
+                <div class="flex-row">
+                    <mat-label>{{title}}</mat-label>
+                </div>
+                <mat-divider></mat-divider>
+            }
+            @if(showRemoveButton) {
+                <button mat-icon-button (click)="onRemove()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            }
         </div>
-        <mat-divider></mat-divider>
     }
-    <div class="flex-row">
+
+    <div class="flex-row start gap">
         <mat-form-field [appearance]="fieldAppearance">
             <mat-label>First name</mat-label>
             <input type="text" matInput formControlName="first_name">
@@ -20,7 +30,7 @@
         </mat-form-field>
     </div>
 
-    <div class="flex-row">
+    <div class="flex-row start gap">
         <mat-form-field [appearance]="fieldAppearance">
             <mat-label>Last name</mat-label>
             <input type="text" matInput formControlName="last_name">
@@ -34,7 +44,8 @@
             <input type="text" matInput formControlName="suffix">
         </mat-form-field>
     </div>
-    <div class="flex-row">
+
+    <div class="flex-row start gap">
         <mat-form-field [appearance]="fieldAppearance">
             <mat-label>Birth date</mat-label>
             <input [matDatepicker]="birthDatePicker" matInput formControlName="birth_date">

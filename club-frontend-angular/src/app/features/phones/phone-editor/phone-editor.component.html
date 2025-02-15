@@ -1,13 +1,22 @@
-<div [formGroup]="formGroup">
-    <div class="flex-column">
-        @if(title) {
-            <div class="flex-row">
-                <mat-label>{{title}}</mat-label>
+<div [formGroup]="editorForm">
+    <div class="flex-column space-evenly">
+        @if (showRemoveButton || isTitleDefined()) {
+            <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
+                @if(title) {
+                    <div class="flex-row">
+                        <mat-label>{{title}}</mat-label>
+                    </div>
+                    <mat-divider></mat-divider>
+                }
+                @if(showRemoveButton) {
+                    <button mat-icon-button (click)="onRemove()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                }
             </div>
-            <mat-divider></mat-divider>
         }
 
-        <div class="flex-row">
+        <div class="flex-row start gap">
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>Phone</mat-label>
                 <span matTextPrefix>+1 &nbsp;</span>

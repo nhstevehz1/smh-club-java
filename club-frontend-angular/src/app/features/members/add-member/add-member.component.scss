@@ -17,6 +17,11 @@ mat-card-title {
   margin-bottom: 10px;
 }
 
+mat-divider {
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -26,10 +31,8 @@ mat-card-title {
 .title-container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
-  gap: 15px;
 }
 
 .section-container {
@@ -46,19 +49,4 @@ mat-card-title {
   flex-wrap: wrap;
   justify-content: end;
   gap: 15px;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: start;
-  gap: 15px;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
 }

@@ -2,6 +2,7 @@ package com.smh.club.api.rest.domain.repos;
 
 import com.smh.club.api.rest.domain.entities.*;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import java.util.Comparator;
 import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -82,7 +83,7 @@ public class MemberIntegrationTests {
     }
 
     @Test
-    public void save_middleName_is_null_does_not_throws() {
+    public void save_middleName_is_null_does_not_throw() {
         // setup
         var member = createEntity();
         member.setMiddleName(null);
@@ -129,22 +130,6 @@ public class MemberIntegrationTests {
 
         // execute and verify
         assertThrows(Exception.class, () -> memberRepo.save(member));
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {5,20,50})
-    public void get_memberNumbers_matches(int size) {
-        // setup
-        var members = memberRepo.saveAll(createList(size));
-        var numbers = members.stream().map(MemberEntity::getMemberNumber).toList();
-        var highest = members.stream().map(MemberEntity::getMemberNumber).max(Integer::compareTo).orElseThrow();
-
-        // execute
-        var ret = memberRepo.findByMemberNumberGreaterThanEqualAndMemberNumberLessThanEqual(0, highest);
-        var vals = ret.stream().map(MemberNumberOnly::getMemberNumber).toList();
-
-        // assert
-        vals.forEach(v -> assertTrue(numbers.contains(v)));
     }
 
     @ParameterizedTest
@@ -218,6 +203,125 @@ public class MemberIntegrationTests {
         // verify
         assertTrue(ret.isPresent());
         assertEquals(member, ret.get());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {10, 20, 30})
+    public void should_return_last_used_memberNumber_when_only_one_is_missing(int size) {
+        // setup
+        var entities = createList(size);
+        var idx = 1;
+        for(var member : entities) {
+            member.setMemberNumber(idx++);
+        }
+        var expected = entities.get(size/2).getMemberNumber();
+        entities.remove(entities.get(size/2));
+        memberRepo.saveAllAndFlush(entities);
+
+        // execute
+        var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
+
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get() + 1);
+    }
+
+    @Test
+    public void should_return_highest_used_memberNumber_when_none_are_missing() {
+        // setup
+        var entities = createList(10);
+        var idx = 1;
+        for(var member : entities) {
+            member.setMemberNumber(idx++);
+        }
+        var expected = idx;
+        memberRepo.saveAllAndFlush(entities);
+
+        // execute
+        var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
+
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get() + 1);
+    }
+
+    @Test
+    public void should_return_highest_used_memberNumber_when_first_is_missing() {
+        // setup
+        var entities = createList(10);
+        var idx = 1;
+        for(var member : entities) {
+            member.setMemberNumber(idx++);
+        }
+
+        entities.removeFirst();
+
+        var expected = idx;
+
+        memberRepo.saveAllAndFlush(entities);
+
+        // execute
+        var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
+
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get() + 1);
+    }
+
+    @Test
+    public void should_return_highest_used_memberNumber_when_first_n_are_missing_missing() {
+        // setup
+        var entities = createList(10);
+        var idx = 1;
+        for(var member : entities) {
+            member.setMemberNumber(idx++);
+        }
+        entities.removeFirst();
+        entities.removeFirst();
+        entities.removeFirst();
+
+        var expected = idx;
+
+        memberRepo.saveAllAndFlush(entities);
+
+        // execute
+        var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
+
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get() + 1);
+    }
+
+    @Test
+    public void find_last_used_should_return_null_when_table_is_empty() {
+        // execute
+
+        var result = memberRepo.findLastUsedMemberNumberBeforeGap();
+
+        // verify
+        assertTrue(result.isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {10, 20, 30})
+    public void should_return_min_memberNumber(int size) {
+        // setup
+        var entities = createList(size);
+        var min = entities.stream().min(Comparator.comparingInt(MemberEntity::getMemberNumber));
+        memberRepo.saveAllAndFlush(entities);
+
+        // execute
+        var result = memberRepo.findMinMemberNumber();
+
+        // verify
+        assertTrue(min.isPresent());
+        assertTrue(result.isPresent());
+        assertEquals(min.get().getMemberNumber(), result.get());
+    }
+
+    @Test
+    public void find_min_memberNumber_should_return_null_when_table_is_empty() {
+        // execute
+        var result = memberRepo.findMinMemberNumber();
+
+        // verify
+        assertTrue(result.isEmpty());
     }
 
     private MemberEntity createEntity() {

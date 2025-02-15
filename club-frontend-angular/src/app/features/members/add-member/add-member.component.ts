@@ -20,6 +20,11 @@ import {Member, MemberCreate} from "../models/member";
 import {Address} from "../../addresses/models/address";
 import {Email} from "../../emails/models/email";
 import {Phone} from "../../phones/models/phone";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatDivider} from "@angular/material/divider";
+import {MembersService} from "../services/members.service";
+import {Router} from "@angular/router";
+import {catchError} from "rxjs/operators";
 
 @Component({
   selector: 'app-create-member',
@@ -35,7 +40,9 @@ import {Phone} from "../../phones/models/phone";
         AddressEditorComponent,
         MemberEditorComponent,
         PhoneEditorComponent,
-        EmailEditorComponent
+        EmailEditorComponent,
+        MatTooltip,
+        MatDivider
     ],
   providers: [
       provideLuxonDateAdapter()
@@ -49,8 +56,14 @@ export class AddMemberComponent {
 
     fieldAppearance: MatFormFieldAppearance = 'fill';
 
-    constructor(private formBuilder: FormBuilder){
+    constructor(private formBuilder: FormBuilder,
+                private svc: MembersService,
+                private router: Router) {
+
         this.createForm = this.createMemberGroup();
+        this.addressForms.push(this.createAddressGroup());
+        this.emailForms.push(this.createEmailGroup());
+        this.phoneForms.push(this.createPhoneGroup());
     }
 
     public get memberForm(): FormModelGroup<Member> {
@@ -71,7 +84,18 @@ export class AddMemberComponent {
 
     doneHandler(): void {
         if (this.memberForm.valid) {
-            return;
+            this.svc.createMember(<MemberCreate>this.createForm.value).subscribe({
+              next: () =>  this.router.navigate(['p/members']).then(() => {}),
+              error: (err: any) => {
+                  if (err.error instanceof Error) {
+                      // A client-side or network error occurred.
+                      console.error('An error occurred:', err.error.message);
+                  } else {
+                      // The backend returned an unsuccessful response code.
+                      console.error(`Backend returned code ${err.status}, body was: ${err.error}`);
+                  }
+              }
+            });
         } else {
             return;
         }

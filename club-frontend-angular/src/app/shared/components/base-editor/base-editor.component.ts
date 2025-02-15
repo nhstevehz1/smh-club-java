@@ -1,34 +1,17 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
-import {ControlContainer, FormControl, FormGroup} from "@angular/forms";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormControl} from "@angular/forms";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {FormModelGroup} from "./form-model-group";
 
 @Component({
   selector: 'base-editor',
   imports: [],
   template: ``,
-  styles: ``,
-  viewProviders: [
-    {
-      provide: ControlContainer,
-      useFactory: (): ControlContainer => inject(ControlContainer, {skipSelf: true})
-    }
-  ]
+  styles: ``
 })
-export abstract class BaseEditorComponent implements OnInit {
-  private parentContainer = inject(ControlContainer);
-
-  private get parentFormGroup(): FormGroup {
-    return this.parentContainer.control as FormGroup;
-  }
-
-  private fg?: FormGroup;
-
-  public get formGroup(): FormGroup {
-    return this.fg!;
-  }
-
+export abstract class BaseEditorComponent<T> {
   @Input({required: true})
-  public controlKey = '';
+  public editorForm!: FormModelGroup<T>;
 
   @Input()
   public title?: string;
@@ -36,15 +19,21 @@ export abstract class BaseEditorComponent implements OnInit {
   @Input()
   public fieldAppearance: MatFormFieldAppearance = 'outline'
 
-  ngOnInit() {
-    console.log('ngOnInit in base editor fired')
-    this.fg = this.createGroup();
-    this.parentFormGroup.addControl(this.controlKey, this.createGroup());
-  }
+  @Input()
+  public showRemoveButton: boolean = false;
+
+  @Output()
+  public removeClick: EventEmitter<any> = new EventEmitter();
 
   hasError(formControl: FormControl): boolean {
     return formControl.invalid && (formControl.dirty || !formControl.untouched)
   }
 
-  protected abstract createGroup(): FormGroup;
+  onRemove(): void {
+    this.removeClick.next(null);
+  }
+
+  isTitleDefined(): boolean {
+    return this.title !== undefined;
+  };
 }

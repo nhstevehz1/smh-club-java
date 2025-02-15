@@ -1,9 +1,7 @@
 import {FullName} from "../../../shared/models/full-name";
 import {DateTime} from "luxon";
+import {Renewal} from "./renewal";
 
-export interface RenewalMember {
-    id: number;
-    renewal_date: DateTime;
-    renewal_year: number;
+export interface RenewalMember extends Renewal{
     full_name: FullName;
 }

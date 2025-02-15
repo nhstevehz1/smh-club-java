@@ -1,10 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {EmailType} from "../models/email-type";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDivider} from "@angular/material/divider";
+import {Email} from "../models/email";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-email-editor',
@@ -12,24 +16,27 @@ import {MatDivider} from "@angular/material/divider";
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
-    MatDivider
+    MatDivider,
+    MatIcon,
+    MatIconButton,
+    NgClass
   ],
   templateUrl: './email-editor.component.html',
   styleUrl: './email-editor.component.scss'
 })
-export class EmailEditorComponent extends BaseEditorComponent implements OnInit {
+export class EmailEditorComponent extends BaseEditorComponent<Email> {
 
   emailTypes = Object.values(EmailType);
 
   public get email(): FormControl {
-    return this.formGroup.get('email') as FormControl;
+    return this.editorForm.controls.email;
   }
 
   public get emailType(): FormControl {
-    return this.formGroup.get('email_type') as FormControl;
+    return this.editorForm.controls.email_type;
   }
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor() {
     super();
   }
 
@@ -45,10 +52,4 @@ export class EmailEditorComponent extends BaseEditorComponent implements OnInit 
     return 'invalid';
   }
 
-  protected createGroup(): FormGroup {
-    return this.formBuilder.group({
-      email: [null, [Validators.required, Validators.email]],
-      email_type: [EmailType.Home, [Validators.required]]
-    });
-  }
 }
