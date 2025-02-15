@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.domain.repos;
 
 import com.smh.club.api.rest.domain.entities.MemberEntity;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
