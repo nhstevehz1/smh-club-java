@@ -63,7 +63,10 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
               // map the content array only
               return data._content;
             })
-        ).subscribe(data => this.datasource.data = data!); // set the data source with the new page
+        ).subscribe({
+          // set the data source with the new page
+          next: data => this.datasource.data = data!
+        });
   }
 
   protected getColumns(): ColumnDef<AddressMember>[] {
