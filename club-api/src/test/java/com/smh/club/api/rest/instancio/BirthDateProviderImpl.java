@@ -2,7 +2,9 @@ package com.smh.club.api.rest.instancio;
 
 import com.smh.club.api.rest.validation.constraints.BirthDate;
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import org.instancio.Node;
 import org.instancio.generator.GeneratorSpec;
 import org.instancio.generators.Generators;
@@ -25,11 +27,12 @@ public class BirthDateProviderImpl implements InstancioServiceProvider {
       Field field = node.getField();
       Class<?> targetClass = node.getTargetClass();
 
-      if (targetClass == LocalDate.class && field != null) {
+      if (targetClass == Instant.class && field != null) {
         BirthDate birthdate = field.getDeclaredAnnotation(BirthDate.class);
         if (birthdate != null) {
-          return gen.temporal().localDate().range(LocalDate.now().minusYears(100),
-              LocalDate.now().minusYears(birthdate.minAge()));
+          return gen.temporal().instant().range(
+              ZonedDateTime.now().minusYears(100).toInstant(),
+              ZonedDateTime.now().minusYears(birthdate.minAge()).toInstant());
         }
       }
       return null;

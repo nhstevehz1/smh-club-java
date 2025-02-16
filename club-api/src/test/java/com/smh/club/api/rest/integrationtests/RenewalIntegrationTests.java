@@ -11,7 +11,10 @@ import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.dto.RenewalMemberDto;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -228,8 +231,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
     @Test
     public void get_returns_model_status_ok() {
         // setup
-        var email = addEntitiesToDb(20).get(10);
-        var id = email.getId();
+        var renewal = addEntitiesToDb(20).get(10);
+        var id = renewal.getId();
 
         // perform get
         var actual =
@@ -244,7 +247,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
                 .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract().body().as(RenewalDto.class);
 
-        verify(email, actual);
+        verify(renewal, actual);
     }
 
     @Test
@@ -269,11 +272,14 @@ public class RenewalIntegrationTests extends IntegrationTests {
     @ValueSource(ints = {0,1})
     public void create_returns_dto_status_created(int offset) throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
+
+        var renewalYear = ZonedDateTime.now().minusYears(offset).getYear();
+
         var create = Instancio.of(RenewalDto.class)
             .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
             .ignore((field(RenewalDto::getId)))
-            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() - offset)
+            .set(field(RenewalDto::getRenewalDate), Instant.now())
+            .set(field(RenewalDto::getRenewalYear), renewalYear)
             .create();
 
         // perform POST
@@ -293,7 +299,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
             .ignore((field(RenewalDto::getId)))
             .setBlank(field(RenewalDto::getRenewalDate))
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .set(field(RenewalDto::getRenewalYear), ZonedDateTime.now().getYear())
             .create();
 
         // perform POST
@@ -306,8 +312,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var create = Instancio.of(RenewalDto.class)
             .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
             .ignore((field(RenewalDto::getId)))
-            .set(field(RenewalDto::getRenewalDate), LocalDate.now().plusYears(1))
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .set(field(RenewalDto::getRenewalDate), ZonedDateTime.now().plusYears(1).toInstant())
+            .set(field(RenewalDto::getRenewalYear), ZonedDateTime.now().getYear())
             .create();
 
         // perform POST
@@ -320,8 +326,9 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var create = Instancio.of(RenewalDto.class)
             .generate(field(RenewalDto::getMemberId), g -> g.oneOf(memberIdList))
             .ignore((field(RenewalDto::getId)))
-            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() + 1)
+            .set(field(RenewalDto::getRenewalDate), Instant.now())
+            .set(field(RenewalDto::getRenewalYear),
+                Instant.now().atZone(ZoneId.systemDefault()).getYear() + 1)
             .create();
 
         // perform POST
@@ -339,18 +346,19 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var update = Instancio.of(RenewalDto.class)
             .set(field(RenewalDto::getId), id)
             .set(field(RenewalDto::getMemberId), memberId)
-            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() - offset)
+            .set(field(RenewalDto::getRenewalDate), Instant.now())
+            .set(field(RenewalDto::getRenewalYear),
+                Instant.now().atZone(ZoneId.systemDefault()).getYear() - offset)
             .create();
 
         // perform PUT
         var actual = sendValidUpdate(id, update, RenewalDto.class);
 
         // verify
-        var email = repo.findById(actual.getId());
+        var renewal = repo.findById(actual.getId());
 
-        assertTrue(email.isPresent());
-        verify(update, email.get());
+        assertTrue(renewal.isPresent());
+        verify(update, renewal.get());
     }
 
     @Test
@@ -383,7 +391,7 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .set(field(RenewalDto::getId), id)
             .set(field(RenewalDto::getMemberId), memberId)
             .setBlank(field(RenewalDto::getRenewalDate))
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .set(field(RenewalDto::getRenewalYear), ZonedDateTime.now().getYear())
             .create();
 
         // perform put
@@ -401,8 +409,10 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var update = Instancio.of(RenewalDto.class)
             .set(field(RenewalDto::getId), id)
             .set(field(RenewalDto::getMemberId), memberId)
-            .set(field(RenewalDto::getRenewalDate), LocalDate.now().minusYears(1))
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear())
+            .set(field(RenewalDto::getRenewalDate),
+                Instant.now().atZone(ZoneId.systemDefault()).minusYears(1).toInstant())
+            .set(field(RenewalDto::getRenewalYear),
+                ZonedDateTime.now().getYear())
             .create();
 
         // perform put
@@ -420,8 +430,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
         var update = Instancio.of(RenewalDto.class)
             .set(field(RenewalDto::getId), id)
             .set(field(RenewalDto::getMemberId), memberId)
-            .set(field(RenewalDto::getRenewalDate), LocalDate.now())
-            .set(field(RenewalDto::getRenewalYear), LocalDate.now().getYear() + 1)
+            .set(field(RenewalDto::getRenewalDate), Instant.now())
+            .set(field(RenewalDto::getRenewalYear), ZonedDateTime.now().getYear() + 1)
             .create();
 
         // perform put
@@ -443,8 +453,8 @@ public class RenewalIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.NO_CONTENT);
 
-        var email = repo.findById(id);
-        assertTrue(email.isEmpty());
+        var renewal = repo.findById(id);
+        assertTrue(renewal.isEmpty());
     }
 
     @Test
@@ -480,18 +490,21 @@ public class RenewalIntegrationTests extends IntegrationTests {
 
     private void verify(RenewalDto expected, RenewalEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
+        assertEquals(expected.getRenewalDate().truncatedTo(ChronoUnit.SECONDS),
+            actual.getRenewalDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
     }
 
     private void verify(RenewalEntity expected, RenewalDto actual) {
         assertEquals(expected.getMember().getId(), actual.getMemberId());
-        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
+        assertEquals(expected.getRenewalDate().truncatedTo(ChronoUnit.SECONDS),
+            actual.getRenewalDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
     }
 
     private void verify(RenewalEntity expected, RenewalMemberDto actual) {
-        assertEquals(expected.getRenewalDate(), actual.getRenewalDate());
+        assertEquals(expected.getRenewalDate().truncatedTo(ChronoUnit.SECONDS),
+            actual.getRenewalDate().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(expected.getRenewalYear(), actual.getRenewalYear());
         assertEquals(expected.getMember().getMemberNumber(), actual.getMemberNumber());
         assertEquals(expected.getMember().getFirstName(), actual.getFullName().getFirstName());

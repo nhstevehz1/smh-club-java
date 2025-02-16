@@ -7,7 +7,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.time.LocalDate;
+import java.time.Instant;
 
 /**
  * A constraint validator used on LocalDate fields.
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BirthDate {
-  Class<?> value() default LocalDate.class;
+  Class<?> value() default Instant.class;
 
   int minAge() default 21;
   String message() default "Birth date must be at least 21 years in the past";

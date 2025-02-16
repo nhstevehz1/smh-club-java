@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import java.time.LocalDate;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,11 +52,11 @@ public class MemberDto {
     @NotNull
     @BirthDate
     @JsonProperty("birth_date")
-    private LocalDate birthDate;
+    private Instant birthDate;
 
     @NotNull
     @PastOrPresent
     @JsonProperty("joined_date")
-    private LocalDate joinedDate;
+    private Instant joinedDate;
 
 }

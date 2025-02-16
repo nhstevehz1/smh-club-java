@@ -2,7 +2,7 @@ package com.smh.club.api.rest.domain.entities;
 
 import com.smh.club.api.rest.domain.annotations.SortExclude;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.Instant;
 import lombok.*;
 
 /**
@@ -22,7 +22,7 @@ public class RenewalEntity {
     private int id;
 
     @Column(name = "renewal_date", nullable = false)
-    private LocalDate renewalDate;
+    private Instant renewalDate;
 
     @Column(name = "renewal_year", nullable = false)
     private int renewalYear;
