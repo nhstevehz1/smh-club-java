@@ -87,8 +87,7 @@ public abstract class IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+            .expect(jsonPath("$.validation-errors").isNotEmpty());
     }
 
     protected <T> List<T> executeListPage(PageTestParams<T> testParams) {

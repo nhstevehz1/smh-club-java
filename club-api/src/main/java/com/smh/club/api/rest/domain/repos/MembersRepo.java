@@ -19,8 +19,8 @@ public interface MembersRepo extends JpaRepository<MemberEntity, Integer> {
      * @return An optional Integer.  Returns an empty optional if there are no records in th table.
      */
     @Query(
-    "SELECT MIN(m1.memberNumber) from MemberEntity m1 " +
-    "LEFT JOIN MemberEntity m2 ON m2.memberNumber + 1 = m1.memberNumber " +
+    "SELECT MIN(m1.memberNumber + 1) from MemberEntity m1 " +
+    "LEFT JOIN MemberEntity m2 ON m1.memberNumber + 1 = m2.memberNumber " +
     "WHERE m2.memberNumber is NULL")
     Optional<Integer> findLastUsedMemberNumberBeforeGap();
 

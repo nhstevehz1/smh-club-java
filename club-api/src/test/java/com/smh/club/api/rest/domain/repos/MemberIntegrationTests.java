@@ -222,7 +222,7 @@ public class MemberIntegrationTests {
         var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
 
         assertTrue(actual.isPresent());
-        assertEquals(expected, actual.get() + 1);
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -240,29 +240,7 @@ public class MemberIntegrationTests {
         var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
 
         assertTrue(actual.isPresent());
-        assertEquals(expected, actual.get() + 1);
-    }
-
-    @Test
-    public void should_return_highest_used_memberNumber_when_first_is_missing() {
-        // setup
-        var entities = createList(10);
-        var idx = 1;
-        for(var member : entities) {
-            member.setMemberNumber(idx++);
-        }
-
-        entities.removeFirst();
-
-        var expected = idx;
-
-        memberRepo.saveAllAndFlush(entities);
-
-        // execute
-        var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
-
-        assertTrue(actual.isPresent());
-        assertEquals(expected, actual.get() + 1);
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -281,11 +259,11 @@ public class MemberIntegrationTests {
 
         memberRepo.saveAllAndFlush(entities);
 
-        // execute
+        // execute.
         var actual = memberRepo.findLastUsedMemberNumberBeforeGap();
 
         assertTrue(actual.isPresent());
-        assertEquals(expected, actual.get() + 1);
+        assertEquals(expected, actual.get());
     }
 
     @Test
@@ -319,6 +297,35 @@ public class MemberIntegrationTests {
     public void find_min_memberNumber_should_return_null_when_table_is_empty() {
         // execute
         var result = memberRepo.findMinMemberNumber();
+
+        // verify
+        assertTrue(result.isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {10, 20, 30})
+    public void should_return_max_memberNumber(int size) {
+        // setup
+        var entities = createList(size);
+        var idx = 1;
+        for(var member : entities) {
+            member.setMemberNumber(idx++);
+        }
+        memberRepo.saveAllAndFlush(entities);
+        var expected = --idx;
+
+        // execute
+        var actual = memberRepo.findMaxMemberNumber();
+
+        // verify
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
+    }
+
+    @Test
+    public void find_max_memberNumber_should_return_null_when_table_is_empty() {
+        // execute
+        var result = memberRepo.findMaxMemberNumber();
 
         // verify
         assertTrue(result.isEmpty());

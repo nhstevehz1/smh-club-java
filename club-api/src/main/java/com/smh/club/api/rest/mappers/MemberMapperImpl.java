@@ -33,9 +33,9 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
     @Override
     public MemberEntity toEntity(CreateMemberDto dto) {
         var entity = modelMapper.map(dto, MemberEntity.class);
-        entity.addAddress(modelMapper.map(dto.getAddress(), AddressEntity.class));
-        entity.addPhone(modelMapper.map(dto.getPhone(), PhoneEntity.class));
-        entity.addEmail(modelMapper.map(dto.getEmail(), EmailEntity.class));
+        dto.getAddresses().forEach(a -> entity.addAddress(modelMapper.map(a, AddressEntity.class)));
+        dto.getEmails().forEach(e -> entity.addEmail(modelMapper.map(e, EmailEntity.class)));
+        dto.getPhones().forEach(p -> entity.addPhone(modelMapper.map(p, PhoneEntity.class)));
         return entity;
     }
 

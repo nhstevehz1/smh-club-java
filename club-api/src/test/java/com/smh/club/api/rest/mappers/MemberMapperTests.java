@@ -29,13 +29,15 @@ public class MemberMapperTests {
     private final Settings settings = Settings.create()
             .set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
-            .set(Keys.MAX_DEPTH, 4);
-            //.set(Keys.COLLECTION_MAX_SIZE, 0);
+            .set(Keys.MAX_DEPTH, 4)
+            .set(Keys.COLLECTION_MIN_SIZE, 1);
 
     @Test
     public void from_create_to_entity() {
         // setup
-        var create = Instancio.create(CreateMemberDto.class);
+        var create = Instancio.of(CreateMemberDto.class)
+            .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
+            .create();
 
         // execute
         var entity = mapper.toEntity(create);
@@ -51,25 +53,27 @@ public class MemberMapperTests {
         assertEquals(create.getMember().getJoinedDate(), entity.getJoinedDate());
 
 
-        assertEquals(1, entity.getAddresses().size());
-        var address = entity.getAddresses().getFirst();
-        assertEquals(create.getAddress().getAddress1(), address.getAddress1());
-        assertEquals(create.getAddress().getAddress2(), address.getAddress2());
-        assertEquals(create.getAddress().getCity(), address.getCity());
-        assertEquals(create.getAddress().getState(), address.getState());
-        assertEquals(create.getAddress().getZip(), address.getZip());
-        assertEquals(create.getAddress().getAddressType(), address.getAddressType());
+        assertEquals(create.getAddresses().size(), entity.getAddresses().size());
+        var expAddress = create.getAddresses().getFirst();
+        var actAddress = entity.getAddresses().getFirst();
+        assertEquals(expAddress.getAddress1(), actAddress.getAddress1());
+        assertEquals(expAddress.getAddress2(), actAddress.getAddress2());
+        assertEquals(expAddress.getCity(), actAddress.getCity());
+        assertEquals(expAddress.getState(), actAddress.getState());
+        assertEquals(expAddress.getZip(), actAddress.getZip());
+        assertEquals(expAddress.getAddressType(), actAddress.getAddressType());
 
+        assertEquals(create.getEmails().size(), entity.getEmails().size());
+        var expEmail = create.getEmails().getFirst();
+        var actEmail = entity.getEmails().getFirst();
+        assertEquals(expEmail.getEmail(), actEmail.getEmail());
+        assertEquals(expEmail.getEmailType(), actEmail.getEmailType());
 
-        assertEquals(1, entity.getEmails().size());
-        var email = entity.getEmails().getFirst();
-        assertEquals(create.getEmail().getEmail(), email.getEmail());
-        assertEquals(create.getEmail().getEmailType(), email.getEmailType());
-
-        assertEquals(1, entity.getPhones().size());
-        var phone = entity.getPhones().getFirst();
-        assertEquals(create.getPhone().getPhoneNumber(), phone.getPhoneNumber());
-        assertEquals(create.getPhone().getPhoneType(), phone.getPhoneType());
+        assertEquals(create.getPhones().size(), entity.getPhones().size());
+        var expPhone = create.getPhones().getFirst();
+        var actPhone = entity.getPhones().getFirst();
+        assertEquals(expPhone.getPhoneNumber(), actPhone.getPhoneNumber());
+        assertEquals(expPhone.getPhoneType(), actPhone.getPhoneType());
 
         assertEquals(0, entity.getRenewals().size());
 

@@ -276,6 +276,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var create = Instancio.of(CreateMemberDto.class)
+            .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
+            .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
             .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
@@ -406,6 +408,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_nullableField_returns_dto_status_created(Selector nullableField) throws Exception {
         // create address
         var create = Instancio.of(CreateMemberDto.class)
+            .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
+            .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
             .setBlank(nullableField)
             .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
@@ -662,9 +666,9 @@ public class MemberIntegrationTests extends IntegrationTests {
     private void verify(CreateMemberDto expected, MemberEntity actual) {
         verify(expected.getMember(), actual);
 
-        assertEquals(1, actual.getAddresses().size());
+        assertEquals(expected.getAddresses().size(), actual.getAddresses().size());
         var actAddress = actual.getAddresses().getFirst();
-        var expAddress = expected.getAddress();
+        var expAddress = expected.getAddresses().getFirst();
         assertEquals(expAddress.getAddress1(), actAddress.getAddress1());
         assertEquals(expAddress.getAddress2(), actAddress.getAddress2());
         assertEquals(expAddress.getCity(), actAddress.getCity());
@@ -672,15 +676,15 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(expAddress.getZip(), actAddress.getZip());
         assertEquals(expAddress.getAddressType(), actAddress.getAddressType());
 
-        assertEquals(1, actual.getEmails().size());
+        assertEquals(expected.getEmails().size(), actual.getEmails().size());
         var actEmail = actual.getEmails().getFirst();
-        var expEmail = expected.getEmail();
+        var expEmail = expected.getEmails().getFirst();
         assertEquals(expEmail.getEmail(), actEmail.getEmail());
         assertEquals(expEmail.getEmailType(), actEmail.getEmailType());
 
-        assertEquals(1, actual.getPhones().size());
+        assertEquals(expected.getPhones().size(), actual.getPhones().size());
         var actPhone = actual.getPhones().getFirst();
-        var expPhone = expected.getPhone();
+        var expPhone = expected.getPhones().getFirst();
         assertEquals(expPhone.getPhoneNumber(), actPhone.getPhoneNumber());
         assertEquals(expPhone.getPhoneType(), actPhone.getPhoneType());
 
