@@ -8,7 +8,6 @@ import com.smh.club.api.rest.validation.constraints.ValidMember;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import lombok.extern.slf4j.Slf4j;
 

@@ -3,7 +3,6 @@ package com.smh.club.api.rest.instancio;
 import com.smh.club.api.rest.validation.constraints.BirthDate;
 import java.lang.reflect.Field;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import org.instancio.Node;
 import org.instancio.generator.GeneratorSpec;
