@@ -44,7 +44,8 @@ import {Router} from "@angular/router";
         MatDivider
     ],
   providers: [
-      provideLuxonDateAdapter()
+      provideLuxonDateAdapter(),
+      MembersService
   ],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss'

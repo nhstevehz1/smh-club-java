@@ -58,7 +58,7 @@
                 <mat-label>Address type</mat-label>
                 <mat-select formControlName="address_type">
                     @for (option of addressTypes; track option){
-                        <mat-option>{{option}}</mat-option>
+                        <mat-option [value]="option">{{option}}</mat-option>
                     }
                 </mat-select>
                 @if (hasError(addressType)) {
