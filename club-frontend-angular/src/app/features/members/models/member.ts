@@ -10,8 +10,8 @@ export interface Member {
     middle_name: string;
     last_name: string;
     suffix: string;
-    birth_date: DateTime;
-    joined_date: DateTime;
+    birth_date: string;
+    joined_date: string;
 
 }
 

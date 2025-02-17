@@ -6,6 +6,8 @@ import com.smh.club.api.rest.domain.entities.*;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,8 +53,10 @@ public class DevSetup implements CommandLineRunner {
           .firstName(firstName)
           .middleName(middleName)
           .lastName(lastName)
-          .birthDate(ZonedDateTime.now().minusYears(22).minusDays(ii+10).toInstant())
-          .joinedDate(ZonedDateTime.now().minusYears(1).minusDays(ii+10).toInstant())
+          .birthDate(LocalDate.now().minusYears(22).minusDays(ii+10)
+              .atStartOfDay(ZoneId.systemDefault()).toInstant())
+          .joinedDate(LocalDate.now().minusYears(1).minusDays(ii+10)
+              .atStartOfDay(ZoneId.systemDefault()).toInstant())
           .build();
 
       for (var address : getRandomAddresses(random, addresses)) {

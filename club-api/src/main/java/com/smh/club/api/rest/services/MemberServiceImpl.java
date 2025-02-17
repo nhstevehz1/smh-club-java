@@ -63,13 +63,14 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      */
     @Override
     public MemberDto createMember(CreateMemberDto member) {
-        log.debug("creating member: {}", member);
+        log.info("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);
 
         // will return empty optional if table is empty.
         var maxMemNum = membersRepo.findMaxMemberNumber().orElse(0);
-
+        log.info("Max mem number: {}", maxMemNum);
+        log.info("New member number: {}", maxMemNum + 1);
         memberEntity.setMemberNumber(maxMemNum + 1);
         return memberMapper.toDto(membersRepo.save(memberEntity));
     }

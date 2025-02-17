@@ -13,6 +13,10 @@ import {MatButtonModule} from "@angular/material/button";
 import {Router} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
 import {Member} from "../models/member";
+import {DateTime} from "luxon";
+import {DateTimeToLocalPipe} from "../../../shared/pipes/luxon/date-time-to-local.pipe";
+import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
+import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
 
 @Component({
   selector: 'app-list-members',
@@ -22,7 +26,11 @@ import {Member} from "../models/member";
         MatButtonModule,
         MatTooltip
     ],
-    providers: [MembersService],
+    providers: [
+        MembersService,
+        DateTimeFromIsoPipe,
+        DateTimeToFormatPipe
+    ],
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
@@ -34,7 +42,10 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
     datasource = new MatTableDataSource<Member>();
     columns: ColumnDef<Member>[] = [];
 
-    constructor(private svc: MembersService, private router: Router) {
+    constructor(private svc: MembersService,
+                private router: Router,
+                private dtFromIsoPipe: DateTimeFromIsoPipe,
+                private dtToFormatPipe: DateTimeToFormatPipe) {
         super();
     }
 
@@ -105,14 +116,19 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                 columnName: 'birth_date',
                 displayName: 'Birth Date',
                 isSortable: true,
-                cell: (element: Member) => `${element.birth_date}`
+                cell: (element: Member) => this.transformDate(element.birth_date)
             },
             {
                 columnName: 'joined_date',
                 displayName: 'Joined',
                 isSortable: true,
-                cell: (element: Member) => `${element.joined_date}`
+                cell: (element: Member) => this.transformDate(element.joined_date)
             }
         ];
+    }
+
+    private transformDate(dateTime: string): string | null {
+        const iso = DateTime.fromISO(dateTime);
+        return this.dtToFormatPipe.transform(iso, DateTime.DATE_SHORT);
     }
 }

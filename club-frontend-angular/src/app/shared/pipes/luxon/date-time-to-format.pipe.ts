@@ -6,8 +6,8 @@ import {DateTime} from 'luxon';
 })
 export class DateTimeToFormatPipe implements PipeTransform {
 
-  transform <T extends DateTime | null | undefined>(value: T, format: string) {
-    return (value == null ? null : value.toFormat(format)) as T extends DateTime ? string : null;
+  transform <T extends DateTime | null | undefined>(value: T, format: Intl.DateTimeFormatOptions) {
+    return (value == null ? null : value.toLocaleString(format) as T extends DateTime ? string : null);
   }
 
 }
