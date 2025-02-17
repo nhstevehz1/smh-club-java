@@ -14,7 +14,6 @@ import {Router} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
 import {Member} from "../models/member";
 import {DateTime} from "luxon";
-import {DateTimeToLocalPipe} from "../../../shared/pipes/luxon/date-time-to-local.pipe";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
 import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
 

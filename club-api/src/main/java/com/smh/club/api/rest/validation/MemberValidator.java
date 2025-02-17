@@ -18,6 +18,7 @@ public class MemberValidator implements ConstraintValidator<ValidMember, MemberD
   @Override
   public void initialize(ValidMember constraintAnnotation) {
     var message = constraintAnnotation.message();
+    log.debug("ValidMember message: {}", message);
   }
 
   @Override
