@@ -7,7 +7,6 @@ import {loadingSpinnerInterceptor} from "./core/loading/loading-spinner.intercep
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideOAuthClient} from "angular-oauth2-oidc";
 import {DefaultOAuthInterceptor} from "./core/auth/interceptors/default-oauth.interceptor";
-import {AuthService} from "./core/auth/services/auth.service";
 
 export let appConfig: ApplicationConfig;
 appConfig = {
