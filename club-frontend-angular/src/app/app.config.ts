@@ -7,6 +7,7 @@ import {loadingSpinnerInterceptor} from "./core/loading/loading-spinner.intercep
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideOAuthClient} from "angular-oauth2-oidc";
 import {DefaultOAuthInterceptor} from "./core/auth/interceptors/default-oauth.interceptor";
+import {AuthService} from "./core/auth/services/auth.service";
 
 export let appConfig: ApplicationConfig;
 appConfig = {
@@ -23,11 +24,11 @@ appConfig = {
     provideOAuthClient({
       resourceServer: {
         allowedUrls: [
+            '/api/v1', // used when running in dev mode
             'http://localhost:9001/api/v1',
-            'https://localhost:9000/api/v1',
-            'http://localhost:4200/api/v1',
+            'https://localhost:9000/api/v1'
         ],
-        sendAccessToken: true,
+        sendAccessToken: false,
       }
     })
   ]
