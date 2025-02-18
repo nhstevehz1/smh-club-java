@@ -14,7 +14,7 @@ import {MatDividerModule} from "@angular/material/divider";
         ContentComponent,
         MatDividerModule
     ],
-  providers: [AuthService],
+  providers: [],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
