@@ -1,119 +1,140 @@
 <div class="container">
     <mat-card>
         <mat-card-content>
-            <form [formGroup]="memberForm" (ngSubmit)="doneHandler()">
-                <div class="content">
-                    <div class="title-container">
-                        <mat-card-title>Add Member</mat-card-title>
-                        <mat-error>* = required</mat-error>
-                    </div>
-                    <!-- member section -->
-                    <div class="section-container" >
-                        <div class="flex-row start">
-                            <mat-card-subtitle>Member Info</mat-card-subtitle>
+            @if(!submitted) {
+                <form [formGroup]="memberForm" (ngSubmit)="onSave()">
+                    <div class="content">
+                        <div class="title-container">
+                            <mat-card-title>Add Member</mat-card-title>
+                            <mat-error>* = required</mat-error>
                         </div>
-                        <mat-divider></mat-divider>
-                        <app-member-editor
-                            [editorForm]="memberForm"
-                            [fieldAppearance]="fieldAppearance"
-                        ></app-member-editor>
+                        <!-- member section -->
+                        <div class="section-container" >
+                            <div class="flex-row start">
+                                <mat-card-subtitle>Member Info</mat-card-subtitle>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <app-member-editor
+                                    [editorForm]="memberForm"
+                                    [fieldAppearance]="fieldAppearance"
+                            ></app-member-editor>
+                        </div>
+
+                        <!-- address section -->
+                        <div class="section-container">
+                            <div class="title-container">
+                                <mat-card-subtitle>
+                                    @if(addressForms.length > 1) {
+                                        Addresses
+                                    } @else {
+                                        Address
+                                    }
+                                </mat-card-subtitle>
+                                <button mat-icon-button matTooltip="Add address" (click)="onAddAddress()">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
+                            <mat-divider></mat-divider>
+                            @for (form of addressForms.controls; track form; let idx = $index) {
+                                <app-address-editor
+                                        (removeClick)="onDeleteAddress(idx)"
+                                        [showRemoveButton]="addressForms.length>1"
+                                        [editorForm]="form"
+                                        [fieldAppearance]="fieldAppearance"
+                                ></app-address-editor>
+                                @if(idx < addressForms.length - 1) {
+                                    <mat-divider></mat-divider>
+                                }
+                            }
+                        </div>
+
+                        <!-- phone section -->
+                        <div class="section-container">
+                            <div class="title-container">
+                                <mat-card-subtitle>
+                                    @if(phoneForms.length > 1) {
+                                        Phone Numbers
+                                    } @else {
+                                        Phone Number
+                                    }
+                                </mat-card-subtitle>
+                                <button mat-icon-button matTooltip="Add phone" (click)="onAddPhone()">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
+                            <mat-divider></mat-divider>
+                            @for(form of phoneForms.controls; track form; let idx = $index) {
+                                <app-phone-editor
+                                        (removeClick)="onDeletePhone(idx)"
+                                        [showRemoveButton]="phoneForms.length>1"
+                                        [editorForm]="form"
+                                        [fieldAppearance]="fieldAppearance"
+                                ></app-phone-editor>
+                                @if(idx < phoneForms.length - 1) {
+                                    <mat-divider></mat-divider>
+                                }
+                            }
+                        </div>
+
+                        <!-- email section -->
+                        <div class="section-container">
+                            <div class="title-container">
+                                <mat-card-subtitle>
+                                    @if(emailForms.length > 1) {
+                                        Email Addresses
+                                    } @else {
+                                        Email Address
+                                    }
+                                </mat-card-subtitle>
+                                <button mat-icon-button matTooltip="Add email" (click)="onAddEmail()">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
+                            <mat-divider></mat-divider>
+                            @for (form of emailForms.controls; track form; let idx = $index) {
+                                <app-email-editor
+                                        (removeClick)="onDeleteEmail(idx)"
+                                        [showRemoveButton]="emailForms.length>1"
+                                        [editorForm]="form"
+                                        [fieldAppearance]="fieldAppearance"
+                                ></app-email-editor>
+
+                                @if(idx < emailForms.length - 1) {
+                                    <mat-divider></mat-divider>
+                                }
+                            }
+
+                        </div>
                     </div>
 
-                    <!-- address section -->
-                    <div class="section-container">
-                        <div class="title-container">
-                            <mat-card-subtitle>
-                                @if(addressForms.length > 1) {
-                                    Addresses
-                                } @else {
-                                    Address
-                                }
-                            </mat-card-subtitle>
-                            <button mat-icon-button matTooltip="Add address" (click)="onAddAddress()">
-                                <mat-icon>add</mat-icon>
+                    <div class="flex-column">
+                        <mat-error>{{errorMessage}}</mat-error>
+                        <div class="action-row">
+                            <button
+                                mat-mini-fab
+                                (click)="onCancel()"
+                                matTooltip="Return to members list">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                            <button
+                                    mat-mini-fab
+                                    type="submit"
+                                    [disabled]="memberForm.invalid"
+                                    matTooltip="Save">
+                                <mat-icon>save</mat-icon>
                             </button>
                         </div>
-                        <mat-divider></mat-divider>
-                        @for (form of addressForms.controls; track form; let idx = $index) {
-                            <app-address-editor
-                                (removeClick)="onDeleteAddress(idx)"
-                                [showRemoveButton]="addressForms.length>1"
-                                [editorForm]="form"
-                                [fieldAppearance]="fieldAppearance"
-                            ></app-address-editor>
-                            @if(idx < addressForms.length - 1) {
-                                <mat-divider></mat-divider>
-                            }
-                        }
                     </div>
-
-                    <!-- phone section -->
-                   <div class="section-container">
-                       <div class="title-container">
-                       <mat-card-subtitle>
-                           @if(phoneForms.length > 1) {
-                               Phone Numbers
-                           } @else {
-                               Phone Number
-                           }
-                       </mat-card-subtitle>
-                           <button mat-icon-button matTooltip="Add phone" (click)="onAddPhone()">
-                               <mat-icon>add</mat-icon>
-                           </button>
-                       </div>
-                       <mat-divider></mat-divider>
-                       @for(form of phoneForms.controls; track form; let idx = $index) {
-                            <app-phone-editor
-                                (removeClick)="onDeletePhone(idx)"
-                                [showRemoveButton]="phoneForms.length>1"
-                                [editorForm]="form"
-                                [fieldAppearance]="fieldAppearance"
-                            ></app-phone-editor>
-                           @if(idx < phoneForms.length - 1) {
-                               <mat-divider></mat-divider>
-                           }
-                       }
-                    </div>
-
-                    <!-- email section -->
-                   <div class="section-container">
-                       <div class="title-container">
-                       <mat-card-subtitle>
-                           @if(emailForms.length > 1) {
-                               Email Addresses
-                           } @else {
-                               Email Address
-                           }
-                       </mat-card-subtitle>
-                           <button mat-icon-button matTooltip="Add email" (click)="onAddEmail()">
-                               <mat-icon>add</mat-icon>
-                           </button>
-                       </div>
-                       <mat-divider></mat-divider>
-                       @for (form of emailForms.controls; track form; let idx = $index) {
-                           <app-email-editor
-                               (removeClick)="onDeleteEmail(idx)"
-                               [showRemoveButton]="emailForms.length>1"
-                               [editorForm]="form"
-                               [fieldAppearance]="fieldAppearance"
-                           ></app-email-editor>
-
-                           @if(idx < emailForms.length - 1) {
-                               <mat-divider></mat-divider>
-                           }
-                       }
-
-                   </div>
+                </form>
+            } @else {
+                <div class="flex-row center">
+                    <app-success
+                        successMessage="Member saved!"
+                        buttonToolTip="Return to members list"
+                        (buttonClick)="onOkOrCancel()"
+                    ></app-success>
                 </div>
-
-                <div class="action-row">
-                    <button
-                            mat-raised-button
-                            (click)="doneHandler()"
-                            [disabled]="memberForm.invalid"
-                    >Done</button>
-                </div>
-            </form>
+            }
         </mat-card-content>
     </mat-card>
 </div>

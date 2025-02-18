@@ -24,6 +24,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatDivider} from "@angular/material/divider";
 import {MembersService} from "../services/members.service";
 import {Router} from "@angular/router";
+import {SuccessComponent} from "../../../shared/components/success/success.component";
 
 @Component({
   selector: 'app-create-member',
@@ -41,7 +42,8 @@ import {Router} from "@angular/router";
         PhoneEditorComponent,
         EmailEditorComponent,
         MatTooltip,
-        MatDivider
+        MatDivider,
+        SuccessComponent
     ],
   providers: [
       provideLuxonDateAdapter(),
@@ -55,6 +57,10 @@ export class AddMemberComponent {
     createForm: FormModelGroup<MemberCreate>;
 
     fieldAppearance: MatFormFieldAppearance = 'fill';
+
+    errorMessage = '';
+
+    submitted = false;
 
     constructor(private formBuilder: FormBuilder,
                 private svc: MembersService,
@@ -82,23 +88,39 @@ export class AddMemberComponent {
         return this.createForm.get("phones") as FormArray<FormModelGroup<Phone>>;
     }
 
-    doneHandler(): void {
+    onSave(): void {
         if (this.memberForm.valid) {
             this.svc.createMember(<MemberCreate>this.createForm.value).subscribe({
-              next: () =>  this.router.navigate(['p/members']).then(() => {}),
+              next: () =>  {
+                  this.errorMessage = ''
+                  this.submitted = true;
+              },
               error: (err: any) => {
+                  let errMsg: string;
                   if (err.error instanceof Error) {
                       // A client-side or network error occurred.
-                      console.error('An error occurred:', err.error.message);
+                      console.log(`Client of network error: ${err}`);
+                      errMsg = 'An error has occurred.  Contact your administrator.';
                   } else {
                       // The backend returned an unsuccessful response code.
-                      console.error(`Backend returned code ${err.status}, body was: ${err.error}`);
+                      console.log(`Server error, ${err}`);
+                      errMsg = `Error code: ${err.status}, server error.  Contact your administrator.`;
                   }
+                  this.errorMessage = errMsg;
               }
             });
         } else {
+            this.errorMessage = 'Invalid data';
             return;
         }
+    }
+
+    onOkOrCancel(): void {
+        this.router.navigate(['p/members']).then(() => {});
+    }
+
+    onCancel(): void {
+        this.router.navigate(['p/members']).then(() => {});
     }
 
     onAddAddress(): void {
