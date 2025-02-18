@@ -87,7 +87,7 @@ public class MemberController {
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MemberDto> create(
         @NotNull @Valid @RequestBody CreateMemberDto member) {
-
+        //member.getMember().setMemberNumber(memberSvc.getNextMemberNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
