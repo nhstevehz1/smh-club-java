@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {MainLayoutComponent} from "./core/layout/main-layout/main-layout.component";
-import {LoadingSpinnerService} from "./core/loading/loading-spinner.service";
 import {AuthService} from "./core/auth/services/auth.service";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
