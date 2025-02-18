@@ -106,22 +106,24 @@
 
                     </div>
                 </mat-card-content>
-                <mat-card-actions align="end">
+                <div class="action-row">
                     <button
-                            mat-mini-fab
+                            mat-raised-button
                             type="button"
                             (click)="onCancel()"
                             matTooltip="Return to members list">
                         <mat-icon>cancel</mat-icon>
+                        Cancel
                     </button>
                     <button
-                            mat-mini-fab
+                            mat-raised-button
                             type="submit"
                             [disabled]="memberForm.invalid"
-                            matTooltip="Save">
+                            matTooltip="Save member data">
                         <mat-icon>save</mat-icon>
+                        Save
                     </button>
-                </mat-card-actions>
+                </div>
             </mat-card>
         </form>
     } @else {
