@@ -1,10 +1,12 @@
 import {HttpInterceptorFn} from '@angular/common/http';
 import {inject} from "@angular/core";
-import {OAuthModuleConfig, OAuthStorage} from "angular-oauth2-oidc";
+import {OAuthModuleConfig, OAuthResourceServerErrorHandler, OAuthStorage} from "angular-oauth2-oidc";
+import {catchError} from "rxjs/operators";
 
 export const DefaultOAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const authStorage = inject(OAuthStorage);
   const moduleConfig = inject(OAuthModuleConfig);
+  const errorHandler = inject(OAuthResourceServerErrorHandler);
 
   const url = req.url.toLowerCase();
   console.log(url);
@@ -17,16 +19,15 @@ export const DefaultOAuthInterceptor: HttpInterceptorFn = (req, next) => {
   if (!checkUrl(url, allowedUrls)) return next(req);
 
   // url is in the allowed list.  Set authorization header with bearer token
-  const sendAccessToken = moduleConfig.resourceServer.sendAccessToken
   const token = authStorage.getItem('access_token');
 
-  if (sendAccessToken && token) {
+  if (token) {
     let header = 'Bearer ' + token;
     let headers = req.headers.set('Authorization', header);
     req = req.clone({headers: headers});
   }
 
-  return next(req);
+  return next(req).pipe(catchError(error => errorHandler.handleError(error)));
 };
 
 export function checkUrl(url: string, allowedUrls: string[]): boolean {
