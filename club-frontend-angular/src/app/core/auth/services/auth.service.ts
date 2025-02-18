@@ -96,6 +96,7 @@ export class AuthService {
   }
 
   private initOauth(): void {
+    console.log('initializing OAUTH');
     this.oauthService.configure(authCodeFlowConfig);
 
     this.oauthService.events.subscribe(event => {
