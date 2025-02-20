@@ -18,7 +18,7 @@ import {MatIcon} from "@angular/material/icon";
 export class SuccessComponent {
 
   @Input()
-  public successMessage = 'Success';
+  public titleMessage = 'Success';
 
   @Input()
   public iconName = 'checked';

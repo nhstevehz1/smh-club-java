@@ -63,6 +63,12 @@ export const routes: Routes = [
               .then(mod => mod.AccessDeniedComponent)
     },
     {
+      path: 'p/login',
+      loadComponent: () =>
+          import('./core/auth/pages/login/login.component')
+              .then(mod => mod.LoginComponent)
+    },
+    {
         path: '**',
         redirectTo: 'p/home'
     }

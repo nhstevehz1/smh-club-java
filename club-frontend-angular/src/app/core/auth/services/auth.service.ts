@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, filter} from "rxjs";
-import {OAuthErrorEvent, OAuthService} from "angular-oauth2-oidc";
+import {BehaviorSubject, combineLatest, filter, Observable} from "rxjs";
+import {OAuthErrorEvent, OAuthService, OAuthSuccessEvent, ReceivedTokens} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
 import {RealmAccess} from "../models/realm-access";
 import {PermissionType} from "../models/permission-type";
 import {Roles} from "../models/roles";
 import {Router} from "@angular/router";
+import {map} from "rxjs/operators";
 
 
 @Injectable({
@@ -14,20 +15,39 @@ import {Router} from "@angular/router";
 })
 export class AuthService {
 
+  private userRoles?: string[];
+
   private permissionsMap: Map<PermissionType, string[]> = new Map();
 
   private isLoadedSubject$ = new BehaviorSubject<boolean>(false);
   public isLoaded$ = this.isLoadedSubject$.asObservable();
 
-  constructor(private oauthService: OAuthService, private router: Router) {
+  private isAuthenticatedSubject$ = new BehaviorSubject(false)
+  public isAuthenticated$ = this.isAuthenticatedSubject$.asObservable();
+
+  public canActivateRoutes$: Observable<boolean> = combineLatest([
+      this.isAuthenticated$,
+      this.isLoaded$
+  ]).pipe(map(values => values.every(b=> b)));
+
+  constructor(private oauthService: OAuthService,
+              private router: Router,
+              private window: Window) {
     this.permissionsMap.set(PermissionType.read, [Roles.USER, Roles.ADMIN]);
     this.permissionsMap.set(PermissionType.write, [Roles.ADMIN]);
     this.initOauth();
   }
 
+  login(url? : string): void {
+    this.oauthService.initLoginFlow(url || this.router.url);
+  }
+
   logOut() {
+    //this.isLoadedSubject$.next(false);
+    //this.isAuthenticatedSubject$.next(false);
     return this.oauthService.logOut();
   }
+
 
   getEmail(): string {
     const claims = this.oauthService.getIdentityClaims();
@@ -42,7 +62,7 @@ export class AuthService {
   }
 
   getRoles(): string[] {
-    return this.parseRoles().filter(r => r.startsWith('club-'));
+    return this.userRoles || [];
   }
 
   private hasRole(roles?: string[]): boolean {
@@ -61,6 +81,32 @@ export class AuthService {
     return this.oauthService.hasValidIdToken();
   }
 
+  public startupLoginSequence(): Promise<void> {
+    console.log('inside startup login sequence');
+
+    return this.oauthService.loadDiscoveryDocumentAndTryLogin()
+        .then(success => {
+          console.log('end tryLogin: ', success);
+          if (!this.oauthService.hasValidAccessToken()) {
+            this.navigateToLogin();
+          }
+          this.isLoadedSubject$.next(true);
+        });
+  }
+
+  private needsInteraction(result: { reason: { error: string; }; }): boolean {
+  const reasons = [
+      'interaction_required',
+      'login_required',
+      'account_selection_required',
+      'consent_required',
+    ];
+    return result
+        && result.reason
+        && reasons.includes(result.reason.error);
+  }
+
+  // For debugging only - start
   getIdToken(): string {
     const token = this.oauthService.getIdToken();
     if (token) {
@@ -84,6 +130,7 @@ export class AuthService {
     }
     return 'access token not found';
   }
+  // for debugging only - end
 
   private parseRoles(): string[] {
     const token = this.oauthService.getAccessToken();
@@ -101,20 +148,55 @@ export class AuthService {
 
     this.oauthService.events.subscribe(event => {
       if ( event instanceof OAuthErrorEvent) {
-        console.error('OAuthErrorEvent', event);
+        console.error('OAuthErrorEvent: ', event);
+      } else {
+        console.warn('OauthEvent: ', event)
       }
     });
 
-    this.oauthService.setupAutomaticSilentRefresh();
+    window.addEventListener('storage', (event) => {
+      // The `key` is `null` if the event was caused by `.clear()`
+      if (event.key !== 'access_token' && event.key !== null) {
+        return;
+      }
+
+      console.warn('Noticed changes to access_token (most likely from another tab), updating isAuthenticated');
+      this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
+
+      if (!this.oauthService.hasValidAccessToken()) {
+        this.navigateToLogin();
+      }
+    });
+
+    this.oauthService.events.subscribe(() => {
+      console.log('inside hasValidAccessToken: ', this.oauthService.hasValidAccessToken());
+      this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
+    });
+
+    console.log('outside hasValidAccessToken: ', this.oauthService.hasValidAccessToken());
+    this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
 
     this.oauthService.events
-        .pipe(filter(event => event.type === 'token_received'))
-        .subscribe(() => this.oauthService.loadUserProfile());
+        .pipe(filter(event => ['token_received'].includes(event.type)))
+        .subscribe(() => {
+          console.log('token received, loading user profile');
+          //this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
+          //console.log('user roles: ', this.userRoles);
+          this.oauthService.loadUserProfile().then((claims) => {
+            console.log('profile claims: ', claims);
+            // TODO: populate user profile object.
+          });
+        });
 
-    this.oauthService.loadDiscoveryDocumentAndLogin().then(() => {
-      console.log('Login complete');
-      this.isLoadedSubject$.next(true);
-      this.router.navigate(['p/home']).then(() => {});
-    });
+    this.oauthService.events
+        .pipe(filter(event => ['session_terminated', 'session_error'].includes(event.type)))
+        .subscribe(event => this.navigateToLogin());
+
+    this.oauthService.setupAutomaticSilentRefresh();
+
+  }
+
+  private navigateToLogin(): void {
+    this.router.navigateByUrl('p/login').then();
   }
 }

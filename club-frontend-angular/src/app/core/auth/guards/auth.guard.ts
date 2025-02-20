@@ -1,6 +1,7 @@
 import {CanActivateFn, Router} from '@angular/router';
 import {inject} from "@angular/core";
 import {AuthService} from "../services/auth.service";
+import {map} from "rxjs/operators";
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
@@ -12,9 +13,19 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // no need to determine if the user is logged in.
   // the oauth client should automatically redirect to the realm sign in page
-  if(authService.hasPermission(permission)) {
+
+
     return true;
-  } else {
-    return router.createUrlTree(['p/access-denied']);
-  }
+
+  /*return authService.canActivateRoutes$.pipe(
+      map(() => {
+          if(authService.hasPermission(permission)) {
+              console.log('hasPermission: false');
+            return true;
+          } else {
+              console.log('hasPermission: false');
+            return router.createUrlTree(['p/access-denied']);
+          }
+      })
+  )*/
 };

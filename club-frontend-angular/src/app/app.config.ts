@@ -1,4 +1,4 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -6,7 +6,9 @@ import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {loadingSpinnerInterceptor} from "./core/loading/loading-spinner.interceptor";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideOAuthClient} from "angular-oauth2-oidc";
-import {DefaultOAuthInterceptor} from "./core/auth/interceptors/default-oauth.interceptor";
+import {customOauthInterceptor} from "./core/auth/interceptors/custom-oauth.interceptor";
+import {appInitTest, authAppInitFactory} from "./core/auth/factories/auth-app-init-factory";
+import {AuthService} from "./core/auth/services/auth.service";
 
 export let appConfig: ApplicationConfig;
 appConfig = {
@@ -17,7 +19,7 @@ appConfig = {
     provideHttpClient(
         withInterceptors([
           loadingSpinnerInterceptor,
-          DefaultOAuthInterceptor
+          customOauthInterceptor
         ])
     ),
     provideOAuthClient({
@@ -27,8 +29,17 @@ appConfig = {
             'http://localhost:9001/api/v1',
             'https://localhost:9000/api/v1'
         ],
-        sendAccessToken: false,
+        sendAccessToken: true,
       }
-    })
+    }),
+      {
+          provide: Window,
+          useValue: window
+      },
+      provideAppInitializer(() => {
+          const initFn = (authAppInitFactory)(inject(AuthService));
+          return initFn();
+      }),
+
   ]
 };
