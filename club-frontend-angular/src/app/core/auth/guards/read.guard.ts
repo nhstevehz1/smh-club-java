@@ -12,6 +12,7 @@ export const readGuard: CanActivateFn = (route, state) => {
       take(1),
       tap(isAuthed => {
           if(!isAuthed) {
+              // TODO: added target url
               router.navigate(['p/login']).then();
           }
       })
