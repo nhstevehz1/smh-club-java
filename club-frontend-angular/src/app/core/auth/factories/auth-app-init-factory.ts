@@ -1,5 +1,4 @@
 import {AuthService} from "../services/auth.service";
-import {firstValueFrom} from "rxjs";
 
 export function authAppInitFactory(authService: AuthService): () => Promise<void> {
     console.log('running auth init factor');

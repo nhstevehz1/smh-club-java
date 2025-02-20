@@ -25,14 +25,11 @@ export class AuthService {
   private isAuthenticatedSubject$ = new BehaviorSubject(false)
   public isAuthenticated$ = this.isAuthenticatedSubject$.asObservable();
 
-  public canActivateRoutes$: Observable<boolean> = combineLatest([
-      this.isAuthenticated$,
-      this.isLoaded$
-  ]).pipe(map(values => values.every(b=> b)));
+  private rolesLoadedSubject$ = new BehaviorSubject(false);
+  public rolesLoaded$ = this.rolesLoadedSubject$.asObservable();
 
   constructor(private oauthService: OAuthService,
-              private router: Router,
-              private window: Window) {
+              private router: Router) {
     this.permissionsMap.set(PermissionType.read, [Roles.USER, Roles.ADMIN]);
     this.permissionsMap.set(PermissionType.write, [Roles.ADMIN]);
     this.initOauth();
@@ -43,8 +40,6 @@ export class AuthService {
   }
 
   logOut() {
-    //this.isLoadedSubject$.next(false);
-    //this.isAuthenticatedSubject$.next(false);
     return this.oauthService.logOut();
   }
 
@@ -74,7 +69,8 @@ export class AuthService {
   }
 
   hasPermission(permission: PermissionType): boolean {
-    return this.permissionsMap.has(permission) && this.hasRole(this.permissionsMap.get(permission));
+    return this.permissionsMap.has(permission)
+        && this.hasRole(this.permissionsMap.get(permission));
   }
 
   isLoggedIn(): boolean {
@@ -92,18 +88,6 @@ export class AuthService {
           }
           this.isLoadedSubject$.next(true);
         });
-  }
-
-  private needsInteraction(result: { reason: { error: string; }; }): boolean {
-  const reasons = [
-      'interaction_required',
-      'login_required',
-      'account_selection_required',
-      'consent_required',
-    ];
-    return result
-        && result.reason
-        && reasons.includes(result.reason.error);
   }
 
   // For debugging only - start
@@ -180,17 +164,19 @@ export class AuthService {
         .pipe(filter(event => ['token_received'].includes(event.type)))
         .subscribe(() => {
           console.log('token received, loading user profile');
-          //this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
-          //console.log('user roles: ', this.userRoles);
+
           this.oauthService.loadUserProfile().then((claims) => {
             console.log('profile claims: ', claims);
             // TODO: populate user profile object.
+            this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
+            console.log('user roles: ', this.userRoles);
+            this.rolesLoadedSubject$.next(true);
           });
         });
 
     this.oauthService.events
         .pipe(filter(event => ['session_terminated', 'session_error'].includes(event.type)))
-        .subscribe(event => this.navigateToLogin());
+        .subscribe(() => this.navigateToLogin());
 
     this.oauthService.setupAutomaticSilentRefresh();
 
