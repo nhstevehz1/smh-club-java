@@ -16,6 +16,9 @@ import {Member} from "../models/member";
 import {DateTime} from "luxon";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
 import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
+import {AuthService} from "../../../core/auth/services/auth.service";
+import {PermissionType} from "../../../core/auth/models/permission-type";
+import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: 'app-list-members',
@@ -23,7 +26,8 @@ import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-is
         SortablePageableTableComponent,
         MatIconModule,
         MatButtonModule,
-        MatTooltip
+        MatTooltip,
+        AsyncPipe
     ],
     providers: [
         MembersService,
@@ -42,8 +46,8 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
     columns: ColumnDef<Member>[] = [];
 
     constructor(private svc: MembersService,
+                protected authSvc: AuthService,
                 private router: Router,
-                private dtFromIsoPipe: DateTimeFromIsoPipe,
                 private dtToFormatPipe: DateTimeToFormatPipe) {
         super();
     }
@@ -65,7 +69,7 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                     // pipe any errors to an Observable of null
                     return this.svc.getMembers(pr)
                         .pipe(catchError(err => {
-                            console.log(err);
+                            console.debug(err);
                             return observableOf(null);
                         }));
                 }),
@@ -85,6 +89,12 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                 // set the data source to the new page
                 next: data => this.datasource.data = data!
             });
+    }
+
+    canAddedMember(): boolean {
+        const canShow = this.authSvc.hasPermission(PermissionType.write);
+        console.debug('canAddMember', canShow)
+        return canShow;
     }
 
     addMemberHandler(): void {

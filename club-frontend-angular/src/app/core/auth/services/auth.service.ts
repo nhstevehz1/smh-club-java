@@ -152,12 +152,10 @@ export class AuthService {
     });
 
     this.oauthService.events.subscribe(() => {
-      console.log('inside hasValidAccessToken: ', this.oauthService.hasValidAccessToken());
       this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
     });
 
-    console.log('outside hasValidAccessToken: ', this.oauthService.hasValidAccessToken());
-    this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
+
 
     this.oauthService.events
         .pipe(filter(event => ['token_received'].includes(event.type)))
@@ -179,6 +177,13 @@ export class AuthService {
 
     this.oauthService.setupAutomaticSilentRefresh();
 
+    this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
+
+    // if a valid token is in storage, populate user roles.
+    if(this.oauthService.hasValidAccessToken()) {
+      this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
+      this.rolesLoadedSubject$.next(true);
+    }
   }
 
   private navigateToLogin(): void {
