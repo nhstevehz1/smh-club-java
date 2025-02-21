@@ -15,8 +15,6 @@ import {AuthUser} from "../models/auth-user";
 })
 export class AuthService {
 
-  private userRoles?: string[];
-
   private user?: AuthUser;
 
   private permissionsMap: Map<PermissionType, string[]> = new Map();
@@ -50,22 +48,6 @@ export class AuthService {
     return this.oauthService.logOut();
   }
 
-  getEmail(): string {
-    const claims = this.oauthService.getIdentityClaims();
-    if (!claims) return 'email claim not found';
-    return claims['email'];
-  }
-
-  getGivenName(): string {
-    const claims = this.oauthService.getIdentityClaims();
-    if (!claims) return 'given_name claim not found';
-    return claims['given_name'];
-  }
-
-  getRoles(): string[] {
-    return this.userRoles || [];
-  }
-
   hasPermission(permission: PermissionType): boolean {
     return this.permissionsMap.has(permission)
         && this.hasRole(this.permissionsMap.get(permission));
@@ -90,19 +72,20 @@ export class AuthService {
 
   private loadCurrentUser(claims:  any): void {
     console.debug('claims: ', claims);
+    let roles = this.parseRoles().filter(r => r.startsWith('club-'));
     this.user = {
       preferredUserName: claims["preferred_username"],
       givenName: claims['given_name'],
       familyName: claims['family_name'],
       fullName: claims['name'],
       email: claims['email'],
-      roles: this.getRoles()
+      roles: roles
     }
   }
 
   private hasRole(roles?: string[]): boolean {
-    if (roles) {
-      return this.getRoles().some((val) => roles.includes(val));
+    if (roles && this.user) {
+      return this.user.roles.some((val) => roles.includes(val));
     } else {
       return false;
     }
@@ -152,17 +135,14 @@ export class AuthService {
       this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
     });
 
-
     this.oauthService.events
         .pipe(filter(event => ['token_received'].includes(event.type)))
         .subscribe(() => {
           console.log('token received, loading user profile');
 
           this.oauthService.loadUserProfile().then((claims) => {
-            console.log('profile claims: ', claims);
+            console.debug('profile claims: ', claims);
             this.loadCurrentUser(claims);
-            this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
-            console.log('user roles: ', this.userRoles);
             this.rolesLoadedSubject$.next(true);
           });
         });
@@ -179,7 +159,6 @@ export class AuthService {
     if(this.oauthService.hasValidAccessToken()) {
       const claims = this.oauthService.getIdentityClaims()
       this.loadCurrentUser(claims);
-      this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
       this.rolesLoadedSubject$.next(true);
     }
   }
