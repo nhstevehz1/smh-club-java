@@ -63,6 +63,12 @@ export const routes: Routes = [
               .then(mod => mod.LoginComponent)
     },
     {
+      path: 'p/profile',
+      loadComponent: () =>
+        import('./core/auth/pages/profile/profile.component')
+            .then(mod => mod.ProfileComponent)
+    },
+    {
         path: '**',
         redirectTo: 'p/home'
     }
