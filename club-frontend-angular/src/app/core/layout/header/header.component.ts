@@ -17,7 +17,7 @@ import {MatIconButton} from "@angular/material/button";
         MatDividerModule,
         MatTooltipModule,
         MatSlideToggleModule,
-        MatIconButton,
+        MatIconButton
     ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -25,13 +25,13 @@ import {MatIconButton} from "@angular/material/button";
 export class HeaderComponent {
   private document: Document = inject(DOCUMENT);
 
-  @Input('name') name: string = '';
+  @Input('name') userName?: string;
 
   @Input('isLoggedIn')
   isLoggedIn: boolean = false;
 
   @Input('lastLogin')
-  lastLogin: string | null = null;
+  lastLogin?: string;
 
   @Output()
   profileClick = new EventEmitter<void>();

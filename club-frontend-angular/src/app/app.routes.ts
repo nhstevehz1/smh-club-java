@@ -9,12 +9,6 @@ export const routes: Routes = [
         redirectTo: 'p/home'
     },
     {
-      path: 'p/user',
-      loadComponent: () =>
-          import('./core/auth/pages/user/user.component')
-              .then(mod => mod.UserComponent)
-    },
-    {
         path: 'p/home',
         loadComponent: () =>
             import('./features/home/home.component')

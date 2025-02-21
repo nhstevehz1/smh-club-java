@@ -1,6 +1,18 @@
 @use '@angular/material' as mat;
-.header-spacer {
-  flex: 1 1 auto;
+
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gap {
+  gap: 15px;
+}
+
+.user-name {
+  font-size: var(--mat-sys-title-small-size);
 }
 
 mat-toolbar {
@@ -11,6 +23,7 @@ mat-toolbar {
 }
 
 mat-slide-toggle {
+  transform: scale(0.75);
   @include mat.slide-toggle-overrides((
     label-text-color: var(--mat-sys-primary)
   ))

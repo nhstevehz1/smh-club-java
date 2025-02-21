@@ -7,6 +7,7 @@ import {RealmAccess} from "../models/realm-access";
 import {PermissionType} from "../models/permission-type";
 import {Roles} from "../models/roles";
 import {Router} from "@angular/router";
+import {AuthUser} from "../models/auth-user";
 
 
 @Injectable({
@@ -15,6 +16,8 @@ import {Router} from "@angular/router";
 export class AuthService {
 
   private userRoles?: string[];
+
+  private user?: AuthUser;
 
   private permissionsMap: Map<PermissionType, string[]> = new Map();
 
@@ -26,6 +29,11 @@ export class AuthService {
 
   private rolesLoadedSubject$ = new BehaviorSubject(false);
   public rolesLoaded$ = this.rolesLoadedSubject$.asObservable();
+
+
+  public get currentUser(): AuthUser | undefined{
+    return this.user;
+  }
 
   constructor(private oauthService: OAuthService,
               private router: Router) {
@@ -41,7 +49,6 @@ export class AuthService {
   logOut() {
     return this.oauthService.logOut();
   }
-
 
   getEmail(): string {
     const claims = this.oauthService.getIdentityClaims();
@@ -59,14 +66,6 @@ export class AuthService {
     return this.userRoles || [];
   }
 
-  private hasRole(roles?: string[]): boolean {
-    if (roles) {
-      return this.getRoles().some((val) => roles.includes(val));
-    } else {
-      return false;
-    }
-  }
-
   hasPermission(permission: PermissionType): boolean {
     return this.permissionsMap.has(permission)
         && this.hasRole(this.permissionsMap.get(permission));
@@ -76,7 +75,7 @@ export class AuthService {
     return this.oauthService.hasValidIdToken();
   }
 
-  public startupLoginSequence(): Promise<void> {
+  startupLoginSequence(): Promise<void> {
     console.log('inside startup login sequence');
 
     return this.oauthService.loadDiscoveryDocumentAndTryLogin()
@@ -89,31 +88,25 @@ export class AuthService {
         });
   }
 
-  // For debugging only - start
-  getIdToken(): string {
-    const token = this.oauthService.getIdToken();
-    if (token) {
-      return jwtDecode(token);
+  private loadCurrentUser(claims:  any): void {
+    console.debug('claims: ', claims);
+    this.user = {
+      preferredUserName: claims["preferred_username"],
+      givenName: claims['given_name'],
+      familyName: claims['family_name'],
+      fullName: claims['name'],
+      email: claims['email'],
+      roles: this.getRoles()
     }
-    return 'id token not found';
   }
 
-  getRefreshToken(): string {
-    const token = this.oauthService.getRefreshToken();
-    if (token) {
-      return jwtDecode(token);
+  private hasRole(roles?: string[]): boolean {
+    if (roles) {
+      return this.getRoles().some((val) => roles.includes(val));
+    } else {
+      return false;
     }
-    return 'refresh token not found';
   }
-
-  getAccessToken(): string {
-    const token = this.oauthService.getAccessToken();
-    if (token) {
-      return jwtDecode(token);
-    }
-    return 'access token not found';
-  }
-  // for debugging only - end
 
   private parseRoles(): string[] {
     const token = this.oauthService.getAccessToken();
@@ -123,6 +116,10 @@ export class AuthService {
       return realmAccess.roles;
     }
     return [];
+  }
+
+  private navigateToLogin(): void {
+    this.router.navigateByUrl('p/login').then();
   }
 
   private initOauth(): void {
@@ -156,7 +153,6 @@ export class AuthService {
     });
 
 
-
     this.oauthService.events
         .pipe(filter(event => ['token_received'].includes(event.type)))
         .subscribe(() => {
@@ -164,7 +160,7 @@ export class AuthService {
 
           this.oauthService.loadUserProfile().then((claims) => {
             console.log('profile claims: ', claims);
-            // TODO: populate user profile object.
+            this.loadCurrentUser(claims);
             this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
             console.log('user roles: ', this.userRoles);
             this.rolesLoadedSubject$.next(true);
@@ -181,12 +177,10 @@ export class AuthService {
 
     // if a valid token is in storage, populate user roles.
     if(this.oauthService.hasValidAccessToken()) {
+      const claims = this.oauthService.getIdentityClaims()
+      this.loadCurrentUser(claims);
       this.userRoles = this.parseRoles().filter(r => r.startsWith('club-'));
       this.rolesLoadedSubject$.next(true);
     }
-  }
-
-  private navigateToLogin(): void {
-    this.router.navigateByUrl('p/login').then();
   }
 }

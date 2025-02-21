@@ -28,13 +28,16 @@ export class MainLayoutComponent {
     return this.authService!.isLoggedIn()
   }
 
-  get name(): string {
-    return this.authService!.getGivenName()
+  get name(): string | undefined {
+    if(this.authService.currentUser) {
+      return this.authService.currentUser.fullName;
+    }
+    return undefined;
   }
 
-  get lastLogin(): string | null{
+  get lastLogin(): string | undefined {
     // TODO: implement
-    return null;
+    return undefined;
   }
 
   sideNavHandler(): void {
