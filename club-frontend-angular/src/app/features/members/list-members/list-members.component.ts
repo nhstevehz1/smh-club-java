@@ -45,6 +45,8 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
     datasource = new MatTableDataSource<Member>();
     columns: ColumnDef<Member>[] = [];
 
+    rolesLoaded = false;
+
     constructor(private svc: MembersService,
                 protected authSvc: AuthService,
                 private router: Router,
@@ -53,7 +55,11 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
     }
 
     ngOnInit(): void {
-       this.columns = this.getColumns(); // create column defs
+       this.columns = this.getColumns();// create column defs
+        console.debug('rolesLoaded$', this.authSvc.rolesLoaded$);
+        this.authSvc.rolesLoaded$.subscribe(rolesLoaded => {
+            this.rolesLoaded = rolesLoaded;
+        })
     }
 
     ngAfterViewInit(): void {
@@ -91,7 +97,7 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
             });
     }
 
-    canAddedMember(): boolean {
+    canAddMember(): boolean {
         const canShow = this.authSvc.hasPermission(PermissionType.write);
         console.debug('canAddMember', canShow)
         return canShow;

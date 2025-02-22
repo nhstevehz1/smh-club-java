@@ -1,12 +1,10 @@
 <div class="container">
-    @if(authSvc.rolesLoaded$ | async) {
-        @if(canAddedMember()) {
-            <div class="action-container">
-                <button mat-mini-fab matTooltip="Add new member" (click)="addMemberHandler()">
-                    <mat-icon>add</mat-icon>
-                </button>
-            </div>
-        }
+    @if(rolesLoaded && canAddMember()) {
+        <div class="action-container">
+            <button mat-mini-fab matTooltip="Add new member" (click)="addMemberHandler()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
     }
 
     <app-sortable-pageable-table
