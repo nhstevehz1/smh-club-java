@@ -16,6 +16,7 @@ import {MatMenuHarness} from "@angular/material/menu/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {MatIconHarness} from "@angular/material/icon/testing";
 import {MatSlideToggleHarness} from "@angular/material/slide-toggle/testing";
+import {By} from "@angular/platform-browser";
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
@@ -99,6 +100,7 @@ describe('HeaderComponent', () => {
 
     beforeEach(() => {
       loader = TestbedHarnessEnvironment.loader(fixture);
+      component.isLoggedIn = true;
     });
 
     it('should contain two mat-icon-buttons', async () => {
@@ -133,7 +135,7 @@ describe('HeaderComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('account button click should open menu', async () => {
+    it('account button click should open menu when loggedIn is true', async () => {
       const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
       const buttonHarness = buttonHarnesses[1];
       const menuHarness = await loader.getHarness(MatMenuHarness);
@@ -141,6 +143,17 @@ describe('HeaderComponent', () => {
       await buttonHarness.click();
 
       expect(await menuHarness.isOpen()).toBeTrue();
+    });
+
+    it('account button click should not open menu when loggedIn is false', async () => {
+      component.isLoggedIn = false;
+      const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
+      const buttonHarness = buttonHarnesses[1];
+      const menuHarness = await loader.getHarness(MatMenuHarness);
+
+      await buttonHarness.click();
+
+      expect(await menuHarness.isOpen()).toBeFalsy();
     });
 
     it('menu should contain two menu items', async () => {
@@ -190,13 +203,43 @@ describe('HeaderComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should call onThemChanged', async  () => {
+    it('should call onThemeChanged', async  () => {
       const spy = spyOn(component, 'onThemeChanged');
       const slideToggleHarness = await loader.getHarness(MatSlideToggleHarness);
 
       await slideToggleHarness.check();
 
       expect(spy).toHaveBeenCalled();
+    });
+
+    it('user name should be visible when isLogged in is true and userName is truthy', async () => {
+      component.isLoggedIn = true;
+      component.userName = 'USER';
+
+      fixture.detectChanges();
+
+      const element = fixture.debugElement.query(By.css(('.user-name')));
+      expect(element).toBeTruthy();
+      expect(element.nativeElement.textContent).toContain('USER');
+    });
+
+    it('user name should not be visible when isLogged in is true and userName is not set', async () => {
+      component.isLoggedIn = true;
+
+      fixture.detectChanges();
+
+      const element = fixture.debugElement.query(By.css(('.user-name')));
+      expect(element).toBeFalsy();
+    });
+
+    it('user name should be visible when isLogged in is false and userName is truthy', async () => {
+      component.isLoggedIn = false;
+      component.userName = 'USER';
+
+      fixture.detectChanges();
+
+      const element = fixture.debugElement.query(By.css(('.user-name')));
+      expect(element).toBeFalsy();
     });
   })
 });
