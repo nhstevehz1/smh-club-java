@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject, filter} from "rxjs";
 import {OAuthErrorEvent, OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
@@ -34,7 +34,8 @@ export class AuthService {
   }
 
   constructor(private oauthService: OAuthService,
-              private router: Router) {
+              private router: Router,
+              private window: Window) {
     this.permissionsMap.set(PermissionType.read, [Roles.USER, Roles.ADMIN]);
     this.permissionsMap.set(PermissionType.write, [Roles.ADMIN]);
     this.initOauth();
@@ -57,7 +58,7 @@ export class AuthService {
     return this.oauthService.hasValidIdToken();
   }
 
-  startupLoginSequence(): Promise<void> {
+   async startupLoginSequence(): Promise<void> {
     console.log('inside startup login sequence');
 
     return this.oauthService.loadDiscoveryDocumentAndTryLogin()
@@ -109,28 +110,7 @@ export class AuthService {
     console.log('initializing OAUTH');
     this.oauthService.configure(authCodeFlowConfig);
 
-    this.oauthService.events.subscribe(event => {
-      if ( event instanceof OAuthErrorEvent) {
-        console.error('OAuthErrorEvent: ', event);
-      } else {
-        console.warn('OauthEvent: ', event)
-      }
-    });
-
-    window.addEventListener('storage', (event) => {
-      // The `key` is `null` if the event was caused by `.clear()`
-      if (event.key !== 'access_token' && event.key !== null) {
-        return;
-      }
-
-      console.warn('Noticed changes to access_token (most likely from another tab), updating isAuthenticated');
-      this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
-
-      if (!this.oauthService.hasValidAccessToken()) {
-        this.navigateToLogin();
-      }
-    });
-
+    // listen on any event.  Update the isAuthenticated subject
     this.oauthService.events.subscribe(() => {
       this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
     });
@@ -151,9 +131,20 @@ export class AuthService {
         .pipe(filter(event => ['session_terminated', 'session_error'].includes(event.type)))
         .subscribe(() => this.navigateToLogin());
 
-    this.oauthService.setupAutomaticSilentRefresh();
 
-    this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
+    this.window.addEventListener('storage', (event) => {
+      // The `key` is `null` if the event was caused by `.clear()`
+      if (event.key !== 'access_token' && event.key !== null) {
+        return;
+      }
+
+      console.warn('Noticed changes to access_token (most likely from another tab), updating isAuthenticated');
+      this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
+
+      if (!this.oauthService.hasValidAccessToken()) {
+        this.navigateToLogin();
+      }
+    });
 
     // if a valid token is in storage, populate user roles.
     if(this.oauthService.hasValidAccessToken()) {
@@ -161,5 +152,7 @@ export class AuthService {
       this.loadCurrentUser(claims);
       this.rolesLoadedSubject$.next(true);
     }
+
+    this.oauthService.setupAutomaticSilentRefresh();
   }
 }
