@@ -1,6 +1,6 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, filter} from "rxjs";
-import {OAuthErrorEvent, OAuthService} from "angular-oauth2-oidc";
+import {OAuthService} from "angular-oauth2-oidc";
 import {authCodeFlowConfig} from "../../../auth.config";
 import {jwtDecode} from "jwt-decode";
 import {RealmAccess} from "../models/realm-access";

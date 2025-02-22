@@ -3,10 +3,9 @@ import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {AuthService} from './auth.service';
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {OAuthEvent, OAuthService, OAuthSuccessEvent, OAuthErrorEvent} from "angular-oauth2-oidc";
+import {OAuthEvent, OAuthService, OAuthSuccessEvent} from "angular-oauth2-oidc";
 import {Subject} from "rxjs";
 import {authCodeFlowConfig} from "../../../auth.config";
-import {inject} from "@angular/core";
 
 describe('AuthService', () => {
   let service: AuthService;
