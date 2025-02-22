@@ -5,7 +5,6 @@ import {AuthService} from "../../services/auth.service";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatListHarness} from "@angular/material/list/testing";
-import {UserInfo} from "angular-oauth2-oidc";
 import {AuthUser} from "../../models/auth-user";
 
 describe('ProfileComponent', () => {
