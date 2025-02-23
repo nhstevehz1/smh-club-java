@@ -11,12 +11,14 @@ import {MatInputHarness} from "@angular/material/input/testing";
 import {MatSelectHarness} from "@angular/material/select/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {By} from "@angular/platform-browser";
+import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
+import {Address} from "../models/address";
 
 describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;
   let fixture: ComponentFixture<AddressEditorComponent>;
   let loader: HarnessLoader;
-  let formGroup = new FormGroup({
+  let formGroup: FormModelGroup<Address> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
     address1: new FormControl<string>('address1', {nonNullable: true}),
