@@ -5,17 +5,17 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 
 @Component({
-  selector: 'app-success',
+  selector: 'app-ok-cancel',
   imports: [
     MatCardTitle,
     MatIcon,
     MatTooltip,
     MatFabButton
   ],
-  templateUrl: './success.component.html',
-  styleUrl: './success.component.scss'
+  templateUrl: './ok-cancel.component.html',
+  styleUrl: './ok-cancel.component.scss'
 })
-export class SuccessComponent {
+export class OkCancelComponent {
 
   @Input()
   public titleMessage = 'Success';
