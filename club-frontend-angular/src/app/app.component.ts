@@ -16,8 +16,8 @@ export class AppComponent implements OnInit {
   constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
-    //this.authService.isLoaded$.subscribe(isLoaded => {
-     // this.isLoaded = isLoaded;
-    //});
+    this.authService.isLoaded$.subscribe(isLoaded => {
+      this.isLoaded = isLoaded;
+    });
   }
 }
