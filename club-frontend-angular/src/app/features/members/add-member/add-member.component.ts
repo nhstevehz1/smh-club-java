@@ -24,7 +24,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatDivider} from "@angular/material/divider";
 import {MembersService} from "../services/members.service";
 import {Router} from "@angular/router";
-import {SuccessComponent} from "../../../shared/components/success/success.component";
+import {OkCancelComponent} from "../../../shared/components/ok-cancel/ok-cancel.component";
 
 @Component({
   selector: 'app-create-member',
@@ -43,7 +43,7 @@ import {SuccessComponent} from "../../../shared/components/success/success.compo
         EmailEditorComponent,
         MatTooltip,
         MatDivider,
-        SuccessComponent
+        OkCancelComponent
     ],
   providers: [
       provideLuxonDateAdapter(),
@@ -116,10 +116,6 @@ export class AddMemberComponent {
     }
 
     onOkOrCancel(): void {
-        this.router.navigate(['p/members']).then(() => {});
-    }
-
-    onCancel(): void {
         this.router.navigate(['p/members']).then(() => {});
     }
 

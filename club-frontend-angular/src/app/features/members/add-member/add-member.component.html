@@ -110,7 +110,7 @@
                     <button
                             mat-raised-button
                             type="button"
-                            (click)="onCancel()"
+                            (click)="onOkOrCancel()"
                             matTooltip="Return to members list">
                         <mat-icon>cancel</mat-icon>
                         Cancel
@@ -128,11 +128,11 @@
         </form>
     } @else {
         <div class="flex-row center">
-            <app-success
+            <app-ok-cancel
                     titleMessage="Member saved!"
                     buttonToolTip="Return to members list"
                     (buttonClick)="onOkOrCancel()"
-            ></app-success>
+            ></app-ok-cancel>
         </div>
     }
 </div>
