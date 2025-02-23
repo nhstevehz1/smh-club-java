@@ -13,6 +13,7 @@ export function generatePhoneList(size: number): Array<PhoneMember> {
     for(let ii = 0; ii < size; ii++) {
         let phone: PhoneMember = {
             id: ii,
+            member_id: ii,
             country_code: '1',
             phone_number: `60388399${ii}`,
             phone_type: 'Home',

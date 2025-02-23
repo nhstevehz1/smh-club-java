@@ -14,6 +14,7 @@ export function generateRenewalList(size: number): Array<RenewalMember> {
     for (let ii = 0; ii < size; ii++) {
         let renewalMember = {
             id: ii,
+            member_id: ii,
             member_number: ii,
             renewal_date: DateTime.now(),
             renewal_year: DateTime.now().year,

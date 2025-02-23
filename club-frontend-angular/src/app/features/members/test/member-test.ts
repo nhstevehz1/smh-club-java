@@ -1,4 +1,4 @@
-import {Member} from "../models/Member";
+import {Member} from "../models/member";
 import {DateTime} from "luxon";
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
@@ -19,8 +19,8 @@ export function generateMemberList(size: number): Array<Member> {
             middle_name: ii +  " Middle",
             last_name: ii + " Last",
             suffix: ii + " Suffix",
-            birth_date: DateTime.now(),
-            joined_date: DateTime.now(),
+            birth_date: DateTime.now().toFormat('SHORT_DTE'),
+            joined_date: DateTime.now().toFormat('SHORT_DATE'),
         }
         list.push(member);
     }
