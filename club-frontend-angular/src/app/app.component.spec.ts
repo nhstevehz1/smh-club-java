@@ -7,7 +7,7 @@ import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {AuthService} from "./core/auth/services/auth.service";
 import {BehaviorSubject, Observable} from "rxjs";
 import {MainLayoutComponent} from "./core/layout/main-layout/main-layout.component";
-import {HarnessEnvironment, HarnessLoader} from "@angular/cdk/testing";
+import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatProgressSpinnerHarness} from "@angular/material/progress-spinner/testing";
 
@@ -48,11 +48,11 @@ describe('AppComponent', () => {
        loader = TestbedHarnessEnvironment.loader(fixture);
    });
 
-    fit('should create the app', () => {
+    it('should create the app', () => {
         expect(component).toBeTruthy();
     });
 
-    fit(`should display an 'app-main-layout' component when isLoaded is true`, async () => {
+    it(`should display an 'app-main-layout' component when isLoaded is true`, async () => {
         isLoadedSubjectMock$.next(true);
 
         fixture.detectChanges();
@@ -62,7 +62,7 @@ describe('AppComponent', () => {
         expect(layout ).toBeTruthy();
     });
 
-    fit(`should NOT display an 'app-main-layout' component when isLoaded is false`, async () => {
+    it(`should NOT display an 'app-main-layout' component when isLoaded is false`, async () => {
         isLoadedSubjectMock$.next(false);
 
         fixture.detectChanges();
@@ -72,14 +72,14 @@ describe('AppComponent', () => {
         expect(layout).toBeFalsy();
     });
 
-    fit('should display spinner when isLoaded is false', async () => {
+    it('should display spinner when isLoaded is false', async () => {
         isLoadedSubjectMock$.next(false);
         const harnesses = await loader.getAllHarnesses(MatProgressSpinnerHarness);
 
         expect(harnesses.length).toEqual(1);
     });
 
-    fit('should NOT display spinner when isLoaded is true', async () => {
+    it('should NOT display spinner when isLoaded is true', async () => {
         isLoadedSubjectMock$.next(true);
         const harnesses = await loader.getAllHarnesses(MatProgressSpinnerHarness);
 
