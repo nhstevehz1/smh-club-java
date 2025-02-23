@@ -37,11 +37,11 @@ describe('ProfileComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should call authSvc.currentUser', async () => {
+  it('should call authSvc.currentUser', async () => {
     const spy = authSvcMock.getCurrentUser.and.stub();
     fixture.detectChanges()
     await fixture.whenStable();
@@ -49,14 +49,14 @@ describe('ProfileComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  fit('should show profile data list', async () => {
+  it('should show profile data list', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
 
     expect(listHarness).toBeTruthy();
   });
 
-  fit('should show profile data list', async () => {
+  it('should show profile data list', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems();
@@ -64,7 +64,7 @@ describe('ProfileComponent', () => {
     expect(items.length).toEqual(4);
   });
 
-  fit('list should contain Username', async () => {
+  it('list should contain Username', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Username'});
@@ -74,7 +74,7 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.preferredUserName);
   });
 
-  fit('list should contain Full name', async () => {
+  it('list should contain Full name', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Full name'});
@@ -84,7 +84,7 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.fullName);
   });
 
-  fit('list should contain Email', async () => {
+  it('list should contain Email', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Email'});
@@ -94,7 +94,7 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.email);
   });
 
-  fit('list should contain Roles', async () => {
+  it('list should contain Roles', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Roles'});
@@ -104,7 +104,7 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.roles.toString());
   });
 
-  fit('list should contain default message when user undefined', async () => {
+  it('list should contain default message when user undefined', async () => {
     authSvcMock.getCurrentUser.and.returnValue(undefined);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems();
