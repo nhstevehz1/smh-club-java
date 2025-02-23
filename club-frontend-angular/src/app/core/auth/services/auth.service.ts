@@ -28,11 +28,6 @@ export class AuthService {
   private rolesLoadedSubject$ = new BehaviorSubject(false);
   public rolesLoaded$ = this.rolesLoadedSubject$.asObservable();
 
-
-  public get currentUser(): AuthUser | undefined{
-    return this.user;
-  }
-
   constructor(private oauthService: OAuthService,
               private router: Router,
               private window: Window) {
@@ -41,11 +36,15 @@ export class AuthService {
     this.initOauth();
   }
 
+  getCurrentUser(): AuthUser | undefined{
+    return this.user;
+  }
+
   login(url? : string): void {
     this.oauthService.initLoginFlow(url || this.router.url);
   }
 
-  logOut() {
+  logOut(): void {
     return this.oauthService.logOut();
   }
 
