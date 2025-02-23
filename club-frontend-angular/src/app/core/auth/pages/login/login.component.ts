@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import {SuccessComponent} from "../../../../shared/components/success/success.component";
+import {OkCancelComponent} from "../../../../shared/components/ok-cancel/ok-cancel.component";
 import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-login',
   imports: [
-    SuccessComponent
+    OkCancelComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
