@@ -4,7 +4,7 @@
             <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
                 @if(title) {
                     <div class="flex-row">
-                        <mat-label>{{title}}</mat-label>
+                        <mat-label class="editor-title">{{title}}</mat-label>
                     </div>
                 }
                 @if(showRemoveButton) {
@@ -26,6 +26,9 @@
         <mat-form-field [appearance]="fieldAppearance">
             <mat-label>(address continued)</mat-label>
             <input type="text" matInput formControlName="address2">
+            @if (hasError(address2)) {
+                <mat-error>Address2 invalid</mat-error>
+            }
         </mat-form-field>
 
         <div class="flex-row flex-start gap">
