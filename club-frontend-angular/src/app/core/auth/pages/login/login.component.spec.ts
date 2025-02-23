@@ -1,5 +1,4 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {LoginComponent} from './login.component';
 import {AuthService} from "../../services/auth.service";
 
@@ -25,11 +24,11 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('onLogin should call AuthService.login', () => {
+  it('onLogin should call AuthService.login', () => {
     const spy = authSvcMock.login.and.stub();
 
     component.onLogin();
@@ -37,7 +36,7 @@ describe('LoginComponent', () => {
     expect(spy).toHaveBeenCalledWith('p/home');
   });
 
-  fit('should contain app-ok-cancel component',  () => {
+  it('should contain app-ok-cancel component',  () => {
     const native = fixture.debugElement.nativeElement;
     const okCancel = native.querySelector('app-ok-cancel');
 
