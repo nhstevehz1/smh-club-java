@@ -9,6 +9,7 @@ import {provideOAuthClient} from "angular-oauth2-oidc";
 import {customOauthInterceptor} from "./core/auth/interceptors/custom-oauth.interceptor";
 import {authAppInitFactory} from "./core/auth/factories/auth-app-init-factory";
 import {AuthService} from "./core/auth/services/auth.service";
+import {DOCUMENT} from "@angular/common";
 
 export let appConfig: ApplicationConfig;
 appConfig = {
@@ -32,14 +33,14 @@ appConfig = {
         sendAccessToken: true,
       }
     }),
-      {
-          provide: Window,
-          useValue: window
-      },
       provideAppInitializer(() => {
           const initFn = (authAppInitFactory)(inject(AuthService));
           return initFn();
       }),
+      {
+          provide: Window,
+          useFactory: (): Window => <Window>inject(DOCUMENT)?.defaultView,
+      }
 
   ]
 };
