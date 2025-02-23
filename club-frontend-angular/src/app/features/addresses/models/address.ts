@@ -1,5 +1,4 @@
 import {AddressType} from "./address-type";
-import {FormControl} from "@angular/forms";
 
 export interface Address {
     id: number;
@@ -9,5 +8,5 @@ export interface Address {
     city: string;
     state: string;
     zip: string;
-    address_type: FormControl<AddressType | null>;
+    address_type: AddressType | string;
 }

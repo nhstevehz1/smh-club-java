@@ -7,12 +7,11 @@ import {FormControl, FormGroup, ValidationErrors} from "@angular/forms";
 import {AddressType} from "../models/address-type";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {MatInputHarness} from "@angular/material/input/testing";
-import {MatSelectHarness} from "@angular/material/select/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {By} from "@angular/platform-browser";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {Address} from "../models/address";
+import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 
 describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;
@@ -83,7 +82,7 @@ describe('AddressEditorComponent', () => {
 
       it('address1 should use outline appearance', async () => {
         component.fieldAppearance = outline;
-        let appearance = await harness?.getAppearance();
+        const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
@@ -91,7 +90,7 @@ describe('AddressEditorComponent', () => {
       it('address1 should use fill appearance', async () => {
         component.fieldAppearance = fill;
 
-        let appearance = await harness?.getAppearance();
+        const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
 
@@ -376,7 +375,7 @@ describe('AddressEditorComponent', () => {
     });
   });
   
-  describe('remove button and title tests', () => {
+  describe('address remove button and title tests', () => {
     let buttonHarness: MatButtonHarness | null;
     
     beforeEach(async () => {
@@ -437,18 +436,3 @@ describe('AddressEditorComponent', () => {
     });
   });
 });
-
-export async function getFormFieldValue(harness: MatFormFieldHarness | null ): Promise<string> {
-
-  const control = await harness?.getControl();
-
-  if(control instanceof MatInputHarness) {
-
-    const input: MatInputHarness = (control as MatInputHarness);
-    return input.getValue();
-  } else {
-
-    const select: MatSelectHarness = (control as MatSelectHarness);
-    return select.getValueText()
-  }
-}
