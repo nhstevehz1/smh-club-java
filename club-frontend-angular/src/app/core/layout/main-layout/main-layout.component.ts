@@ -29,15 +29,7 @@ export class MainLayoutComponent {
   }
 
   get name(): string | undefined {
-    if(this.authService.currentUser) {
-      return this.authService.currentUser.fullName;
-    }
-    return undefined;
-  }
-
-  get lastLogin(): string | undefined {
-    // TODO: implement
-    return undefined;
+    return this.authService.getCurrentUser()?.fullName;
   }
 
   sideNavHandler(): void {
