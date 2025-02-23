@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
   constructor(private authSvc: AuthService) {}
 
   ngOnInit(): void {
-    this.user = this.authSvc.currentUser();
+    this.user = this.authSvc.getCurrentUser();
   }
 
 }

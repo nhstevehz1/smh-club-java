@@ -1,5 +1,4 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {ProfileComponent} from './profile.component';
 import {AuthService} from "../../services/auth.service";
 import {HarnessLoader} from "@angular/cdk/testing";
@@ -21,9 +20,8 @@ describe('ProfileComponent', () => {
     roles: ['role1', 'role2']
   }
 
-
   beforeEach(async () => {
-    authSvcMock = jasmine.createSpyObj('AuthService', ['currentUser']);
+    authSvcMock = jasmine.createSpyObj('AuthService', ['getCurrentUser']);
 
     await TestBed.configureTestingModule({
       imports: [ProfileComponent],
@@ -39,35 +37,35 @@ describe('ProfileComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call authSvc.currentUser', async () => {
-    const spy = authSvcMock.currentUser.and.stub();
+  fit('should call authSvc.currentUser', async () => {
+    const spy = authSvcMock.getCurrentUser.and.stub();
     fixture.detectChanges()
     await fixture.whenStable();
 
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should show profile data list', async () => {
-    authSvcMock.currentUser.and.returnValue(currUser);
+  fit('should show profile data list', async () => {
+    authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
 
     expect(listHarness).toBeTruthy();
   });
 
-  it('should show profile data list', async () => {
-    authSvcMock.currentUser.and.returnValue(currUser);
+  fit('should show profile data list', async () => {
+    authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems();
 
     expect(items.length).toEqual(4);
   });
 
-  it('list should contain Username', async () => {
-    authSvcMock.currentUser.and.returnValue(currUser);
+  fit('list should contain Username', async () => {
+    authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Username'});
 
@@ -76,8 +74,8 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.preferredUserName);
   });
 
-  it('list should contain Full name', async () => {
-    authSvcMock.currentUser.and.returnValue(currUser);
+  fit('list should contain Full name', async () => {
+    authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Full name'});
 
@@ -86,8 +84,8 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.fullName);
   });
 
-  it('list should contain Email', async () => {
-    authSvcMock.currentUser.and.returnValue(currUser);
+  fit('list should contain Email', async () => {
+    authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Email'});
 
@@ -96,8 +94,8 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.email);
   });
 
-  it('list should contain Roles', async () => {
-    authSvcMock.currentUser.and.returnValue(currUser);
+  fit('list should contain Roles', async () => {
+    authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems({title: 'Roles'});
 
@@ -106,8 +104,8 @@ describe('ProfileComponent', () => {
     expect(txt).toBe(currUser.roles.toString());
   });
 
-  it('list should contain default message when user undefined', async () => {
-    authSvcMock.currentUser.and.returnValue(undefined);
+  fit('list should contain default message when user undefined', async () => {
+    authSvcMock.getCurrentUser.and.returnValue(undefined);
     const listHarness = await loader.getHarness(MatListHarness);
     const items = await  listHarness.getItems();
 
