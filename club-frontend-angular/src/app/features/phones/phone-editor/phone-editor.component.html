@@ -4,7 +4,7 @@
             <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
                 @if(title) {
                     <div class="flex-row">
-                        <mat-label>{{title}}</mat-label>
+                        <mat-label class="editor-title">{{title}}</mat-label>
                     </div>
                     <mat-divider></mat-divider>
                 }
