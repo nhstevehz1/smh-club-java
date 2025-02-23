@@ -18,7 +18,6 @@ import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-for
 import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
 import {AuthService} from "../../../core/auth/services/auth.service";
 import {PermissionType} from "../../../core/auth/models/permission-type";
-import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: 'app-list-members',
@@ -26,8 +25,7 @@ import {AsyncPipe} from "@angular/common";
         SortablePageableTableComponent,
         MatIconModule,
         MatButtonModule,
-        MatTooltip,
-        AsyncPipe
+        MatTooltip
     ],
     providers: [
         MembersService,
