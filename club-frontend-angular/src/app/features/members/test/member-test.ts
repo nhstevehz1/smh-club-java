@@ -19,8 +19,8 @@ export function generateMemberList(size: number): Array<Member> {
             middle_name: ii +  " Middle",
             last_name: ii + " Last",
             suffix: ii + " Suffix",
-            birth_date: DateTime.now().toFormat('SHORT_DTE'),
-            joined_date: DateTime.now().toFormat('SHORT_DATE'),
+            birth_date: DateTime.now(),
+            joined_date: DateTime.now(),
         }
         list.push(member);
     }

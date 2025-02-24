@@ -3,6 +3,7 @@ import {PagedData} from "../models/paged-data";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {MatInputHarness} from "@angular/material/input/testing";
 import {MatSelectHarness} from "@angular/material/select/testing";
+import {MatDatepickerInputHarness} from "@angular/material/datepicker/testing";
 
 export function asyncData<T>(data: T) {
     return defer(() => Promise.resolve(data));
@@ -32,13 +33,14 @@ export async function getFormFieldValue(harness: MatFormFieldHarness | null ): P
 
     const control = await harness?.getControl();
 
-    if(control instanceof MatInputHarness) {
-
-        const input: MatInputHarness = (control as MatInputHarness);
-        return input.getValue();
-    } else {
-
+    if(control instanceof MatSelectHarness) {
         const select: MatSelectHarness = (control as MatSelectHarness);
         return select.getValueText()
+    } else if(control instanceof MatDatepickerInputHarness) {
+        const dt: MatDatepickerInputHarness = (control as MatDatepickerInputHarness);
+        return dt.getValue();
+    } else {
+        const input: MatInputHarness = (control as MatInputHarness);
+        return input.getValue();
     }
 }

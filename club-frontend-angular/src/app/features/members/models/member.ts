@@ -1,6 +1,7 @@
 import {Address} from "../../addresses/models/address";
 import {Email} from "../../emails/models/email";
 import {Phone} from "../../phones/models/phone";
+import {DateTime} from "luxon";
 
 export interface Member {
     id: number;
@@ -9,8 +10,8 @@ export interface Member {
     middle_name: string;
     last_name: string;
     suffix: string;
-    birth_date: string;
-    joined_date: string;
+    birth_date: DateTime;
+    joined_date: DateTime;
 
 }
 
