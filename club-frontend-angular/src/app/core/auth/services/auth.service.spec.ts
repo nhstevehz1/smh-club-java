@@ -109,7 +109,7 @@ describe('AuthService', () => {
     it('should call oAuthService.loadUserProfile on token_received event', fakeAsync(() => {
         spyOn(oAuthMock.events, 'pipe').and.callThrough();
         spyOn(oAuthMock.events.pipe(), 'subscribe').and.callThrough();
-        const spy = oAuthMock.loadUserProfile.and.callFake(() => Promise.resolve(claimsMock));
+        const spy = oAuthMock.loadUserProfile.and.returnValue(Promise.resolve(claimsMock));
 
         TestBed.inject(AuthService);
 
