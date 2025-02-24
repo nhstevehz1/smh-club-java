@@ -58,7 +58,7 @@ export class AddMemberComponent {
 
     fieldAppearance: MatFormFieldAppearance = 'fill';
 
-    errorMessage = '';
+    errorMessage?: string;
 
     submitted = false;
 
@@ -89,10 +89,10 @@ export class AddMemberComponent {
     }
 
     onSave(): void {
-        if (this.memberForm.valid) {
+        if (this.createForm.valid) {
             this.svc.createMember(<MemberCreate>this.createForm.value).subscribe({
               next: () =>  {
-                  this.errorMessage = ''
+                  this.errorMessage = undefined
                   this.submitted = true;
               },
               error: (err: any) => {

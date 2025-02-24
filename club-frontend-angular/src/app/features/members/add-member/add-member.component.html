@@ -1,6 +1,8 @@
 <div class="container">
     @if(!submitted) {
-        <form [formGroup]="memberForm" (ngSubmit)="onSave()">
+        <form role="form"
+                [formGroup]="createForm"
+                (ngSubmit)="onSave()">
             <mat-card>
                 <div class="title-container">
                     <mat-card-title>Add Member</mat-card-title>
@@ -30,7 +32,10 @@
                                     Address
                                 }
                             </mat-card-subtitle>
-                            <button mat-icon-button matTooltip="Add address" (click)="onAddAddress()">
+                            <button class="add-address"
+                                    mat-icon-button
+                                    matTooltip="Add address"
+                                    (click)="onAddAddress()">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </div>
@@ -58,7 +63,10 @@
                                     Phone Number
                                 }
                             </mat-card-subtitle>
-                            <button mat-icon-button matTooltip="Add phone" (click)="onAddPhone()">
+                            <button class="add-phone"
+                                    mat-icon-button
+                                    matTooltip="Add phone"
+                                    (click)="onAddPhone()">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </div>
@@ -86,7 +94,10 @@
                                     Email Address
                                 }
                             </mat-card-subtitle>
-                            <button mat-icon-button matTooltip="Add email" (click)="onAddEmail()">
+                            <button class="add-email"
+                                    mat-icon-button
+                                    matTooltip="Add email"
+                                    (click)="onAddEmail()">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </div>
@@ -107,7 +118,7 @@
                     </div>
                 </mat-card-content>
                 <div class="action-row">
-                    <button
+                    <button class="cancel"
                             mat-raised-button
                             type="button"
                             (click)="onOkOrCancel()"
@@ -115,7 +126,7 @@
                         <mat-icon>cancel</mat-icon>
                         Cancel
                     </button>
-                    <button
+                    <button class="submit"
                             mat-raised-button
                             type="submit"
                             [disabled]="memberForm.invalid"
