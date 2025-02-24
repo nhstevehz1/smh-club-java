@@ -135,8 +135,8 @@ describe('EmailEditorComponent', () => {
       });
 
       it('email type should show error', async () => {
-        formGroup.controls.email.markAsTouched()
-        formGroup.controls.email.setErrors(errors);
+        formGroup.controls.email_type.markAsTouched()
+        formGroup.controls.email_type.setErrors(errors);
 
         const errHarnesses = await harness?.getErrors();
 
