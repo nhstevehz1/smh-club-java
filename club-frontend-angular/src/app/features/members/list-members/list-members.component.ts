@@ -54,7 +54,6 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
 
     ngOnInit(): void {
        this.columns = this.getColumns();// create column defs
-        console.debug('rolesLoaded$', this.authSvc.rolesLoaded$);
         this.authSvc.rolesLoaded$.subscribe(rolesLoaded => {
             this.rolesLoaded = rolesLoaded;
         })
@@ -129,19 +128,17 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                 columnName: 'birth_date',
                 displayName: 'Birth Date',
                 isSortable: true,
-                cell: (element: Member) => this.transformDate(element.birth_date)
+                cell: (element: Member) =>
+                    this.dtToFormatPipe.transform(element.birth_date, DateTime.DATE_SHORT)
             },
             {
                 columnName: 'joined_date',
                 displayName: 'Joined',
                 isSortable: true,
-                cell: (element: Member) => this.transformDate(element.joined_date)
+                cell: (element: Member) =>
+                    this.dtToFormatPipe.transform(element.joined_date, DateTime.DATE_SHORT)
             }
         ];
     }
 
-    private transformDate(dateTime: string): string | null {
-        const iso = DateTime.fromISO(dateTime);
-        return this.dtToFormatPipe.transform(iso, DateTime.DATE_SHORT);
-    }
 }
