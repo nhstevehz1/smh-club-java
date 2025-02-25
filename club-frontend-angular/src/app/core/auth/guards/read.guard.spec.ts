@@ -4,23 +4,27 @@ import {CanActivateFn, provideRouter, Router} from '@angular/router';
 import {readGuard} from './read.guard';
 import {AuthService} from "../services/auth.service";
 import {Observable, Subject} from "rxjs";
+import {PermissionType} from "../models/permission-type";
 
-describe('authGuard', () => {
+describe('readGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) => 
       TestBed.runInInjectionContext(() => readGuard(...guardParameters));
 
   let authServiceMock: jasmine.SpyObj<AuthService>;
   let routerMock: jasmine.SpyObj<Router>;
 
-  let isAuthedSubject$: Subject<boolean>;
-  let isAuthedEvent$: Observable<boolean>
+  let readIsAuthedSubject$: Subject<boolean>;
+  let readIsAuthedEvent$: Observable<boolean>
+
+  const route: any = {};
+  const state: any = {};
 
   beforeEach(async () => {
-    authServiceMock = jasmine.createSpyObj('AuthService', ['isAuthenticated$']);
+    authServiceMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
-    isAuthedSubject$ = new Subject<boolean>;
-    isAuthedEvent$ = isAuthedSubject$.asObservable();
+    readIsAuthedSubject$ = new Subject<boolean>;
+    readIsAuthedEvent$ = readIsAuthedSubject$.asObservable();
 
     TestBed.configureTestingModule({
       providers: [
@@ -30,50 +34,60 @@ describe('authGuard', () => {
       ]
     });
 
-    authServiceMock.isAuthenticated$ = isAuthedEvent$;
+    authServiceMock.isAuthenticated$ = readIsAuthedEvent$;
   });
 
   it('should be created', () => {
     expect(executeGuard).toBeTruthy();
   });
 
-  it('should allow when AuthService.isAuthenticated  is true', async  () => {
-    const spyNav =
-        routerMock.navigate.and.returnValue(Promise.resolve(true));
-    const spyAuth =
-        spyOn(authServiceMock.isAuthenticated$, 'pipe').and.callThrough();
+  it('readGuard should call AuthService.hasPermissions to be called when isAuthenticated is true', async  () => {
+    const spy = authServiceMock.hasPermission.and.returnValue(true);
+    routerMock.navigate.and.returnValue(Promise.resolve(true));
 
-    const route: any = {};
-    const state: any = {};
+    const result = executeGuard(route, state) as Observable<boolean>;
+
+    result.subscribe(() => {
+      expect(spy).toHaveBeenCalledWith(PermissionType.read);
+    });
+
+    readIsAuthedSubject$.next(true);
+  });
+
+  it('readGuard should call NOT AuthService.hasPermissions when isAuthenticated is false', async () => {
+    const spy = authServiceMock.hasPermission.and.stub();
+    routerMock.navigate.and.returnValue(Promise.resolve(true));
+
+    const result = executeGuard(route, state) as Observable<boolean>;
+
+    result.subscribe(() => {
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    readIsAuthedSubject$.next(false);
+  });
+
+  it('readGuard should call router.navigate with p/login when AuthService.isAuthenticated is false', async () => {
+    const spy = routerMock.navigate.and.returnValue(Promise.resolve(true));
+    const result = executeGuard(route,state) as Observable<boolean>;
+
+    result.subscribe(val => {
+      expect(spy).toHaveBeenCalledWith(['p/login']);
+    });
+
+    readIsAuthedSubject$.next(false);
+  });
+
+  it('readGuard should call router.navigate with p/access-denied when AuthService.hasPermission returns false', async () => {
+    const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
+    authServiceMock.hasPermission.and.returnValue(false);
 
     const result = executeGuard(route,state) as Observable<boolean>;
 
     result.subscribe(val => {
-      expect(val).toBeTrue();
-      expect(spyAuth).toHaveBeenCalled()
-      expect(spyNav).not.toHaveBeenCalled();
+      expect(spy).toHaveBeenCalledWith(['p/access-denied']);
     });
 
-    isAuthedSubject$.next(true);
-  });
-
-  it('should call navigate when AuthService.isAuthenticated is false', async () => {
-    const spyNav =
-        routerMock.navigate.and.returnValue(Promise.resolve(true));
-    const spyAuth =
-        spyOn(authServiceMock.isAuthenticated$, 'pipe').and.callThrough();
-
-    const route: any = {};
-    const state: any = {};
-
-    const result = executeGuard(route, state) as Observable<boolean>
-
-    result.subscribe(val => {
-      expect(val).not.toBeTrue();
-      expect(spyAuth).toHaveBeenCalled();
-      expect(spyNav).toHaveBeenCalledWith(['p/login']);
-    });
-
-    isAuthedSubject$.next(false);
+    readIsAuthedSubject$.next(true);
   });
 });

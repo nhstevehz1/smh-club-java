@@ -13,19 +13,19 @@ describe('writeGuard', () => {
   let authServiceMock: jasmine.SpyObj<AuthService>;
   let routerMock: jasmine.SpyObj<Router>;
 
-  let rolesLoadedSubject$: Subject<boolean>;
-  let rolesLoaded$: Observable<boolean>;
+  let isAuthedSubject$: Subject<boolean>;
+  let isAuthedEvent$: Observable<boolean>;
 
   const route: any = {};
   const state: any = {};
 
   beforeEach(() => {
     authServiceMock =
-        jasmine.createSpyObj('AuthService', ['rolesLoaded$', 'isLoggedIn', 'hasPermission']);
+        jasmine.createSpyObj('AuthService', ['hasPermission']);
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
-    rolesLoadedSubject$ = new Subject<boolean>;
-    rolesLoaded$ = rolesLoadedSubject$.asObservable()
+    isAuthedSubject$ = new Subject<boolean>;
+    isAuthedEvent$ = isAuthedSubject$.asObservable()
 
     TestBed.configureTestingModule({
       providers: [
@@ -35,29 +35,16 @@ describe('writeGuard', () => {
       ]
     });
 
-    authServiceMock.rolesLoaded$ = rolesLoaded$;
+    authServiceMock.isAuthenticated$ = isAuthedEvent$;
   });
 
   it('should be created', () => {
     expect(executeGuard).toBeTruthy();
   });
 
-  it('expect AuthService.isLoggedIn to be called', async () => {
-    const spy = authServiceMock.isLoggedIn.and.returnValue(true);
-    authServiceMock.hasPermission.and.returnValue(true);
-
-    const result = executeGuard(route, state) as Observable<boolean>;
-
-    result.subscribe(() => {
-      expect(spy).toHaveBeenCalled();
-    });
-
-    rolesLoadedSubject$.next(true);
-  });
-
-  it('expect AuthService.hasPermissions to be called', async () => {
-    authServiceMock.isLoggedIn.and.returnValue(true);
+  it('writeGuard should call AuthService.hasPermissions to be called when isAuthenticated is true', async () => {
     const spy = authServiceMock.hasPermission.and.returnValue(true);
+    routerMock.navigate.and.returnValue(Promise.resolve(true));
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
@@ -65,13 +52,12 @@ describe('writeGuard', () => {
       expect(spy).toHaveBeenCalledWith(PermissionType.write);
     });
 
-    rolesLoadedSubject$.next(true);
+    isAuthedSubject$.next(true);
   });
 
-  it('expect router.navigate to NOT be called', async () => {
-    authServiceMock.isLoggedIn.and.returnValue(true);
-    authServiceMock.hasPermission.and.returnValue(true);
-    const spy = routerMock.navigate.and.stub();
+  it('writeGuard should call NOT AuthService.hasPermissions when isAuthenticated is false', async () => {
+    const spy = authServiceMock.hasPermission.and.stub();
+    routerMock.navigate.and.returnValue(Promise.resolve(true));
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
@@ -79,51 +65,30 @@ describe('writeGuard', () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    rolesLoadedSubject$.next(true);
+    isAuthedSubject$.next(false);
   });
 
-  it('should return true', async () => {
-    authServiceMock.isLoggedIn.and.returnValue(true);
-    authServiceMock.hasPermission.and.returnValue(true);
+  it('writeGuard should call router.navigate with p/login when AuthService.isAuthenticated is false', async () => {
+    const spy = routerMock.navigate.and.returnValue(Promise.resolve(true));
+    const result = executeGuard(route,state) as Observable<boolean>;
+
+    result.subscribe(val => {
+      expect(spy).toHaveBeenCalledWith(['p/login']);
+    });
+
+    isAuthedSubject$.next(false);
+  });
+
+  it('writeGuard should call router.navigate with p/access-denied when AuthService.hasPermission returns false', async () => {
+    const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
+    authServiceMock.hasPermission.and.returnValue(false);
 
     const result = executeGuard(route,state) as Observable<boolean>;
 
     result.subscribe(val => {
-      expect(val).toBeTrue();
+      expect(spy).toHaveBeenCalledWith(['p/access-denied']);
     });
 
-    rolesLoadedSubject$.next(true);
-  });
-
-  it('should call router.navigate with p/login', async () => {
-    const spyIsLoggedIn = authServiceMock.isLoggedIn.and.returnValue(false);
-    const spyPermissions = authServiceMock.hasPermission.and.returnValue(true);
-    const spyNav = routerMock.navigate.and.returnValue(Promise.resolve(true))
-    const result = executeGuard(route,state) as Observable<boolean>;
-
-    result.subscribe(val => {
-      expect(val).toBeTrue()
-      expect(spyNav).toHaveBeenCalledWith(['p/login']);
-      expect(spyIsLoggedIn).toHaveBeenCalled();
-      expect(spyPermissions).not.toHaveBeenCalled();
-    });
-
-    rolesLoadedSubject$.next(true);
-  });
-
-  it('should call router.navigate with p/access-denied', async () => {
-    const spyIsLoggedIn = authServiceMock.isLoggedIn.and.returnValue(true);
-    const spyPermissions = authServiceMock.hasPermission.and.returnValue(false);
-    const spyNav = routerMock.navigate.and.returnValue(Promise.resolve(true))
-    const result = executeGuard(route,state) as Observable<boolean>;
-
-    result.subscribe(val => {
-      expect(val).toBeTrue()
-      expect(spyNav).toHaveBeenCalledWith(['p/access-denied']);
-      expect(spyIsLoggedIn).toHaveBeenCalled();
-      expect(spyPermissions).toHaveBeenCalled();
-    });
-
-    rolesLoadedSubject$.next(true);
+    isAuthedSubject$.next(true);
   });
 });

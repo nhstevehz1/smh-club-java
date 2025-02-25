@@ -12,14 +12,12 @@ export const writeGuard: CanActivateFn = (route, state) => {
   console.debug('write guard url', route.url);
   console.debug('write guard state', state);
 
-  return authService.rolesLoaded$.pipe(
+  return authService.isAuthenticated$.pipe(
       take(1),
-      tap(rolesLoaded => {
-
-        //TODO: add target url to navigate
-        if(!authService.isLoggedIn()) {
+      tap(authed => {
+        if(!authed) {
           router.navigate(['p/login']).then();
-        } else if(rolesLoaded && !authService.hasPermission(PermissionType.write)) {
+        } else if(!authService.hasPermission(PermissionType.write)) {
           router.navigate(['p/access-denied']).then();
         }
       })
