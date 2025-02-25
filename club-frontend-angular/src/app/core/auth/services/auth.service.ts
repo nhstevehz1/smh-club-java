@@ -59,7 +59,7 @@ export class AuthService {
 
    async startupLoginSequence(): Promise<void> {
     return this.oauthService.loadDiscoveryDocumentAndTryLogin()
-        .then(success => {
+        .then(() => {
           if (!this.oauthService.hasValidAccessToken()) {
             this.navigateToLogin();
           }
