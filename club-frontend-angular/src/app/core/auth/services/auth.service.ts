@@ -75,8 +75,6 @@ export class AuthService {
       email: claims['email'],
       roles: roles
     }
-
-    console.info('AuthUser', this.user);
   }
 
   private hasRole(roles?: string[]): boolean {
