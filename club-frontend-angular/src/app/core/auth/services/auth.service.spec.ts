@@ -4,7 +4,7 @@ import {AuthService} from './auth.service';
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {OAuthEvent, OAuthService, OAuthSuccessEvent} from "angular-oauth2-oidc";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {authCodeFlowConfig} from "../../../auth.config";
 
 describe('AuthService', () => {
@@ -23,16 +23,20 @@ describe('AuthService', () => {
       name: 'name',
       email: 'email@email.com'
   }
-  const tokenReceivedEvent = new OAuthSuccessEvent('token_received');
+  const tokenReceivedEvent: OAuthEvent = new OAuthSuccessEvent('token_received');
 
-  let oauthSubject$ = new Subject<OAuthEvent>();
-  let oauthEvent$ = oauthSubject$.asObservable();
+  let oauthSubject$: Subject<OAuthEvent>
+  let oauthEvent$: Observable<OAuthEvent>;
 
   let windowMock: jasmine.SpyObj<Window>;
 
   beforeEach(() => {
     oAuthMock = jasmine.createSpyObj('OAuthService', methods);
     windowMock = jasmine.createSpyObj('Window', ['addEventListener', 'dispatchEvent']);
+
+    oauthSubject$ = new Subject<OAuthEvent>();
+    oauthEvent$  = oauthSubject$.asObservable()
+
     TestBed.configureTestingModule({
       providers: [
           provideHttpClient(),
@@ -107,16 +111,15 @@ describe('AuthService', () => {
     }));
 
     it('should call oAuthService.loadUserProfile on token_received event', fakeAsync(() => {
-        spyOn(oAuthMock.events, 'pipe').and.callThrough();
-        spyOn(oAuthMock.events.pipe(), 'subscribe').and.callThrough();
         const spy = oAuthMock.loadUserProfile.and.returnValue(Promise.resolve(claimsMock));
 
         TestBed.inject(AuthService);
+        tick();
 
         oauthSubject$.next(tokenReceivedEvent);
         tick();
 
-        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith();
     }));
 
     it('should call oAuthService.hasValidAccessToken()', fakeAsync(() => {

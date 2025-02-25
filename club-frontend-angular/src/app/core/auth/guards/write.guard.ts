@@ -9,6 +9,9 @@ export const writeGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  console.debug('write guard url', route.url);
+  console.debug('write guard state', state);
+
   return authService.rolesLoaded$.pipe(
       take(1),
       tap(rolesLoaded => {

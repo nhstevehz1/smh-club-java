@@ -48,7 +48,7 @@ describe('writeGuard', () => {
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
-    result.subscribe(val => () => {
+    result.subscribe(() => {
       expect(spy).toHaveBeenCalled();
     });
 
@@ -61,7 +61,7 @@ describe('writeGuard', () => {
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
-    result.subscribe(val => () => {
+    result.subscribe(() => {
       expect(spy).toHaveBeenCalledWith(PermissionType.write);
     });
 
@@ -75,8 +75,8 @@ describe('writeGuard', () => {
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
-    result.subscribe(val => () => {
-      expect(spy).toHaveBeenCalled();
+    result.subscribe(() => {
+      expect(spy).not.toHaveBeenCalled();
     });
 
     rolesLoadedSubject$.next(true);

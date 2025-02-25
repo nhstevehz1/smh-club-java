@@ -58,11 +58,8 @@ export class AuthService {
   }
 
    async startupLoginSequence(): Promise<void> {
-    console.log('inside startup login sequence');
-
     return this.oauthService.loadDiscoveryDocumentAndTryLogin()
         .then(success => {
-          console.log('end tryLogin: ', success);
           if (!this.oauthService.hasValidAccessToken()) {
             this.navigateToLogin();
           }
@@ -71,7 +68,6 @@ export class AuthService {
   }
 
   private loadCurrentUser(claims:  any): void {
-    console.debug('claims: ', claims);
     let roles = this.parseRoles().filter(r => r.startsWith('club-'));
     this.user = {
       preferredUserName: claims["preferred_username"],
@@ -106,7 +102,6 @@ export class AuthService {
   }
 
   private initOauth(): void {
-    console.log('initializing OAUTH');
     this.oauthService.configure(authCodeFlowConfig);
 
     // listen on any event.  Update the isAuthenticated subject
@@ -117,10 +112,7 @@ export class AuthService {
     this.oauthService.events
         .pipe(filter(event => ['token_received'].includes(event.type)))
         .subscribe(() => {
-          console.log('token received, loading user profile');
-
           this.oauthService.loadUserProfile().then((claims) => {
-            console.debug('profile claims: ', claims);
             this.loadCurrentUser(claims);
             this.rolesLoadedSubject$.next(true);
           });
@@ -137,7 +129,6 @@ export class AuthService {
         return;
       }
 
-      console.warn('Noticed changes to access_token (most likely from another tab), updating isAuthenticated');
       this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
 
       if (!this.oauthService.hasValidAccessToken()) {
