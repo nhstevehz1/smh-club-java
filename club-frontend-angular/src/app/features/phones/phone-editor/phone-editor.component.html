@@ -20,7 +20,7 @@
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>Phone</mat-label>
                 <span matTextPrefix>+1 &nbsp;</span>
-                <input type="tel" matInput formControlName="phone_number">
+                <input type="tel" matInput [formControl]="phoneNumber">
                 @if (hasError(phoneNumber)) {
                     <mat-error>Phone number required</mat-error>
                 }
@@ -28,7 +28,7 @@
 
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>Phone type</mat-label>
-                <mat-select formControlName="phone_type">
+                <mat-select [formControl]="phoneType">
                     @for (option of phoneTypes; track option){
                         <mat-option [value]="option">{{option}}</mat-option>
                     }

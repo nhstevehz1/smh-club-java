@@ -17,7 +17,7 @@
 
         <mat-form-field [appearance]="fieldAppearance">
             <mat-label>Street or PO Box</mat-label>
-            <input type="text" matInput formControlName="address1">
+            <input type="text" matInput [formControl]="address1">
             @if (hasError(address1)) {
                 <mat-error>Street or PO box required</mat-error>
             }
@@ -25,7 +25,7 @@
 
         <mat-form-field [appearance]="fieldAppearance">
             <mat-label>(address continued)</mat-label>
-            <input type="text" matInput formControlName="address2">
+            <input type="text" matInput [formControl]="address2">
             @if (hasError(address2)) {
                 <mat-error>Address2 invalid</mat-error>
             }
@@ -34,14 +34,14 @@
         <div class="flex-row flex-start gap">
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>City/Town</mat-label>
-                <input type="text" matInput formControlName="city">
+                <input type="text" matInput [formControl]="city">
                 @if (hasError(city)) {
                     <mat-error>City/Town required</mat-error>
                 }
             </mat-form-field>
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>State/Territory</mat-label>
-                <input type="text" matInput formControlName="state">
+                <input type="text" matInput [formControl]="state">
                 @if (hasError(state)) {
                     <mat-error>State required</mat-error>
                 }
@@ -51,7 +51,7 @@
         <div class="flex-row flex-start gap">
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>Postal Code</mat-label>
-                <input type="text" matInput formControlName="zip">
+                <input type="text" matInput [formControl]="zip">
                 @if (hasError(zip)) {
                     <mat-error>ZIP code required</mat-error>
                 }
@@ -59,7 +59,7 @@
 
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>Address type</mat-label>
-                <mat-select formControlName="address_type">
+                <mat-select [formControl]="addressType">
                     @for (option of addressTypes; track option){
                         <mat-option [value]="option">{{option}}</mat-option>
                     }
