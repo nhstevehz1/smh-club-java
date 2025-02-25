@@ -67,7 +67,7 @@ describe('readGuard', () => {
     const spy = routerMock.navigate.and.returnValue(Promise.resolve(true));
     const result = executeGuard(route,state) as Observable<boolean>;
 
-    result.subscribe(val => expect(spy).toHaveBeenCalledWith(['p/login']));
+    result.subscribe(() => expect(spy).toHaveBeenCalledWith(['p/login']));
 
     readIsAuthedSubject$.next(false);
   });
@@ -78,7 +78,7 @@ describe('readGuard', () => {
 
     const result = executeGuard(route,state) as Observable<boolean>;
 
-    result.subscribe(val => expect(spy).toHaveBeenCalledWith(['p/access-denied']));
+    result.subscribe(() => expect(spy).toHaveBeenCalledWith(['p/access-denied']));
 
     readIsAuthedSubject$.next(true);
   });
