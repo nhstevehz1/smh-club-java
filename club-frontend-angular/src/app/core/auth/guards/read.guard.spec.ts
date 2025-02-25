@@ -47,9 +47,7 @@ describe('readGuard', () => {
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
-    result.subscribe(() => {
-      expect(spy).toHaveBeenCalledWith(PermissionType.read);
-    });
+    result.subscribe(() => expect(spy).toHaveBeenCalledWith(PermissionType.read));
 
     readIsAuthedSubject$.next(true);
   });
@@ -60,9 +58,7 @@ describe('readGuard', () => {
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
-    result.subscribe(() => {
-      expect(spy).not.toHaveBeenCalled();
-    });
+    result.subscribe(() => expect(spy).not.toHaveBeenCalled());
 
     readIsAuthedSubject$.next(false);
   });
@@ -71,9 +67,7 @@ describe('readGuard', () => {
     const spy = routerMock.navigate.and.returnValue(Promise.resolve(true));
     const result = executeGuard(route,state) as Observable<boolean>;
 
-    result.subscribe(val => {
-      expect(spy).toHaveBeenCalledWith(['p/login']);
-    });
+    result.subscribe(val => expect(spy).toHaveBeenCalledWith(['p/login']));
 
     readIsAuthedSubject$.next(false);
   });
@@ -84,9 +78,7 @@ describe('readGuard', () => {
 
     const result = executeGuard(route,state) as Observable<boolean>;
 
-    result.subscribe(val => {
-      expect(spy).toHaveBeenCalledWith(['p/access-denied']);
-    });
+    result.subscribe(val => expect(spy).toHaveBeenCalledWith(['p/access-denied']));
 
     readIsAuthedSubject$.next(true);
   });

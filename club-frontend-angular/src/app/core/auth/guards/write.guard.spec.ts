@@ -48,9 +48,7 @@ describe('writeGuard', () => {
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
-    result.subscribe(() => {
-      expect(spy).toHaveBeenCalledWith(PermissionType.write);
-    });
+    result.subscribe(() => expect(spy).toHaveBeenCalledWith(PermissionType.write));
 
     isAuthedSubject$.next(true);
   });
@@ -61,9 +59,7 @@ describe('writeGuard', () => {
 
     const result = executeGuard(route, state) as Observable<boolean>;
 
-    result.subscribe(() => {
-      expect(spy).not.toHaveBeenCalled();
-    });
+    result.subscribe(() => expect(spy).not.toHaveBeenCalled());
 
     isAuthedSubject$.next(false);
   });
@@ -72,9 +68,7 @@ describe('writeGuard', () => {
     const spy = routerMock.navigate.and.returnValue(Promise.resolve(true));
     const result = executeGuard(route,state) as Observable<boolean>;
 
-    result.subscribe(val => {
-      expect(spy).toHaveBeenCalledWith(['p/login']);
-    });
+    result.subscribe(() => expect(spy).toHaveBeenCalledWith(['p/login']));
 
     isAuthedSubject$.next(false);
   });
@@ -85,9 +79,7 @@ describe('writeGuard', () => {
 
     const result = executeGuard(route,state) as Observable<boolean>;
 
-    result.subscribe(val => {
-      expect(spy).toHaveBeenCalledWith(['p/access-denied']);
-    });
+    result.subscribe(() => expect(spy).toHaveBeenCalledWith(['p/access-denied']));
 
     isAuthedSubject$.next(true);
   });
