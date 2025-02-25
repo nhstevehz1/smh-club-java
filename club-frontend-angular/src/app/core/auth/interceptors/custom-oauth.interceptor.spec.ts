@@ -1,17 +1,15 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {HttpClient, HttpInterceptorFn, provideHttpClient, withInterceptors} from '@angular/common/http';
 import {customOauthInterceptor} from "./custom-oauth.interceptor";
 import {
   OAuthEvent,
   OAuthModuleConfig,
-  OAuthResourceServerConfig,
   OAuthResourceServerErrorHandler,
   OAuthService,
   OAuthStorage
 } from "angular-oauth2-oidc";
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {Subject} from "rxjs";
-import createSpy = jasmine.createSpy;
 
 describe('defaultOauthInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) => 
@@ -64,11 +62,11 @@ describe('defaultOauthInterceptor', () => {
     testController.verify();
   })
 
-  fit('should be created', () => {
+  it('should be created', () => {
     expect(interceptor).toBeTruthy();
   });
 
-  fit('should add auth header', async () => {
+  it('should add auth header', async () => {
     fakeModuleConfig.resourceServer.allowedUrls?.push(url);
     fakeModuleConfig.resourceServer.sendAccessToken = true;
 
@@ -84,7 +82,7 @@ describe('defaultOauthInterceptor', () => {
     expect(req.request.headers.get('Authorization')).toEqual(`Bearer ${fakeToken}`);
   });
 
-  fit('should NOT add header if url not in allowedUrls', async () => {
+  it('should NOT add header if url not in allowedUrls', async () => {
     fakeModuleConfig.resourceServer.sendAccessToken = true;
     fakeModuleConfig.resourceServer.allowedUrls?.push(url);
     const fakeUrl = '/fake';
@@ -95,7 +93,7 @@ describe('defaultOauthInterceptor', () => {
     expect(req.request.headers.get('Authorization')).toBeNull();
   });
 
-  fit('should NOT add header if sendAccessToken is false', async () => {
+  it('should NOT add header if sendAccessToken is false', async () => {
     fakeModuleConfig.resourceServer.sendAccessToken = false;
     fakeModuleConfig.resourceServer.allowedUrls?.push(url);
 
