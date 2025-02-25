@@ -1,5 +1,5 @@
 <div class="container">
-    @if(rolesLoaded && canAddMember()) {
+    @if(canAddMember()) {
         <div class="action-container">
             <button mat-mini-fab matTooltip="Add new member" (click)="addMemberHandler()">
                 <mat-icon>add</mat-icon>
