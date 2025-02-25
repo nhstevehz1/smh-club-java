@@ -54,11 +54,11 @@ describe('ListMembersComponent', () => {
   });
 
   describe('test component', () => {
-      fit('should create', () => {
+      it('should create', () => {
           expect(component).toBeTruthy();
       });
 
-      fit('should create column list', () => {
+      it('should create column list', () => {
          fixture.detectChanges();
          expect(component.columns.length).toEqual(5);
       });
@@ -71,7 +71,7 @@ describe('ListMembersComponent', () => {
          loader = TestbedHarnessEnvironment.loader(fixture);
       });
 
-      fit('should call MemberService.getMembers() on init', async () => {
+      it('should call MemberService.getMembers() on init', async () => {
          const data = generateMemberPageData(0, 5, 100);
 
          memberSvcMock.getMembers.and.returnValue(asyncData(data));
@@ -83,7 +83,7 @@ describe('ListMembersComponent', () => {
          expect(memberSvcMock.getMembers).toHaveBeenCalledWith(request);
      });
 
-    fit('length should be set on init', async () => {
+    it('length should be set on init', async () => {
        const data = generateMemberPageData(0, 5, 100);
 
        memberSvcMock.getMembers.and.returnValue(asyncData(data));
@@ -94,7 +94,7 @@ describe('ListMembersComponent', () => {
        expect(component.resultsLength).toEqual(data.page.totalElements);
     });
 
-    fit('datasource.data should be set on init', async () => {
+    it('datasource.data should be set on init', async () => {
         const data = generateMemberPageData(0, 5, 2);
 
         memberSvcMock.getMembers.and.returnValue(asyncData(data));
@@ -105,7 +105,7 @@ describe('ListMembersComponent', () => {
         expect(component.datasource.data).toBe(data._content);
     });
 
-    fit('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
+    it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
       memberSvcMock.getMembers.and.returnValue(throwError(() => 'error'));
 
       fixture.detectChanges();
@@ -114,7 +114,7 @@ describe('ListMembersComponent', () => {
       expect(component.datasource.data).toEqual([]);
     });
 
-    fit('should call canAddMember', async () => {
+    it('should call canAddMember', async () => {
         const data = generateMemberPageData(0, 5, 2);
 
         const spy = spyOn(component, 'canAddMember').and.stub();
@@ -126,7 +126,7 @@ describe('ListMembersComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-      fit('should call authService.hasPermissions', async () => {
+      it('should call authService.hasPermissions', async () => {
           const data = generateMemberPageData(0, 5, 2);
 
           const spy = authSvcMock.hasPermission.and.stub();
@@ -139,7 +139,7 @@ describe('ListMembersComponent', () => {
           expect(spy).toHaveBeenCalledWith(PermissionType.write);
       });
 
-      fit('should display add member button', async () => {
+      it('should display add member button', async () => {
           const data = generateMemberPageData(0, 5, 2);
 
           memberSvcMock.getMembers.and.returnValue(asyncData(data));
@@ -150,7 +150,7 @@ describe('ListMembersComponent', () => {
           expect(harnesses.length).toBe(1);
       });
 
-      fit('add member button should call addMemberHandler() when clicked', async () => {
+      it('add member button should call addMemberHandler() when clicked', async () => {
           const data = generateMemberPageData(0, 5, 2);
 
           const spy = spyOn(component, 'addMemberHandler').and.stub();
@@ -163,7 +163,7 @@ describe('ListMembersComponent', () => {
           expect(spy).toHaveBeenCalled();
       });
 
-      fit('router.navigate should be called when add member button is clicked', async () => {
+      it('router.navigate should be called when add member button is clicked', async () => {
           const data = generateMemberPageData(0, 5, 2);
 
           const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
