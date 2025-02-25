@@ -16,9 +16,7 @@ export const writeGuard: CanActivateFn = (route, state) => {
         //TODO: add target url to navigate
         if(!authService.isLoggedIn()) {
           router.navigate(['p/login']).then();
-        }
-
-        if(rolesLoaded && !authService.hasPermission(PermissionType.write)) {
+        } else if(rolesLoaded && !authService.hasPermission(PermissionType.write)) {
           router.navigate(['p/access-denied']).then();
         }
       })
