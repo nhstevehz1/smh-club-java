@@ -25,9 +25,6 @@ export class AuthService {
   private isAuthenticatedSubject$ = new BehaviorSubject(false)
   public isAuthenticated$ = this.isAuthenticatedSubject$.asObservable();
 
-  private rolesLoadedSubject$ = new BehaviorSubject(false);
-  public rolesLoaded$ = this.rolesLoadedSubject$.asObservable();
-
   constructor(private oauthService: OAuthService,
               private router: Router,
               private window: Window) {
@@ -67,16 +64,19 @@ export class AuthService {
         });
   }
 
-  private loadCurrentUser(claims:  any): void {
+  private loadCurrentUser(): void {
     let roles = this.parseRoles().filter(r => r.startsWith('club-'));
+    const claims = this.oauthService.getIdentityClaims();
     this.user = {
-      preferredUserName: claims["preferred_username"],
+      preferredUserName: claims['preferred_username'],
       givenName: claims['given_name'],
       familyName: claims['family_name'],
       fullName: claims['name'],
       email: claims['email'],
       roles: roles
     }
+
+    console.info('AuthUser', this.user);
   }
 
   private hasRole(roles?: string[]): boolean {
@@ -104,19 +104,13 @@ export class AuthService {
   private initOauth(): void {
     this.oauthService.configure(authCodeFlowConfig);
 
+    this.isAuthenticated$.pipe(filter(authed => authed))
+        .subscribe(() => this.loadCurrentUser());
+
     // listen on any event.  Update the isAuthenticated subject
     this.oauthService.events.subscribe(() => {
       this.isAuthenticatedSubject$.next(this.oauthService.hasValidAccessToken());
     });
-
-    this.oauthService.events
-        .pipe(filter(event => ['token_received'].includes(event.type)))
-        .subscribe(() => {
-          this.oauthService.loadUserProfile().then((claims) => {
-            this.loadCurrentUser(claims);
-            this.rolesLoadedSubject$.next(true);
-          });
-        });
 
     this.oauthService.events
         .pipe(filter(event => ['session_terminated', 'session_error'].includes(event.type)))
@@ -138,9 +132,8 @@ export class AuthService {
 
     // if a valid token is in storage, populate user roles.
     if(this.oauthService.hasValidAccessToken()) {
-      const claims = this.oauthService.getIdentityClaims()
-      this.loadCurrentUser(claims);
-      this.rolesLoadedSubject$.next(true);
+      this.loadCurrentUser();
+      this.isAuthenticatedSubject$.next(true);
     }
 
     this.oauthService.setupAutomaticSilentRefresh();

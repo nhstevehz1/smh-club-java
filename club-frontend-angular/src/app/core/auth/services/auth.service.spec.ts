@@ -60,6 +60,7 @@ describe('AuthService', () => {
       it('should call loadDiscoveryDocumentAndTryLogin()', fakeAsync(() => {
           const spy =
               oAuthMock.loadDiscoveryDocumentAndTryLogin.and.returnValue(Promise.resolve(true));
+
           oAuthMock.hasValidAccessToken.and.returnValue(false);
           spyOn(oAuthMock.events, 'pipe').and.callThrough();
           spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
@@ -75,7 +76,6 @@ describe('AuthService', () => {
           expect(spy).toHaveBeenCalled();
           expect(svcSpy).toHaveBeenCalled()
       }));
-
   })
 
   describe('test initialization', () => {
@@ -106,20 +106,8 @@ describe('AuthService', () => {
         TestBed.inject(AuthService);
         tick();
 
-        expect(pipeSpy).toHaveBeenCalledTimes(3);
-        expect(subSpy).toHaveBeenCalledTimes(3)
-    }));
-
-    it('should call oAuthService.loadUserProfile on token_received event', fakeAsync(() => {
-        const spy = oAuthMock.loadUserProfile.and.returnValue(Promise.resolve(claimsMock));
-
-        TestBed.inject(AuthService);
-        tick();
-
-        oauthSubject$.next(tokenReceivedEvent);
-        tick();
-
-        expect(spy).toHaveBeenCalledWith();
+        expect(pipeSpy).toHaveBeenCalledTimes(2);
+        expect(subSpy).toHaveBeenCalledTimes(2)
     }));
 
     it('should call oAuthService.hasValidAccessToken()', fakeAsync(() => {
