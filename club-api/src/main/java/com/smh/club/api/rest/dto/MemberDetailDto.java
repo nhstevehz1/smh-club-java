@@ -3,7 +3,7 @@ package com.smh.club.api.rest.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -39,10 +39,10 @@ public class MemberDetailDto {
     private String suffix;
 
     @JsonProperty("birth_date")
-    private LocalDate birthDate;
+    private Instant birthDate;
 
     @JsonProperty("joined_date")
-    private LocalDate joinedDate;
+    private Instant joinedDate;
 
     @Builder.Default
     @JsonProperty("addresses")

@@ -5,7 +5,7 @@
                 @if(hasPermission(item.permission)) {
                     <mat-list-item (click)="onMenuClicked(item.route)">
                         <mat-icon matListItemIcon>{{item.iconName}}</mat-icon>
-                        <div matListItemLine>{{item.displayName}}</div>
+                        <span matListItemTitle>{{item.displayName}}</span>
                     </mat-list-item>
                 }
             }

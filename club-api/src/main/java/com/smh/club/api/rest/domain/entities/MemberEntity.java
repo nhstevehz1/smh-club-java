@@ -2,7 +2,7 @@ package com.smh.club.api.rest.domain.entities;
 
 import com.smh.club.api.rest.domain.annotations.SortExclude;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
@@ -39,10 +39,10 @@ public class MemberEntity {
     private String suffix;
 
     @Column(name = "birth_date", nullable = false)
-    private LocalDate birthDate;
+    private Instant birthDate;
 
     @Column(name = "joined_date", nullable = false)
-    private LocalDate joinedDate;
+    private Instant joinedDate;
 
     @SortExclude
     @Getter

@@ -1,5 +1,6 @@
 package com.smh.club.api.rest.contracts.services;
 
+import com.smh.club.api.rest.dto.CreateMemberDto;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import com.smh.club.api.rest.response.PagedDto;
@@ -30,7 +31,7 @@ public interface MemberService {
      * @param member The {@link MemberDto} used to create the member.
      * @return The newly created member.
      */
-    MemberDto createMember(MemberDto member);
+    MemberDto createMember(CreateMemberDto member);
 
     /**
      * Updates a member in the database.

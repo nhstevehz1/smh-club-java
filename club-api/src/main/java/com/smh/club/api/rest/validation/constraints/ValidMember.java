@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * Instructs validation to fire the {@link MemberValidator} validator.
  */
 @Constraint(validatedBy = MemberValidator.class)
-@Target({ElementType.TYPE_USE})
+@Target({ElementType.TYPE_USE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidMember {
   Class<?> value() default LocalDate.class;

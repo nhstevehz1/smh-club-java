@@ -13,6 +13,7 @@ export function generateEmailList(size: number): Array<EmailMember> {
     for (let ii = 0; ii < size; ii++) {
         let emailMember = {
             id: ii,
+            member_id: ii,
             email: `${ii}email@${ii}domain.com`,
             email_type: 'Home',
             full_name: {

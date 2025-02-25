@@ -1,0 +1,73 @@
+<div [formGroup]="editorForm">
+    <div class="flex-column space-evenly">
+        @if (showRemoveButton || isTitleDefined()) {
+            <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
+                @if(title) {
+                    <div class="flex-row">
+                        <mat-label class="editor-title">{{title}}</mat-label>
+                    </div>
+                }
+                @if(showRemoveButton) {
+                    <button mat-icon-button (click)="onRemove()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                }
+            </div>
+        }
+
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>Street or PO Box</mat-label>
+            <input type="text" matInput [formControl]="address1">
+            @if (hasError(address1)) {
+                <mat-error>Street or PO box required</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>(address continued)</mat-label>
+            <input type="text" matInput [formControl]="address2">
+            @if (hasError(address2)) {
+                <mat-error>Address2 invalid</mat-error>
+            }
+        </mat-form-field>
+
+        <div class="flex-row flex-start gap">
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>City/Town</mat-label>
+                <input type="text" matInput [formControl]="city">
+                @if (hasError(city)) {
+                    <mat-error>City/Town required</mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>State/Territory</mat-label>
+                <input type="text" matInput [formControl]="state">
+                @if (hasError(state)) {
+                    <mat-error>State required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="flex-row flex-start gap">
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Postal Code</mat-label>
+                <input type="text" matInput [formControl]="zip">
+                @if (hasError(zip)) {
+                    <mat-error>ZIP code required</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field [appearance]="fieldAppearance">
+                <mat-label>Address type</mat-label>
+                <mat-select [formControl]="addressType">
+                    @for (option of addressTypes; track option){
+                        <mat-option [value]="option">{{option}}</mat-option>
+                    }
+                </mat-select>
+                @if (hasError(addressType)) {
+                    <mat-error>Address type required</mat-error>
+                }
+            </mat-form-field>
+        </div>
+    </div>
+</div>

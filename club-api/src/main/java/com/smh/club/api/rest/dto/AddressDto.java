@@ -6,7 +6,6 @@ import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.entities.AddressType;
 import com.smh.club.api.rest.validation.constraints.PostalCode;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,6 @@ public class AddressDto {
     @JsonProperty("id")
     private int id;
 
-    @Min(1)
     @SortExclude
     @JsonProperty("member_id")
     private int memberId;

@@ -14,7 +14,7 @@ import {MatDividerModule} from "@angular/material/divider";
         ContentComponent,
         MatDividerModule
     ],
-  providers: [AuthService],
+  providers: [],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })
@@ -28,13 +28,8 @@ export class MainLayoutComponent {
     return this.authService!.isLoggedIn()
   }
 
-  get name(): string {
-    return this.authService!.getGivenName()
-  }
-
-  get lastLogin(): string | null{
-    // TODO: implement
-    return null;
+  get name(): string | undefined {
+    return this.authService.getCurrentUser()?.fullName;
   }
 
   sideNavHandler(): void {

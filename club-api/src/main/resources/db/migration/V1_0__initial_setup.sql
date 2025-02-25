@@ -7,8 +7,8 @@ CREATE TABLE member_mgmt.member (
     middle_name varchar(40),
     last_name varchar(40) NOT NULL,
 	suffix varchar(10),
-	joined_date DATE NOT NULL,
-	birth_date DATE NOT NULL,
+	joined_date TIMESTAMP WITH TIME ZONE NOT NULL,
+	birth_date TIMESTAMP WITH TIME ZONE NOT NULL,
 	active boolean DEFAULT FALSE,
 
 	CONSTRAINT pk_member PRIMARY KEY (id),
@@ -43,7 +43,7 @@ CREATE TABLE member_mgmt.email (
 CREATE TABLE member_mgmt.renewal (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	member_id int NOT NULL,
-	renewal_date DATE NOT NULL,
+	renewal_date TIMESTAMP WITH TIME ZONE NOT NULL,
 	renewal_year smallint NOT NULL,
 
 	CONSTRAINT pk_renewals PRIMARY KEY (id),

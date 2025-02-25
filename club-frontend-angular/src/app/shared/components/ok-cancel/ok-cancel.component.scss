@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  min-width: 200px;
+  max-width: 400px;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.card-title {}

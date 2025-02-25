@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,7 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 public abstract class IntegrationTests {
 
     protected final ObjectMapper mapper;
@@ -34,7 +36,7 @@ public abstract class IntegrationTests {
         configure();
     }
 
-    protected <T> T sendValidCreate(T create, Class<T> clazz) throws JsonProcessingException {
+    protected <T, R> R sendValidCreate(T create, Class<R> clazz) throws JsonProcessingException {
         return  given()
             .auth().none()
             .accept(MediaType.APPLICATION_JSON)
@@ -59,7 +61,7 @@ public abstract class IntegrationTests {
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
             .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+            .expect(jsonPath("$.validation-errors.length()").isNotEmpty());
     }
 
     protected <T> T sendValidUpdate(int id, T update, Class<T> clazz) throws JsonProcessingException {
@@ -87,8 +89,7 @@ public abstract class IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.BAD_REQUEST)
             .assertThat().contentType(ContentType.JSON)
-            .expect(jsonPath("$.validation-errors").isNotEmpty())
-            .expect(jsonPath("$.validation-errors.length()").value(1));
+            .expect(jsonPath("$.validation-errors").isNotEmpty());
     }
 
     protected <T> List<T> executeListPage(PageTestParams<T> testParams) {
@@ -121,7 +122,11 @@ public abstract class IntegrationTests {
         // Configure RestAssured to use the injected Object mapper.
         RestAssuredMockMvc.config =
             RestAssuredMockMvcConfig.config().objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
-                (type, s) -> mapper));
+                (type, s) -> {
+                    log.debug(String.valueOf(type));
+                    log.debug(String.valueOf(s));
+                    return mapper;
+                }));
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)

@@ -18,7 +18,7 @@ describe('MainLayoutComponent', () => {
 
   beforeEach(async () => {
     authServiceMock = jasmine.createSpyObj<AuthService>('AuthService',
-        ['logOut', 'isLoggedIn', 'getGivenName']);
+        ['logOut', 'isLoggedIn']);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -72,16 +72,7 @@ describe('MainLayoutComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(result).toBe(false);
   });
-
-  it('should return user name', () => {
-    const spy = authServiceMock.getGivenName.and.returnValue('test');
-
-    const result = component.name;
-
-    expect(spy).toHaveBeenCalled();
-    expect(result).toBe('test');
-  });
-
+  
   it('should call content.toggleSlideNav', () => {
     const spy = spyOn(component.content, 'toggleSideNav');
     component.sideNavHandler();

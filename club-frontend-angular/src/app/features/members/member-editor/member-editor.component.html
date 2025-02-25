@@ -1,0 +1,75 @@
+<div [formGroup]=editorForm >
+    @if (showRemoveButton || isTitleDefined()) {
+        <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
+            @if(title) {
+                <div class="flex-row">
+                    <mat-label>{{title}}</mat-label>
+                </div>
+                <mat-divider></mat-divider>
+            }
+            @if(showRemoveButton) {
+                <button mat-icon-button (click)="onRemove()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            }
+        </div>
+    }
+
+    <div class="flex-row start gap">
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>First name</mat-label>
+            <input type="text" matInput [formControl]="firstName">
+            @if (hasError(firstName)) {
+                <mat-error>First name required</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>Middle name or initial</mat-label>
+            <input type="text" matInput [formControl]="middleName">
+            @if (hasError(middleName)) {
+                <mat-error>Middle name invalid</mat-error>
+            }
+        </mat-form-field>
+    </div>
+
+    <div class="flex-row start gap">
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>Last name</mat-label>
+            <input type="text" matInput [formControl]="lastName">
+            @if (hasError(lastName)) {
+                <mat-error>Last name required</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>Suffix</mat-label>
+            <input type="text" matInput [formControl]="suffix">
+            @if (hasError(suffix)) {
+                <mat-error>Last name required</mat-error>
+            }
+        </mat-form-field>
+    </div>
+
+    <div class="flex-row start gap">
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>Birth date</mat-label>
+            <input [matDatepicker]="birthDatePicker" matInput [formControl]="birthDate">
+            <mat-datepicker-toggle matIconSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #birthDatePicker></mat-datepicker>
+            @if (hasError(birthDate)) {
+                <mat-error>Birth date required</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field [appearance]="fieldAppearance">
+            <mat-label>Joined date</mat-label>
+            <input [matDatepicker]="joinedDatePicker" matInput [formControl]="joinedDate">
+            <mat-datepicker-toggle matIconSuffix [for]="joinedDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #joinedDatePicker></mat-datepicker>
+            @if (hasError(joinedDate)) {
+                <mat-error>Joined date required</mat-error>
+            }
+        </mat-form-field>
+    </div>
+</div>

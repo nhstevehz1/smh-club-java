@@ -14,6 +14,7 @@ export function generateAddressList(size: number): Array<AddressMember> {
     for (let ii = 0; ii < size; ii++) {
         let addressMember = {
             id: ii,
+            member_id: ii,
             address1: ii + " Street",
             address2: ii + " Apt.",
             city: ii + " City",

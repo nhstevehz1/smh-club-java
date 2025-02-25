@@ -7,7 +7,7 @@ import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.validation.constraints.ValidRenewal;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import java.time.LocalDate;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +34,7 @@ public class RenewalDto {
     @NotNull
     @PastOrPresent
     @JsonProperty("renewal_date")
-    private LocalDate renewalDate;
+    private Instant renewalDate;
 
     @JsonProperty("renewal_year")
     private int renewalYear;

@@ -3,17 +3,35 @@ import {
     SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {MatTableDataSource} from "@angular/material/table";
-import {Member} from "../models/Member";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MembersService} from "../services/members.service";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {Router} from "@angular/router";
+import {MatTooltip} from "@angular/material/tooltip";
+import {Member} from "../models/member";
+import {DateTime} from "luxon";
+import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
+import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
+import {AuthService} from "../../../core/auth/services/auth.service";
+import {PermissionType} from "../../../core/auth/models/permission-type";
 
 @Component({
   selector: 'app-list-members',
-    imports: [SortablePageableTableComponent],
-    providers: [MembersService],
+    imports: [
+        SortablePageableTableComponent,
+        MatIconModule,
+        MatButtonModule,
+        MatTooltip
+    ],
+    providers: [
+        MembersService,
+        DateTimeFromIsoPipe,
+        DateTimeToFormatPipe
+    ],
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
@@ -25,12 +43,17 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
     datasource = new MatTableDataSource<Member>();
     columns: ColumnDef<Member>[] = [];
 
-    constructor(private svc: MembersService) {
+    isAuthed = false;
+
+    constructor(private svc: MembersService,
+                protected authSvc: AuthService,
+                private router: Router,
+                private dtToFormatPipe: DateTimeToFormatPipe) {
         super();
     }
 
     ngOnInit(): void {
-       this.columns = this.getColumns(); // create column defs
+       this.columns = this.getColumns();// create column defs
     }
 
     ngAfterViewInit(): void {
@@ -46,7 +69,7 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                     // pipe any errors to an Observable of null
                     return this.svc.getMembers(pr)
                         .pipe(catchError(err => {
-                            console.log(err);
+                            console.debug(err);
                             return observableOf(null);
                         }));
                 }),
@@ -62,7 +85,20 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                     // map the content array only
                     return data._content;
                 })
-            ).subscribe(data => this.datasource.data = data!); // set the data source with the new page
+            ).subscribe({
+                // set the data source to the new page
+                next: data => this.datasource.data = data!
+            });
+    }
+
+    canAddMember(): boolean {
+        const canShow = this.authSvc.hasPermission(PermissionType.write);
+        console.debug('canAddMember', canShow)
+        return canShow;
+    }
+
+    addMemberHandler(): void {
+        this.router.navigate(['p/members/add']).then(() => {});
     }
 
     // assemble the column defs which will be consumed by the pageable sortable table component
@@ -89,14 +125,17 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
                 columnName: 'birth_date',
                 displayName: 'Birth Date',
                 isSortable: true,
-                cell: (element: Member) => `${element.birth_date}`
+                cell: (element: Member) =>
+                    this.dtToFormatPipe.transform(element.birth_date, DateTime.DATE_SHORT)
             },
             {
                 columnName: 'joined_date',
                 displayName: 'Joined',
                 isSortable: true,
-                cell: (element: Member) => `${element.joined_date}`
+                cell: (element: Member) =>
+                    this.dtToFormatPipe.transform(element.joined_date, DateTime.DATE_SHORT)
             }
         ];
     }
+
 }

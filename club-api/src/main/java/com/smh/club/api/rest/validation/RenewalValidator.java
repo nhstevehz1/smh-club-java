@@ -4,6 +4,7 @@ import com.smh.club.api.rest.dto.RenewalDto;
 import com.smh.club.api.rest.validation.constraints.ValidRenewal;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import java.time.ZoneId;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,8 +18,10 @@ public class RenewalValidator implements ConstraintValidator<ValidRenewal, Renew
       return true;
     }
 
+    var zonedRenewal = renewal.getRenewalDate().atZone(ZoneId.systemDefault());
+
     // Renewal year must be same year as renewal date or for the year early.  Covers late renewals.
-    return renewal.getRenewalYear() == renewal.getRenewalDate().getYear()
-        || renewal.getRenewalYear() == renewal.getRenewalDate().getYear() - 1;
+    return renewal.getRenewalYear() == zonedRenewal.getYear()
+        || renewal.getRenewalYear() == zonedRenewal.getYear() - 1;
   }
 }

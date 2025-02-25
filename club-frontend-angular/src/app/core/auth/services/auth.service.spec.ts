@@ -3,56 +3,86 @@ import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {AuthService} from './auth.service';
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {OAuthEvent, OAuthService, OAuthSuccessEvent} from "angular-oauth2-oidc";
-import {Subject} from "rxjs";
+import {OAuthEvent, OAuthService} from "angular-oauth2-oidc";
+import {Observable, Subject} from "rxjs";
 import {authCodeFlowConfig} from "../../../auth.config";
 
 describe('AuthService', () => {
   let service: AuthService;
-  let oAuthServiceMock: jasmine.SpyObj<OAuthService>;
+  let oAuthMock: jasmine.SpyObj<OAuthService>;
   const methods = [
-        'configure', 'loadDiscoveryDocumentAndLogin', 'setupAutomaticSilentRefresh',
-        'loadUserProfile', 'events', 'getAccessToken', 'getAccessToken', 'getIdentityClaims',
-      'logOut', 'hasValidIdToken'
+        'configure', 'loadDiscoveryDocumentAndTryLogin', 'setupAutomaticSilentRefresh',
+        'loadUserProfile', 'events', 'getAccessToken', 'getIdentityClaims',
+      'logOut', 'hasValidAccessToken', 'hasValidIdToken', 'initLoginFlow'
   ];
-  const tokenReceivedEvent = new OAuthSuccessEvent('token_received')
-  let oauthSubject = new Subject<OAuthEvent>();
-  let $oauthEvent = oauthSubject.asObservable();
+
+  let oauthSubject$: Subject<OAuthEvent>
+  let oauthEvent$: Observable<OAuthEvent>;
+
+  let windowMock: jasmine.SpyObj<Window>;
 
   beforeEach(() => {
-    oAuthServiceMock = jasmine.createSpyObj('OAuthService', methods);
+    oAuthMock = jasmine.createSpyObj('OAuthService', methods);
+    windowMock = jasmine.createSpyObj('Window', ['addEventListener', 'dispatchEvent']);
+
+    oauthSubject$ = new Subject<OAuthEvent>();
+    oauthEvent$  = oauthSubject$.asObservable()
+
     TestBed.configureTestingModule({
       providers: [
           provideHttpClient(),
           provideHttpClientTesting(),
-          {provide: OAuthService, useValue: oAuthServiceMock},
+          {provide: OAuthService, useValue: oAuthMock},
+          {provide: Window, useValue: windowMock}
       ]
     });
-    oAuthServiceMock.events = $oauthEvent;
+    oAuthMock.events = oauthEvent$;
   });
 
   it('should be created', () => {
+      spyOn(oAuthMock.events, 'pipe').and.callThrough();
+      spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
+
     service = TestBed.inject(AuthService);
     expect(service).toBeTruthy();
   });
 
+  describe('test startupLoginSequence', () => {
+      it('should call loadDiscoveryDocumentAndTryLogin()', fakeAsync(() => {
+          const spy =
+              oAuthMock.loadDiscoveryDocumentAndTryLogin.and.returnValue(Promise.resolve(true));
+
+          oAuthMock.hasValidAccessToken.and.returnValue(false);
+          spyOn(oAuthMock.events, 'pipe').and.callThrough();
+          spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
+
+          const svc = TestBed.inject(AuthService);
+
+          // @ts-expect-error
+          const svcSpy = spyOn(svc, 'navigateToLogin').and.stub();
+          svc.startupLoginSequence();
+
+          tick();
+
+          expect(spy).toHaveBeenCalled();
+          expect(svcSpy).toHaveBeenCalled()
+      }));
+  })
+
   describe('test initialization', () => {
     it('should call oAuthService.configure() on init', () => {
-      const spy = oAuthServiceMock.configure.and.callThrough();
+      const spy = oAuthMock.configure.and.callThrough();
+        spyOn(oAuthMock.events, 'pipe').and.callThrough();
+        spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
+
       TestBed.inject(AuthService);
       expect(spy).toHaveBeenCalledOnceWith(authCodeFlowConfig);
     });
 
-    it('should call oAuthService.loadDiscoveryDocumentAndLogin() on init', () => {
-      const spy =
-          oAuthServiceMock.loadDiscoveryDocumentAndLogin.and.returnValue(Promise.resolve(true));
-      TestBed.inject(AuthService);
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-
     it('should call oAuthService.setupAutomaticSilentRefresh() on init', fakeAsync(() => {
-      oAuthServiceMock.loadDiscoveryDocumentAndLogin.and.returnValue(Promise.resolve(true));
-      const spy = oAuthServiceMock.setupAutomaticSilentRefresh.and.callThrough();
+      const spy = oAuthMock.setupAutomaticSilentRefresh.and.callThrough();
+      spyOn(oAuthMock.events, 'pipe').and.callThrough();
+      spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
 
       TestBed.inject(AuthService);
       tick();
@@ -60,14 +90,48 @@ describe('AuthService', () => {
       expect(spy).toHaveBeenCalled();
     }));
 
-    it('should call oAuthService.loadUserProfile()', fakeAsync(() => {
-        oAuthServiceMock.loadDiscoveryDocumentAndLogin.and.returnValue(Promise.resolve(true));
-        const spy = oAuthServiceMock.loadUserProfile.and.callThrough();
+    it('should call oAuthService.events', fakeAsync(() => {
+        const pipeSpy = spyOn(oAuthMock.events, 'pipe').and.callThrough();
+        const subSpy = spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
 
         TestBed.inject(AuthService);
         tick();
 
-        oauthSubject.next(tokenReceivedEvent);
+        expect(pipeSpy).toHaveBeenCalledTimes(2);
+        expect(subSpy).toHaveBeenCalledTimes(2)
+    }));
+
+    it('should call oAuthService.hasValidAccessToken()', fakeAsync(() => {
+        spyOn(oAuthMock.events, 'pipe').and.callThrough();
+        spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
+
+        const spy = oAuthMock.hasValidAccessToken.and.stub();
+
+        TestBed.inject(AuthService);
+        tick()
+
+        expect(spy).toHaveBeenCalled();
+    }));
+
+    it('should call oAuthService.setupAutomaticClientRefresh()', fakeAsync(() => {
+        spyOn(oAuthMock.events, 'pipe').and.callThrough();
+        spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
+
+        const spy = oAuthMock.setupAutomaticSilentRefresh.and.stub();
+
+        TestBed.inject(AuthService);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+    }));
+
+    it('should call window.addEventListener', fakeAsync(() => {
+        const spy = windowMock.addEventListener.and.stub();
+        spyOn(oAuthMock.events, 'pipe').and.callThrough();
+        spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
+
+        TestBed.inject(AuthService);
+        tick();
 
         expect(spy).toHaveBeenCalled();
     }));
@@ -76,38 +140,29 @@ describe('AuthService', () => {
   describe('test service methods', () => {
      beforeEach(() => {
        service = TestBed.inject(AuthService);
+         spyOn(oAuthMock.events, 'pipe').and.callThrough();
+         spyOn(oAuthMock.events.pipe(), 'subscribe').and.stub();
      });
 
-     it('should return email', () => {
-       const record: Record<string, string> = {'email': 'test@test.com'} ;
-       const spy = oAuthServiceMock.getIdentityClaims.and.returnValue(record);
+      it('should call oAuthService.initCodeFlow on login', () => {
+          const spy = oAuthMock.initLoginFlow.and.stub();
 
-       let result = service.getEmail();
+          service.login();
 
-       expect(spy).toHaveBeenCalled();
-       expect(result).toEqual('test@test.com');
-     });
+          expect(spy).toHaveBeenCalled();
+      });
 
      it('should call oAuthService.logOut on logout', () => {
-         const spy = oAuthServiceMock.logOut.and.callThrough();
+         const spy = oAuthMock.logOut.and.stub();
 
          service.logOut();
 
          expect(spy).toHaveBeenCalled();
      });
 
-     it('should return user name', () => {
-        const record: Record<string, string> = {'given_name': 'username'} ;
-        const spy = oAuthServiceMock.getIdentityClaims.and.returnValue(record);
-
-        let result = service.getGivenName();
-
-        expect(spy).toHaveBeenCalled();
-        expect(result).toEqual('username');
-     });
 
      it('isLoggedIn should return true', () => {
-        const spy = oAuthServiceMock.hasValidIdToken.and.returnValue(true);
+        const spy = oAuthMock.hasValidIdToken.and.returnValue(true);
 
         let result = service.isLoggedIn();
 
@@ -116,7 +171,7 @@ describe('AuthService', () => {
      });
 
     it('isLoggedIn should return false', () => {
-      const spy = oAuthServiceMock.hasValidIdToken.and.returnValue(false);
+      const spy = oAuthMock.hasValidIdToken.and.returnValue(false);
 
       let result = service.isLoggedIn();
 

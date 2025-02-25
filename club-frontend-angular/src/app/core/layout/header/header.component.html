@@ -1,22 +1,36 @@
 <header>
-<mat-toolbar class="header-toolbar">
-    <button mat-icon-button (click)="toggleSideNavHandler()">
-        <mat-icon>menu</mat-icon>
-    </button>
-    <span>Social Club</span>
-    <span class="header-spacer"></span>
-    <mat-slide-toggle (change)="onThemeChanged($event)">dark</mat-slide-toggle>
-    <button mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
-        <mat-icon>account_circle</mat-icon>
-    </button>
-    <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
-        <button mat-menu-item (click)="profileHandler()">
-            <mat-icon>person</mat-icon><span>Profile</span>
+<mat-toolbar class="content">
+    <div class="flex-row start gap">
+        <button mat-icon-button (click)="toggleSideNavHandler()">
+            <mat-icon>menu</mat-icon>
         </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item (click)="logoutHandler()">
-            <mat-icon>exit_to_app</mat-icon><span>Logout</span>
+        <span>Social Club</span>
+    </div>
+
+    <div class="flex-row center">
+        <mat-slide-toggle (change)="onThemeChanged($event)">Dark mode</mat-slide-toggle>
+    </div>
+
+    <div class="flex-row end gap">
+        @if(isLoggedIn && userName) {
+            <span class="user-name">Welcome {{userName}}!</span>
+        }
+
+        <button mat-icon-button
+                matTooltip="My Account"
+                [matMenuTriggerFor]="userAccountMenu"
+                [disabled]="!isLoggedIn">
+            <mat-icon>account_circle</mat-icon>
         </button>
-    </mat-menu>
+        <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
+            <button mat-menu-item (click)="profileHandler()">
+                <mat-icon>person</mat-icon><span>Profile</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logoutHandler()">
+                <mat-icon>exit_to_app</mat-icon><span>Logout</span>
+            </button>
+        </mat-menu>
+    </div>
 </mat-toolbar>
 </header>

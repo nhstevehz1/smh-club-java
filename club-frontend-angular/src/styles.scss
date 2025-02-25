@@ -21,6 +21,10 @@ html {
       container-text-color: var(--mat-sys-primary),
   ));
 
+  @include mat.divider-overrides((
+          width: 2px,
+          color: var(--mat-sys-outline-variant)
+  ));
 }
 
 body.dark-mode {
@@ -35,4 +39,39 @@ body {
   margin: 0;
   background: var(--mat-sys-surface);
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// flexbox stuff
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.start {
+  justify-content: start;
+}
+
+.end {
+  justify-content: end;
+}
+.center {
+  justify-content: center;
+}
+
+.space-evenly {
+  justify-content: space-evenly;
+}
+
+.space-between {
+  justify-content: space-between;
 }
