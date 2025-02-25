@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,7 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 public abstract class IntegrationTests {
 
     protected final ObjectMapper mapper;
@@ -120,7 +122,11 @@ public abstract class IntegrationTests {
         // Configure RestAssured to use the injected Object mapper.
         RestAssuredMockMvc.config =
             RestAssuredMockMvcConfig.config().objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
-                (type, s) -> mapper));
+                (type, s) -> {
+                    log.debug(String.valueOf(type));
+                    log.debug(String.valueOf(s));
+                    return mapper;
+                }));
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
