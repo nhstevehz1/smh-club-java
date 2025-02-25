@@ -1,5 +1,5 @@
 import {HttpInterceptorFn} from '@angular/common/http';
-import {inject} from "@angular/core";
+import {inject, Optional} from "@angular/core";
 import {OAuthModuleConfig, OAuthResourceServerErrorHandler, OAuthService, OAuthStorage} from "angular-oauth2-oidc";
 import {catchError, map, mergeMap, take, timeout} from "rxjs/operators";
 import {filter, merge, of} from "rxjs";
@@ -11,12 +11,10 @@ export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
   const errorHandler = inject(OAuthResourceServerErrorHandler);
 
   const url = req.url.toLowerCase();
-  console.log(url);
-
-  if (!moduleConfig ||
-      !moduleConfig.resourceServer ||
-      !moduleConfig.resourceServer.allowedUrls ||
-      !checkUrl(url, moduleConfig.resourceServer.allowedUrls)) {
+  console.debug('url', url);
+  console.debug('resourceServer', moduleConfig.resourceServer);
+  if (!moduleConfig.resourceServer.allowedUrls ||
+      !checkUrl(url, moduleConfig.resourceServer.allowedUrls!)) {
     return next(req);
   }
 
@@ -42,7 +40,7 @@ export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
           const headers = req.headers.set('Authorization', header);
           req = req.clone({ headers });
         }
-
+        console.debug('about to call next', req);
         return next(req).pipe(catchError(error => errorHandler.handleError(error)));
       })
   )
@@ -50,5 +48,6 @@ export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
 
 export function checkUrl(url: string, allowedUrls: string[]): boolean {
   let found = allowedUrls.find(u => url.startsWith(u));
+  console.debug('found', found);
   return !!found;
 }
