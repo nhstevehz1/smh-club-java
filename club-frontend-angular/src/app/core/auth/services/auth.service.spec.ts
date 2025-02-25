@@ -16,15 +16,6 @@ describe('AuthService', () => {
       'logOut', 'hasValidAccessToken', 'hasValidIdToken', 'initLoginFlow'
   ];
 
-  const claimsMock = {
-      preferred_username: 'username',
-      given_name: 'given name',
-      family_name: 'family name',
-      name: 'name',
-      email: 'email@email.com'
-  }
-  const tokenReceivedEvent: OAuthEvent = new OAuthSuccessEvent('token_received');
-
   let oauthSubject$: Subject<OAuthEvent>
   let oauthEvent$: Observable<OAuthEvent>;
 
