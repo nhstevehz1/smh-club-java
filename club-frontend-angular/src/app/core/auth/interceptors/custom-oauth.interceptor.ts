@@ -1,5 +1,5 @@
 import {HttpInterceptorFn} from '@angular/common/http';
-import {inject, Optional} from "@angular/core";
+import {inject} from "@angular/core";
 import {OAuthModuleConfig, OAuthResourceServerErrorHandler, OAuthService, OAuthStorage} from "angular-oauth2-oidc";
 import {catchError, map, mergeMap, take, timeout} from "rxjs/operators";
 import {filter, merge, of} from "rxjs";
