@@ -21,7 +21,7 @@ export class ListEmailsComponent
     extends TableComponentBase<EmailMember> implements OnInit, AfterViewInit {
 
     @ViewChild(SortablePageableTableComponent, {static: true})
-    private _table!: SortablePageableTableComponent;
+    private _table!: SortablePageableTableComponent<EmailMember>;
 
     resultsLength = 0;
     datasource = new MatTableDataSource<EmailMember>();

@@ -20,7 +20,7 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
 export class ListPhonesComponent extends TableComponentBase<PhoneMember> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
-  private _table!: SortablePageableTableComponent;
+  private _table!: SortablePageableTableComponent<PhoneMember>;
 
   resultsLength = 0;
   datasource = new MatTableDataSource<PhoneMember>();

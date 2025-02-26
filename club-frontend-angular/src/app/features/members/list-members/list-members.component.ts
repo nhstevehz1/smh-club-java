@@ -37,7 +37,7 @@ import {PermissionType} from "../../../core/auth/models/permission-type";
 })
 export class ListMembersComponent extends TableComponentBase<Member> implements OnInit, AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
-    private _table!: SortablePageableTableComponent;
+    private _table!: SortablePageableTableComponent<Member>;
 
     resultsLength = 0;
     datasource = new MatTableDataSource<Member>();
