@@ -1,16 +1,14 @@
-import {AfterViewInit, Component, OnInit, Signal, signal, ViewChild, ViewChildren, WritableSignal} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {EmailType} from "../models/email-type";
-import {MatFormField, MatInput, MatInputModule} from "@angular/material/input";
+import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDivider} from "@angular/material/divider";
 import {Email} from "../models/email";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {NgClass} from "@angular/common";
-import {combineLatest, filter, merge, of} from "rxjs";
-import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-email-editor',
