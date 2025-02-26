@@ -14,9 +14,9 @@ import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
   templateUrl: './sortable-pageable-table.component.html',
   styleUrl: './sortable-pageable-table.component.scss'
 })
-export class SortablePageableTableComponent implements AfterViewInit {
-  @Input() columns: Array<ColumnDef<any>> = []
-  @Input() dataSource!: MatTableDataSource<any>;
+export class SortablePageableTableComponent<T> implements AfterViewInit {
+  @Input({required: true}) columns!: Array<ColumnDef<T>>;
+  @Input({required: true}) dataSource!: MatTableDataSource<T>;
   @Input() pageSizes: number[] = [5,10,25,100];
   @Input() pageSize: number = 5;
   @Input() resultsLength: number = 0;

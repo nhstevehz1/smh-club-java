@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {MatInputModule} from "@angular/material/input";
 import {ControlContainer, FormControl, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
@@ -30,7 +30,14 @@ import {NgClass} from "@angular/common";
   templateUrl: './member-editor.component.html',
   styleUrl: './member-editor.component.scss'
 })
-export class MemberEditorComponent extends BaseEditorComponent<Member> {
+export class MemberEditorComponent extends BaseEditorComponent<Member> implements OnInit {
+
+    readonly firstNameError = signal(false);
+    readonly middleNameError = signal(false);
+    readonly lastNameError = signal(false);
+    readonly suffixError = signal(false);
+    readonly birthDateError = signal(false);
+    readonly joinedDateError = signal(false);
 
     constructor() {
         super();
@@ -60,4 +67,12 @@ export class MemberEditorComponent extends BaseEditorComponent<Member> {
         return this.editorForm.controls.joined_date;
     }
 
+    ngOnInit() {
+        this.setErrorSignal(this.firstNameError, this.firstName);
+        this.setErrorSignal(this.middleNameError, this.middleName);
+        this.setErrorSignal(this.lastNameError, this.lastName);
+        this.setErrorSignal(this.suffixError, this.suffix);
+        this.setErrorSignal(this.birthDateError, this.birthDate);
+        this.setErrorSignal(this.joinedDateError, this.joinedDate);
+    }
 }

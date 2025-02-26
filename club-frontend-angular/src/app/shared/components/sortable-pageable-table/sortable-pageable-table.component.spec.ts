@@ -36,8 +36,8 @@ describe('SortablePageableTableComponent', () => {
     {a_string: "Field3", date_time: DateTime.now(), a_boolean: true, a_number: 3},
   ];
 
-  let fixture: ComponentFixture<SortablePageableTableComponent>;
-  let component: SortablePageableTableComponent;
+  let fixture: ComponentFixture<SortablePageableTableComponent<TestModel>>;
+  let component: SortablePageableTableComponent<TestModel>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
@@ -52,9 +52,12 @@ describe('SortablePageableTableComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SortablePageableTableComponent);
+    fixture = TestBed.createComponent(SortablePageableTableComponent<TestModel>);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
+
+    component.columns = columnDefs;
+    component.dataSource = new MatTableDataSource<TestModel>();
   });
 
   describe('test component inputs', () => {
@@ -69,7 +72,7 @@ describe('SortablePageableTableComponent', () => {
 
       expect(component.columns).toEqual(columnDefs);
       columnDefs.forEach(columnDef => {
-        expect(component.columns.map(c => c.columnName)).toContain(columnDef.columnName);
+        expect(component.columns.map((c => c.columnName))).toContain(columnDef.columnName);
       })
     });
 

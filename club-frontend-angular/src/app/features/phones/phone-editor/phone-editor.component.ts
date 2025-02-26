@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {PhoneType} from "../models/phone-type";
 import {MatInputModule} from "@angular/material/input";
@@ -24,7 +24,10 @@ import {NgClass} from "@angular/common";
   templateUrl: './phone-editor.component.html',
   styleUrl: './phone-editor.component.scss'
 })
-export class PhoneEditorComponent extends BaseEditorComponent<Phone> {
+export class PhoneEditorComponent extends BaseEditorComponent<Phone> implements OnInit {
+
+  readonly phoneNumberError = signal(false);
+  readonly phoneTypeError = signal(false);
 
   phoneTypes = Object.values(PhoneType);
 
@@ -38,5 +41,10 @@ export class PhoneEditorComponent extends BaseEditorComponent<Phone> {
 
   constructor() {
     super();
+  }
+
+  ngOnInit() {
+    this.setErrorSignal(this.phoneNumberError, this.phoneNumber);
+    this.setErrorSignal(this.phoneTypeError, this.phoneType);
   }
 }

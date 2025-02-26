@@ -90,6 +90,7 @@ describe('EmailEditorComponent', () => {
       it('emails should show error', async () => {
         formGroup.controls.email.markAsTouched()
         formGroup.controls.email.setErrors(errors);
+        component.emailError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -137,6 +138,7 @@ describe('EmailEditorComponent', () => {
       it('email type should show error', async () => {
         formGroup.controls.email_type.markAsTouched()
         formGroup.controls.email_type.setErrors(errors);
+        component.emailTypeError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 

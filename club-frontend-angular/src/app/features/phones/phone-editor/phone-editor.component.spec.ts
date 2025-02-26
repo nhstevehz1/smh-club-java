@@ -92,6 +92,7 @@ describe('PhoneEditorComponent', () => {
       it('phone should show error', async () => {
         formGroup.controls.phone_number.markAsTouched()
         formGroup.controls.phone_number.setErrors(errors);
+        component.phoneNumberError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -139,6 +140,7 @@ describe('PhoneEditorComponent', () => {
       it('phone type should show error', async () => {
         formGroup.controls.phone_type.markAsTouched()
         formGroup.controls.phone_type.setErrors(errors);
+        component.phoneTypeError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 

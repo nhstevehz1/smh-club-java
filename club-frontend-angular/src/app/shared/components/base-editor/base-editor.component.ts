@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, WritableSignal} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormModelGroup} from "./form-model-group";
@@ -36,4 +36,10 @@ export abstract class BaseEditorComponent<T> {
   isTitleDefined(): boolean {
     return this.title !== undefined;
   };
+
+  setErrorSignal(signal: WritableSignal<boolean>, fc: FormControl): void {
+    fc.valueChanges.subscribe(() => {
+      signal.update(() => this.hasError(fc));
+    })
+  }
 }

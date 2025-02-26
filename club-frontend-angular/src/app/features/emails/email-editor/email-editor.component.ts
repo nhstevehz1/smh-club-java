@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {EmailType} from "../models/email-type";
@@ -24,9 +24,12 @@ import {NgClass} from "@angular/common";
   templateUrl: './email-editor.component.html',
   styleUrl: './email-editor.component.scss'
 })
-export class EmailEditorComponent extends BaseEditorComponent<Email> {
+export class EmailEditorComponent extends BaseEditorComponent<Email> implements OnInit {
 
   emailTypes = Object.values(EmailType);
+
+  readonly emailError = signal(false);
+  readonly emailTypeError = signal(false);
 
   public get email(): FormControl {
     return this.editorForm.controls.email;
@@ -40,12 +43,17 @@ export class EmailEditorComponent extends BaseEditorComponent<Email> {
     super();
   }
 
+  ngOnInit() {
+    this.setErrorSignal(this.emailError, this.email);
+    this.setErrorSignal(this.emailTypeError, this.emailType);
+  }
+
   getEmailError(): string {
-    if(this.email.hasError('required')) {
+    if(this.email!.hasError('required')) {
       return 'Email required';
     }
 
-    if(this.email.hasError('email')) {
+    if(this.email!.hasError('email')) {
       return 'Email invalid';
     }
 

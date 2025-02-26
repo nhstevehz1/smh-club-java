@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, Signal, signal, WritableSignal} from '@angular/core';
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
@@ -22,9 +22,18 @@ import {MatButtonModule} from "@angular/material/button";
   templateUrl: './address-editor.component.html',
   styleUrl: './address-editor.component.scss'
 })
-export class AddressEditorComponent extends BaseEditorComponent<Address> {
+export class AddressEditorComponent extends BaseEditorComponent<Address> implements OnInit{
 
   addressTypes = Object.values(AddressType);
+
+  readonly showTitle: Signal<boolean> = signal(!!this.title);
+
+  readonly address1Error: WritableSignal<boolean> = signal(false);
+  readonly address2Error: WritableSignal<boolean> = signal(false);
+  readonly cityError: WritableSignal<boolean> = signal(false);
+  readonly stateError: WritableSignal<boolean> = signal(false);
+  readonly zipError: WritableSignal<boolean> = signal(false);
+  readonly addressTypeError: WritableSignal<boolean> = signal(false);
 
   public get address1(): FormControl {
     return this.editorForm.controls.address1;
@@ -54,4 +63,13 @@ export class AddressEditorComponent extends BaseEditorComponent<Address> {
     super();
   }
 
+  ngOnInit() {
+
+    this.setErrorSignal(this.address1Error, this.address1);
+    this.setErrorSignal(this.address2Error, this.address2);
+    this.setErrorSignal(this.cityError, this.city);
+    this.setErrorSignal(this.stateError, this.state);
+    this.setErrorSignal(this.zipError, this.zip);
+    this.setErrorSignal(this.addressTypeError, this.addressType);
+  }
 }

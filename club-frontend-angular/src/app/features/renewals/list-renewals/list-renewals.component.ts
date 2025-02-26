@@ -21,7 +21,7 @@ export class ListRenewalsComponent
     extends TableComponentBase<RenewalMember> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
-  private _table!: SortablePageableTableComponent;
+  private _table!: SortablePageableTableComponent<RenewalMember>;
 
   resultsLength = 0;
   datasource = new MatTableDataSource<RenewalMember>();

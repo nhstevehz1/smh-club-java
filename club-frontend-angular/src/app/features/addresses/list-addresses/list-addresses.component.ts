@@ -20,7 +20,7 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
 })
 export class ListAddressesComponent extends TableComponentBase<AddressMember> implements OnInit, AfterViewInit {
   @ViewChild(SortablePageableTableComponent, {static: true})
-  private _table!: SortablePageableTableComponent;
+  private _table!: SortablePageableTableComponent<ColumnDef<AddressMember>>;
 
   resultsLength = 0;
   datasource = new MatTableDataSource<AddressMember>();

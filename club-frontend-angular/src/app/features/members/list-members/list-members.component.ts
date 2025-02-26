@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, OnInit, Signal, ViewChild} from '@angular/core';
 import {
     SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
@@ -37,13 +37,13 @@ import {PermissionType} from "../../../core/auth/models/permission-type";
 })
 export class ListMembersComponent extends TableComponentBase<Member> implements OnInit, AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
-    private _table!: SortablePageableTableComponent;
+    private _table!: SortablePageableTableComponent<Member>;
 
     resultsLength = 0;
     datasource = new MatTableDataSource<Member>();
     columns: ColumnDef<Member>[] = [];
 
-    isAuthed = false;
+    readonly canAddMember: Signal<boolean> = computed(() => this.authSvc.hasPermission(PermissionType.write));
 
     constructor(private svc: MembersService,
                 protected authSvc: AuthService,
@@ -91,11 +91,11 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
             });
     }
 
-    canAddMember(): boolean {
+    /*canAddMember(): boolean {
         const canShow = this.authSvc.hasPermission(PermissionType.write);
         console.debug('canAddMember', canShow)
         return canShow;
-    }
+    }*/
 
     addMemberHandler(): void {
         this.router.navigate(['p/members/add']).then(() => {});
