@@ -19,8 +19,8 @@
         <div class="flex-row start gap">
             <mat-form-field [appearance]="fieldAppearance">
                 <mat-label>Email</mat-label>
-                <input type="email" matInput [formControl]="email">
-                @if (hasError(email)) {
+                <input type="email" matInput [formControl]="email" #emailInput>
+                @if (emailError()) {
                     <mat-error>{{getEmailError()}}</mat-error>
                 }
             </mat-form-field>
@@ -32,7 +32,7 @@
                         <mat-option [value]="option">{{option}}</mat-option>
                     }
                 </mat-select>
-                @if (hasError(emailType)) {
+                @if (emailTypeError()) {
                     <mat-error>Email type required</mat-error>
                 }
             </mat-form-field>

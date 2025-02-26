@@ -97,6 +97,7 @@ describe('AddressEditorComponent', () => {
       it('address1 should show error', async () => {
         formGroup.controls.address1.markAsTouched()
         formGroup.controls.address1.setErrors(errors);
+        component.address1Error.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -148,6 +149,7 @@ describe('AddressEditorComponent', () => {
       it('address2 should show error', async () => {
         formGroup.controls.address2.markAsTouched()
         formGroup.controls.address2.setErrors(errors);
+        component.address2Error.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -199,6 +201,7 @@ describe('AddressEditorComponent', () => {
       it('city should show error', async () => {
         formGroup.controls.city.markAsTouched()
         formGroup.controls.city.setErrors(errors);
+        component.cityError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -251,6 +254,7 @@ describe('AddressEditorComponent', () => {
       it('state should show error', async () => {
         formGroup.controls.state.markAsTouched()
         formGroup.controls.state.setErrors(errors);
+        component.stateError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -303,6 +307,7 @@ describe('AddressEditorComponent', () => {
       it('zip should show error', async () => {
         formGroup.controls.zip.markAsTouched()
         formGroup.controls.zip.setErrors(errors);
+        component.zipError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -359,6 +364,7 @@ describe('AddressEditorComponent', () => {
       it('address type should show error', async () => {
         formGroup.controls.address_type.markAsTouched()
         formGroup.controls.address_type.setErrors(errors);
+        component.addressTypeError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 

@@ -97,6 +97,7 @@ describe('MemberEditorComponent', () => {
       it('first name should show error', async () => {
         formGroup.controls.first_name.markAsTouched()
         formGroup.controls.first_name.setErrors(errors);
+        component.firstNameError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -145,6 +146,7 @@ describe('MemberEditorComponent', () => {
       it('middle name should show error', async () => {
         formGroup.controls.middle_name.markAsTouched()
         formGroup.controls.middle_name.setErrors(errors);
+        component.middleNameError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -193,6 +195,7 @@ describe('MemberEditorComponent', () => {
       it('last name should show error', async () => {
         formGroup.controls.last_name.markAsTouched()
         formGroup.controls.last_name.setErrors(errors);
+        component.lastNameError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -240,6 +243,7 @@ describe('MemberEditorComponent', () => {
       it('suffix should show error', async () => {
         formGroup.controls.suffix.markAsTouched()
         formGroup.controls.suffix.setErrors(errors);
+        component.suffixError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -288,6 +292,7 @@ describe('MemberEditorComponent', () => {
       it('birthdate should show error', async () => {
         formGroup.controls.birth_date.markAsTouched()
         formGroup.controls.birth_date.setErrors(errors);
+        component.birthDateError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
@@ -336,6 +341,7 @@ describe('MemberEditorComponent', () => {
       it('joined date should show error', async () => {
         formGroup.controls.joined_date.markAsTouched()
         formGroup.controls.joined_date.setErrors(errors);
+        component.joinedDateError.update(() => true);
 
         const errHarnesses = await harness?.getErrors();
 
