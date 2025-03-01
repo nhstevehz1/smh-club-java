@@ -4,16 +4,21 @@
         <button mat-icon-button (click)="toggleSideNavHandler()">
             <mat-icon>menu</mat-icon>
         </button>
-        <span>Social Club</span>
+        <span>{{'layout.header.title' | translate}}</span>
     </div>
 
-    <div class="flex-row center">
-        <mat-slide-toggle (change)="onThemeChanged($event)">Dark mode</mat-slide-toggle>
+    <div class="flex-row center gap">
+        <mat-slide-toggle (change)="onThemeChanged($event)">
+            {{'layout.header.darkMode' | translate }}
+        </mat-slide-toggle>
+        <app-language-switcher></app-language-switcher>
     </div>
 
     <div class="flex-row end gap">
         @if(isLoggedIn && userName) {
-            <span class="user-name">Welcome {{userName}}!</span>
+            <span class="user-name">
+                {{'layout.header.welcome' | translate}} {{userName}}!
+            </span>
         }
 
         <button mat-icon-button
@@ -24,11 +29,11 @@
         </button>
         <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
             <button mat-menu-item (click)="profileHandler()">
-                <mat-icon>person</mat-icon><span>Profile</span>
+                <mat-icon>person</mat-icon><span>[translate]="'header.profile'" Profile</span>
             </button>
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="logoutHandler()">
-                <mat-icon>exit_to_app</mat-icon><span>Logout</span>
+                <mat-icon>exit_to_app</mat-icon><span>[translate]="'header.logout'" Logout</span>
             </button>
         </mat-menu>
     </div>

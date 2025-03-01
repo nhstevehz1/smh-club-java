@@ -23,8 +23,15 @@ mat-toolbar {
 }
 
 mat-slide-toggle {
-  transform: scale(0.75);
+  transform: scale(0.80);
   @include mat.slide-toggle-overrides((
     label-text-color: var(--mat-sys-primary)
+  ))
+}
+
+app-language-switcher {
+  transform: scale(0.80);
+  @include mat.select-overrides((
+    enabled-trigger-text-color: var(--mat-sys-primary)
   ))
 }
