@@ -123,13 +123,14 @@
       }
     },
     "footer": {
-      "socialClub": "Social Club"
+      "title": "Social Club"
     },
     "header": {
       "darkMode": "Dark Mode",
       "logout": "Logout",
       "profile": "Profile",
-      "title": "Social Club"
+      "title": "Social Club",
+      "welcome": "Welcome"
     }
   },
   "members": {
@@ -177,7 +178,7 @@
           "invalid": "",
           "required": ""
         },
-        "label": ""
+        "label": "Birth Date"
       },
       "firstName": {
         "error": {
@@ -190,7 +191,7 @@
           "invalid": "",
           "required": ""
         },
-        "label": ""
+        "label": "Joined Date"
       },
       "lastName": {
         "error": {

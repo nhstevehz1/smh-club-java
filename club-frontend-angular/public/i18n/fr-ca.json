@@ -1,0 +1,258 @@
+{
+  "addresses": {
+    "editor": {
+      "address1": {
+        "error": {
+          "required": "Rue ou boîte postale requise"
+        },
+        "label": "Rue ou boîte postale"
+      },
+      "address2": {
+        "error": {
+          "invalid": "L'adresse n'est pas valide",
+          "required": "L'adresse est obligatoire"
+        },
+        "label": "adresse suite"
+      },
+      "addressType": {
+        "error": {
+          "required": "le type d'adresse est requis"
+        },
+        "label": "Type d'adresse"
+      },
+      "city": {
+        "error": {
+          "required": "Ville requise"
+        },
+        "label": "Ville ou village"
+      },
+      "postalCode": {
+        "error": {
+          "required": "Le code postal est requis"
+        },
+        "label": "Code Postal"
+      },
+      "state": {
+        "error": {
+          "required": "État ou territoire requis"
+        },
+        "label": "État ou territoire"
+      }
+    },
+    "list": {
+      "columns": {
+        "address": "Adresse",
+        "addressType": "Type",
+        "city": "Ville",
+        "fullName": "Membre",
+        "postalCode": "Code Postal",
+        "state": "État"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "loginToolTip": "Connexion",
+      "titleMessage": "Cliquez sur le bouton pour vous connecter"
+    },
+    "profile": {
+      "card": {
+        "list": {
+          "defaultMessage": "Impossible de lire les données du profil !",
+          "email": "Courriel",
+          "fullName": "Nom complet",
+          "roles": "Rôles",
+          "username": "Nom d'utilisateur"
+        },
+        "title": "Détails du profil"
+      }
+    }
+  },
+  "emails": {
+    "editor": {
+      "email": {
+        "error": {
+          "invalid": "L'adresse électronique n'est pas valide",
+          "required": "L'adresse électronique est requise"
+        },
+        "label": "Adresse électronique"
+      },
+      "emailType": {
+        "error": {
+          "required": "le type d'email est obligatoire"
+        },
+        "label": "Type d'email"
+      }
+    },
+    "list": {
+      "columns": {
+        "email": "Courriel",
+        "emailType": "Type",
+        "fullName": "Membre"
+      }
+    }
+  },
+  "errors": {
+    "accessDenied": {
+      "card": {
+        "subtitle": "Veuillez sélectionner une page dans le menu.",
+        "title": "Page non trouvée !"
+      }
+    },
+    "pageNotFound": {
+      "card": {
+        "subtitle": "Veuillez contacter l'administrateur du site",
+        "title": "Vous n'avez pas accès à cette ressource"
+      }
+    }
+  },
+  "home": {
+    "card": {
+      "subTitle": "Utilisez le menu pour consulter les informations sur les membres",
+      "title": "Bienvenue au Club Social"
+    }
+  },
+  "layout": {
+    "content": {
+      "navList": {
+        "addresses": "Adresses",
+        "emails": "Courriels",
+        "home": "ACCUEIL",
+        "members": "Les membres",
+        "phones": "Téléphones"
+      }
+    },
+    "footer": {
+      "title": "Club Social"
+    },
+    "header": {
+      "darkMode": "Mode sombre",
+      "logout": "Déconnexion",
+      "profile": "Profil",
+      "title": "Club Social",
+      "welcome": "Bienvenue"
+    }
+  },
+  "members": {
+    "add": {
+      "card": {
+        "action": {
+          "cancelToolTip": "Retour à la liste des membres",
+          "okCancel": {
+            "title": "Membre sauvé !",
+            "toolTip": "Retour à la liste des membres"
+          },
+          "submitToolTip": "Sauvegarder les données des membres"
+        },
+        "address": {
+          "addToolTip": "Ajouter une adresse",
+          "subtitle": {
+            "address": "Adresse",
+            "addresses": "Adresses"
+          }
+        },
+        "emails": {
+          "addToolTip": "Ajouter un courriel",
+          "subtitle": {
+            "email": "Adresse électronique",
+            "emails": "Adresses électroniques"
+          }
+        },
+        "member": {
+          "subTitle": "Détails du membre"
+        },
+        "phones": {
+          "addTooltip": "Ajouter un téléphone",
+          "subtitle": {
+            "phoneNumber": "Numéros de téléphone",
+            "phoneNumbers": "Numéros de téléphone"
+          }
+        },
+        "required": "Exigée",
+        "title": ""
+      }
+    },
+    "editor": {
+      "birthDate": {
+        "error": {
+          "invalid": "",
+          "required": ""
+        },
+        "label": "Date de naissance"
+      },
+      "firstName": {
+        "error": {
+          "required": "Le prénom est obligatoire"
+        },
+        "label": "Prénom"
+      },
+      "joinedDate": {
+        "error": {
+          "invalid": "",
+          "required": ""
+        },
+        "label": "Date d'adhésion"
+      },
+      "lastName": {
+        "error": {
+          "required": "Le nom de famille est obligatoire"
+        },
+        "label": "Nom de famille"
+      },
+      "middleName": {
+        "error": {
+          "required": "le deuxième prénom est obligatoire"
+        },
+        "label": "Deuxième prénom ou initiale"
+      },
+      "suffix": {
+        "error": {
+          "required": "est nécessaire"
+        },
+        "label": "Suffixe"
+      }
+    },
+    "list": {
+      "columns": {
+        "birthDate": "Date de naissance",
+        "firstName": "Prénom",
+        "joinedDate": "Date d'adhésion",
+        "lastName": "Nom de famille",
+        "memberNumber": "Nombre"
+      }
+    }
+  },
+  "phones": {
+    "editor": {
+      "phoneNumber": {
+        "error": {
+          "invalid": "Le numéro de téléphone n'est pas valide",
+          "required": "Le numéro de téléphone est requis"
+        },
+        "label": "Téléphone"
+      },
+      "phoneType": {
+        "error": {
+          "required": "le type de téléphone est requis"
+        },
+        "label": "Type de téléphone"
+      }
+    },
+    "list": {
+      "columns": {
+        "fullName": "Membre",
+        "phoneNumber": "Téléphone",
+        "phoneType": "Type"
+      }
+    }
+  },
+  "renewals": {
+    "list": {
+      "columns": {
+        "fullName": "Membre",
+        "renewalDate": "Date de renouvellement",
+        "renewalYear": "Pour l'année"
+      }
+    }
+  }
+}
