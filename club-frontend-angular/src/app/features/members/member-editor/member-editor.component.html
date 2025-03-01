@@ -3,7 +3,7 @@
         <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
             @if(title) {
                 <div class="flex-row">
-                    <mat-label>{{title}}</mat-label>
+                    <mat-label>{{title | translate}}</mat-label>
                 </div>
                 <mat-divider></mat-divider>
             }
@@ -17,7 +17,7 @@
 
     <div class="flex-row start gap">
         <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>First name</mat-label>
+            <mat-label>{{'members.editor.firstName.label' |translate }}</mat-label>
             <input type="text" matInput [formControl]="firstName">
             @if (firstNameError()) {
                 <mat-error>First name required</mat-error>
@@ -25,7 +25,7 @@
         </mat-form-field>
 
         <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>Middle name or initial</mat-label>
+            <mat-label>{{'members.editor.middleName.label' | translate}}</mat-label>
             <input type="text" matInput [formControl]="middleName">
             @if (middleNameError()) {
                 <mat-error>Middle name invalid</mat-error>
@@ -35,7 +35,7 @@
 
     <div class="flex-row start gap">
         <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>Last name</mat-label>
+            <mat-label>{{'members.editor.lastName.label' | translate}}</mat-label>
             <input type="text" matInput [formControl]="lastName">
             @if (lastNameError()) {
                 <mat-error>Last name required</mat-error>
@@ -43,7 +43,7 @@
         </mat-form-field>
 
         <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>Suffix</mat-label>
+            <mat-label>{{'members.editor.suffix.label' | translate}}</mat-label>
             <input type="text" matInput [formControl]="suffix">
             @if (suffixError()) {
                 <mat-error>Last name required</mat-error>
@@ -53,7 +53,7 @@
 
     <div class="flex-row start gap">
         <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>Birth date</mat-label>
+            <mat-label>{{'members.editor.birthDate.label' | translate}}</mat-label>
             <input [matDatepicker]="birthDatePicker" matInput [formControl]="birthDate">
             <mat-datepicker-toggle matIconSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #birthDatePicker></mat-datepicker>
@@ -63,7 +63,7 @@
         </mat-form-field>
 
         <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>Joined date</mat-label>
+            <mat-label>{{'members.editor.joinedDate.label' | translate}}</mat-label>
             <input [matDatepicker]="joinedDatePicker" matInput [formControl]="joinedDate">
             <mat-datepicker-toggle matIconSuffix [for]="joinedDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #joinedDatePicker></mat-datepicker>
