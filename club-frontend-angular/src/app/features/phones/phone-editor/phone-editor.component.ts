@@ -9,6 +9,7 @@ import {Phone} from "../models/phone";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {NgClass} from "@angular/common";
+import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-phone-editor',
@@ -19,7 +20,8 @@ import {NgClass} from "@angular/common";
     MatInputModule,
     MatSelectModule,
     MatDivider,
-    NgClass
+    NgClass,
+    TranslatePipe
   ],
   templateUrl: './phone-editor.component.html',
   styleUrl: './phone-editor.component.scss'
