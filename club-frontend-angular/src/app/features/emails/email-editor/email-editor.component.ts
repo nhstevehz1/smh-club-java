@@ -9,18 +9,20 @@ import {Email} from "../models/email";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {NgClass} from "@angular/common";
+import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-email-editor',
-  imports: [
-    ReactiveFormsModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDivider,
-    MatIcon,
-    MatIconButton,
-    NgClass
-  ],
+    imports: [
+        ReactiveFormsModule,
+        MatInputModule,
+        MatSelectModule,
+        MatDivider,
+        MatIcon,
+        MatIconButton,
+        NgClass,
+        TranslatePipe
+    ],
   templateUrl: './email-editor.component.html',
   styleUrl: './email-editor.component.scss'
 })

@@ -4,7 +4,7 @@
             <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
                 @if(title) {
                     <div class="flex-row">
-                        <mat-label class="editor-title">{{title}}</mat-label>
+                        <mat-label class="editor-title">{{title | translate}}</mat-label>
                     </div>
                     <mat-divider></mat-divider>
                 }
@@ -18,7 +18,7 @@
 
         <div class="flex-row start gap">
             <mat-form-field [appearance]="fieldAppearance">
-                <mat-label>Email</mat-label>
+                <mat-label>{{'emails.editor.email.label' | translate}}</mat-label>
                 <input type="email" matInput [formControl]="email" #emailInput>
                 @if (emailError()) {
                     <mat-error>{{getEmailError()}}</mat-error>
@@ -26,7 +26,7 @@
             </mat-form-field>
 
             <mat-form-field [appearance]="fieldAppearance">
-                <mat-label>Email type</mat-label>
+                <mat-label>{{'emails.editor.emailType.label' | translate }}</mat-label>
                 <mat-select [formControl]="emailType">
                     @for (option of emailTypes; track option){
                         <mat-option [value]="option">{{option}}</mat-option>
