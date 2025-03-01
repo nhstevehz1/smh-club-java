@@ -8,17 +8,19 @@ import {Address} from "../models/address";
 import {NgClass} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
+import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-address-editor',
-  imports: [
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    NgClass
-  ],
+    imports: [
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        NgClass,
+        TranslatePipe
+    ],
   templateUrl: './address-editor.component.html',
   styleUrl: './address-editor.component.scss'
 })
