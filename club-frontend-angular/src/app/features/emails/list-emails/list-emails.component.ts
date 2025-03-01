@@ -74,19 +74,19 @@ export class ListEmailsComponent
         return [
             {
                 columnName: 'email',
-                displayName: 'Email',
+                displayName: 'emails.list.columns.email',
                 isSortable: true,
                 cell:(element: EmailMember) => `${element.email}`
             },
             {
                 columnName: 'email_type',
-                displayName: 'Type',
-                isSortable: true,
+                displayName: 'emails.list.columns.emailType',
+                isSortable: false,
                 cell:(element: EmailMember) => `${element.email_type}`
             },
             {
                 columnName: 'full_name',
-                displayName: 'Member',
+                displayName: 'emails.list.columns.fullName',
                 isSortable: true,
                 cell:(element: EmailMember) => this.getFullName(element.full_name)
             }
