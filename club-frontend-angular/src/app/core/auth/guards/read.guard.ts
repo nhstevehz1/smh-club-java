@@ -9,9 +9,6 @@ export const readGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  console.debug('read guard url', route.url);
-  console.debug('read guard state', state);
-
   return authService.isAuthenticated$.pipe(
       take(1),
       tap(isAuthed => {
