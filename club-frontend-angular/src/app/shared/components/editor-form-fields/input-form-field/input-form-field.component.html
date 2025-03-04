@@ -1,0 +1,9 @@
+<mat-form-field [appearance]="appearanceSignal()">
+    @if(labelSignal()) {
+        <mat-label>{{(labelSignal() || '') | translate}}</mat-label>
+    }
+    @if(prefixTextSignal()) {
+        <span matTextPrefix>{{(prefixTextSignal() || '') | translate}}</span>
+    }
+    <input [type]="inputTypeSignal()" matInput [formControl]="formControlSignal()">
+</mat-form-field>

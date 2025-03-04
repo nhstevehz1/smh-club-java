@@ -1,0 +1,8 @@
+<mat-form-field [appearance]="appearanceSignal()">
+    @if(labelSignal()) {
+        <mat-label>{{(labelSignal() || '') | translate}}</mat-label>
+    }
+    <input [matDatepicker]="datePicker" matInput [formControl]="formControlSignal()">
+    <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+</mat-form-field>
