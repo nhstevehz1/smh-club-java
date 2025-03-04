@@ -1,29 +1,31 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {InputFormFieldComponent} from './input-form-field.component';
-import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatFormFieldAppearance, MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {TranslateModule, TranslatePipe} from "@ngx-translate/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {FormControl} from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatInputHarness} from "@angular/material/input/testing";
 import {InputType} from "../models/input-type";
+import {FormControlError} from "../models/form-control-error";
+import {By} from "@angular/platform-browser";
 
 describe('InputFormFieldComponent', () => {
   let component: InputFormFieldComponent;
   let fixture: ComponentFixture<InputFormFieldComponent>;
   let loader: HarnessLoader;
 
-  let stringControl: FormControl<string>;
-  let numberControl: FormControl<number>;
+  let stringControl: FormControl<string | null>;
+  let numberControl: FormControl<number | null>;
 
   beforeEach(async () => {
-    stringControl = new FormControl<string>('test', {nonNullable: true});
-    numberControl = new FormControl<number>(10, {nonNullable: true});
-
+    stringControl = new FormControl<string | null>(null);
+    stringControl.setValidators([Validators.required, Validators.email]);
+    numberControl = new FormControl<number | null>(null);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -42,7 +44,6 @@ describe('InputFormFieldComponent', () => {
     fixture = TestBed.createComponent(InputFormFieldComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    
   });
 
   it('should create', async () => {
@@ -63,7 +64,6 @@ describe('InputFormFieldComponent', () => {
     const harnesses = await loader.getAllHarnesses(MatInputHarness);
     expect(harnesses.length).toEqual(1);
   });
-
 
   describe('input base form fields tests', ()=> {
     let harness: MatFormFieldHarness;
@@ -97,9 +97,10 @@ describe('InputFormFieldComponent', () => {
     });
 
     it('input should use the correct appearance', async () => {
-      const val = 'fill'
+      const val = <MatFormFieldAppearance>'fill'
       fixture.componentRef.setInput('appearance', val);
       const appearance = await harness.getAppearance();
+      console.debug(component.appearanceSignal());
       expect(appearance).toBe(val);
     });
 
@@ -147,6 +148,64 @@ describe('InputFormFieldComponent', () => {
 
       const val = await harness.getValue();
       expect(Number(val)).toEqual(test);
+    });
+  });
+
+  describe('error tests, validators present', ()=> {
+    let harness: MatInputHarness;
+    let errors: FormControlError[]  = [
+      {type: 'required', message:'required message'}
+    ]
+    beforeEach( async () => {
+      fixture.componentRef.setInput('formControl', stringControl);
+      harness = await loader.getHarness(MatInputHarness);
+    });
+
+    it('input should NOT show error by default', async () => {
+      fixture.componentRef.setInput('controlErrors', errors);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const element = fixture.debugElement.query(By.css('mat-error'));
+      expect(element).toBeFalsy();
+    });
+
+    it('input should NOT show error on blur when value is valid', async () => {
+      fixture.componentRef.setInput('controlErrors', errors);
+      stringControl.setValue('test@test.com');
+
+      await harness.blur();
+
+      const element = fixture.debugElement.query(By.css('mat-error'));
+      expect(element).toBeFalsy();
+    });
+
+    it('input should not show error on blur when control has no validators', async () => {
+      fixture.componentRef.setInput('formControl', numberControl);
+
+      await harness.blur();
+
+      const element = fixture.debugElement.query(By.css('mat-error'));
+      expect(element).toBeFalsy();
+    })
+
+    it('should should show error on blur', async() => {
+      fixture.componentRef.setInput('controlErrors', errors);
+
+      await harness.blur();
+
+      const element = fixture.debugElement.query(By.css('mat-error'));
+      expect(element).toBeTruthy();
+    });
+
+    it('input should show correct error message', async() => {
+      fixture.componentRef.setInput('controlErrors', errors);
+
+      await harness.blur();
+
+      const element = fixture.debugElement.query(By.css('mat-error'));
+      expect(element.nativeElement.textContent).toBe(errors[0].message);
     });
   });
 });

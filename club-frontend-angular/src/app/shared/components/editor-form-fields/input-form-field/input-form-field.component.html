@@ -5,5 +5,8 @@
     @if(prefixTextSignal()) {
         <span matTextPrefix>{{(prefixTextSignal() || '') | translate}}</span>
     }
-    <input [type]="inputTypeSignal()" matInput [formControl]="formControlSignal()">
+    <input [type]="inputTypeSignal()" matInput [formControl]="formControlSignal()" (blur)="onBlur()">
+    @if(hasErrorSignal()){
+        <mat-error>{{errorMessageSignal() | translate}}</mat-error>
+    }
 </mat-form-field>

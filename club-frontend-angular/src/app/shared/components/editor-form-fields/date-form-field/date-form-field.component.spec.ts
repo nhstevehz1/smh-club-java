@@ -6,21 +6,25 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {TranslateModule, TranslatePipe} from "@ngx-translate/core";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {FormControl} from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import {DateTime} from "luxon";
 import {MatInputModule} from "@angular/material/input";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {MatDatepickerInputHarness, MatDatepickerToggleHarness} from "@angular/material/datepicker/testing";
+import {FormControlError} from "../models/form-control-error";
+import {By} from "@angular/platform-browser";
 
 describe('DateFormFieldComponent', () => {
   let component: DateFormFieldComponent;
   let fixture: ComponentFixture<DateFormFieldComponent>;
   let loader: HarnessLoader;
-  let dateControl: FormControl<DateTime>;
+  let dateControl: FormControl<DateTime | null>;
 
   beforeEach(async () => {
-    dateControl = new FormControl<DateTime>(DateTime.now(), {nonNullable: true});
+    dateControl = new FormControl<DateTime | null>(null)
+    dateControl.setValidators(Validators.required);
+
     await TestBed.configureTestingModule({
       imports: [
           DateFormFieldComponent,
@@ -103,6 +107,8 @@ describe('DateFormFieldComponent', () => {
 
   describe('date picker tests', () => {
     let harness: MatDatepickerInputHarness;
+
+
     beforeEach(async () => {
         harness = await loader.getHarness(MatDatepickerInputHarness);
     });
@@ -115,9 +121,49 @@ describe('DateFormFieldComponent', () => {
     it('should display the correct date', async () => {
        const now = DateTime.now();
        const formatted = now.toLocaleString(DateTime.DATE_SHORT);
+       dateControl.setValue(now);
 
        const dt = await harness.getValue();
        expect(dt).toBe(formatted);
     });
+
+  });
+
+  describe('date time error tests', ()=> {
+     let harness: MatDatepickerInputHarness;
+      const errors: FormControlError[]  = [
+          {type: 'required', message:'required message'}
+      ]
+     beforeEach( async () => {
+         harness = await loader.getHarness(MatDatepickerInputHarness);
+     });
+
+      it('date picker should NOT show error on blur when value is valid', async () => {
+          fixture.componentRef.setInput('controlErrors', errors);
+          dateControl.setValue(DateTime.now());
+
+          await harness.blur();
+
+          const element = fixture.debugElement.query(By.css('mat-error'));
+          expect(element).toBeFalsy();
+      });
+
+     it('date picker should show error on blur', async() => {
+        fixture.componentRef.setInput('controlErrors', errors);
+
+        await harness.blur();
+
+         const element = fixture.debugElement.query(By.css('mat-error'));
+         expect(element).toBeTruthy();
+     });
+
+      it('date picker should show correct error message', async() => {
+          fixture.componentRef.setInput('controlErrors', errors);
+
+          await harness.blur();
+
+          const element = fixture.debugElement.query(By.css('mat-error'));
+          expect(element.nativeElement.textContent).toBe(errors[0].message);
+      });
   });
 });

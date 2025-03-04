@@ -2,7 +2,10 @@
     @if(labelSignal()) {
         <mat-label>{{(labelSignal() || '') | translate}}</mat-label>
     }
-    <input [matDatepicker]="datePicker" matInput [formControl]="formControlSignal()">
+    <input [matDatepicker]="datePicker" matInput [formControl]="formControlSignal()" (blur)="onBlur()">
     <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
     <mat-datepicker #datePicker></mat-datepicker>
+    @if(hasErrorSignal()){
+        <mat-error>{{errorMessageSignal() | translate}}</mat-error>
+    }
 </mat-form-field>
