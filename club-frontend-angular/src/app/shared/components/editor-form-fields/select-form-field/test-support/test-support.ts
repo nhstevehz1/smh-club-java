@@ -3,9 +3,3 @@ export enum TestStringEnum {
     Test2 = 'Test2',
     Test3 = 'Test3'
 }
-
-export enum TestNumberEnum {
-    Test1 = 1,
-    Test2 = 2,
-    Test3 = 3
-}

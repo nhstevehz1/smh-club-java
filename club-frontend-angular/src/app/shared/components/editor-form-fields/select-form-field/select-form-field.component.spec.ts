@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SelectFormFieldComponent} from './select-form-field.component';
-import {TestNumberEnum, TestStringEnum} from "./test-support/test-support";
+import {TestStringEnum} from "./test-support/test-support";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {SelectOption} from "../models/select-option";
 import {HarnessLoader} from "@angular/cdk/testing";
@@ -19,7 +19,6 @@ describe('SelectFormFieldComponent', () => {
   let loader: HarnessLoader;
 
   let textControl: FormControl<TestStringEnum>;
-  let numberControl: FormControl<TestNumberEnum>
 
   const stringOptions: SelectOption<TestStringEnum>[] = [
     {label: 'Test1', value: TestStringEnum.Test1},
@@ -27,15 +26,8 @@ describe('SelectFormFieldComponent', () => {
     {label: 'Test3', value: TestStringEnum.Test3}
   ];
 
-  const numberOptions: SelectOption<TestNumberEnum>[] = [
-    {label: 'Test1', value: TestNumberEnum.Test1},
-    {label: 'Test2', value: TestNumberEnum.Test2},
-    {label: 'Test3', value: TestNumberEnum.Test3}
-  ];
-
   beforeEach(async () => {
     textControl = new FormControl<TestStringEnum>(TestStringEnum.Test1, {nonNullable: true});
-    numberControl = new FormControl<TestNumberEnum>(TestNumberEnum.Test1, {nonNullable: true});
 
     await TestBed.configureTestingModule({
       imports: [
