@@ -8,5 +8,5 @@ export interface Address {
     city: string;
     state: string;
     zip: string;
-    address_type: AddressType | string;
+    address_type: AddressType;
 }

@@ -1,77 +1,60 @@
-import {Component, OnInit, Signal, signal, WritableSignal} from '@angular/core';
+import {Component, computed, input} from '@angular/core';
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
-import {AddressType} from "../models/address-type";
+import {ReactiveFormsModule} from "@angular/forms";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
 import {Address} from "../models/address";
-import {NgClass} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {TranslatePipe} from "@ngx-translate/core";
+import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
+import {
+  InputFormFieldComponent
+} from "../../../shared/components/editor-form-fields/input-form-field/input-form-field.component";
+import {AddressTypeFormFieldComponent} from "../address-type-form-field/address-type-form-field.component";
+import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
 
 @Component({
   selector: 'app-address-editor',
-    imports: [
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        NgClass,
-        TranslatePipe
-    ],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    EditorHeaderComponent,
+    InputFormFieldComponent,
+    AddressTypeFormFieldComponent
+  ],
   templateUrl: './address-editor.component.html',
   styleUrl: './address-editor.component.scss'
 })
-export class AddressEditorComponent extends BaseEditorComponent<Address> implements OnInit{
+export class AddressEditorComponent extends BaseEditorComponent<Address> {
 
-  addressTypes = Object.values(AddressType);
+  address1Signal = computed(() => this.editorFormSignal().controls.address1);
+  address1ErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'address1Errors'});
 
-  readonly showTitle: Signal<boolean> = signal(!!this.title);
+  address2Signal = computed(() => this.editorFormSignal().controls.address2);
+  address2ErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'address2Errors'});
 
-  readonly address1Error: WritableSignal<boolean> = signal(false);
-  readonly address2Error: WritableSignal<boolean> = signal(false);
-  readonly cityError: WritableSignal<boolean> = signal(false);
-  readonly stateError: WritableSignal<boolean> = signal(false);
-  readonly zipError: WritableSignal<boolean> = signal(false);
-  readonly addressTypeError: WritableSignal<boolean> = signal(false);
+  citySignal = computed(() => this.editorFormSignal().controls.city);
+  cityErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'cityErrors'});
 
-  public get address1(): FormControl {
-    return this.editorForm.controls.address1;
-  }
+  stateSignal = computed(() => this.editorFormSignal().controls.state);
+  stateErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'stateErrors'});
 
-  public get address2(): FormControl {
-    return this.editorForm.controls.address2;
-  }
+  postalCodeSignal = computed(() => this.editorFormSignal().controls.zip);
+  postalCodeErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'postalCodeErrors'});
 
-  public get city(): FormControl {
-    return this.editorForm.controls.city;
-  }
-
-  public get state(): FormControl {
-    return this.editorForm.controls.state;
-  }
-
-  public get zip(): FormControl {
-    return this.editorForm.controls.zip;
-  }
-
-  public get addressType(): FormControl {
-    return this.editorForm.controls.address_type;
-  }
+  addressTypeSignal = computed(() => this.editorFormSignal().controls.address_type);
+  addressTypeErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'addressTypeErrors'});
 
   constructor() {
     super();
-  }
-
-  ngOnInit() {
-
-    this.setErrorSignal(this.address1Error, this.address1);
-    this.setErrorSignal(this.address2Error, this.address2);
-    this.setErrorSignal(this.cityError, this.city);
-    this.setErrorSignal(this.stateError, this.state);
-    this.setErrorSignal(this.zipError, this.zip);
-    this.setErrorSignal(this.addressTypeError, this.addressType);
   }
 }

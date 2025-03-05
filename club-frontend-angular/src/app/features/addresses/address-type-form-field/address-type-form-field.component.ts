@@ -5,6 +5,7 @@ import {
   SelectFormFieldComponent
 } from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
 
 @Component({
   selector: 'app-address-type-form-field',
@@ -23,10 +24,13 @@ export class AddressTypeFormFieldComponent {
       = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
 
   optionsSignal
-      = signal<Array<AddressTypeOption>> ([])
+      = signal<Array<AddressTypeOption>>([]);
 
   labelSignal =
       input<string>(undefined, {alias: 'label'});
+
+  controlErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'controlErrors'});
 
   constructor() {
     this.optionsSignal.set([

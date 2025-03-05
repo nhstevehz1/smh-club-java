@@ -1,6 +1,7 @@
 import {AddressMember} from "../models/address-member";
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
+import {AddressType} from "../models/address-type";
 
 
 export function generateAddressPagedData(page: number, size: number, total: number): PagedData<AddressMember> {
@@ -20,7 +21,7 @@ export function generateAddressList(size: number): Array<AddressMember> {
             city: ii + " City",
             state: ii + " State",
             zip: ii + " Zip",
-            address_type: "Home",
+            address_type: AddressType.Home,
             member_number: ii,
             full_name: {
                 first_name: ii + " First",
