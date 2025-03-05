@@ -35,8 +35,6 @@ describe('AddressEditorComponent', () => {
     address_type: new FormControl<AddressType>(AddressType.Home, {nonNullable: true})
   });
 
-  let label: string;
-  
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
