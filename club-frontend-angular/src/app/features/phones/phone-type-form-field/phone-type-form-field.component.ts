@@ -3,9 +3,8 @@ import {
     SelectFormFieldComponent
 } from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
 import {FormControl} from "@angular/forms";
-import {PhoneType} from "../models/phone-type";
+import {PhoneType, PhoneTypeOption} from "../models/phone-type";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {SelectOption} from "../../../shared/components/editor-form-fields/models/select-option";
 
 @Component({
   selector: 'app-phone-type-form-field',
@@ -24,7 +23,7 @@ export class PhoneTypeFormFieldComponent {
         = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
 
     optionsSignal
-        = signal<Array<SelectOption<PhoneType>>> ([])
+        = signal<Array<PhoneTypeOption>> ([])
 
     labelSignal =
         input<string>(undefined, {alias: 'label'});
