@@ -1,0 +1,15 @@
+@if (showButtonSignal() || titleDefinedSignal()) {
+    <div class="flex-row" [ngClass]="{'space-between': titleDefinedSignal(), 'end': !titleDefinedSignal()}">
+        @if(titleDefinedSignal()) {
+            <div class="flex-row">
+                <mat-label class="editor-title">{{(titleSignal() || '') | translate}}</mat-label>
+            </div>
+            <mat-divider></mat-divider>
+        }
+        @if(showButtonSignal()) {
+            <button mat-icon-button (click)="onRemove()">
+                <mat-icon>delete</mat-icon>
+            </button>
+        }
+    </div>
+}
