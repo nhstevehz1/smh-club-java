@@ -11,7 +11,7 @@ export abstract class InputComponentBase<T> {
         input.required<FormControl<T>>({alias: 'formControl'});
 
     appearanceSignal
-        = input(undefined, { alias: 'appearance',
+        = input( <MatFormFieldAppearance>('outline'), { alias: 'appearance',
             transform(value: MatFormFieldAppearance | undefined) {
                 const defaultVal = <MatFormFieldAppearance>('outline');
                 return value || defaultVal;
