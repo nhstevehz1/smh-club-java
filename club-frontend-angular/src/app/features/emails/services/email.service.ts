@@ -4,6 +4,8 @@ import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
 import {EmailMember} from "../models/email-member";
 import {PagedData} from "../../../shared/models/paged-data";
+import {map} from "rxjs/operators";
+import {EmailType} from "../models/email-type";
 
 @Injectable()
 export class EmailService {
@@ -15,6 +17,11 @@ export class EmailService {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
-    return this.http.get<PagedData<EmailMember>>(uri);
+    return this.http.get<PagedData<EmailMember>>(uri).pipe(
+      map(pd => {
+        pd._content.forEach(e => e.email_type = e.email_type as unknown as EmailType)
+        return pd;
+      })
+    );
   }
 }
