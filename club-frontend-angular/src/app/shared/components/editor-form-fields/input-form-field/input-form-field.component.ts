@@ -19,9 +19,6 @@ import {InputComponentBase} from "../models/input-component";
 })
 export class InputFormFieldComponent extends InputComponentBase<number | string> {
 
-    /*formControlSignal =
-        input.required<FormControl<number | string>>({alias: 'formControl'});*/
-
     prefixTextSignal
         = input<string>(undefined, {alias: 'textPrefix'});
 

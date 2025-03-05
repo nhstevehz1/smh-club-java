@@ -7,7 +7,7 @@
             <mat-option [value]="option.value">{{option.label | translate}}</mat-option>
         }
     </mat-select>
-    @if(hasErrorSignal()){
-        <mat-error>{{errorMessageSignal() | translate}}</mat-error>
+    @if(invalidSignal()){
+        <mat-error>{{invalidMessageSignal() | translate}}</mat-error>
     }
 </mat-form-field>

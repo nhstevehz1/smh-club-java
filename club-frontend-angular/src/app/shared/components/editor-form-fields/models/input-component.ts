@@ -6,12 +6,13 @@ import {FormControlError} from "./form-control-error";
 @Directive()
 export abstract class InputComponentBase<T> {
 
+
     formControlSignal =
         input.required<FormControl<T>>({alias: 'formControl'});
 
     appearanceSignal
-        = input(<MatFormFieldAppearance>('outline'), { alias: 'appearance',
-            transform(value: MatFormFieldAppearance | undefined | null) {
+        = input(undefined, { alias: 'appearance',
+            transform(value: MatFormFieldAppearance | undefined) {
                 const defaultVal = <MatFormFieldAppearance>('outline');
                 return value || defaultVal;
         }
@@ -26,10 +27,10 @@ export abstract class InputComponentBase<T> {
         }
     });
 
-    protected hasErrorSignal = signal<boolean>(false);
+    protected invalidSignal = signal<boolean>(false);
 
-    protected errorMessageSignal = computed<string>(() => {
-        if(this.hasErrorSignal()) {
+    protected invalidMessageSignal = computed<string>(() => {
+        if(this.invalidSignal()) {
             for (let val of this.controlErrorsSignal()) {
                 let hasError = this.formControlSignal().hasError(val.type);
                 if (hasError) {
@@ -42,6 +43,6 @@ export abstract class InputComponentBase<T> {
     });
 
     protected onBlur(): void {
-        this.hasErrorSignal.set(this.formControlSignal().invalid);
+        this.invalidSignal.set(this.formControlSignal().invalid);
     }
 }

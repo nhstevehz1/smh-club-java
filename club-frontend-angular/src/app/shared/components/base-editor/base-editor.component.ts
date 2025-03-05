@@ -1,45 +1,24 @@
-import {Component, EventEmitter, Input, Output, WritableSignal} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {Directive, input, output} from '@angular/core';
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormModelGroup} from "./form-model-group";
 
-@Component({
-  selector: 'base-editor',
-  imports: [],
-  template: ``,
-  styles: ``
-})
+@Directive()
 export abstract class BaseEditorComponent<T> {
-  @Input({required: true})
-  public editorForm!: FormModelGroup<T>;
 
-  @Input()
-  public title?: string;
+  editorFormSignal
+      = input.required<FormModelGroup<T>>({alias: 'editorForm'});
 
-  @Input()
-  public fieldAppearance: MatFormFieldAppearance = 'outline'
+  titleSignal = input<string>(undefined, {alias: 'title'});
 
-  @Input()
-  public showRemoveButton: boolean = false;
+  fieldAppearanceSignal
+      = input<MatFormFieldAppearance>(undefined, {alias: 'fieldAppearance'});
 
-  @Output()
-  public removeClick: EventEmitter<any> = new EventEmitter();
+  showRemoveButtonSignal = input(false, {
+    alias: 'showRemoveButton'});
 
-  hasError(formControl: FormControl): boolean {
-    return formControl.invalid && (formControl.dirty || !formControl.untouched)
-  }
+  removeSignal = output<void>({alias: 'removeClick'});
 
   onRemove(): void {
-    this.removeClick.next(null);
-  }
-
-  isTitleDefined(): boolean {
-    return this.title !== undefined;
-  };
-
-  setErrorSignal(signal: WritableSignal<boolean>, fc: FormControl): void {
-    fc.valueChanges.subscribe(() => {
-      signal.update(() => this.hasError(fc));
-    })
+    this.removeSignal.emit();
   }
 }
