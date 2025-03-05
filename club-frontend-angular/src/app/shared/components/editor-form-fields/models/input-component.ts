@@ -32,7 +32,6 @@ export abstract class InputComponentBase<T> {
         if(this.hasErrorSignal()) {
             for (let val of this.controlErrorsSignal()) {
                 let hasError = this.formControlSignal().hasError(val.type);
-                console.debug(`type ${val.type}, hasError ${hasError}`);
                 if (hasError) {
                     return val.message;
                 }

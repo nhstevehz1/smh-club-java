@@ -1,22 +1,22 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PhoneTypeFormFieldComponent} from './phone-type-form-field.component';
+import {EmailTypeFormFieldComponent} from './email-type-form-field.component';
 import {FormControl} from "@angular/forms";
-import {PhoneType} from "../models/phone-type";
+import {EmailType} from "../models/email-type";
 import {TranslateModule} from "@ngx-translate/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 
-describe('PhoneTypeFormFieldComponent', () => {
-  let component: PhoneTypeFormFieldComponent;
-  let fixture: ComponentFixture<PhoneTypeFormFieldComponent>;
-  let phoneTypeControl: FormControl<PhoneType | null>;
+describe('EmailTypeFormFieldComponent', () => {
+  let component: EmailTypeFormFieldComponent;
+  let fixture: ComponentFixture<EmailTypeFormFieldComponent>;
+  let emailTypeControl: FormControl<EmailType | null>;
 
   beforeEach(async () => {
-    phoneTypeControl = new FormControl(null);
+    emailTypeControl = new FormControl(null);
 
     await TestBed.configureTestingModule({
       imports: [
-          PhoneTypeFormFieldComponent,
+          EmailTypeFormFieldComponent,
           TranslateModule.forRoot({})
       ],
       providers: [
@@ -25,9 +25,9 @@ describe('PhoneTypeFormFieldComponent', () => {
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PhoneTypeFormFieldComponent);
+    fixture = TestBed.createComponent(EmailTypeFormFieldComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('formControl', phoneTypeControl);
+    fixture.componentRef.setInput('formControl', emailTypeControl);
     fixture.detectChanges();
     await fixture.whenStable();
   });
@@ -36,17 +36,17 @@ describe('PhoneTypeFormFieldComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should contain the correct number of options',  () => {
+  it('should contain the correct number of options', () => {
     const options = component.optionsSignal();
-    expect(options.length).toEqual(Object.entries(PhoneType).length);
+    expect(options.length).toEqual(Object.entries(EmailType).length);
   });
 
   it('should contain the correct option values', () => {
     const options = component.optionsSignal();
 
-    for ( let phoneType of Object.values(PhoneType)) {
+    for ( let emailType of Object.values(EmailType)) {
       let values = options.map(v => v.value);
-      expect(values).toContain(phoneType);
+      expect(values).toContain(emailType);
     }
   });
 });

@@ -1,23 +1,23 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PhoneTypeFormFieldComponent} from './phone-type-form-field.component';
-import {FormControl} from "@angular/forms";
-import {PhoneType} from "../models/phone-type";
+import {AddressTypeFormFieldComponent} from './address-type-form-field.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {FormControl} from "@angular/forms";
+import {AddressType} from "../models/address-type";
 
-describe('PhoneTypeFormFieldComponent', () => {
-  let component: PhoneTypeFormFieldComponent;
-  let fixture: ComponentFixture<PhoneTypeFormFieldComponent>;
-  let phoneTypeControl: FormControl<PhoneType | null>;
+describe('AddressTypeFormFieldComponent', () => {
+  let component: AddressTypeFormFieldComponent;
+  let fixture: ComponentFixture<AddressTypeFormFieldComponent>;
+  let addressTypeControl: FormControl<AddressType | null>;
 
   beforeEach(async () => {
-    phoneTypeControl = new FormControl(null);
+    addressTypeControl = new FormControl(null);
 
     await TestBed.configureTestingModule({
       imports: [
-          PhoneTypeFormFieldComponent,
-          TranslateModule.forRoot({})
+          AddressTypeFormFieldComponent,
+        TranslateModule.forRoot({})
       ],
       providers: [
         provideNoopAnimations()
@@ -25,9 +25,9 @@ describe('PhoneTypeFormFieldComponent', () => {
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PhoneTypeFormFieldComponent);
+    fixture = TestBed.createComponent(AddressTypeFormFieldComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('formControl', phoneTypeControl);
+    fixture.componentRef.setInput('formControl', addressTypeControl);
     fixture.detectChanges();
     await fixture.whenStable();
   });
@@ -38,15 +38,15 @@ describe('PhoneTypeFormFieldComponent', () => {
 
   it('should contain the correct number of options',  () => {
     const options = component.optionsSignal();
-    expect(options.length).toEqual(Object.entries(PhoneType).length);
+    expect(options.length).toEqual(Object.entries(AddressType).length);
   });
 
   it('should contain the correct option values', () => {
     const options = component.optionsSignal();
 
-    for ( let phoneType of Object.values(PhoneType)) {
+    for (let addressType of Object.values(AddressType)) {
       let values = options.map(v => v.value);
-      expect(values).toContain(phoneType);
+      expect(values).toContain(addressType);
     }
   });
 });
