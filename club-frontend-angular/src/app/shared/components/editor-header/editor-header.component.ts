@@ -1,14 +1,4 @@
-import {
-    booleanAttribute,
-    Component,
-    computed,
-    EventEmitter,
-    Input,
-    Output,
-    Signal,
-    signal,
-    WritableSignal
-} from '@angular/core';
+import {booleanAttribute, Component, computed, input, output,} from '@angular/core';
 import {MatDivider} from "@angular/material/divider";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
@@ -30,27 +20,20 @@ import {NgClass} from "@angular/common";
   styleUrl: './editor-header.component.scss'
 })
 export class EditorHeaderComponent {
-  protected readonly titleSignal: WritableSignal<string | undefined>  = signal(undefined);
+  titleSignal = input<string>(undefined, {alias: 'title'});
 
-  protected readonly titleDefinedSignal: Signal<boolean>
-      = computed(() => !!this.titleSignal);
+  showRemoveButtonSignal = input(false, {
+      alias: 'showRemoveButton',
+      transform: booleanAttribute
+  });
 
-  protected readonly showButtonSignal: WritableSignal<boolean> = signal(false);
+  removeSignal = output<void>({alias: 'removeClick'});
 
-  @Input()
-  public set title(title: string | undefined) {
-    this.titleSignal.set(title);
-  };
+  protected titleDefinedSignal
+        = computed<boolean>(() => !!this.titleSignal());
 
-  @Input({transform: booleanAttribute})
-  public set showRemoveButton(show:boolean) {
-    this.showButtonSignal.set(show);
-  }
-
-  @Output()
-  removeClick: EventEmitter<void> = new EventEmitter();
 
   onRemove(): void {
-    this.removeClick.next();
+    this.removeSignal.emit();
   }
 }

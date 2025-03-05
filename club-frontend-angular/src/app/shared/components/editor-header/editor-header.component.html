@@ -1,4 +1,4 @@
-@if (showButtonSignal() || titleDefinedSignal()) {
+@if (showRemoveButtonSignal() || titleDefinedSignal()) {
     <div class="flex-row" [ngClass]="{'space-between': titleDefinedSignal(), 'end': !titleDefinedSignal()}">
         @if(titleDefinedSignal()) {
             <div class="flex-row">
@@ -6,7 +6,7 @@
             </div>
             <mat-divider></mat-divider>
         }
-        @if(showButtonSignal()) {
+        @if(showRemoveButtonSignal()) {
             <button mat-icon-button (click)="onRemove()">
                 <mat-icon>delete</mat-icon>
             </button>
