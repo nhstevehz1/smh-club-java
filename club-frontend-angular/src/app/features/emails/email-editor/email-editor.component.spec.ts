@@ -11,9 +11,9 @@ import {Email} from "../models/email";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {By} from "@angular/platform-browser";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
 
 describe('EmailEditorComponent', () => {
   let component: EmailEditorComponent;
@@ -33,7 +33,9 @@ describe('EmailEditorComponent', () => {
           EmailEditorComponent,
           TranslateModule.forRoot({})
       ],
-      providers: [provideNoopAnimations()]
+      providers: [
+          provideNoopAnimations()
+      ]
     })
     .compileComponents();
 
@@ -42,7 +44,10 @@ describe('EmailEditorComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should create', () => {
+  it('should create', async () => {
+    fixture.componentRef.setInput('editorForm', formGroup);
+    fixture.detectChanges()
+    await fixture.whenStable();
     expect(component).toBeTruthy();
   });
 
@@ -122,63 +127,58 @@ describe('EmailEditorComponent', () => {
   });
 
   describe('email remove button and title tests', () => {
-    let buttonHarness: MatButtonHarness | null;
+    let headerHarness: EditorHeaderHarness | null;
 
     beforeEach(async () => {
       fixture.componentRef.setInput('editorForm', formGroup);
+      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
     });
 
-   it('should NOT show email remove button when showRemoveButton is set to false', async () => {
-      fixture.componentRef.setInput('showRemoveButton', false);
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeFalsy();
+    it('should contain one editor header', async () => {
+      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
+      expect(harnesses.length).toEqual(1);
     });
+
+     it('should NOT show email remove button when showRemoveButton is set to false', async () => {
+        fixture.componentRef.setInput('showRemoveButton', false);
+        const visible = await headerHarness?.isButtonVisible();
+        expect(visible).not.toBeTrue();
+      });
 
     it('should show email remove button when showRemoveButton is set to true', async () => {
       fixture.componentRef.setInput('showRemoveButton', true);
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeTruthy();
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).toBeTrue();
     });
 
     it('should call on remove when remove email button is clicked', async () => {
       fixture.componentRef.setInput('showRemoveButton', true);
       const spy = spyOn(component, 'onRemove').and.stub();
 
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      await buttonHarness?.click();
+      const button = await headerHarness?.getHarnessOrNull(MatButtonHarness);
+      await button?.click();
 
       expect(spy).toHaveBeenCalled();
     });
 
     it('should display title when email title is defined', async () => {
       fixture.componentRef.setInput('title', 'test');
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeTruthy()
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).toBeTrue()
     });
 
     it('should NOT display title when email title is undefined', async () => {
       fixture.componentRef.setInput('title', undefined);
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeFalsy()
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).not.toBeTrue();
     });
 
     it('should display correct email title', async () => {
       const title = 'title';
       fixture.componentRef.setInput('title', title);
 
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element.nativeElement.textContent).toBe(title);
+      const titleText = await headerHarness?.titleText();
+      expect(titleText).toBe(title);
     });
   });
 });

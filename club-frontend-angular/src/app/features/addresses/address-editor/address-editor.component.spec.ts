@@ -8,7 +8,6 @@ import {AddressType} from "../models/address-type";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {By} from "@angular/platform-browser";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {Address} from "../models/address";
 import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
@@ -18,6 +17,7 @@ import {
 import {forwardRef} from "@angular/core";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
 
 describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;
@@ -271,63 +271,57 @@ describe('AddressEditorComponent', () => {
   });
   
   describe('address remove button and title tests', () => {
-    let buttonHarness: MatButtonHarness | null;
+    let headerHarness: EditorHeaderHarness | null;
     
     beforeEach(async () => {
       fixture.componentRef.setInput('editorForm', formGroup);
+      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
     });
-    
-    fit('should NOT show remove button when showRemoveButton is set to false', async () => {
+
+    it('should contain only one editor header', async () => {
+      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
+      expect(harnesses.length).toEqual(1)
+    });
+
+    it('should NOT show remove button when showRemoveButton is set to false', async () => {
       fixture.componentRef.setInput('showRemoveButton', false);
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeFalsy();
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).not.toBeTrue();
     });
 
     it('should show remove button when showRemoveButton is set to true', async () => {
       fixture.componentRef.setInput('showRemoveButton', true);
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeTruthy();
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).toBeTrue();
     });
 
     it('should call on remove when remove button is clicked', async () => {
       fixture.componentRef.setInput('showRemoveButton', true);
       const spy = spyOn(component, 'onRemove').and.stub();
 
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      await buttonHarness?.click();
+      const button = await headerHarness?.getHarnessOrNull(MatButtonHarness);
+      await button?.click();
 
       expect(spy).toHaveBeenCalled();
     });
 
     it('should display title when title is defined', async () => {
       fixture.componentRef.setInput('title', 'test');
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeTruthy()
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).toBeTrue();
     });
 
     it('should NOT display title when title is undefined', async () => {
       fixture.componentRef.setInput('title', undefined);
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeFalsy()
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).not.toBeTrue();
     });
 
     it('should display correct title', async () => {
       const title = 'title';
       fixture.componentRef.setInput('title', title);
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element.nativeElement.textContent).toBe(title);
+      const titleText = await headerHarness?.titleText();
+      expect(titleText).toBe(title);
     });
   });
 });
