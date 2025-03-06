@@ -4,6 +4,8 @@ import {PageRequest} from "../../../shared/models/page-request";
 import {PhoneMember} from "../models/phone-member";
 import {PagedData} from "../../../shared/models/paged-data";
 import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
+import {PhoneType} from "../models/phone-type";
 
 @Injectable()
 export class PhoneService {
@@ -15,6 +17,11 @@ export class PhoneService {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
-    return this.http.get<PagedData<PhoneMember>>(uri);
+    return this.http.get<PagedData<PhoneMember>>(uri).pipe(
+        map(pd => {
+          pd._content.forEach(p => p.phone_type as unknown as PhoneType);
+          return pd;
+        })
+    );
   }
 }

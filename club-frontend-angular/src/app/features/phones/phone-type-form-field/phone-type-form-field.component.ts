@@ -5,6 +5,7 @@ import {
 import {FormControl} from "@angular/forms";
 import {PhoneType, PhoneTypeOption} from "../models/phone-type";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
 
 @Component({
   selector: 'app-phone-type-form-field',
@@ -22,11 +23,14 @@ export class PhoneTypeFormFieldComponent {
     appearanceSignal
         = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
 
-    optionsSignal
-        = signal<Array<PhoneTypeOption>> ([])
+    labelSignal
+        = input<string>(undefined, {alias: 'label'});
 
-    labelSignal =
-        input<string>(undefined, {alias: 'label'});
+    controlErrorsSignal
+        = input<Array<FormControlError>>(undefined, {alias: 'controlErrors'});
+
+    optionsSignal
+        = signal<Array<PhoneTypeOption>>([]);
 
     constructor() {
         this.optionsSignal.set([

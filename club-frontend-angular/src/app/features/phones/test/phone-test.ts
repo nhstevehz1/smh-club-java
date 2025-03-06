@@ -1,6 +1,7 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
 import {PhoneMember} from "../models/phone-member";
+import {PhoneType} from "../models/phone-type";
 
 export function generatePhonePageData(page: number, size: number, total: number): PagedData<PhoneMember> {
     const content = generatePhoneList(size);
@@ -16,7 +17,7 @@ export function generatePhoneList(size: number): Array<PhoneMember> {
             member_id: ii,
             country_code: '1',
             phone_number: `60388399${ii}`,
-            phone_type: 'Home',
+            phone_type: PhoneType.Home,
             full_name: {
                 first_name: ii + " First",
                 middle_name: ii +  " Middle",
