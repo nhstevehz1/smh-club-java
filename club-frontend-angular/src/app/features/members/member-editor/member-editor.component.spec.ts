@@ -14,10 +14,7 @@ import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {TranslateModule} from "@ngx-translate/core";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {
-  EditorHeaderHarness,
-  TitleHarness
-} from "../../../shared/components/editor-header/test-support/editor-header-harness";
+import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
 
 describe('MemberEditorComponent', () => {
   let component: MemberEditorComponent;
@@ -274,58 +271,50 @@ describe('MemberEditorComponent', () => {
       headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
     });
 
-    it('should contain an editor header', async () => {
-      expect(headerHarness).toBeTruthy()
+    it('should contain an one editor header', async () => {
+      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
+      expect(harnesses.length).toEqual(1)
     });
 
-    describe('title tests', async () => {
-      let titleHarness: TitleHarness | null | undefined;
-
-      it('member should display title when title is defined', async () => {
-        fixture.componentRef.setInput('title', 'test');
-        titleHarness = await headerHarness?.title();
-        expect(titleHarness).toBeTruthy()
-      });
-
-      it('member should NOT display title when title is undefined', async () => {
-        fixture.componentRef.setInput('title', undefined);
-        titleHarness = await headerHarness?.title();
-        expect(titleHarness).toBeFalsy()
-      });
-
-      it('member should display correct title', async () => {
-        const title = 'title';
-        fixture.componentRef.setInput('title', title);
-        titleHarness = await headerHarness?.title();
-        const titleText = await titleHarness?.titleLabel();
-        expect(titleText).toBe(title);
-      });
+    it('member should display title when title is defined', async () => {
+      fixture.componentRef.setInput('title', 'test');
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).toBeTrue()
     });
 
-    describe('member remove button tests', () => {
-      let buttonHarness: MatButtonHarness | null | undefined;
+    it('member should NOT display title when title is undefined', async () => {
+      fixture.componentRef.setInput('title', undefined);
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).not.toBeTrue()
+    });
 
-      it('should NOT show remove button when showRemoveButton is set to false', async () => {
-        fixture.componentRef.setInput('showRemoveButton', false);
-        buttonHarness = await headerHarness?.removeButton();
-        expect(buttonHarness).toBeFalsy();
-      });
+    it('member should display correct title', async () => {
+      const title = 'title';
+      fixture.componentRef.setInput('title', title);
+      const titleText = await headerHarness?.titleText();
+      expect(titleText).toBe(title);
+    });
 
-      it('should show remove button when showRemoveButton is set to true', async () => {
-        fixture.componentRef.setInput('showRemoveButton', true);
-        buttonHarness = await headerHarness?.removeButton();
-        expect(buttonHarness).toBeTruthy();
-      });
+    it('should NOT show remove button when showRemoveButton is set to false', async () => {
+      fixture.componentRef.setInput('showRemoveButton', false);
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).not.toBeTrue();
+    });
 
-      it('member should call on remove when remove button is clicked', async () => {
-        fixture.componentRef.setInput('showRemoveButton', true);
-        const spy = spyOn(component, 'onRemove').and.stub();
+    it('should show remove button when showRemoveButton is set to true', async () => {
+      fixture.componentRef.setInput('showRemoveButton', true);
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).toBeTrue();
+    });
 
-        buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-        await buttonHarness?.click();
+    it('member should call on remove when remove button is clicked', async () => {
+      fixture.componentRef.setInput('showRemoveButton', true);
+      const spy = spyOn(component, 'onRemove').and.stub();
 
-        expect(spy).toHaveBeenCalled();
-      });
+      const harness = await headerHarness?.getHarnessOrNull(MatButtonHarness);
+      await harness?.click();
+
+      expect(spy).toHaveBeenCalled();
     });
   });
 });
