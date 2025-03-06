@@ -1,7 +1,7 @@
 import {booleanAttribute, Component, computed, input, output,} from '@angular/core';
 import {MatDivider} from "@angular/material/divider";
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
 import {MatLabel} from "@angular/material/form-field";
 import {TranslatePipe} from "@ngx-translate/core";
 import {NgClass} from "@angular/common";
@@ -10,11 +10,11 @@ import {NgClass} from "@angular/common";
   selector: 'app-editor-header',
   imports: [
     MatDivider,
-    MatIcon,
-    MatIconButton,
+    MatIconModule,
+    MatButtonModule,
     MatLabel,
     TranslatePipe,
-    NgClass
+    NgClass,
   ],
   templateUrl: './editor-header.component.html',
   styleUrl: './editor-header.component.scss'
@@ -31,7 +31,6 @@ export class EditorHeaderComponent {
 
   protected titleDefinedSignal
         = computed<boolean>(() => !!this.titleSignal());
-
 
   onRemove(): void {
     this.removeSignal.emit();

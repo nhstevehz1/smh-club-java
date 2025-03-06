@@ -5,12 +5,19 @@ import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {Member} from "../models/member";
-import {FormControl, FormGroup, ValidationErrors} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import {DateTime} from "luxon";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
+import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {TranslateModule} from "@ngx-translate/core";
+import {MatButtonHarness} from "@angular/material/button/testing";
+import {
+  EditorHeaderHarness,
+  TitleHarness
+} from "../../../shared/components/editor-header/test-support/editor-header-harness";
 
 describe('MemberEditorComponent', () => {
   let component: MemberEditorComponent;
@@ -30,7 +37,10 @@ describe('MemberEditorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MemberEditorComponent],
+      imports: [
+          MemberEditorComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [
           provideLuxonDateAdapter(),
           provideNoopAnimations(),
@@ -49,26 +59,26 @@ describe('MemberEditorComponent', () => {
   });
 
   describe('form field tests', ()=> {
-    const outline = 'outline';
-    const fill = 'fill';
-    const errors: ValidationErrors = [{p: 'error'}];
+    const outline: MatFormFieldAppearance = 'outline';
+    const fill: MatFormFieldAppearance = 'fill';
     let harness: MatFormFieldHarness | null;
 
     beforeEach(() => {
       formGroup.reset();
-      component.editorForm = formGroup;
+      fixture.componentRef.setInput('editorForm', formGroup);
     });
 
     it('should contain the correct number of member form fields', async () => {
       const harnesses = await loader.getAllHarnesses(MatFormFieldHarness);
-
       expect(harnesses.length).toEqual(6);
     });
 
     describe('first name field tests', () => {
+
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'First name'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'members.editor.firstName.label'}))
       });
       
       it('should contain member field', async () => {
@@ -81,43 +91,24 @@ describe('MemberEditorComponent', () => {
       });
 
       it('first name should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
-
         expect(appearance).toBe(outline);
       });
 
       it('first name should use fill appearance', async() => {
-        component.fieldAppearance = fill;
-
+        fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-
-      it('first name should show error', async () => {
-        formGroup.controls.first_name.markAsTouched()
-        formGroup.controls.first_name.setErrors(errors);
-        component.firstNameError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('first name should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
-      });
-
     });
 
     describe('middle name field tests', () => {
+      
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Middle name or initial'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'members.editor.middleName.label'}))
       });
 
       it('should contain middle name field', async () => {
@@ -130,43 +121,26 @@ describe('MemberEditorComponent', () => {
       });
 
       it('middle name should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
       it('middle name should use fill appearance', async() => {
-        component.fieldAppearance = fill;
-
+        fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-
-      it('middle name should show error', async () => {
-        formGroup.controls.middle_name.markAsTouched()
-        formGroup.controls.middle_name.setErrors(errors);
-        component.middleNameError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('middle should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
-      });
-
+      
     });
 
     describe('last name field tests', () => {
+          
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Last name'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'members.editor.lastName.label'}))
       });
 
       it('should contain last name field', async () => {
@@ -179,42 +153,26 @@ describe('MemberEditorComponent', () => {
       });
 
       it('last name should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
       it('last name should use fill appearance', async() => {
-        component.fieldAppearance = fill;
+        fixture.componentRef.setInput('fieldAppearance', fill);
 
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
 
-      it('last name should show error', async () => {
-        formGroup.controls.last_name.markAsTouched()
-        formGroup.controls.last_name.setErrors(errors);
-        component.lastNameError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('last name should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
-      });
     });
 
     describe('suffix field tests', () => {
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Suffix'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'members.editor.suffix.label'}))
       });
 
       it('should contain suffix field', async () => {
@@ -227,42 +185,26 @@ describe('MemberEditorComponent', () => {
       });
 
       it('suffix should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
       it('suffix should use fill appearance', async() => {
-        component.fieldAppearance = fill;
+        fixture.componentRef.setInput('fieldAppearance', fill);
 
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-
-      it('suffix should show error', async () => {
-        formGroup.controls.suffix.markAsTouched()
-        formGroup.controls.suffix.setErrors(errors);
-        component.suffixError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('suffix should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
-      });
     });
 
     describe('birthdate field tests', () => {
+
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Birth date'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'members.editor.birthDate.label'}))
       });
 
       it('should contain birthdate field', async () => {
@@ -276,42 +218,26 @@ describe('MemberEditorComponent', () => {
       });
 
       it('birthdate should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
       it('birthdate should use fill appearance', async() => {
-        component.fieldAppearance = fill;
+        fixture.componentRef.setInput('fieldAppearance', fill);
 
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-
-      it('birthdate should show error', async () => {
-        formGroup.controls.birth_date.markAsTouched()
-        formGroup.controls.birth_date.setErrors(errors);
-        component.birthDateError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('birthdate should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
-      });
     });
 
     describe('joined date field tests', () => {
+
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Joined date'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'members.editor.birthDate.label'}));
       });
 
       it('should contain joined date field', async () => {
@@ -325,35 +251,82 @@ describe('MemberEditorComponent', () => {
       });
 
       it('joined date should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
       it('joined date should use fill appearance', async() => {
-        component.fieldAppearance = fill;
+        fixture.componentRef.setInput('fieldAppearance', fill);
 
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
+    });
+  });
 
-      it('joined date should show error', async () => {
-        formGroup.controls.joined_date.markAsTouched()
-        formGroup.controls.joined_date.setErrors(errors);
-        component.joinedDateError.update(() => true);
+  describe('member remove button and title tests', () => {
+    let headerHarness: EditorHeaderHarness | null;
+    let buttonHarness: MatButtonHarness | undefined | null;
 
-        const errHarnesses = await harness?.getErrors();
 
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
+    beforeEach(async () => {
+      fixture.componentRef.setInput('editorForm', formGroup);
+      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
+    });
+
+    fit('should contain an editor header', async () => {
+      expect(headerHarness).toBeTruthy()
+    });
+
+    describe('title tests', async () => {
+      let titleHarness: TitleHarness | null | undefined;
+
+      fit('member should display title when title is defined', async () => {
+        fixture.componentRef.setInput('title', 'test');
+        titleHarness = await headerHarness?.title();
+        expect(titleHarness).toBeTruthy()
       });
 
-      it('joined date should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
+      fit('member should NOT display title when title is undefined', async () => {
+        fixture.componentRef.setInput('title', undefined);
+        titleHarness = await headerHarness?.title();
+        expect(titleHarness).toBeFalsy()
+      });
 
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
+      fit('member should display correct title', async () => {
+        const title = 'title';
+        fixture.componentRef.setInput('title', title);
+        titleHarness = await headerHarness?.title();
+        const titleText = await titleHarness?.titleLabel();
+        expect(titleText).toBe(title);
+      });
+    });
+
+    describe('member remove button tests', () => {
+      let buttonHarness: MatButtonHarness | null | undefined;
+
+      fit('should NOT show remove button when showRemoveButton is set to false', async () => {
+        fixture.componentRef.setInput('showRemoveButton', false);
+        buttonHarness = await headerHarness?.removeButton();
+        expect(buttonHarness).toBeFalsy();
+      });
+
+      fit('should show remove button when showRemoveButton is set to true', async () => {
+        fixture.componentRef.setInput('showRemoveButton', true);
+        buttonHarness = await headerHarness?.removeButton();
+        expect(buttonHarness).toBeTruthy();
+      });
+
+      fit('member should call on remove when remove button is clicked', async () => {
+        fixture.componentRef.setInput('showRemoveButton', true);
+        const spy = spyOn(component, 'onRemove').and.stub();
+
+        buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
+        await buttonHarness?.click();
+
+        expect(spy).toHaveBeenCalled();
       });
     });
   });

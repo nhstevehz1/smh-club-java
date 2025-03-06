@@ -1,75 +1,58 @@
-<div [formGroup]=editorForm >
-    @if (showRemoveButton || isTitleDefined()) {
-        <div class="flex-row" [ngClass]="{'space-between': isTitleDefined(), 'end': !isTitleDefined()}">
-            @if(title) {
-                <div class="flex-row">
-                    <mat-label>{{title | translate}}</mat-label>
-                </div>
-                <mat-divider></mat-divider>
-            }
-            @if(showRemoveButton) {
-                <button mat-icon-button (click)="onRemove()">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            }
-        </div>
-    }
+<div [formGroup]=editorFormSignal() class="flex-column space-evenly">
+    <app-editor-header
+        [title]=titleSignal()
+        [showRemoveButton]="showRemoveButtonSignal()"
+        (removeClick)="onRemove()">
+    </app-editor-header>
 
     <div class="flex-row start gap">
-        <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>{{'members.editor.firstName.label' |translate }}</mat-label>
-            <input type="text" matInput [formControl]="firstName">
-            @if (firstNameError()) {
-                <mat-error>First name required</mat-error>
-            }
-        </mat-form-field>
-
-        <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>{{'members.editor.middleName.label' | translate}}</mat-label>
-            <input type="text" matInput [formControl]="middleName">
-            @if (middleNameError()) {
-                <mat-error>Middle name invalid</mat-error>
-            }
-        </mat-form-field>
+        <app-input-form-field
+            ngDefaultControl
+            [appearance]="fieldAppearanceSignal()"
+            [formControl]="firstNameSignal()"
+            [controlErrors]="firstNameErrorsSignal()"
+            label="members.editor.firstName.label">
+        </app-input-form-field>
+        <app-input-form-field
+            ngDefaultControl
+            [appearance]="fieldAppearanceSignal()"
+            [formControl]=middleNameSignal()
+            [controlErrors]="middleNameErrorsSignal()"
+            label="members.editor.middleName.label">
+        </app-input-form-field>
     </div>
 
     <div class="flex-row start gap">
-        <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>{{'members.editor.lastName.label' | translate}}</mat-label>
-            <input type="text" matInput [formControl]="lastName">
-            @if (lastNameError()) {
-                <mat-error>Last name required</mat-error>
-            }
-        </mat-form-field>
-
-        <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>{{'members.editor.suffix.label' | translate}}</mat-label>
-            <input type="text" matInput [formControl]="suffix">
-            @if (suffixError()) {
-                <mat-error>Last name required</mat-error>
-            }
-        </mat-form-field>
+        <app-input-form-field
+            ngDefaultControl
+            [appearance]="fieldAppearanceSignal()"
+            [formControl]="lastNameSignal()"
+            [controlErrors]="lastNameErrorsSignal()"
+            label="members.editor.lastName.label">
+        </app-input-form-field>
+        <app-input-form-field
+            ngDefaultControl
+            [appearance]="fieldAppearanceSignal()"
+            [formControl]="suffixSignal()"
+            [controlErrors]="suffixErrorsSignal()"
+            label="members.editor.suffix.label">
+        </app-input-form-field>
     </div>
 
     <div class="flex-row start gap">
-        <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>{{'members.editor.birthDate.label' | translate}}</mat-label>
-            <input [matDatepicker]="birthDatePicker" matInput [formControl]="birthDate">
-            <mat-datepicker-toggle matIconSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #birthDatePicker></mat-datepicker>
-            @if (birthDateError()) {
-                <mat-error>Birth date required</mat-error>
-            }
-        </mat-form-field>
-
-        <mat-form-field [appearance]="fieldAppearance">
-            <mat-label>{{'members.editor.joinedDate.label' | translate}}</mat-label>
-            <input [matDatepicker]="joinedDatePicker" matInput [formControl]="joinedDate">
-            <mat-datepicker-toggle matIconSuffix [for]="joinedDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #joinedDatePicker></mat-datepicker>
-            @if (joinedDateError()) {
-                <mat-error>Joined date required</mat-error>
-            }
-        </mat-form-field>
+        <app-date-form-field
+            ngDefaultControl
+            [appearance]="fieldAppearanceSignal()"
+            [formControl]="birthDateSignal()"
+            [controlErrors]="birthDateErrorsSignal()"
+            label="members.editor.birthDate.label">
+        </app-date-form-field>
+        <app-date-form-field
+            ngDefaultControl
+            [appearance]="fieldAppearanceSignal()"
+            [formControl]="joinedDateSignal()"
+            [controlErrors]="joinedDateErrorsSignal()"
+            label="members.editor.joinedDate.label">
+        </app-date-form-field>
     </div>
 </div>
