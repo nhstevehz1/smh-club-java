@@ -274,26 +274,26 @@ describe('MemberEditorComponent', () => {
       headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
     });
 
-    fit('should contain an editor header', async () => {
+    it('should contain an editor header', async () => {
       expect(headerHarness).toBeTruthy()
     });
 
     describe('title tests', async () => {
       let titleHarness: TitleHarness | null | undefined;
 
-      fit('member should display title when title is defined', async () => {
+      it('member should display title when title is defined', async () => {
         fixture.componentRef.setInput('title', 'test');
         titleHarness = await headerHarness?.title();
         expect(titleHarness).toBeTruthy()
       });
 
-      fit('member should NOT display title when title is undefined', async () => {
+      it('member should NOT display title when title is undefined', async () => {
         fixture.componentRef.setInput('title', undefined);
         titleHarness = await headerHarness?.title();
         expect(titleHarness).toBeFalsy()
       });
 
-      fit('member should display correct title', async () => {
+      it('member should display correct title', async () => {
         const title = 'title';
         fixture.componentRef.setInput('title', title);
         titleHarness = await headerHarness?.title();
@@ -305,19 +305,19 @@ describe('MemberEditorComponent', () => {
     describe('member remove button tests', () => {
       let buttonHarness: MatButtonHarness | null | undefined;
 
-      fit('should NOT show remove button when showRemoveButton is set to false', async () => {
+      it('should NOT show remove button when showRemoveButton is set to false', async () => {
         fixture.componentRef.setInput('showRemoveButton', false);
         buttonHarness = await headerHarness?.removeButton();
         expect(buttonHarness).toBeFalsy();
       });
 
-      fit('should show remove button when showRemoveButton is set to true', async () => {
+      it('should show remove button when showRemoveButton is set to true', async () => {
         fixture.componentRef.setInput('showRemoveButton', true);
         buttonHarness = await headerHarness?.removeButton();
         expect(buttonHarness).toBeTruthy();
       });
 
-      fit('member should call on remove when remove button is clicked', async () => {
+      it('member should call on remove when remove button is clicked', async () => {
         fixture.componentRef.setInput('showRemoveButton', true);
         const spy = spyOn(component, 'onRemove').and.stub();
 
