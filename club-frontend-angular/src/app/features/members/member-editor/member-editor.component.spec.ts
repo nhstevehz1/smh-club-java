@@ -268,8 +268,6 @@ describe('MemberEditorComponent', () => {
 
   describe('member remove button and title tests', () => {
     let headerHarness: EditorHeaderHarness | null;
-    let buttonHarness: MatButtonHarness | undefined | null;
-
 
     beforeEach(async () => {
       fixture.componentRef.setInput('editorForm', formGroup);
