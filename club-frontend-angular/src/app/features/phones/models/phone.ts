@@ -9,7 +9,7 @@ export interface Phone {
 
 export interface PhoneDetails extends Phone {
     id: number;
-    member_number: number;
+    member_id: number;
 }
 
 export interface PhoneMember extends PhoneDetails {

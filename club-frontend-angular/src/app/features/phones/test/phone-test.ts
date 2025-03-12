@@ -1,6 +1,6 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {PhoneMember} from "../models/phone-member";
+import {PhoneMember} from "../models/phone";
 import {PhoneType} from "../models/phone-type";
 
 export function generatePhonePageData(page: number, size: number, total: number): PagedData<PhoneMember> {
