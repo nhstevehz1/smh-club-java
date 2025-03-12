@@ -1,6 +1,6 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {EmailMember} from "../models/email-member";
+import {EmailMember} from "../models/email";
 import {EmailType} from "../models/email-type";
 
 export function generateEmailPagedData(page: number, size: number, total: number): PagedData<EmailMember> {

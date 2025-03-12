@@ -8,7 +8,7 @@ export interface Email {
 
 export interface EmailDetails extends Email {
     id: number;
-    member_number: number;
+    member_id: number;
 }
 
 export interface EmailMember extends EmailDetails {
