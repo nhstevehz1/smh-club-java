@@ -12,7 +12,7 @@ export interface Address {
 
 export interface AddressDetails extends Address {
     id: number;
-    member_number: number;
+    member_id: number;
 }
 
 export interface AddressMember extends AddressDetails {

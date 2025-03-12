@@ -1,8 +1,7 @@
-import {AddressMember} from "../models/address-member";
+import {AddressMember} from "../models/address";
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
 import {AddressType} from "../models/address-type";
-
 
 export function generateAddressPagedData(page: number, size: number, total: number): PagedData<AddressMember> {
     const content = generateAddressList(size);

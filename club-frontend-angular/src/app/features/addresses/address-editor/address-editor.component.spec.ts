@@ -9,7 +9,7 @@ import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Address} from "../models/address";
+import {AddressUpdate} from "../models/address";
 import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {
   InputFormFieldComponent
@@ -24,7 +24,7 @@ describe('AddressEditorComponent', () => {
   let fixture: ComponentFixture<AddressEditorComponent>;
   let loader: HarnessLoader;
   
-  const formGroup: FormModelGroup<Address> = new FormGroup({
+  const formGroup: FormModelGroup<AddressUpdate> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
     address1: new FormControl<string>('address1', {nonNullable: true}),
