@@ -8,7 +8,7 @@ import {ColumnDef} from "../../../shared/components/sortable-pageable-table/mode
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
-import {RenewalMember} from "../models/renewal-member";
+import {RenewalMember} from "../models/renewal";
 
 @Component({
   selector: 'app-list-renewals',

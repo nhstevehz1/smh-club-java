@@ -48,6 +48,11 @@
         "postalCode": "Code Postal",
         "state": "État"
       }
+    },
+    "type": {
+      "home": "ACCUEIL",
+      "other": "Autres",
+      "work": "Travail"
     }
   },
   "auth": {
@@ -90,6 +95,11 @@
         "emailType": "Type",
         "fullName": "Membre"
       }
+    },
+    "type": {
+      "home": "ACCUEIL",
+      "other": "Autres",
+      "work": "Travail"
     }
   },
   "errors": {
@@ -244,6 +254,11 @@
         "phoneNumber": "Téléphone",
         "phoneType": "Type"
       }
+    },
+    "type": {
+      "home": "ACCUEIL",
+      "mobile": "Mobile",
+      "work": "Travail"
     }
   },
   "renewals": {

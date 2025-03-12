@@ -5,8 +5,7 @@ import {FormModelGroup} from "./form-model-group";
 @Directive()
 export abstract class BaseEditorComponent<T> {
 
-  editorFormSignal
-      = input.required<FormModelGroup<T>>({alias: 'editorForm'});
+  editorFormSignal = input.required<FormModelGroup<T>>({alias: 'editorForm'});
 
   titleSignal = input<string>(undefined, {alias: 'title'});
 

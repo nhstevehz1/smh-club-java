@@ -48,6 +48,11 @@
         "postalCode": "Postal code",
         "state": "State"
       }
+    },
+    "type": {
+      "home": "Home",
+      "other": "Other",
+      "work": "Work"
     }
   },
   "auth": {
@@ -90,6 +95,11 @@
         "emailType": "Type",
         "fullName": "Member"
       }
+    },
+    "type": {
+      "home": "Home",
+      "other": "Other",
+      "work": "Work"
     }
   },
   "errors": {
@@ -244,6 +254,11 @@
         "phoneNumber": "Phone",
         "phoneType": "Type"
       }
+    },
+    "type": {
+      "home": "Home",
+      "mobile": "Mobile",
+      "work": "Work"
     }
   },
   "renewals": {

@@ -1,4 +1,7 @@
 import {DateTime} from "luxon";
+import {AddressCreate} from "../../addresses/models/address";
+import {EmailCreate} from "../../emails/models/email";
+import {PhoneCreate} from "../../phones/models/phone";
 
 export interface Member {
     first_name: string;
@@ -14,6 +17,10 @@ export interface MemberDetails extends Member {
     member_number: number;
 }
 
-export interface MemberCreate extends Member {}
+export interface MemberCreate extends Member {
+    addresses: Array<AddressCreate>;
+    emails: Array<EmailCreate>;
+    phones: Array<PhoneCreate>;
+}
 
 export interface MemberEdit extends MemberDetails {}

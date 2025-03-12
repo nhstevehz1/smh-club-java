@@ -48,6 +48,11 @@
         "postalCode": "Código postal",
         "state": "Estado"
       }
+    },
+    "type": {
+      "home": "INICIO",
+      "other": "Otros",
+      "work": "Trabajo"
     }
   },
   "auth": {
@@ -90,6 +95,11 @@
         "emailType": "Tipo",
         "fullName": "Miembro"
       }
+    },
+    "type": {
+      "home": "INICIO",
+      "other": "Otros",
+      "work": "Trabajo"
     }
   },
   "errors": {
@@ -244,6 +254,11 @@
         "phoneNumber": "Teléfono",
         "phoneType": "Tipo"
       }
+    },
+    "type": {
+      "home": "INICIO",
+      "mobile": "Móvil",
+      "work": "Trabajo"
     }
   },
   "renewals": {

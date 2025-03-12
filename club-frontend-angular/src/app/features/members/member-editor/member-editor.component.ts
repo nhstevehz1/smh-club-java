@@ -3,7 +3,7 @@ import {MatInputModule} from "@angular/material/input";
 import {ControlContainer, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {Member} from "../models/member";
+import {MemberCreate} from "../models/member";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
@@ -33,7 +33,7 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './member-editor.component.html',
   styleUrl: './member-editor.component.scss'
 })
-export class MemberEditorComponent extends BaseEditorComponent<Member> {
+export class MemberEditorComponent extends BaseEditorComponent<MemberCreate> {
 
     firstNameSignal
         = computed(() => this.editorFormSignal().controls.first_name);
@@ -68,4 +68,5 @@ export class MemberEditorComponent extends BaseEditorComponent<Member> {
     constructor() {
         super();
     }
+
 }

@@ -17,4 +17,4 @@ export interface EmailMember extends EmailDetails {
 
 export interface EmailCreate extends Email {}
 
-export interface EmailEdit extends EmailDetails {}
+export interface EmailUpdate extends EmailDetails {}

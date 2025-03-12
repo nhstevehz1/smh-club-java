@@ -3,7 +3,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {Phone} from "../models/phone";
+import {PhoneCreate, PhoneUpdate} from "../models/phone";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
@@ -28,7 +28,12 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './phone-editor.component.html',
   styleUrl: './phone-editor.component.scss'
 })
-export class PhoneEditorComponent extends BaseEditorComponent<Phone> {
+export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | PhoneUpdate> {
+
+  countryCodeSignal
+      = computed(() => this.editorFormSignal().controls.country_code);
+  countryCodeErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'countryCodeErrors'});
 
   phoneNumberSignal
       = computed(() => this.editorFormSignal().controls.phone_number);
@@ -39,7 +44,6 @@ export class PhoneEditorComponent extends BaseEditorComponent<Phone> {
       = computed(() => this.editorFormSignal().controls.phone_type);
   phoneTypeErrorsSignal
       = input<Array<FormControlError>>(undefined, {alias: 'phoneTypeErrors'});
-
 
   constructor() {
     super();

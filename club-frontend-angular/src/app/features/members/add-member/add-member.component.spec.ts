@@ -13,6 +13,7 @@ import {Member} from "../models/member";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {By} from "@angular/platform-browser";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('AddMemberComponent', () => {
   let component: AddMemberComponent;
@@ -32,7 +33,10 @@ describe('AddMemberComponent', () => {
     createMember$ = createSubject$.asObservable();
 
     await TestBed.configureTestingModule({
-      imports: [AddMemberComponent],
+      imports: [
+          AddMemberComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -47,7 +51,9 @@ describe('AddMemberComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  fit('should create', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
     expect(component).toBeTruthy();
   });
 

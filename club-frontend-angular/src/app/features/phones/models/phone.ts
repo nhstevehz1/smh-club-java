@@ -1,6 +1,5 @@
 import {PhoneType} from "./phone-type";
 import {FullName} from "../../../shared/models/full-name";
-import {AddressDetails} from "../../addresses/models/address";
 
 export interface Phone {
     country_code: string;
@@ -19,4 +18,4 @@ export interface PhoneMember extends PhoneDetails {
 
 export interface PhoneCreate extends Phone {}
 
-export interface PhoneEdit extends AddressDetails {}
+export interface PhoneUpdate extends PhoneDetails {}
