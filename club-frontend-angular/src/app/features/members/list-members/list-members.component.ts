@@ -17,7 +17,6 @@ import {DateTime} from "luxon";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
 import {AuthService} from "../../../core/auth/services/auth.service";
 import {PermissionType} from "../../../core/auth/models/permission-type";
-import {DateTimeToLocalPipe} from "../../../shared/pipes/luxon/date-time-to-local.pipe";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
@@ -31,7 +30,6 @@ import {TranslateService} from "@ngx-translate/core";
     providers: [
         MembersService,
         TranslateService,
-        DateTimeToLocalPipe,
         DateTimeToFormatPipe
     ],
   templateUrl: './list-members.component.html',
@@ -51,8 +49,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
                 protected authSvc: AuthService,
                 private router: Router,
                 private translate: TranslateService,
-                private dtFormat: DateTimeToFormatPipe,
-                private dtLocal: DateTimeToLocalPipe) {
+                private dtFormat: DateTimeToFormatPipe) {
         super();
     }
 

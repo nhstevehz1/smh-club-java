@@ -16,7 +16,6 @@ import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {Router} from "@angular/router";
 import {TranslateModule} from "@ngx-translate/core";
-import {DateTimeToLocalPipe} from "../../../shared/pipes/luxon/date-time-to-local.pipe";
 
 describe('ListMembersComponent', () => {
   let fixture: ComponentFixture<ListMembersComponent>;
@@ -42,7 +41,6 @@ describe('ListMembersComponent', () => {
           provideHttpClient(),
           provideHttpClientTesting(),
           provideNoopAnimations(),
-          DateTimeToLocalPipe,
           DateTimeToFormatPipe,
           {provide: Router, useValue: routerMock},
           {provide: DateTimeToFormatPipe, useValue: dtFormatMock},

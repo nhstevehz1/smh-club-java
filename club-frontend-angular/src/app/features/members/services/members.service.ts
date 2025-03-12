@@ -21,10 +21,10 @@ export class MembersService {
         map(pd => {
           pd._content.forEach(m => {
             let date = m.birth_date as unknown as string;
-            m.birth_date = DateTime.fromISO(date);
+            m.birth_date = DateTime.fromISO(date).toLocal();
 
             date = m.joined_date as unknown as string;
-            m.joined_date = DateTime.fromISO(date);
+            m.joined_date = DateTime.fromISO(date).toLocal();
           })
           return pd;
         })
