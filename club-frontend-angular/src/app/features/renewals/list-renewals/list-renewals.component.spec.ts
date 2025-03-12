@@ -8,6 +8,7 @@ import {generateRenewalPageData} from "../test/renewal-test";
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
 import {PageRequest} from "../../../shared/models/page-request";
 import {throwError} from "rxjs";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('ListRenewalsComponent', () => {
   let fixture: ComponentFixture<ListRenewalsComponent>;
@@ -18,7 +19,10 @@ describe('ListRenewalsComponent', () => {
     renewalServiceMock = jasmine.createSpyObj('RenewalService', ['getRenewals']);
 
     await TestBed.configureTestingModule({
-      imports: [ListRenewalsComponent],
+      imports: [
+          ListRenewalsComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [
           {provide: RenewalService, useValue: {}},
           provideHttpClient(),
