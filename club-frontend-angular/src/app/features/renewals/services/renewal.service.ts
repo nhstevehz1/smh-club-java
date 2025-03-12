@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
 import {PagedData} from "../../../shared/models/paged-data";
-import {RenewalMember} from "../models/renewal-member";
+import {RenewalMember} from "../models/renewal";
 
 @Injectable()
 export class RenewalService {

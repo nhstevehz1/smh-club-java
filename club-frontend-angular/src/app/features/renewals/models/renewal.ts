@@ -8,7 +8,7 @@ export interface Renewal {
 
 export interface RenewalDetails extends Renewal {
     id: number;
-    member_number: number;
+    member_id: number;
 }
 
 export interface RenewalMember extends RenewalDetails {
