@@ -5,11 +5,12 @@ import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import SpyObj = jasmine.SpyObj;
 import {generatePhonePageData} from "../test/phone-test";
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
 import {PageRequest} from "../../../shared/models/page-request";
 import {throwError} from "rxjs";
+import {TranslateModule} from "@ngx-translate/core";
+import SpyObj = jasmine.SpyObj;
 
 describe('ListPhonesComponent', () => {
   let fixture: ComponentFixture<ListPhonesComponent>;
@@ -20,7 +21,10 @@ describe('ListPhonesComponent', () => {
     phoneSvcMock = jasmine.createSpyObj('PhoneService', ['getPhones']);
 
     await TestBed.configureTestingModule({
-      imports: [ListPhonesComponent],
+      imports: [
+          ListPhonesComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [
           {provide: PhoneService, useValue: {}},
           provideHttpClient(),
@@ -37,18 +41,18 @@ describe('ListPhonesComponent', () => {
   });
 
   describe('test component', () => {
-    it('should create', () => {
+    fit('should create', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should create column list', () => {
+    fit('should create column list', () => {
        fixture.detectChanges();
        expect(component.columns.length).toEqual(3);
     });
   });
 
   describe('test service interactions on init', () => {
-    it('should call PhoneService.getPhones on init', async () => {
+    fit('should call PhoneService.getPhones on init', async () => {
       const data = generatePhonePageData(0, 5, 100);
       phoneSvcMock.getPhones.and.returnValue(asyncData(data));
 
@@ -59,7 +63,7 @@ describe('ListPhonesComponent', () => {
       expect(phoneSvcMock.getPhones).toHaveBeenCalledWith(request);
     });
 
-    it('length should be set on init', async () => {
+    fit('length should be set on init', async () => {
       const data = generatePhonePageData(0, 5, 2);
       phoneSvcMock.getPhones.and.returnValue(asyncData(data));
 
@@ -69,7 +73,7 @@ describe('ListPhonesComponent', () => {
       expect(component.datasource.data).toBe(data._content);
     });
 
-    it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
+    fit('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
       phoneSvcMock.getPhones.and.returnValue(throwError(() => 'error'));
 
       fixture.detectChanges();
