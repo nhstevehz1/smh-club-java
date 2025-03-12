@@ -19,7 +19,9 @@ export class EmailService {
 
     return this.http.get<PagedData<EmailMember>>(uri).pipe(
       map(pd => {
-        pd._content.forEach(e => e.email_type = e.email_type as unknown as EmailType)
+        if (pd && pd._content) {
+          pd._content.forEach(e => e.email_type = e.email_type as unknown as EmailType);
+        }
         return pd;
       })
     );

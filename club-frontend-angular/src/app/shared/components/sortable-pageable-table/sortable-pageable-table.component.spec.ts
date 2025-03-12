@@ -10,6 +10,7 @@ import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {MatHeaderCellHarness, MatHeaderRowHarness, MatTableHarness} from "@angular/material/table/testing";
 import {MatSortHarness, MatSortHeaderHarness} from "@angular/material/sort/testing";
+import {TranslateModule} from "@ngx-translate/core";
 
 export interface TestModel {
   a_string: string;
@@ -45,7 +46,8 @@ describe('SortablePageableTableComponent', () => {
       imports: [
         MatTableModule,
         MatSortModule,
-        MatPaginator
+        MatPaginator,
+        TranslateModule.forRoot({})
       ],
       providers: [
         provideNoopAnimations()

@@ -10,6 +10,7 @@ import {MainLayoutComponent} from "./core/layout/main-layout/main-layout.compone
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatProgressSpinnerHarness} from "@angular/material/progress-spinner/testing";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('AppComponent', () => {
    let fixture: ComponentFixture<AppComponent>;
@@ -31,7 +32,11 @@ describe('AppComponent', () => {
         authSvcMock.isLoaded$ = isLoadedMock$;
 
        await TestBed.configureTestingModule({
-           imports: [AppComponent, MainLayoutComponent],
+           imports: [
+               AppComponent,
+               MainLayoutComponent,
+               TranslateModule.forRoot({})
+           ],
            providers: [
                provideHttpClient(),
                provideHttpClientTesting(),

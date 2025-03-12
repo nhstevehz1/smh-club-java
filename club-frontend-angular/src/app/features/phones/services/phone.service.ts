@@ -19,7 +19,9 @@ export class PhoneService {
 
     return this.http.get<PagedData<PhoneMember>>(uri).pipe(
         map(pd => {
-          pd._content.forEach(p => p.phone_type as unknown as PhoneType);
+          if (pd && pd._content) {
+              pd._content.forEach(p => p.phone_type as unknown as PhoneType);
+          }
           return pd;
         })
     );

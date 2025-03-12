@@ -19,13 +19,15 @@ export class MembersService {
 
     return this.http.get<PagedData<MemberDetails>>(uri).pipe(
         map(pd => {
-          pd._content.forEach(m => {
-            let date = m.birth_date as unknown as string;
-            m.birth_date = DateTime.fromISO(date).toLocal();
+          if(pd && pd._content){
+              pd._content.forEach(m => {
+                  let date = m.birth_date as unknown as string;
+                  m.birth_date = DateTime.fromISO(date).toLocal();
 
-            date = m.joined_date as unknown as string;
-            m.joined_date = DateTime.fromISO(date).toLocal();
-          })
+                  date = m.joined_date as unknown as string;
+                  m.joined_date = DateTime.fromISO(date).toLocal();
+              })
+          }
           return pd;
         })
     );

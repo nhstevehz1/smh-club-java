@@ -8,6 +8,7 @@ import {generateAddressPagedData} from "../test/address-test";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {PageRequest} from "../../../shared/models/page-request";
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;
@@ -17,7 +18,10 @@ describe('ListAddressesComponent', () => {
   beforeEach(async () => {
     addressSvcMock = jasmine.createSpyObj('AddressService', ['getAddresses']);
     await TestBed.configureTestingModule({
-      imports: [ListAddressesComponent],
+      imports: [
+          ListAddressesComponent,
+          TranslateModule.forRoot({})
+      ],
         providers: [
           {provide: AddressService, useValue: {}},
           provideHttpClient(),

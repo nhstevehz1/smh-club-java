@@ -17,6 +17,7 @@ import {MatButtonHarness} from "@angular/material/button/testing";
 import {MatIconHarness} from "@angular/material/icon/testing";
 import {MatSlideToggleHarness} from "@angular/material/slide-toggle/testing";
 import {By} from "@angular/platform-browser";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
@@ -33,6 +34,7 @@ describe('HeaderComponent', () => {
         RouterLink,
         MatTooltipModule,
         MatSlideToggleModule,
+        TranslateModule.forRoot({})
       ],
       providers: [
         provideNoopAnimations(),

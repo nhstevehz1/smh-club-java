@@ -17,7 +17,7 @@ export class AddressService {
   getAddresses(pageRequest: PageRequest): Observable<PagedData<AddressMember>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
-    console.debug('uri', uri);
+
     return this.http.get<PagedData<AddressMember>>(uri).pipe(
       map(pd => {
         if (pd && pd._content) {
