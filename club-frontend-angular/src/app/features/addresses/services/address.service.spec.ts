@@ -8,7 +8,6 @@ import {provideHttpClient} from "@angular/common/http";
 describe('AddressService', () => {
   let service: AddressService;
   let controller: HttpTestingController;
-  const baseUri = '/api/v1/addresses';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -29,10 +28,9 @@ describe('AddressService', () => {
 
   it('should call api with no parameters when page request is empty', () => {
     let pageRequest: PageRequest = PageRequest.of(undefined, undefined);
-
     service.getAddresses(pageRequest).subscribe(() => {});
 
-    const req = controller.expectOne(baseUri);
+    const req = controller.expectOne(service.BASE_API);
     expect(req.request.method).toBe('GET');
 
     req.flush([false, true, false]);
@@ -41,7 +39,7 @@ describe('AddressService', () => {
 
   it('should call api with parameters when page request is populated', () => {
     let pageRequest: PageRequest = PageRequest.of(0, 0);
-    const uri = baseUri + pageRequest.createQuery();
+    const uri = service.BASE_API + pageRequest.createQuery();
 
     service.getAddresses(pageRequest).subscribe(() => {});
 

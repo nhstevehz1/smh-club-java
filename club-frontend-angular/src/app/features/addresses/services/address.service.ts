@@ -10,17 +10,19 @@ import {FormGroup, NonNullableFormBuilder, Validators} from "@angular/forms";
 
 @Injectable()
 export class AddressService {
-  private  BASE_API = '/api/v1/addresses';
+  public readonly BASE_API = '/api/v1/addresses';
 
   constructor(private http: HttpClient, private fb: NonNullableFormBuilder) {}
 
   getAddresses(pageRequest: PageRequest): Observable<PagedData<AddressMember>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
-
+    console.debug('uri', uri);
     return this.http.get<PagedData<AddressMember>>(uri).pipe(
       map(pd => {
-        pd._content.forEach(a => a.address_type = a.address_type as unknown as AddressType);
+        if (pd && pd._content) {
+          pd._content.forEach(a => a.address_type = a.address_type as unknown as AddressType);
+        }
         return pd;
       })
     );
