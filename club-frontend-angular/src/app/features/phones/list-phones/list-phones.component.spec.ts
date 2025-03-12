@@ -41,18 +41,18 @@ describe('ListPhonesComponent', () => {
   });
 
   describe('test component', () => {
-    fit('should create', () => {
+    it('should create', () => {
       expect(component).toBeTruthy();
     });
 
-    fit('should create column list', () => {
+    it('should create column list', () => {
        fixture.detectChanges();
        expect(component.columns.length).toEqual(3);
     });
   });
 
   describe('test service interactions on init', () => {
-    fit('should call PhoneService.getPhones on init', async () => {
+    it('should call PhoneService.getPhones on init', async () => {
       const data = generatePhonePageData(0, 5, 100);
       phoneSvcMock.getPhones.and.returnValue(asyncData(data));
 
@@ -63,7 +63,7 @@ describe('ListPhonesComponent', () => {
       expect(phoneSvcMock.getPhones).toHaveBeenCalledWith(request);
     });
 
-    fit('length should be set on init', async () => {
+    it('length should be set on init', async () => {
       const data = generatePhonePageData(0, 5, 2);
       phoneSvcMock.getPhones.and.returnValue(asyncData(data));
 
@@ -73,7 +73,7 @@ describe('ListPhonesComponent', () => {
       expect(component.datasource.data).toBe(data._content);
     });
 
-    fit('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
+    it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
       phoneSvcMock.getPhones.and.returnValue(throwError(() => 'error'));
 
       fixture.detectChanges();
