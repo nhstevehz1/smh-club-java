@@ -4,7 +4,7 @@ import {MemberEditorComponent} from './member-editor.component';
 import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Member} from "../models/member";
+import {MemberUpdate} from "../models/member";
 import {FormControl, FormGroup} from "@angular/forms";
 import {DateTime} from "luxon";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
@@ -21,7 +21,7 @@ describe('MemberEditorComponent', () => {
   let fixture: ComponentFixture<MemberEditorComponent>;
   let loader: HarnessLoader;
 
-  const formGroup: FormModelGroup<Member> = new FormGroup({
+  const formGroup: FormModelGroup<MemberUpdate> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_number: new FormControl<number>(0, {nonNullable: true}),
     first_name: new FormControl<string>('First', {nonNullable: true}),
