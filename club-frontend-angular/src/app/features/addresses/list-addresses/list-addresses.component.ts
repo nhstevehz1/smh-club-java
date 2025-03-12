@@ -5,7 +5,7 @@ import {
 import {AddressService} from "../services/address.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {AddressMember} from "../models/address-member";
+import {AddressMember} from "../models/address";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";

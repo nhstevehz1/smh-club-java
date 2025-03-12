@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
-import {EmailMember} from "../models/email-member";
+import {EmailMember} from "../models/email";
 import {PagedData} from "../../../shared/models/paged-data";
 import {map} from "rxjs/operators";
 import {EmailType} from "../models/email-type";

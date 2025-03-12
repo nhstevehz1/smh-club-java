@@ -21,4 +21,4 @@ export interface AddressMember extends AddressDetails {
 
 export interface AddressCreate extends Address {}
 
-export interface AddressEdit extends AddressDetails {}
+export interface AddressUpdate extends AddressDetails {}
