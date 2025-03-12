@@ -125,8 +125,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
                 displayName: 'members.list.columns.birthDate',
                 isSortable: true,
                 cell: (element: MemberDetails) => {
-                    const local = this.dtLocal.transform(element.birth_date);
-                    return this.dtFormat.transform(local, DateTime.DATE_SHORT,
+                    return this.dtFormat.transform(element.birth_date, DateTime.DATE_SHORT,
                         {locale: this.translate.currentLang});
                 }
             },
@@ -135,8 +134,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
                 displayName: 'members.list.columns.joinedDate',
                 isSortable: true,
                 cell: (element: MemberDetails) => {
-                    const local = this.dtLocal.transform(element.joined_date);
-                    return this.dtFormat.transform(local, DateTime.DATE_SHORT,
+                    return this.dtFormat.transform(element.joined_date, DateTime.DATE_SHORT,
                         {locale: this.translate.currentLang});
                 }
             }

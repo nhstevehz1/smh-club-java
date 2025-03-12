@@ -23,4 +23,4 @@ export interface MemberCreate extends Member {
     phones: Array<PhoneCreate>;
 }
 
-export interface MemberEdit extends MemberDetails {}
+export interface MemberUpdate extends MemberDetails {}
