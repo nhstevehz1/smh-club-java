@@ -13,6 +13,8 @@ Member information managed includes:
 The data is stored in a relation database and is served through a REST API.  A microservices architecture is used where authentication services are separate from the REST services.
 The project is multi-module Gradle with centralized version management.
 
+i18n support in the Angular app is provided by ngx-translate.  This was chosen over the native Angular framework due to the requirement tha the language be switchable at runtime.
+
 ### Technologies and Frameworks
 * Gradle build tool
 * Spring Framework via Spring Boot starters
@@ -27,6 +29,7 @@ The project is multi-module Gradle with centralized version management.
 * Angular Material Framework
 * Angular Test Framework
 * angular-oauth2-oidc for OpenId support.  Authored by Manfred Steyer
+* ngx-translate i18n support.
 
 ### Project Modules
 #### club-api
@@ -54,9 +57,6 @@ It is recommended that an off the shelf solution be used instead.
 Provides centralized version management for Spring Boot, Spring Framework, and other the libraries used int he project.  
 Can be used for other global tasks like static code analysis, documentation generation, etc.
 
-### Future
-Content services utilizing UI frameworks such as Angular or React.
-
 ## Keycloak
 Keycloak running in a Docker container is used for OAuth2 support.
 The compose script is locating in the .keycloak folder.
@@ -74,7 +74,7 @@ Realm Information:
 The master realm admin credentials are *admin/admin*. 
 
 ## Next steps
-- Add create, update, and delete functionality in the Angular front end app.
+- Add update, and delete functionality in the Angular front end app.
 - Add e2e testing to the Angular Front end app.
 - Prepare Angular front end for *zoneless* operation.
 - Create custom themes for the Angular front end app.
@@ -101,6 +101,7 @@ The master realm admin credentials are *admin/admin*.
 * [Angular Material](https://material.angular.io/)
 * [Angular Testing Framework](https://angular.dev/guide/testing)
 * [Angular OAuth2 OIDC Library](https://github.com/manfredsteyer/angular-oauth2-oidc)
+* [ngx-translate i18n Framework](https://github.com/ngx-translate/core)
 
 ## Running the development environment
 To run the software 
