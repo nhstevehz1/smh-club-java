@@ -4,6 +4,7 @@ import {EmailCreate} from "../../emails/models/email";
 import {PhoneCreate} from "../../phones/models/phone";
 
 export interface Member {
+    member_number: number;
     first_name: string;
     middle_name: string;
     last_name: string;
@@ -14,7 +15,6 @@ export interface Member {
 
 export interface MemberDetails extends Member {
     id: number;
-    member_number: number;
 }
 
 export interface MemberCreate extends Member {

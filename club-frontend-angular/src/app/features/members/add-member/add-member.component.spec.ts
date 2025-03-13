@@ -14,10 +14,13 @@ import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {By} from "@angular/platform-browser";
 import {TranslateModule} from "@ngx-translate/core";
+import {HarnessLoader} from "@angular/cdk/testing";
 
 describe('AddMemberComponent', () => {
   let component: AddMemberComponent;
   let fixture: ComponentFixture<AddMemberComponent>;
+  let loader: HarnessLoader;
+
   let memberSvcMock: jasmine.SpyObj<MembersService>;
   let routerMock: jasmine.SpyObj<Router>;
   const memberMock: Member = generateMember(1);
@@ -49,9 +52,10 @@ describe('AddMemberComponent', () => {
 
     fixture = TestBed.createComponent(AddMemberComponent);
     component = fixture.componentInstance;
+    loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  fit('should create', async () => {
+  it('should create', async () => {
     fixture.detectChanges();
     await fixture.whenStable();
     expect(component).toBeTruthy();
@@ -59,32 +63,32 @@ describe('AddMemberComponent', () => {
 
   describe('test properties', ()=> {
 
-    it('should contain member form group', () => {
-      expect(component.memberForm).not.toBeNull();
+    it('should contain member create form group', () => {
+      expect(component.createFormSignal()).not.toBeNull();
     });
 
     it('should contain address form group array', () => {
-      expect(component.addressForms).not.toBeNull();
+      expect(component.addressFormsComputed()).not.toBeNull();
     });
 
     it('address form array should have a length of 1', () => {
-      expect(component.addressForms.length).toEqual(1);
+      expect(component.addressFormsComputed().length).toEqual(1);
     });
 
     it('should contain email form group array', () => {
-      expect(component.emailForms).not.toBeNull();
+      expect(component.emailFormsComputed).not.toBeNull();
     });
 
     it('email form array should have a length of 1', () => {
-      expect(component.emailForms.length).toEqual(1);
+      expect(component.emailFormsComputed().length).toEqual(1);
     });
 
     it('should contain phone form group array', () => {
-      expect(component.phoneForms).not.toBeNull();
+      expect(component.phoneFormsComputed()).not.toBeNull();
     });
 
     it('address form array should have a length of 1', () => {
-      expect(component.phoneForms.length).toEqual(1);
+      expect(component.phoneFormsComputed().length).toEqual(1);
     });
   });
 
@@ -98,68 +102,68 @@ describe('AddMemberComponent', () => {
     });
 
     it('onAddAddress should should add an address form group to array', () => {
-      const length = component.addressForms.length;
+      const length = component.addressFormsComputed().length;
       component.onAddAddress();
-      expect(component.addressForms.length).toEqual(length + 1);
+      expect(component.addressFormsComputed().length).toEqual(length + 1);
     });
 
     it('onDeleteAddress should remove the correct form', () => {
-      const spy = spyOn(component.addressForms, 'removeAt').and.callThrough();
+      const spy = spyOn(component.addressFormsComputed(), 'removeAt').and.callThrough();
       component.onAddAddress();
       component.onAddAddress();
-      const length = component.addressForms.length;
+      const length = component.addressFormsComputed().length;
 
       component.onDeleteAddress(1);
 
       expect(spy).toHaveBeenCalledWith(1);
-      expect(component.addressForms.length).toEqual(length - 1);
+      expect(component.addressFormsComputed().length).toEqual(length - 1);
     });
 
     it('onAddEmail should add an email form group to the array', () => {
-      const length = component.emailForms.length;
+      const length = component.emailFormsComputed().length;
       component.onAddEmail();
-      expect(component.emailForms.length).toEqual(length + 1);
+      expect(component.emailFormsComputed().length).toEqual(length + 1);
     });
 
     it('onDeleteEmail should remove the correct form', () => {
-      const spy = spyOn(component.emailForms, 'removeAt').and.callThrough();
+      const spy = spyOn(component.emailFormsComputed(), 'removeAt').and.callThrough();
       component.onAddEmail();
       component.onAddEmail();
-      const length = component.emailForms.length;
+      const length = component.emailFormsComputed().length;
 
       component.onDeleteEmail(1);
 
       expect(spy).toHaveBeenCalledWith(1);
-      expect(component.emailForms.length).toEqual(length - 1);
+      expect(component.emailFormsComputed().length).toEqual(length - 1);
     });
 
     it('onAddPhone should add an email form group to the array', () => {
-      const length = component.phoneForms.length;
+      const length = component.phoneFormsComputed().length;
       component.onAddPhone();
-      expect(component.phoneForms.length).toEqual(length + 1);
+      expect(component.phoneFormsComputed().length).toEqual(length + 1);
     });
 
     it('onDeletePhone should remove the correct form', () => {
-      const spy = spyOn(component.phoneForms, 'removeAt').and.callThrough();
+      const spy = spyOn(component.phoneFormsComputed(), 'removeAt').and.callThrough();
       component.onAddPhone();
       component.onAddPhone();
-      const length = component.phoneForms.length;
+      const length = component.phoneFormsComputed().length;
 
       component.onDeletePhone(1);
 
       expect(spy).toHaveBeenCalledWith(1);
-      expect(component.phoneForms.length).toEqual(length - 1);
+      expect(component.phoneFormsComputed().length).toEqual(length - 1);
     });
 
     it('onSave should call createForm.valid', () => {
       const spy =
-          spyOnProperty(component.createForm, 'valid').and.stub();
+          spyOnProperty(component.createFormSignal(), 'valid').and.stub();
       component.onSave();
       expect(spy).toHaveBeenCalled();
     });
 
     it('onSave should call MemberService.createMember createForm.valid is true', () => {
-      spyOnProperty(component.createForm, 'valid', 'get').and.returnValue(true);
+      spyOnProperty(component.createFormSignal(), 'valid', 'get').and.returnValue(true);
       const spy
           = memberSvcMock.createMember.and.returnValue(asyncData(memberMock));
 
@@ -168,45 +172,47 @@ describe('AddMemberComponent', () => {
     });
 
     it('onSave should set errorMessage to undefined when Member.Service is success', fakeAsync( () => {
-      component.errorMessage = 'error';
-      spyOnProperty(component.createForm, 'valid', 'get').and.returnValue(true);
+      component.errorMessage.set('error');
+      const spy = spyOnProperty(component.createFormSignal(), 'valid', 'get').and.returnValue(true);
       memberSvcMock.createMember.and.returnValue(createMember$);
       component.onSave();
       createSubject$.next(memberMock);
       tick();
 
-      expect(component.errorMessage).toBeFalsy();
+      expect(spy).toHaveBeenCalled();
+      expect(component.errorMessage()).toBeNull();
     }));
 
     it('onSave should set errorMessage Member.Service returns an error', fakeAsync( () => {
-      component.errorMessage = undefined;
-      spyOnProperty(component.createForm, 'valid', 'get').and.returnValue(true);
+      component.errorMessage.set(null);
+      spyOnProperty(component.createFormSignal(), 'valid', 'get').and.returnValue(true);
       memberSvcMock.createMember.and.returnValue(throwError(() => new Error('error message')));
 
       component.onSave();
       createSubject$.next(memberMock);
       tick();
 
-      expect(component.errorMessage).toBeTruthy();
+      expect(component.errorMessage()).toBeTruthy();
     }));
 
     it('onSave should set error message when formGroup.valid is false', () => {
-      component.errorMessage = undefined
-      spyOnProperty(component.createForm, 'valid', 'get').and.returnValue(false);
+      component.errorMessage.set(null);
+      spyOnProperty(component.createFormSignal(), 'valid', 'get').and.returnValue(false);
       component.onSave();
       expect(component.errorMessage).toBeTruthy();
     })
   });
 
   describe('test component rendering', ()=> {
-
     beforeEach(async () => {
       fixture.detectChanges();
+      await fixture.whenStable();
     });
 
     it('should display form when submitted is false', async ()=> {
-      component.submitted = false;
+      component.submitted.set(false);
 
+      //const harness = await loader.getHarnessOrNull(MatCardHarness);
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -215,7 +221,7 @@ describe('AddMemberComponent', () => {
     });
 
     it('should NOT display form when submitted is true', async ()=> {
-      component.submitted = true;
+      component.submitted.set(true);
 
       fixture.detectChanges();
       await fixture.whenStable();
@@ -224,12 +230,12 @@ describe('AddMemberComponent', () => {
       expect(form).toBeFalsy();
     });
 
-    it('should display add address button', () =>  {
+    it('should display add address button', async () =>  {
       const button = fixture.debugElement.query(By.css('.add-address'));
       expect(button).toBeTruthy();
     });
 
-    it('should call onAAddress when add address button is clicked', fakeAsync(() => {
+    it('should call onAAddress when add address button is clicked', fakeAsync(async () => {
       const spy = spyOn(component, 'onAddAddress').and.stub();
 
       fixture.debugElement.query(By.css('.add-address')).nativeElement.click();
@@ -297,7 +303,7 @@ describe('AddMemberComponent', () => {
     }));
 
     it('should display app-ok-cancel when submitted is true', async () => {
-      component.submitted = true;
+      component.submitted.set(true);
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -307,7 +313,7 @@ describe('AddMemberComponent', () => {
     });
 
     it('should NOT display app-ok-cancel when submitted is false', async () => {
-      component.submitted = false;
+      component.submitted.set(false);
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -317,7 +323,7 @@ describe('AddMemberComponent', () => {
     });
 
     it('should call onOkOrCancel when button clicked in <app-ok-cancel> component', async () => {
-      component.submitted = true;
+      component.submitted.set(true);
       const spy = spyOn(component, 'onOkOrCancel').and.stub();
       const loader = TestbedHarnessEnvironment.loader(fixture);
       const harness = await loader.getHarnessOrNull(MatButtonHarness);

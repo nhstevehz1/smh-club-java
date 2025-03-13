@@ -23,7 +23,7 @@ import {AddressType} from "../../addresses/models/address-type";
 import {EmailType} from "../../emails/models/email-type";
 import {PhoneType} from "../../phones/models/phone-type";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Member, MemberCreate} from "../models/member";
+import {MemberCreate} from "../models/member";
 import {Address, AddressCreate} from "../../addresses/models/address";
 import {Email, EmailCreate} from "../../emails/models/email";
 import {Phone, PhoneCreate} from "../../phones/models/phone";
@@ -66,6 +66,9 @@ export class AddMemberComponent {
 
     createFormSignal: WritableSignal<FormModelGroup<MemberCreate>>;
 
+    memberFormComputed = computed(() =>
+        this.createFormSignal() as unknown as FormModelGroup<MemberCreate>);
+
     addressFormsComputed = computed(() =>
         this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<AddressCreate>>);
 
@@ -88,7 +91,6 @@ export class AddMemberComponent {
                 private svc: MembersService,
                 private router: Router) {
 
-        const member = this.createMemberGroup() as FormModelGroup<Member>;
 
         const addresses
             = this.fb.array<FormModelGroup<AddressCreate>>([this.createAddressGroup()])
@@ -99,7 +101,7 @@ export class AddMemberComponent {
         const emails
             = this.fb.array<FormModelGroup<EmailCreate>>([this.createEmailGroup()])
 
-        const create = this.createFormGroup(member, addresses, phones, emails);
+        const create = this.createFormGroup(addresses, phones, emails);
         this.createFormSignal = signal(create);
     }
 
@@ -136,12 +138,10 @@ export class AddMemberComponent {
 
     onAddAddress(): void {
         this.getAddresses().push(this.createAddressGroup());
-        //this.addressForms.update(value => this.getAddresses());
     }
 
     onDeleteAddress(idx: number): void {
         this.getAddresses().removeAt(idx);
-        //this.addressForms.update(value => this.getAddresses());
     }
 
     onAddEmail(): void {
@@ -164,7 +164,7 @@ export class AddMemberComponent {
         //this.phoneForms.update(value => this.getPhones());
     }
 
-    getAddresses(): FormArray<FormModelGroup<Address>> {
+    private getAddresses(): FormArray<FormModelGroup<Address>> {
         return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<Address>>;
     }
 
@@ -176,10 +176,17 @@ export class AddMemberComponent {
         return this.createFormSignal().get('phones') as FormArray<FormModelGroup<Phone>>;
     }
 
-    private createFormGroup(member: FormModelGroup<Member>, addresses: FormArray<FormGroup>,
+    private createFormGroup(addresses: FormArray<FormGroup>,
                             phones: FormArray<FormGroup>, emails: FormArray<FormGroup>): FormGroup {
         return this.fb.group({
-            member: member,
+            id: [0],
+            member_number: [0],
+            first_name: ['', Validators.required],
+            middle_name: [''],
+            last_name: ['', Validators.required],
+            suffix: [''],
+            birth_date: [DateTime.now, Validators.required],
+            joined_date: [DateTime.now, Validators.required],
             addresses: addresses,
             phones: phones,
             emails: emails
@@ -188,7 +195,7 @@ export class AddMemberComponent {
 
     private createMemberGroup(): FormGroup {
         return this.fb.group({
-            id: [0],
+            //id: [0],
             member_number: [0],
             first_name: ['', Validators.required],
             middle_name: [''],

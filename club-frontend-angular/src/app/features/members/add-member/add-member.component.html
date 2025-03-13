@@ -1,9 +1,9 @@
 <div class="container">
-    @if(!submitted) {
-        <form role="form"
+    @if(!submitted()) {
+        <form data-testid="createForm"
                 [formGroup]="createFormSignal()"
                 (ngSubmit)="onSave()">
-            <mat-card>
+            <mat-card data-testid="card">
                 <div class="title-container">
                     <mat-card-title>{{'members.add.title' | translate}}</mat-card-title>
                     <mat-error>{{ 'members.add.required' | translate }}</mat-error>
@@ -17,7 +17,7 @@
                         </div>
                         <mat-divider></mat-divider>
                         <app-member-editor
-                                [editorForm]="createFormSignal()"
+                                [editorForm]="memberFormComputed()"
                                 [fieldAppearance]="fieldAppearance()"
                         ></app-member-editor>
                     </div>

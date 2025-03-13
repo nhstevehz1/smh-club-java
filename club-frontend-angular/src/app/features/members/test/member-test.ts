@@ -31,6 +31,7 @@ export function generateMemberDetails(prefix: number): MemberDetails {
 
 export function generateMember(prefix: number): Member {
     return {
+        member_number: prefix,
         first_name: prefix + ' First',
         middle_name: prefix +  ' Middle',
         last_name: prefix + ' Last',
@@ -43,6 +44,7 @@ export function generateMember(prefix: number): Member {
 export function generateMemberCreate(): MemberCreate {
     const member = generateMember(1);
     return {
+        member_number: member.member_number,
         first_name: member.first_name,
         middle_name: member.middle_name,
         last_name: member.last_name,
