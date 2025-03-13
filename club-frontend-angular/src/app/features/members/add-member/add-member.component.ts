@@ -193,19 +193,6 @@ export class AddMemberComponent {
         });
     }
 
-    private createMemberGroup(): FormGroup {
-        return this.fb.group({
-            //id: [0],
-            member_number: [0],
-            first_name: ['', Validators.required],
-            middle_name: [''],
-            last_name: ['', Validators.required],
-            suffix: [''],
-            birth_date: [DateTime.now, Validators.required],
-            joined_date: [DateTime.now, Validators.required],
-        });
-    }
-
     private createAddressGroup(): FormGroup {
         return this.formBuilder.group({
             id: [0],
