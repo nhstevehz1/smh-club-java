@@ -8,7 +8,7 @@ import {ColumnDef} from "../../../shared/components/sortable-pageable-table/mode
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
-import {RenewalMember} from "../models/renewal-member";
+import {RenewalMember} from "../models/renewal";
 
 @Component({
   selector: 'app-list-renewals',
@@ -74,19 +74,19 @@ export class ListRenewalsComponent
     return [
       {
         columnName: 'renewal_date',
-        displayName: 'Renewal',
+        displayName: 'renewals.list.columns.renewalDate',
         isSortable: true,
         cell: (element: RenewalMember) => `${element.renewal_date}`,
       },
       {
         columnName: 'renewal_year',
-        displayName: 'For Year',
+        displayName: 'renewals.list.columns.renewalYear',
         isSortable: true,
         cell: (element: RenewalMember) => `${element.renewal_year}`
       },
       {
         columnName: 'full_name',
-        displayName: 'Member',
+        displayName: 'renewals.list.columns.fullName',
         isSortable: true,
         cell: (element: RenewalMember) => this.getFullName(element.full_name)
       }

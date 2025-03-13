@@ -3,67 +3,82 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {PhoneEditorComponent} from './phone-editor.component';
 import {HarnessLoader} from "@angular/cdk/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Phone} from '../models/phone';
-import {FormControl, FormGroup, ValidationErrors} from "@angular/forms";
+import {PhoneUpdate} from '../models/phone';
+import {FormControl, FormGroup} from "@angular/forms";
 import {PhoneType} from "../models/phone-type";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {By} from "@angular/platform-browser";
+import {TranslateModule} from "@ngx-translate/core";
+import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
 
 describe('PhoneEditorComponent', () => {
   let component: PhoneEditorComponent;
   let fixture: ComponentFixture<PhoneEditorComponent>;
   let loader: HarnessLoader;
 
-  const formGroup: FormModelGroup<Phone> = new FormGroup({
+  const formGroup: FormModelGroup<PhoneUpdate> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
     country_code: new FormControl<string>('1', {nonNullable: true}),
     phone_number: new FormControl<string>('5555555555', {nonNullable: true}),
-    phone_type: new FormControl<PhoneType | string>(PhoneType.Mobile, {nonNullable: true})
+    phone_type: new FormControl<PhoneType>(PhoneType.Mobile, {nonNullable: true})
   });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PhoneEditorComponent],
+      imports: [
+          PhoneEditorComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [provideNoopAnimations()]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(PhoneEditorComponent);
     component = fixture.componentInstance;
-
     loader = TestbedHarnessEnvironment.loader(fixture);
+
+
   });
 
-  it('should create', () => {
+  it('should create', async () => {
+    fixture.componentRef.setInput('editorForm', formGroup);
+    fixture.detectChanges();
+    await fixture.whenStable();
     expect(component).toBeTruthy();
   });
 
+  it('should contain editor header', async () => {
+    fixture.componentRef.setInput('editorForm', formGroup);
+    const header = await loader.getAllHarnesses(EditorHeaderHarness);
+    expect(header.length).toEqual(1);
+  });
+
   describe('form field tests', ()=> {
-    const outline = 'outline';
-    const fill = 'fill';
-    const errors: ValidationErrors = [{p: 'error'}];
+    const outline: MatFormFieldAppearance = 'outline';
+    const fill: MatFormFieldAppearance = 'fill';
     let harness: MatFormFieldHarness | null;
 
     beforeEach(() => {
       formGroup.reset();
-      component.editorForm = formGroup;
+      fixture.componentRef.setInput('editorForm', formGroup);
     });
 
     it('should contain the correct number of phone form fields', async () => {
       const harnesses = await loader.getAllHarnesses(MatFormFieldHarness);
-
       expect(harnesses.length).toEqual(2);
     });
-    
+
     describe('phone number field tests', () => {
+
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Phone'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with(
+                {floatingLabelText: 'phones.editor.phoneNumber.label'}))
       });
 
       it('should contain phone field', async () => {
@@ -76,42 +91,24 @@ describe('PhoneEditorComponent', () => {
       });
 
       it('phone should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
       it('phone should use fill appearance', async() => {
-        component.fieldAppearance = fill;
-
+        fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
-      });
-
-      it('phone should show error', async () => {
-        formGroup.controls.phone_number.markAsTouched()
-        formGroup.controls.phone_number.setErrors(errors);
-        component.phoneNumberError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('phone should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
       });
     });
 
     describe('phone type field tests', async () => {
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Phone type'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'phones.editor.phoneType.label'}))
       });
 
       it('should contain phone type field', async () => {
@@ -120,101 +117,78 @@ describe('PhoneEditorComponent', () => {
 
       it('phone type should contain the correct value', async () => {
         const value = await getFormFieldValue(harness);
-        expect(value).toBe(formGroup.controls.phone_type.value);
+        expect(value).toBe('phones.type.mobile');
       });
 
       it('phone type should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
-
         expect(appearance).toBe(outline);
       });
 
       it('phone type should use fill appearance', async() => {
-        component.fieldAppearance = fill;
-
+        fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
 
-      it('phone type should show error', async () => {
-        formGroup.controls.phone_type.markAsTouched()
-        formGroup.controls.phone_type.setErrors(errors);
-        component.phoneTypeError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('emails type should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
-      });
     });
   });
 
-  describe('phone remove button and title tests', () => {
-    let buttonHarness: MatButtonHarness | null;
+  describe('phone header tests', () => {
+    let headerHarness: EditorHeaderHarness | null;
 
     beforeEach(async () => {
-      component.editorForm = formGroup;
+      fixture.componentRef.setInput('editorForm', formGroup);
+      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
+    });
+
+    it('should contain one editor header', async () => {
+      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
+      expect(harnesses.length).toEqual(1);
     });
 
     it('should NOT show phone remove button when showRemoveButton is set to false', async () => {
-      component.showRemoveButton = false;
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeFalsy();
+      fixture.componentRef.setInput('showRemoveButton', false);
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).not.toBeTrue();
     });
 
     it('should show phone remove button when showRemoveButton is set to true', async () => {
-      component.showRemoveButton = true;
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeTruthy();
+      fixture.componentRef.setInput('showRemoveButton', true);
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).toBeTrue();
     });
 
     it('should call on remove when remove phone button is clicked', async () => {
-      component.showRemoveButton = true;
+      fixture.componentRef.setInput('showRemoveButton', true);
       const spy = spyOn(component, 'onRemove').and.stub();
 
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      await buttonHarness?.click();
+      const harness = await headerHarness?.getHarness(MatButtonHarness);
+      await harness?.click();
 
       expect(spy).toHaveBeenCalled();
     });
 
     it('should display title when phone title is defined', async () => {
-      component.title = 'test';
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeTruthy()
+      fixture.componentRef.setInput('title', 'test');
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).toBeTrue();
     });
 
-    it('should display title when phone title is undefined', async () => {
-      component.title = undefined;
+    it('should NOT display title when phone title is undefined', async () => {
+      fixture.componentRef.setInput('title', undefined);
 
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeFalsy()
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).not.toBeTrue();
     });
 
     it('should display correct phone title', async () => {
-      const title = 'title';
-      component.title = title;
+      const title= 'title';
+      fixture.componentRef.setInput('title', title);
 
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element.nativeElement.textContent).toBe(title);
+      const titleText = await headerHarness?.titleText();
+      expect(titleText).toBe(title);
     });
   });
 });

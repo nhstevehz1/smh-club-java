@@ -1,14 +1,17 @@
-import {Component, OnInit, signal} from '@angular/core';
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
-import {PhoneType} from "../models/phone-type";
+import {Component, computed, input} from '@angular/core';
+import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {MatDivider} from "@angular/material/divider";
-import {Phone} from "../models/phone";
+import {PhoneCreate, PhoneUpdate} from "../models/phone";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {NgClass} from "@angular/common";
+import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
+import {
+  InputFormFieldComponent
+} from "../../../shared/components/editor-form-fields/input-form-field/input-form-field.component";
+import {PhoneTypeFormFieldComponent} from "../phone-type-form-field/phone-type-form-field.component";
+import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
 
 @Component({
   selector: 'app-phone-editor',
@@ -18,33 +21,31 @@ import {NgClass} from "@angular/common";
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    MatDivider,
-    NgClass
+    EditorHeaderComponent,
+    InputFormFieldComponent,
+    PhoneTypeFormFieldComponent
   ],
   templateUrl: './phone-editor.component.html',
   styleUrl: './phone-editor.component.scss'
 })
-export class PhoneEditorComponent extends BaseEditorComponent<Phone> implements OnInit {
+export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | PhoneUpdate> {
 
-  readonly phoneNumberError = signal(false);
-  readonly phoneTypeError = signal(false);
+  countryCodeSignal
+      = computed(() => this.editorFormSignal().controls.country_code);
+  countryCodeErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'countryCodeErrors'});
 
-  phoneTypes = Object.values(PhoneType);
+  phoneNumberSignal
+      = computed(() => this.editorFormSignal().controls.phone_number);
+  phoneNumberErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'phoneNumberErrors'});
 
-  public get phoneNumber(): FormControl {
-    return this.editorForm.controls.phone_number;
-  }
-
-  public get phoneType(): FormControl {
-    return this.editorForm.controls.phone_type;
-  }
+  phoneTypeSignal
+      = computed(() => this.editorFormSignal().controls.phone_type);
+  phoneTypeErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'phoneTypeErrors'});
 
   constructor() {
     super();
-  }
-
-  ngOnInit() {
-    this.setErrorSignal(this.phoneNumberError, this.phoneNumber);
-    this.setErrorSignal(this.phoneTypeError, this.phoneType);
   }
 }

@@ -5,11 +5,12 @@ import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import SpyObj = jasmine.SpyObj;
 import {generatePhonePageData} from "../test/phone-test";
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
 import {PageRequest} from "../../../shared/models/page-request";
 import {throwError} from "rxjs";
+import {TranslateModule} from "@ngx-translate/core";
+import SpyObj = jasmine.SpyObj;
 
 describe('ListPhonesComponent', () => {
   let fixture: ComponentFixture<ListPhonesComponent>;
@@ -20,7 +21,10 @@ describe('ListPhonesComponent', () => {
     phoneSvcMock = jasmine.createSpyObj('PhoneService', ['getPhones']);
 
     await TestBed.configureTestingModule({
-      imports: [ListPhonesComponent],
+      imports: [
+          ListPhonesComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [
           {provide: PhoneService, useValue: {}},
           provideHttpClient(),

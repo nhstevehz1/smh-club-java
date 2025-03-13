@@ -36,9 +36,9 @@ export abstract class TableComponentBase <Type> {
         return `${lastName}, ${firstName}`;
     }
 
-    protected contactStrings(str1: string, str2?: string, delimeter?: string): string {
+    protected contactStrings(str1: string, str2?: string, delimiter?: string): string {
         const val2 = str2 || '';
-        const delim = delimeter || ' ';
+        const delim = delimiter || ' ';
         return str1.concat(val2, delim).trim();
     }
 }

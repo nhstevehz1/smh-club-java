@@ -1,14 +1,19 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {MatInputModule} from "@angular/material/input";
-import {ControlContainer, FormControl, ReactiveFormsModule} from "@angular/forms";
+import {ControlContainer, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {MatDivider} from "@angular/material/divider";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {Member} from "../models/member";
+import {MemberCreate} from "../models/member";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {NgClass} from "@angular/common";
+import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
+import {
+    InputFormFieldComponent
+} from "../../../shared/components/editor-form-fields/input-form-field/input-form-field.component";
+import {
+    DateFormFieldComponent
+} from "../../../shared/components/editor-form-fields/date-form-field/date-form-field.component";
+import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
 
 @Component({
   selector: 'app-member-editor',
@@ -18,11 +23,9 @@ import {NgClass} from "@angular/common";
         MatIconModule,
         MatInputModule,
         MatSelectModule,
-        MatDatepicker,
-        MatDatepickerInput,
-        MatDatepickerToggle,
-        MatDivider,
-        NgClass
+        EditorHeaderComponent,
+        InputFormFieldComponent,
+        DateFormFieldComponent
     ],
     viewProviders: [
         {provide: ControlContainer, useFactory: (): ControlContainer => inject(ControlContainer, {skipSelf: true})}
@@ -30,49 +33,40 @@ import {NgClass} from "@angular/common";
   templateUrl: './member-editor.component.html',
   styleUrl: './member-editor.component.scss'
 })
-export class MemberEditorComponent extends BaseEditorComponent<Member> implements OnInit {
+export class MemberEditorComponent extends BaseEditorComponent<MemberCreate> {
 
-    readonly firstNameError = signal(false);
-    readonly middleNameError = signal(false);
-    readonly lastNameError = signal(false);
-    readonly suffixError = signal(false);
-    readonly birthDateError = signal(false);
-    readonly joinedDateError = signal(false);
+    firstNameSignal
+        = computed(() => this.editorFormSignal().controls.first_name);
+    firstNameErrorsSignal
+        = input<Array<FormControlError>>(undefined, {alias: 'firstNameErrors'});
+
+    middleNameSignal
+        = computed(() => this.editorFormSignal().controls.middle_name);
+    middleNameErrorsSignal
+        = input<Array<FormControlError>>(undefined, {alias: 'middleNameErrors'});
+
+    lastNameSignal
+        = computed(() => this.editorFormSignal().controls.last_name);
+    lastNameErrorsSignal
+        = input<Array<FormControlError>>(undefined, {alias: 'lastNameErrors'});
+
+    suffixSignal
+        = computed(() => this.editorFormSignal().controls.suffix);
+    suffixErrorsSignal
+        = input<Array<FormControlError>>(undefined, {alias: 'suffixErrors'});
+
+    birthDateSignal
+        = computed(() => this.editorFormSignal().controls.birth_date);
+    birthDateErrorsSignal
+        = input<Array<FormControlError>>(undefined, {alias: 'birthDateErrors'});
+
+    joinedDateSignal
+        = computed(() => this.editorFormSignal().controls.joined_date);
+    joinedDateErrorsSignal
+        = input<Array<FormControlError>>(undefined, {alias: 'joinedDateErrors'});
 
     constructor() {
         super();
     }
 
-    public get firstName(): FormControl {
-        return this.editorForm.controls.first_name;
-    }
-
-    public get middleName(): FormControl {
-        return this.editorForm.controls.middle_name;
-    }
-
-    public get lastName(): FormControl {
-        return this.editorForm.controls.last_name;
-    }
-
-    public get suffix(): FormControl {
-        return this.editorForm.controls.suffix;
-    }
-
-    public get birthDate(): FormControl {
-        return this.editorForm.controls.birth_date;
-    }
-
-    public get joinedDate(): FormControl {
-        return this.editorForm.controls.joined_date;
-    }
-
-    ngOnInit() {
-        this.setErrorSignal(this.firstNameError, this.firstName);
-        this.setErrorSignal(this.middleNameError, this.middleName);
-        this.setErrorSignal(this.lastNameError, this.lastName);
-        this.setErrorSignal(this.suffixError, this.suffix);
-        this.setErrorSignal(this.birthDateError, this.birthDate);
-        this.setErrorSignal(this.joinedDateError, this.joinedDate);
-    }
 }

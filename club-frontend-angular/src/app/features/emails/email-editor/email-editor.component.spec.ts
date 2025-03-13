@@ -2,66 +2,75 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {EmailEditorComponent} from './email-editor.component';
 import {HarnessLoader} from "@angular/cdk/testing";
-import {FormControl, FormGroup, ValidationErrors} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import {EmailType} from "../models/email-type";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Email} from "../models/email";
+import {EmailUpdate} from "../models/email";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {By} from "@angular/platform-browser";
+import {TranslateModule} from "@ngx-translate/core";
+import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
 
 describe('EmailEditorComponent', () => {
   let component: EmailEditorComponent;
   let fixture: ComponentFixture<EmailEditorComponent>;
   let loader: HarnessLoader;
-  let formGroup: FormModelGroup<Email> = new FormGroup({
+
+  let formGroup: FormModelGroup<EmailUpdate> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
     email: new FormControl<string>('email@email.com', {nonNullable: true}),
-    email_type: new FormControl<EmailType | string>(EmailType.Home, {nonNullable: true}),
+    email_type: new FormControl<EmailType>(EmailType.Home, {nonNullable: true}),
   });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmailEditorComponent],
-      providers: [provideNoopAnimations()]
+      imports: [
+          EmailEditorComponent,
+          TranslateModule.forRoot({})
+      ],
+      providers: [
+          provideNoopAnimations()
+      ]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(EmailEditorComponent);
     component = fixture.componentInstance;
-
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should create', () => {
+  it('should create', async () => {
+    fixture.componentRef.setInput('editorForm', formGroup);
+    fixture.detectChanges()
+    await fixture.whenStable();
     expect(component).toBeTruthy();
   });
 
   describe('form field tests', ()=> {
-    const outline = 'outline';
-    const fill = 'fill';
-    const errors: ValidationErrors = [{p: 'error'}];
+    const outline: MatFormFieldAppearance = 'outline';
+    const fill: MatFormFieldAppearance = 'fill';
     let harness: MatFormFieldHarness | null;
 
     beforeEach(() => {
       formGroup.reset();
-      component.editorForm = formGroup;
+      fixture.componentRef.setInput('editorForm', formGroup);
     });
 
     it('should contain the correct number of form fields', async () => {
       const harnesses = await loader.getAllHarnesses(MatFormFieldHarness);
-
       expect(harnesses.length).toEqual(2);
     });
 
     describe('email field tests', () => {
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Email'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'emails.editor.email.label'}));
       });
 
       it('should contain email field', async () => {
@@ -74,42 +83,23 @@ describe('EmailEditorComponent', () => {
       });
 
       it('email should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
-
         expect(appearance).toBe(outline);
       });
 
       it('email should use fill appearance', async() => {
-        component.fieldAppearance = fill;
-
+        fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
-      });
-
-      it('emails should show error', async () => {
-        formGroup.controls.email.markAsTouched()
-        formGroup.controls.email.setErrors(errors);
-        component.emailError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('emails should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
       });
     });
 
     describe('email type field tests', async () => {
       beforeEach(async () => {
         harness =
-            await loader.getHarnessOrNull(MatFormFieldHarness.with({floatingLabelText: 'Email type'}))
+            await loader.getHarnessOrNull(MatFormFieldHarness.with({
+              floatingLabelText: 'emails.editor.emailType.label'}));
       });
 
       it('should contain email type field', async () => {
@@ -118,102 +108,77 @@ describe('EmailEditorComponent', () => {
 
       it('email type should contain the correct value', async () => {
         const value = await getFormFieldValue(harness);
-        expect(value).toBe(formGroup.controls.email_type.value);
+        expect(value).toBe('emails.type.home');
       });
 
       it('email type should use outline appearance', async () => {
-        component.fieldAppearance = outline;
+        fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
       it('email type should use fill appearance', async() => {
-        component.fieldAppearance = fill;
-
+        fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-
-      it('email type should show error', async () => {
-        formGroup.controls.email_type.markAsTouched()
-        formGroup.controls.email_type.setErrors(errors);
-        component.emailTypeError.update(() => true);
-
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(1);
-      });
-
-      it('emails type should NOT show error', async () => {
-        const errHarnesses = await harness?.getErrors();
-
-        expect(errHarnesses).toBeTruthy();
-        expect(errHarnesses?.length).toEqual(0)
-      });
     });
-
   });
 
   describe('email remove button and title tests', () => {
-    let buttonHarness: MatButtonHarness | null;
+    let headerHarness: EditorHeaderHarness | null;
 
     beforeEach(async () => {
-      component.editorForm = formGroup;
+      fixture.componentRef.setInput('editorForm', formGroup);
+      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
     });
 
-   it('should NOT show email remove button when showRemoveButton is set to false', async () => {
-      component.showRemoveButton = false;
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeFalsy();
+    it('should contain one editor header', async () => {
+      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
+      expect(harnesses.length).toEqual(1);
     });
+
+     it('should NOT show email remove button when showRemoveButton is set to false', async () => {
+        fixture.componentRef.setInput('showRemoveButton', false);
+        const visible = await headerHarness?.isButtonVisible();
+        expect(visible).not.toBeTrue();
+      });
 
     it('should show email remove button when showRemoveButton is set to true', async () => {
-      component.showRemoveButton = true;
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      expect(buttonHarness).toBeTruthy();
+      fixture.componentRef.setInput('showRemoveButton', true);
+      const visible = await headerHarness?.isButtonVisible();
+      expect(visible).toBeTrue();
     });
 
     it('should call on remove when remove email button is clicked', async () => {
-      component.showRemoveButton = true;
+      fixture.componentRef.setInput('showRemoveButton', true);
       const spy = spyOn(component, 'onRemove').and.stub();
 
-      buttonHarness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
-      await buttonHarness?.click();
+      const button = await headerHarness?.getHarnessOrNull(MatButtonHarness);
+      await button?.click();
 
       expect(spy).toHaveBeenCalled();
     });
 
     it('should display title when email title is defined', async () => {
-      component.title = 'test';
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeTruthy()
+      fixture.componentRef.setInput('title', 'test');
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).toBeTrue()
     });
 
-    it('should display title when email title is undefined', async () => {
-      component.title = undefined;
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element).toBeFalsy()
+    it('should NOT display title when email title is undefined', async () => {
+      fixture.componentRef.setInput('title', undefined);
+      const visible = await headerHarness?.isTitleVisible();
+      expect(visible).not.toBeTrue();
     });
 
     it('should display correct email title', async () => {
       const title = 'title';
-      component.title = title;
+      fixture.componentRef.setInput('title', title);
 
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const element = fixture.debugElement.query(By.css(('.editor-title')));
-      expect(element.nativeElement.textContent).toBe(title);
+      const titleText = await headerHarness?.titleText();
+      expect(titleText).toBe(title);
     });
   });
 });

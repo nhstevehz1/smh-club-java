@@ -1,0 +1,273 @@
+{
+  "addresses": {
+    "editor": {
+      "address1": {
+        "error": {
+          "required": "Street or PO box required"
+        },
+        "label": "Street or PO Box"
+      },
+      "address2": {
+        "error": {
+          "invalid": "address is invalid",
+          "required": "address is required"
+        },
+        "label": "address continued"
+      },
+      "addressType": {
+        "error": {
+          "required": "address type is required"
+        },
+        "label": "Address Type"
+      },
+      "city": {
+        "error": {
+          "required": "city or town required"
+        },
+        "label": "City or Town"
+      },
+      "postalCode": {
+        "error": {
+          "required": "postal code is required"
+        },
+        "label": "Postal code"
+      },
+      "state": {
+        "error": {
+          "required": "state or territory required"
+        },
+        "label": "State or territory"
+      }
+    },
+    "list": {
+      "columns": {
+        "address": "Address",
+        "addressType": "Type",
+        "city": "City",
+        "fullName": "Member",
+        "postalCode": "Postal code",
+        "state": "State"
+      }
+    },
+    "type": {
+      "home": "Home",
+      "other": "Other",
+      "work": "Work"
+    }
+  },
+  "auth": {
+    "login": {
+      "loginToolTip": "Login",
+      "titleMessage": "Please click the button to log in"
+    },
+    "profile": {
+      "card": {
+        "list": {
+          "defaultMessage": "Cannot read profile data!",
+          "email": "Email",
+          "fullName": "Full Name",
+          "roles": "Roles",
+          "username": "Username"
+        },
+        "title": "Profile details"
+      }
+    }
+  },
+  "emails": {
+    "editor": {
+      "email": {
+        "error": {
+          "invalid": "email is invalid",
+          "required": "email is required"
+        },
+        "label": "Email address"
+      },
+      "emailType": {
+        "error": {
+          "required": "email type is required"
+        },
+        "label": "Email type"
+      }
+    },
+    "list": {
+      "columns": {
+        "email": "Email",
+        "emailType": "Type",
+        "fullName": "Member"
+      }
+    },
+    "type": {
+      "home": "Home",
+      "other": "Other",
+      "work": "Work"
+    }
+  },
+  "errors": {
+    "accessDenied": {
+      "card": {
+        "subtitle": "Please select a page from the menu.",
+        "title": "Page not found!"
+      }
+    },
+    "pageNotFound": {
+      "card": {
+        "subtitle": "Please contact the site administrator",
+        "title": "You do not have access to this resource"
+      }
+    }
+  },
+  "home": {
+    "card": {
+      "subTitle": "Use the menu to view membership information",
+      "title": "Welcome to the Social Club"
+    }
+  },
+  "layout": {
+    "content": {
+      "navList": {
+        "addresses": "Addresses",
+        "emails": "Emails",
+        "home": "Home",
+        "members": "Members",
+        "phones": "Phones"
+      }
+    },
+    "footer": {
+      "title": "Social Club"
+    },
+    "header": {
+      "darkMode": "Dark Mode",
+      "logout": "Logout",
+      "profile": "Profile",
+      "title": "Social Club",
+      "welcome": "Welcome"
+    }
+  },
+  "members": {
+    "add": {
+      "card": {
+        "action": {
+          "cancelToolTip": "Return to members list",
+          "okCancel": {
+            "title": "Member saved!",
+            "toolTip": "Return to members list"
+          },
+          "submitToolTip": "Save member data"
+        },
+        "address": {
+          "addToolTip": "Add address",
+          "subtitle": {
+            "address": "Address",
+            "addresses": "Addresses"
+          }
+        },
+        "emails": {
+          "addToolTip": "Add email",
+          "subtitle": {
+            "email": "Email Address",
+            "emails": "Email Addresses"
+          }
+        },
+        "member": {
+          "subTitle": "Member Details"
+        },
+        "phones": {
+          "addTooltip": "Add phone",
+          "subtitle": {
+            "phoneNumber": "Phone Numbers",
+            "phoneNumbers": "Phone Numbers"
+          }
+        },
+        "required": "required",
+        "title": "Add Member"
+      }
+    },
+    "editor": {
+      "birthDate": {
+        "error": {
+          "invalid": "",
+          "required": ""
+        },
+        "label": "Birth Date"
+      },
+      "firstName": {
+        "error": {
+          "required": "first name is required"
+        },
+        "label": "First name"
+      },
+      "joinedDate": {
+        "error": {
+          "invalid": "",
+          "required": ""
+        },
+        "label": "Joined Date"
+      },
+      "lastName": {
+        "error": {
+          "required": "last name is required"
+        },
+        "label": "Last name"
+      },
+      "middleName": {
+        "error": {
+          "required": "middle name is required"
+        },
+        "label": "Middle name or initial"
+      },
+      "suffix": {
+        "error": {
+          "required": "suffix is required"
+        },
+        "label": "Suffix"
+      }
+    },
+    "list": {
+      "columns": {
+        "birthDate": "Birth date",
+        "firstName": "First name",
+        "joinedDate": "Joined date",
+        "lastName": "Last name",
+        "memberNumber": "Number"
+      }
+    }
+  },
+  "phones": {
+    "editor": {
+      "phoneNumber": {
+        "error": {
+          "invalid": "phone number is invalid",
+          "required": "phone number is required"
+        },
+        "label": "Phone"
+      },
+      "phoneType": {
+        "error": {
+          "required": "phone type is required"
+        },
+        "label": "Phone type"
+      }
+    },
+    "list": {
+      "columns": {
+        "fullName": "Member",
+        "phoneNumber": "Phone",
+        "phoneType": "Type"
+      }
+    },
+    "type": {
+      "home": "Home",
+      "mobile": "Mobile",
+      "work": "Work"
+    }
+  },
+  "renewals": {
+    "list": {
+      "columns": {
+        "fullName": "Member",
+        "renewalDate": "Renewal date",
+        "renewalYear": "For year"
+      }
+    }
+  }
+}

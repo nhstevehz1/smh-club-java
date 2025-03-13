@@ -10,6 +10,7 @@ import {customOauthInterceptor} from "./core/auth/interceptors/custom-oauth.inte
 import {authAppInitFactory} from "./core/auth/factories/auth-app-init-factory";
 import {AuthService} from "./core/auth/services/auth.service";
 import {DOCUMENT} from "@angular/common";
+import {provideNgxTranslate} from "./core/i18n/providers/ngx-translate-provider";
 
 export let appConfig: ApplicationConfig;
 appConfig = {
@@ -33,6 +34,7 @@ appConfig = {
         sendAccessToken: true,
       }
     }),
+      provideNgxTranslate(), // custom wrapper around ngx-translate
       provideAppInitializer(() => {
           const initFn = (authAppInitFactory)(inject(AuthService));
           return initFn();

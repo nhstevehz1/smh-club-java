@@ -3,6 +3,9 @@ import {ColumnDef} from "./models/column-def";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
 import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
+import {_, TranslatePipe, TranslateService} from "@ngx-translate/core";
+import {map} from "rxjs/operators";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-sortable-pageable-table',
@@ -10,7 +13,9 @@ import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    TranslatePipe
   ],
+  providers: [TranslateService],
   templateUrl: './sortable-pageable-table.component.html',
   styleUrl: './sortable-pageable-table.component.scss'
 })
@@ -31,9 +36,37 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
     return this.columns!.map(column => column.columnName);
   }
 
+  constructor(private ts: TranslateService) {
+  }
   ngAfterViewInit() {
     // revert back to page 0 if it had been changed.
     this.sort!.sortChange.subscribe(() => this.paginator!.pageIndex = 0);
+  }
+
+  translateDisplayName(column: ColumnDef<T>) : Observable<string> {
+    const translate = column.translateDisplayName || true;
+    if(translate) {
+      return this.ts.get(_(column.displayName)).pipe(
+          map((t) => t as string)
+      );
+    } else {
+      return of(column.displayName);
+    }
+  }
+
+  translateInstant(column: ColumnDef<T>): string {
+    const translate = column.translateDisplayName || true;
+    if(translate) {
+      const instant = this.ts.instant(_(column.displayName));
+      console.log('instant', instant);
+      return this.ts.instant(_(`'${column.displayName}'`));
+    } else {
+      return column.displayName;
+    }
+  }
+
+  shouldTranslate(column: ColumnDef<T>): boolean {
+    return column.translateDisplayName || true;
   }
 
 }

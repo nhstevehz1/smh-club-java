@@ -1,63 +1,46 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, computed, input} from '@angular/core';
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
-import {EmailType} from "../models/email-type";
+import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
-import {MatDivider} from "@angular/material/divider";
-import {Email} from "../models/email";
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
-import {NgClass} from "@angular/common";
+import {Email, EmailUpdate} from "../models/email";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
+import {
+    InputFormFieldComponent
+} from "../../../shared/components/editor-form-fields/input-form-field/input-form-field.component";
+import {EmailTypeFormFieldComponent} from "../email-type-form-field/email-type-form-field.component";
+import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
 
 @Component({
   selector: 'app-email-editor',
-  imports: [
-    ReactiveFormsModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDivider,
-    MatIcon,
-    MatIconButton,
-    NgClass
-  ],
+    imports: [
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        EditorHeaderComponent,
+        InputFormFieldComponent,
+        EmailTypeFormFieldComponent
+    ],
   templateUrl: './email-editor.component.html',
   styleUrl: './email-editor.component.scss'
 })
-export class EmailEditorComponent extends BaseEditorComponent<Email> implements OnInit {
+export class EmailEditorComponent extends BaseEditorComponent<Email | EmailUpdate> {
 
-  emailTypes = Object.values(EmailType);
+  emailSignal
+      = computed(() => this.editorFormSignal().controls.email);
+  emailErrorsSignal
+      = input<Array<FormControlError>>(undefined, {alias: 'emailErrors'});
 
-  readonly emailError = signal(false);
-  readonly emailTypeError = signal(false);
-
-  public get email(): FormControl {
-    return this.editorForm.controls.email;
-  }
-
-  public get emailType(): FormControl {
-    return this.editorForm.controls.email_type;
-  }
+  emailTypeSignal
+    = computed(() => this.editorFormSignal().controls.email_type);
+  emailTypeErrorsSignal
+    = input<Array<FormControlError>>(undefined, {alias: 'emailTypeErrors'});
 
   constructor() {
     super();
   }
-
-  ngOnInit() {
-    this.setErrorSignal(this.emailError, this.email);
-    this.setErrorSignal(this.emailTypeError, this.emailType);
-  }
-
-  getEmailError(): string {
-    if(this.email!.hasError('required')) {
-      return 'Email required';
-    }
-
-    if(this.email!.hasError('email')) {
-      return 'Email invalid';
-    }
-
-    return 'invalid';
-  }
-
 }

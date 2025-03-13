@@ -1,6 +1,7 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {EmailMember} from "../models/email-member";
+import {EmailMember} from "../models/email";
+import {EmailType} from "../models/email-type";
 
 export function generateEmailPagedData(page: number, size: number, total: number): PagedData<EmailMember> {
     const content = generateEmailList(size);
@@ -15,7 +16,7 @@ export function generateEmailList(size: number): Array<EmailMember> {
             id: ii,
             member_id: ii,
             email: `${ii}email@${ii}domain.com`,
-            email_type: 'Home',
+            email_type: EmailType.Home,
             full_name: {
                 first_name: ii + " First",
                 middle_name: ii +  " Middle",

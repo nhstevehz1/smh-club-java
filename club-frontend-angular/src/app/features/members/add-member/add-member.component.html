@@ -1,12 +1,12 @@
 <div class="container">
-    @if(!submitted) {
-        <form role="form"
-                [formGroup]="createForm"
+    @if(!submitted()) {
+        <form data-testid="createForm"
+                [formGroup]="createFormSignal()"
                 (ngSubmit)="onSave()">
-            <mat-card>
+            <mat-card data-testid="card">
                 <div class="title-container">
-                    <mat-card-title>Add Member</mat-card-title>
-                    <mat-error>* = required</mat-error>
+                    <mat-card-title>{{'members.add.title' | translate}}</mat-card-title>
+                    <mat-error>{{ 'members.add.required' | translate }}</mat-error>
                 </div>
 
                 <mat-card-content class="content">
@@ -17,8 +17,8 @@
                         </div>
                         <mat-divider></mat-divider>
                         <app-member-editor
-                                [editorForm]="memberForm"
-                                [fieldAppearance]="fieldAppearance"
+                                [editorForm]="memberFormComputed()"
+                                [fieldAppearance]="fieldAppearance()"
                         ></app-member-editor>
                     </div>
 
@@ -26,7 +26,7 @@
                     <div class="section-container">
                         <div class="title-container">
                             <mat-card-subtitle>
-                                @if(addressForms.length > 1) {
+                                @if(addressFormsComputed().length > 1) {
                                     Addresses
                                 } @else {
                                     Address
@@ -40,14 +40,14 @@
                             </button>
                         </div>
                         <mat-divider></mat-divider>
-                        @for (form of addressForms.controls; track form; let idx = $index) {
+                        @for (form of addressFormsComputed().controls; track form; let idx = $index) {
                             <app-address-editor
                                     (removeClick)="onDeleteAddress(idx)"
-                                    [showRemoveButton]="addressForms.length>1"
+                                    [showRemoveButton]="addressFormsComputed().length>1"
                                     [editorForm]="form"
-                                    [fieldAppearance]="fieldAppearance"
+                                    [fieldAppearance]="fieldAppearance()"
                             ></app-address-editor>
-                            @if(idx < addressForms.length - 1) {
+                            @if(idx < addressFormsComputed().length - 1) {
                                 <mat-divider></mat-divider>
                             }
                         }
@@ -57,7 +57,7 @@
                     <div class="section-container">
                         <div class="title-container">
                             <mat-card-subtitle>
-                                @if(phoneForms.length > 1) {
+                                @if(phoneFormsComputed().length > 1) {
                                     Phone Numbers
                                 } @else {
                                     Phone Number
@@ -71,14 +71,14 @@
                             </button>
                         </div>
                         <mat-divider></mat-divider>
-                        @for(form of phoneForms.controls; track form; let idx = $index) {
+                        @for(form of phoneFormsComputed().controls; track form; let idx = $index) {
                             <app-phone-editor
                                     (removeClick)="onDeletePhone(idx)"
-                                    [showRemoveButton]="phoneForms.length>1"
+                                    [showRemoveButton]="phoneFormsComputed().length>1"
                                     [editorForm]="form"
-                                    [fieldAppearance]="fieldAppearance"
+                                    [fieldAppearance]="fieldAppearance()"
                             ></app-phone-editor>
-                            @if(idx < phoneForms.length - 1) {
+                            @if(idx < phoneFormsComputed().length - 1) {
                                 <mat-divider></mat-divider>
                             }
                         }
@@ -88,7 +88,7 @@
                     <div class="section-container">
                         <div class="title-container">
                             <mat-card-subtitle>
-                                @if(emailForms.length > 1) {
+                                @if(emailFormsComputed().length > 1) {
                                     Email Addresses
                                 } @else {
                                     Email Address
@@ -102,15 +102,15 @@
                             </button>
                         </div>
                         <mat-divider></mat-divider>
-                        @for (form of emailForms.controls; track form; let idx = $index) {
+                        @for (form of emailFormsComputed().controls; track form; let idx = $index) {
                             <app-email-editor
                                     (removeClick)="onDeleteEmail(idx)"
-                                    [showRemoveButton]="emailForms.length>1"
+                                    [showRemoveButton]="emailFormsComputed().length>1"
                                     [editorForm]="form"
-                                    [fieldAppearance]="fieldAppearance"
+                                    [fieldAppearance]="fieldAppearance()"
                             ></app-email-editor>
 
-                            @if(idx < emailForms.length - 1) {
+                            @if(idx < emailFormsComputed().length - 1) {
                                 <mat-divider></mat-divider>
                             }
                         }
@@ -129,7 +129,7 @@
                     <button class="submit"
                             mat-raised-button
                             type="submit"
-                            [disabled]="memberForm.invalid"
+                            [disabled]="createFormSignal().invalid"
                             matTooltip="Save member data">
                         <mat-icon>save</mat-icon>
                         Save

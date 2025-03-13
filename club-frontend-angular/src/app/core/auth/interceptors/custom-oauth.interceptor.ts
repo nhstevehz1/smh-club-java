@@ -11,8 +11,7 @@ export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
   const errorHandler = inject(OAuthResourceServerErrorHandler);
 
   const url = req.url.toLowerCase();
-  console.debug('url', url);
-  console.debug('resourceServer', moduleConfig.resourceServer);
+
   if (!moduleConfig.resourceServer.allowedUrls ||
       !checkUrl(url, moduleConfig.resourceServer.allowedUrls!)) {
     return next(req);
@@ -40,7 +39,7 @@ export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
           const headers = req.headers.set('Authorization', header);
           req = req.clone({ headers });
         }
-        console.debug('about to call next', req);
+
         return next(req).pipe(catchError(error => errorHandler.handleError(error)));
       })
   )
@@ -48,6 +47,5 @@ export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
 
 export function checkUrl(url: string, allowedUrls: string[]): boolean {
   let found = allowedUrls.find(u => url.startsWith(u));
-  console.debug('found', found);
   return !!found;
 }

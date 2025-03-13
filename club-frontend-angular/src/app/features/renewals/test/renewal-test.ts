@@ -1,6 +1,6 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {RenewalMember} from "../models/renewal-member";
+import {RenewalMember} from "../models/renewal";
 import {DateTime} from "luxon";
 
 export function generateRenewalPageData(page: number, size: number, total: number): PagedData<RenewalMember> {

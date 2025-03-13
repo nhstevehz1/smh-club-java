@@ -29,18 +29,22 @@ export function generatePagedData<T>(page: number, size: number, total: number, 
     }
 }
 
-export async function getFormFieldValue(harness: MatFormFieldHarness | null ): Promise<string> {
+export async function getFormFieldValue(harness: MatFormFieldHarness | null): Promise<string> {
 
     const control = await harness?.getControl();
 
     if(control instanceof MatSelectHarness) {
         const select: MatSelectHarness = (control as MatSelectHarness);
-        return select.getValueText()
+        await select.open();
+        const options = await select.getOptions({isSelected:true})
+        return options[0].getText();
     } else if(control instanceof MatDatepickerInputHarness) {
         const dt: MatDatepickerInputHarness = (control as MatDatepickerInputHarness);
         return dt.getValue();
-    } else {
+    } else if(control instanceof MatInputHarness){
         const input: MatInputHarness = (control as MatInputHarness);
         return input.getValue();
+    } else {
+        return Promise.reject();
     }
 }

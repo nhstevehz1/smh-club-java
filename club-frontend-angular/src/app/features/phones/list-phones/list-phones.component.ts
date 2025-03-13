@@ -4,7 +4,7 @@ import {
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {PhoneService} from "../services/phone.service";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
-import {PhoneMember} from "../models/phone-member";
+import {PhoneMember} from "../models/phone";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MatTableDataSource} from "@angular/material/table";
 import {merge, of as observableOf} from "rxjs";
@@ -73,19 +73,19 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
     return [
       {
         columnName: 'phone_number',
-        displayName: 'Phone',
+        displayName: 'phones.list.columns.phoneNumber',
         isSortable: true,
         cell: (element: PhoneMember) => this.getPhoneNumber(element)
       },
       {
         columnName: 'phone_type',
-        displayName: 'Type',
-        isSortable: true,
+        displayName: 'phones.list.columns.phoneType',
+        isSortable: false,
         cell: (element: PhoneMember) => `${element.phone_type}`
       },
       {
         columnName: 'full_name',
-        displayName: 'Member',
+        displayName: 'phones.list.columns.fullName',
         isSortable: true,
         cell: (element: PhoneMember) => this.getFullName(element.full_name)
       },

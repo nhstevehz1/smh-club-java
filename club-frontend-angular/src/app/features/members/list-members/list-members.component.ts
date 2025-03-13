@@ -12,12 +12,12 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {Router} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
-import {Member} from "../models/member";
+import {MemberDetails} from "../models/member";
 import {DateTime} from "luxon";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
-import {DateTimeFromIsoPipe} from "../../../shared/pipes/luxon/date-time-from-iso.pipe";
 import {AuthService} from "../../../core/auth/services/auth.service";
 import {PermissionType} from "../../../core/auth/models/permission-type";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-list-members',
@@ -29,26 +29,27 @@ import {PermissionType} from "../../../core/auth/models/permission-type";
     ],
     providers: [
         MembersService,
-        DateTimeFromIsoPipe,
+        TranslateService,
         DateTimeToFormatPipe
     ],
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent extends TableComponentBase<Member> implements OnInit, AfterViewInit{
+export class ListMembersComponent extends TableComponentBase<MemberDetails> implements OnInit, AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
-    private _table!: SortablePageableTableComponent<Member>;
+    private _table!: SortablePageableTableComponent<MemberDetails>;
 
     resultsLength = 0;
-    datasource = new MatTableDataSource<Member>();
-    columns: ColumnDef<Member>[] = [];
+    datasource = new MatTableDataSource<MemberDetails>();
+    columns: ColumnDef<MemberDetails>[] = [];
 
     readonly canAddMember: Signal<boolean> = computed(() => this.authSvc.hasPermission(PermissionType.write));
 
     constructor(private svc: MembersService,
                 protected authSvc: AuthService,
                 private router: Router,
-                private dtToFormatPipe: DateTimeToFormatPipe) {
+                private translate: TranslateService,
+                private dtFormat: DateTimeToFormatPipe) {
         super();
     }
 
@@ -91,49 +92,48 @@ export class ListMembersComponent extends TableComponentBase<Member> implements 
             });
     }
 
-    /*canAddMember(): boolean {
-        const canShow = this.authSvc.hasPermission(PermissionType.write);
-        console.debug('canAddMember', canShow)
-        return canShow;
-    }*/
-
     addMemberHandler(): void {
         this.router.navigate(['p/members/add']).then(() => {});
     }
 
     // assemble the column defs which will be consumed by the pageable sortable table component
-    protected getColumns(): ColumnDef<Member>[] {
+    protected getColumns(): ColumnDef<MemberDetails>[] {
         return [
             {
                 columnName: 'member_number',
-                displayName: 'No.',
+                displayName: 'members.list.columns.memberNumber',
+                translateDisplayName: false,
                 isSortable: true,
-                cell: (element: Member) => `${element.member_number}`},
+                cell: (element: MemberDetails) => `${element.member_number}`},
             {
                 columnName: 'first_name',
-                displayName: 'First',
+                displayName: 'members.list.columns.firstName',
                 isSortable: true,
-                cell: (element: Member) => this.contactStrings(element.first_name, element.middle_name)
+                cell: (element: MemberDetails) => this.contactStrings(element.first_name, element.middle_name)
             },
             {
                 columnName: 'last_name',
-                displayName: 'Last',
+                displayName: 'members.list.columns.lastName',
                 isSortable: true,
-                cell: (element: Member) => this.contactStrings(element.last_name, element.suffix),
+                cell: (element: MemberDetails) => this.contactStrings(element.last_name, element.suffix),
             },
             {
                 columnName: 'birth_date',
-                displayName: 'Birth Date',
+                displayName: 'members.list.columns.birthDate',
                 isSortable: true,
-                cell: (element: Member) =>
-                    this.dtToFormatPipe.transform(element.birth_date, DateTime.DATE_SHORT)
+                cell: (element: MemberDetails) => {
+                    return this.dtFormat.transform(element.birth_date, DateTime.DATE_SHORT,
+                        {locale: this.translate.currentLang});
+                }
             },
             {
                 columnName: 'joined_date',
-                displayName: 'Joined',
+                displayName: 'members.list.columns.joinedDate',
                 isSortable: true,
-                cell: (element: Member) =>
-                    this.dtToFormatPipe.transform(element.joined_date, DateTime.DATE_SHORT)
+                cell: (element: MemberDetails) => {
+                    return this.dtFormat.transform(element.joined_date, DateTime.DATE_SHORT,
+                        {locale: this.translate.currentLang});
+                }
             }
         ];
     }

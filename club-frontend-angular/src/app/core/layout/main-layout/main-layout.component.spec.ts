@@ -10,6 +10,7 @@ import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {provideRouter, Router} from "@angular/router";
 import {MatDividerModule} from "@angular/material/divider";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('MainLayoutComponent', () => {
   let fixture: ComponentFixture<MainLayoutComponent>;
@@ -26,7 +27,8 @@ describe('MainLayoutComponent', () => {
         HeaderComponent,
         FooterComponent,
         ContentComponent,
-        MatDividerModule
+        MatDividerModule,
+        TranslateModule.forRoot({})
       ],
       providers: [
         provideHttpClient(),

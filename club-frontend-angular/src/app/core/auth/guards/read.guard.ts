@@ -1,5 +1,5 @@
 import {CanActivateFn, Router} from '@angular/router';
-import {inject} from "@angular/core";
+import {inject, isDevMode} from "@angular/core";
 import {AuthService} from "../services/auth.service";
 import {take} from "rxjs/operators";
 import {tap} from "rxjs";
@@ -9,8 +9,10 @@ export const readGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  console.debug('read guard url', route.url);
-  console.debug('read guard state', state);
+  if(isDevMode()) {
+      console.debug('readGuard  route.url', route.url);
+      console.debug('readGuard state.url', state.url);
+  }
 
   return authService.isAuthenticated$.pipe(
       take(1),

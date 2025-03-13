@@ -1,0 +1,13 @@
+<mat-form-field [appearance]="appearanceSignal()">
+    @if(labelSignal()) {
+        <mat-label>{{(labelSignal() || '') | translate}}</mat-label>
+    }
+    <mat-select [formControl]="formControlSignal()" (blur)="onBlur()">
+        @for (option of optionsSignal(); track option){
+            <mat-option [value]="option.value">{{option.label | translate}}</mat-option>
+        }
+    </mat-select>
+    @if(invalidSignal()){
+        <mat-error>{{invalidMessageSignal() | translate}}</mat-error>
+    }
+</mat-form-field>

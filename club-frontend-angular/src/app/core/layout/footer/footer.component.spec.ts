@@ -2,6 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FooterComponent} from './footer.component';
 import {DateTime} from "luxon";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('FooterComponent', () => {
   let fixture: ComponentFixture<FooterComponent>;
@@ -9,7 +10,10 @@ describe('FooterComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FooterComponent]
+      imports: [
+        FooterComponent,
+        TranslateModule.forRoot({})
+      ]
     }).compileComponents();
     fixture = TestBed.createComponent(FooterComponent);
     component = fixture.componentInstance;
@@ -28,6 +32,6 @@ describe('FooterComponent', () => {
   it('should render year', () => {
     fixture.detectChanges();
     const span = fixture.nativeElement.querySelector('span');
-    expect(span.textContent).toContain(`Social Club ${DateTime.now().toFormat('yyyy')}`);
+    expect(span.textContent).toContain(`layout.footer.title ${DateTime.now().toFormat('yyyy')}`);
   });
 });
