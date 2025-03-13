@@ -29,11 +29,13 @@
         </button>
         <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
             <button mat-menu-item (click)="profileHandler()">
-                <mat-icon>person</mat-icon><span>[translate]="'header.profile'" Profile</span>
+                <mat-icon>person</mat-icon>
+                <span>{{'layout.header.profile' | translate}}</span>
             </button>
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="logoutHandler()">
-                <mat-icon>exit_to_app</mat-icon><span>[translate]="'header.logout'" Logout</span>
+                <mat-icon>exit_to_app</mat-icon>
+                <span>{{'layout.header.logout' | translate}}</span>
             </button>
         </mat-menu>
     </div>

@@ -171,7 +171,7 @@ describe('HeaderComponent', () => {
       const menuHarness = await loader.getHarness(MatMenuHarness);
       await menuHarness.open();
 
-      const profileHarness = await menuHarness.getItems({text: 'personProfile'});
+      const profileHarness = await menuHarness.getItems({text: 'personlayout.header.profile'});
 
       expect(profileHarness.length).toEqual(1);
     });
@@ -180,7 +180,7 @@ describe('HeaderComponent', () => {
       const menuHarness = await loader.getHarness(MatMenuHarness);
       await menuHarness.open();
 
-      const logoutHarness = await menuHarness.getItems({text: 'exit_to_appLogout'});
+      const logoutHarness = await menuHarness.getItems({text: 'exit_to_applayout.header.logout'});
 
       expect(logoutHarness.length).toEqual(1);
     });
@@ -190,7 +190,7 @@ describe('HeaderComponent', () => {
       const menuHarness = await loader.getHarness(MatMenuHarness);
       await menuHarness.open();
 
-      await menuHarness.clickItem({text: 'personProfile'});
+      await menuHarness.clickItem({text: 'personlayout.header.profile'});
 
       expect(spy).toHaveBeenCalled();
     });
@@ -200,7 +200,7 @@ describe('HeaderComponent', () => {
       const menuHarness = await loader.getHarness(MatMenuHarness);
       await menuHarness.open();
 
-      await menuHarness.clickItem({text: 'exit_to_appLogout'});
+      await menuHarness.clickItem({text: 'exit_to_applayout.header.logout'});
 
       expect(spy).toHaveBeenCalled();
     });
