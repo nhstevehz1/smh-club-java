@@ -4,22 +4,23 @@
         [showRemoveButton]="showRemoveButtonSignal()"
         (removeClick)="onRemove()">
     </app-editor-header>
+    <div class="flex-row flex-start gap">
+        <app-input-form-field
+                ngDefaultControl
+                [appearance]="fieldAppearanceSignal()"
+                [formControl]="address1Signal()"
+                [controlErrors]="address1ErrorsSignal()"
+                label="addresses.editor.address1.label">
+        </app-input-form-field>
 
-    <app-input-form-field
-        ngDefaultControl
-        [appearance]="fieldAppearanceSignal()"
-        [formControl]="address1Signal()"
-        [controlErrors]="address1ErrorsSignal()"
-        label="addresses.editor.address1.label">
-    </app-input-form-field>
-
-    <app-input-form-field
-        ngDefaultControl
-        [appearance]="fieldAppearanceSignal()"
-        [formControl]="address2Signal()"
-        [controlErrors]="address2ErrorsSignal()"
-        label="addresses.editor.address2.label">
-    </app-input-form-field>
+        <app-input-form-field
+                ngDefaultControl
+                [appearance]="fieldAppearanceSignal()"
+                [formControl]="address2Signal()"
+                [controlErrors]="address2ErrorsSignal()"
+                label="addresses.editor.address2.label">
+        </app-input-form-field>
+    </div>
 
     <div class="flex-row flex-start gap">
         <app-input-form-field

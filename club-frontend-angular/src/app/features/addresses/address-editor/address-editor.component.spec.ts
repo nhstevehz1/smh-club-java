@@ -31,7 +31,7 @@ describe('AddressEditorComponent', () => {
     address2: new FormControl<string>('address2', {nonNullable: true}),
     city: new FormControl<string>('city', {nonNullable: true}),
     state: new FormControl<string>('state', {nonNullable: true}),
-    zip: new FormControl<string>('zip', {nonNullable: true}),
+    postal_code: new FormControl<string>('zip', {nonNullable: true}),
     address_type: new FormControl<AddressType>(AddressType.Home, {nonNullable: true})
   });
 
@@ -223,7 +223,7 @@ describe('AddressEditorComponent', () => {
       it('zip form field should contain the correct value', async () => {
         const value = await getFormFieldValue(harness);
 
-        expect(value).toBe(formGroup.controls.zip.value);
+        expect(value).toBe(formGroup.controls.postal_code.value);
       });
 
       it('zip should use outline appearance', async () => {
