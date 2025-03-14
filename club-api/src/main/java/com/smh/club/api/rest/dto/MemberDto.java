@@ -28,7 +28,6 @@ public class MemberDto {
     @JsonProperty("id")
     private int id;
 
-    //@Min(1)
     @JsonProperty("member_number")
     private int memberNumber;
 
