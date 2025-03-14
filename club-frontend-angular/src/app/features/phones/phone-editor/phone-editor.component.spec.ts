@@ -78,7 +78,7 @@ describe('PhoneEditorComponent', () => {
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with(
-                {floatingLabelText: 'phones.editor.phoneNumber.label'}))
+                {floatingLabelText: 'phones.editor.phoneNumber.label'}));
       });
 
       it('should contain phone field', async () => {
