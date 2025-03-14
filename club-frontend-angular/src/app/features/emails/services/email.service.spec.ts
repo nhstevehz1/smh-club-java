@@ -3,6 +3,7 @@ import {EmailService} from "./email.service";
 import {provideHttpClient} from "@angular/common/http";
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {PageRequest} from "../../../shared/models/page-request";
+import {generateEmailUpdate} from "../test/email-test";
 
 describe('EmailServiceService', () => {
   let service: EmailService;
@@ -50,5 +51,21 @@ describe('EmailServiceService', () => {
 
     req.flush([false, true, false]);
     controller.verify();
-  })
+  });
+
+  it('should return email create form', () => {
+    const form = service.generateCreateForm();
+    expect(form).toBeTruthy();
+  });
+
+  it('should return email update form', () => {
+    const form = service.generateUpdateForm(generateEmailUpdate());
+    expect(form).toBeTruthy();
+  });
+
+  it('should return correct email update form', () => {
+    const model = generateEmailUpdate();
+    const val = service.generateUpdateForm(model).value;
+    expect(val).toEqual(model);
+  });
 });

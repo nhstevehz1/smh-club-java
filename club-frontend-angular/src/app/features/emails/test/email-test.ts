@@ -1,7 +1,9 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {EmailMember} from "../models/email";
+import {EmailCreate, EmailMember, EmailUpdate} from "../models/email";
 import {EmailType} from "../models/email-type";
+import {FormControl, FormGroup} from "@angular/forms";
+import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 
 export function generateEmailPagedData(page: number, size: number, total: number): PagedData<EmailMember> {
     const content = generateEmailList(size);
@@ -27,4 +29,20 @@ export function generateEmailList(size: number): Array<EmailMember> {
         list.push(emailMember);
     }
     return list;
+}
+
+export function generateEmailCreateForm(): FormModelGroup<EmailCreate> {
+    return new FormGroup({
+        email: new FormControl('', {nonNullable: true}),
+        email_type: new FormControl<EmailType>(EmailType.Work, {nonNullable: true})
+    });
+}
+
+export function generateEmailUpdate(): EmailUpdate {
+    return {
+        id: 0,
+        member_id: 3,
+        email: 'email@email.com',
+        email_type: EmailType.Home
+    }
 }

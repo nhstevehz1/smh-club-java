@@ -1,4 +1,4 @@
-import {Member, MemberCreate, MemberDetails} from '../models/member';
+import {Member, MemberDetails, MemberUpdate} from '../models/member';
 import {DateTime} from 'luxon';
 import {PagedData} from '../../../shared/models/paged-data';
 import {generatePagedData} from '../../../shared/test-helpers/test-helpers';
@@ -41,9 +41,10 @@ export function generateMember(prefix: number): Member {
     }
 }
 
-export function generateMemberCreate(): MemberCreate {
+export function generateMemberUpdate(): MemberUpdate {
     const member = generateMember(1);
     return {
+        id: 0,
         member_number: member.member_number,
         first_name: member.first_name,
         middle_name: member.middle_name,
@@ -51,8 +52,5 @@ export function generateMemberCreate(): MemberCreate {
         suffix: member.suffix,
         birth_date: member.birth_date,
         joined_date: member.joined_date,
-        addresses: [],
-        emails: [],
-        phones: []
     }
 }

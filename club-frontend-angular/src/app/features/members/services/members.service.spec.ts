@@ -4,6 +4,10 @@ import {MembersService} from './members.service';
 import {provideHttpClient} from "@angular/common/http";
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {PageRequest} from "../../../shared/models/page-request";
+import {generateAddressCreateForm} from "../../addresses/test/address-test";
+import {generateEmailCreateForm} from "../../emails/test/email-test";
+import {generatePhoneCreateForm} from "../../phones/test/phone-test";
+import {generateMemberUpdate} from "../test/member-test";
 
 describe('MembersService', () => {
   let service: MembersService;
@@ -49,5 +53,26 @@ describe('MembersService', () => {
 
     req.flush([false, true, false]);
     controller.verify();
+  });
+
+  it('should return a member create form', () => {
+    const form
+        = service.generateCreateForm(
+            generateAddressCreateForm(),
+            generateEmailCreateForm(),
+            generatePhoneCreateForm());
+
+    expect(form).toBeTruthy();
+  });
+
+  it('should return a member update form', () => {
+    const form = service.generateUpdateForm(generateMemberUpdate());
+    expect(form).toBeTruthy();
+  });
+
+  it('should return correct member update form', () => {
+    const model = generateMemberUpdate();
+    const val = service.generateUpdateForm(model).value;
+    expect(val).toEqual(model);
   });
 });

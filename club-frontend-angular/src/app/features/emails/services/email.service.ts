@@ -2,16 +2,19 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
-import {EmailMember} from "../models/email";
+import {EmailCreate, EmailMember, EmailUpdate} from "../models/email";
 import {PagedData} from "../../../shared/models/paged-data";
 import {map} from "rxjs/operators";
 import {EmailType} from "../models/email-type";
+import {NonNullableFormBuilder, Validators} from "@angular/forms";
+import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 
 @Injectable()
 export class EmailService {
   private  BASE_API = '/api/v1/emails';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+              private fb: NonNullableFormBuilder) {}
 
   public getEmails(pageRequest: PageRequest): Observable<PagedData<EmailMember>> {
     const query = pageRequest.createQuery();
@@ -25,5 +28,21 @@ export class EmailService {
         return pd;
       })
     );
+  }
+
+  generateCreateForm(): FormModelGroup<EmailCreate> {
+      return this.fb.group({
+          email: ['', [Validators.required, Validators.email]],
+          email_type: [EmailType.Home, [Validators.required]]
+      });
+  }
+
+  generateUpdateForm(update: EmailUpdate): FormModelGroup<EmailUpdate> {
+      return this.fb.group({
+          id: [update.id],
+          member_id: [update.member_id],
+          email: [update.email, [Validators.required, Validators.email]],
+          email_type: [update.email_type, [Validators.required]]
+      });
   }
 }
