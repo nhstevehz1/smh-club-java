@@ -35,6 +35,9 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class MemberEditorComponent extends BaseEditorComponent<MemberCreate> {
 
+    memberNumberSignal
+        = computed(() => this.editorFormSignal().controls.member_number);
+
     firstNameSignal
         = computed(() => this.editorFormSignal().controls.first_name);
     firstNameErrorsSignal

@@ -6,7 +6,7 @@ export interface Address {
     address2: string;
     city: string;
     state: string;
-    zip: string;
+    postal_code: string;
     address_type: AddressType;
 }
 

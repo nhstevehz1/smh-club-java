@@ -4,6 +4,7 @@ import {PhoneService} from './phone.service';
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {provideHttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
+import {generatePhoneUpdate} from "../test/phone-test";
 
 describe('PhoneService', () => {
   let service: PhoneService;
@@ -49,5 +50,21 @@ describe('PhoneService', () => {
 
     req.flush([false, true, false]);
     controller.verify();
+  });
+
+  it('should return phone create form', () => {
+    const form = service.generateCreateForm();
+    expect(form).toBeTruthy();
+  });
+
+  it('should return phone update form', () => {
+    const form = service.generateUpdateForm(generatePhoneUpdate());
+    expect(form).toBeTruthy();
+  });
+
+  it('should return the correct phone update form', () => {
+    const model = generatePhoneUpdate();
+    const val = service.generateUpdateForm(model).value;
+    expect(val).toEqual(model);
   });
 });

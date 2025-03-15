@@ -177,10 +177,10 @@
             "phoneNumber": "Números de teléfono",
             "phoneNumbers": "Números de teléfono"
           }
-        },
-        "required": "Requerido",
-        "title": ""
-      }
+        }
+      },
+      "required": "Requerido",
+      "title": ""
     },
     "editor": {
       "birthDate": {
@@ -234,6 +234,9 @@
   },
   "phones": {
     "editor": {
+      "countryCode": {
+        "label": "Código del país"
+      },
       "phoneNumber": {
         "error": {
           "invalid": "El número de teléfono no es válido",

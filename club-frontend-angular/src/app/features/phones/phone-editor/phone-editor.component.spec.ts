@@ -62,6 +62,8 @@ describe('PhoneEditorComponent', () => {
     const outline: MatFormFieldAppearance = 'outline';
     const fill: MatFormFieldAppearance = 'fill';
     let harness: MatFormFieldHarness | null;
+    let expected: string;
+    let actual: string;
 
     beforeEach(() => {
       formGroup.reset();
@@ -70,7 +72,39 @@ describe('PhoneEditorComponent', () => {
 
     it('should contain the correct number of phone form fields', async () => {
       const harnesses = await loader.getAllHarnesses(MatFormFieldHarness);
-      expect(harnesses.length).toEqual(2);
+      expect(harnesses.length).toEqual(3);
+    });
+
+    describe('country code field tests', () => {
+      beforeEach(async () => {
+        harness =
+            await  loader.getHarnessOrNull((MatFormFieldHarness.with(
+                {floatingLabelText: 'phones.editor.countryCode.label'})));
+      });
+
+      it('should contain country code field', async () => {
+        expect(harness).toBeTruthy();
+      });
+
+      it('country code form field should contain the correct value', async () => {
+        expected = 'test';
+        formGroup.controls.country_code.setValue(expected);
+        actual = await getFormFieldValue(harness);
+        expect(actual).toBe(expected);
+      });
+
+      it('country code should use outline appearance', async () => {
+        fixture.componentRef.setInput('fieldAppearance', outline);
+        const appearance = await harness?.getAppearance();
+
+        expect(appearance).toBe(outline);
+      });
+
+      it('country code should use fill appearance', async() => {
+        fixture.componentRef.setInput('fieldAppearance', fill);
+        const appearance = await harness?.getAppearance();
+        expect(appearance).toBe(fill);
+      });
     });
 
     describe('phone number field tests', () => {
@@ -78,7 +112,7 @@ describe('PhoneEditorComponent', () => {
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with(
-                {floatingLabelText: 'phones.editor.phoneNumber.label'}))
+                {floatingLabelText: 'phones.editor.phoneNumber.label'}));
       });
 
       it('should contain phone field', async () => {
@@ -86,8 +120,10 @@ describe('PhoneEditorComponent', () => {
       });
 
       it('phone form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
-        expect(value).toBe(formGroup.controls.phone_number.value);
+        expected = 'test'
+        formGroup.controls.phone_number.setValue(expected);
+        actual = await getFormFieldValue(harness);
+        expect(actual).toBe(expected);
       });
 
       it('phone should use outline appearance', async () => {

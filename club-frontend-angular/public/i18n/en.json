@@ -177,10 +177,10 @@
             "phoneNumber": "Phone Numbers",
             "phoneNumbers": "Phone Numbers"
           }
-        },
-        "required": "required",
-        "title": "Add Member"
-      }
+        }
+      },
+      "required": "required",
+      "title": "Add Member"
     },
     "editor": {
       "birthDate": {
@@ -234,6 +234,9 @@
   },
   "phones": {
     "editor": {
+      "countryCode": {
+        "label": "Country code"
+      },
       "phoneNumber": {
         "error": {
           "invalid": "phone number is invalid",

@@ -3,10 +3,11 @@ import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
 import {PagedData} from "../../../shared/models/paged-data";
-import {AddressCreate, AddressDetails, AddressMember, AddressUpdate} from "../models/address";
+import {Address, AddressCreate, AddressDetails, AddressMember, AddressUpdate} from "../models/address";
 import {map} from "rxjs/operators";
 import {AddressType} from "../models/address-type";
-import {FormGroup, NonNullableFormBuilder, Validators} from "@angular/forms";
+import {NonNullableFormBuilder, Validators} from "@angular/forms";
+import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 
 @Injectable()
 export class AddressService {
@@ -29,7 +30,6 @@ export class AddressService {
   }
 
   createAddress(create: AddressCreate): Observable<AddressDetails> {
-
     return this.http.post<AddressCreate>(this.BASE_API, create).pipe(
         map(data => JSON.stringify(data)),
         map(data => JSON.parse(data) as AddressDetails),
@@ -41,7 +41,6 @@ export class AddressService {
   }
 
   updateAddress(update: AddressUpdate): Observable<AddressDetails> {
-
     return this.http.put<AddressCreate>(`${this.BASE_API}/`, update).pipe(
         map(data => JSON.stringify(data)),
         map(data => JSON.parse(data) as AddressDetails),
@@ -52,27 +51,27 @@ export class AddressService {
     );
   }
 
-  generateCreateForm(): FormGroup {
+  generateCreateForm(): FormModelGroup<Address> {
     return this.fb.group({
-      address1: ['', Validators.required],
+      address1: ['', [Validators.required]],
       address2: [''],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      postal_code: ['', Validators.required],
-      address_type: [AddressType.Home, Validators.required]
+      city: ['', [Validators.required]],
+      state: ['', [Validators.required, Validators.minLength(2)]],
+      postal_code: ['', [Validators.required, Validators.minLength(5)]],
+      address_type: [AddressType.Home, [Validators.required]]
     });
   }
 
-  generateEditForm(): FormGroup {
+  generateUpdateForm(update: AddressUpdate): FormModelGroup<AddressUpdate> {
     return this.fb.group({
-      id: [0, Validators.required],
-      member_number: [0, [Validators.required, Validators.min(1)]],
-      address1: ['', Validators.required],
-      address2: [''],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      postal_code: ['', Validators.required],
-      address_type: [AddressType.Home, Validators.required]
+      id: [update.id, Validators.required],
+      member_id: [update.member_id, [Validators.required, Validators.min(1)]],
+      address1: [update.address1, [Validators.required]],
+      address2: [update.address2],
+      city: [update.city, [Validators.required]],
+      state: [update.state, [Validators.required, Validators.minLength(2)]],
+      postal_code: [update.postal_code, [Validators.required, Validators.minLength(5)]],
+      address_type: [update.address_type, [Validators.required]]
     });
   }
 

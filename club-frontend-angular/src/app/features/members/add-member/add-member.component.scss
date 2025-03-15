@@ -12,11 +12,6 @@ mat-card {
   max-width: 600px;
 }
 
-mat-card-title {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
 mat-divider {
   margin-top: 7px;
   margin-bottom: 7px;
@@ -29,6 +24,8 @@ mat-divider {
 }
 
 .title-container {
+  margin-left: 20px;
+  margin-right: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -50,3 +47,7 @@ mat-divider {
   justify-content: end;
   gap: 15px;
 }
+
+add-address {}
+add-email {}
+add-phone {}

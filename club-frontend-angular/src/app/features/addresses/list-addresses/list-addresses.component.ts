@@ -94,7 +94,7 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
         columnName: 'zip',
         displayName: 'addresses.list.columns.postalCode',
         isSortable: true,
-        cell: (element: AddressMember) => `${element.zip}`
+        cell: (element: AddressMember) => `${element.postal_code}`
       },
       {
         columnName: 'address_type',

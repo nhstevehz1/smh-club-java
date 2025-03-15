@@ -6,14 +6,23 @@
             (removeClick)="onRemove()">
         </app-editor-header>
 
-        <div class="flex-row start gap">
+        <div class="flex-row start">
             <app-input-form-field
                 ngDefaultControl
                 [appearance]="fieldAppearanceSignal()"
-                [formControl]="phoneNumberSignal()"
-                [controlErrors]="phoneNumberErrorsSignal()"
-                label="phones.editor.phoneNumber.label"
-                textPrefix="+1 ">
+                [formControl]="countryCodeSignal()"
+                [controlErrors]="countryCodeErrorsSignal()"
+                label="phones.editor.countryCode.label">
+            </app-input-form-field>
+        </div>
+
+        <div class="flex-row start gap">
+            <app-input-form-field
+                    ngDefaultControl
+                    [appearance]="fieldAppearanceSignal()"
+                    [formControl]="phoneNumberSignal()"
+                    [controlErrors]="phoneNumberErrorsSignal()"
+                    label="phones.editor.phoneNumber.label">
             </app-input-form-field>
 
             <app-phone-type-form-field

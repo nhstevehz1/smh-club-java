@@ -3,7 +3,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {ReactiveFormsModule} from "@angular/forms";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {AddressCreate, AddressUpdate} from "../models/address";
+import {AddressCreate} from "../models/address";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
@@ -28,10 +28,7 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './address-editor.component.html',
   styleUrl: './address-editor.component.scss'
 })
-export class AddressEditorComponent extends BaseEditorComponent<AddressCreate | AddressUpdate> {
-
-  //editorFormSignal
-  //    = input.required<FormModelGroup<AddressCreate | AddressUpdate>>({alias: 'editorForm'});
+export class AddressEditorComponent extends BaseEditorComponent<AddressCreate> {
 
   address1Signal = computed(() => this.editorFormSignal().controls.address1);
   address1ErrorsSignal
@@ -49,7 +46,7 @@ export class AddressEditorComponent extends BaseEditorComponent<AddressCreate | 
   stateErrorsSignal
       = input<Array<FormControlError>>(undefined, {alias: 'stateErrors'});
 
-  postalCodeSignal = computed(() => this.editorFormSignal().controls.zip);
+  postalCodeSignal = computed(() => this.editorFormSignal().controls.postal_code);
   postalCodeErrorsSignal
       = input<Array<FormControlError>>(undefined, {alias: 'postalCodeErrors'});
 

@@ -42,13 +42,6 @@ public class MapperConfig {
             m.skip(MemberEntity::setEmails);
             m.skip(MemberEntity::setPhones);
             m.skip(MemberEntity::setRenewals);
-            m.map(src -> src.getMember().getMemberNumber(), MemberEntity::setMemberNumber);
-            m.map(src -> src.getMember().getFirstName(), MemberEntity::setFirstName);
-            m.map(src -> src.getMember().getMiddleName(), MemberEntity::setMiddleName);
-            m.map(src -> src.getMember().getLastName(), MemberEntity::setLastName);
-            m.map(src -> src.getMember().getSuffix(), MemberEntity::setSuffix);
-            m.map(src -> src.getMember().getBirthDate(), MemberEntity::setBirthDate);
-            m.map(src -> src.getMember().getJoinedDate(), MemberEntity::setJoinedDate);
         });
 
         modelMapper.validate();
