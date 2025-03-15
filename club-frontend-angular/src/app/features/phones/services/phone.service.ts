@@ -30,7 +30,7 @@ export class PhoneService {
     );
   }
 
-  generatePhoneCreateForm(): FormModelGroup<PhoneCreate> {
+  generateCreateForm(): FormModelGroup<PhoneCreate> {
       return this.fb.group({
           country_code: ['1', [Validators.required]],
           phone_number: ['', [Validators.required]],
@@ -38,7 +38,7 @@ export class PhoneService {
       });
   }
 
-    generatePhoneUpdateForm(update: PhoneUpdate): FormModelGroup<PhoneUpdate> {
+    generateUpdateForm(update: PhoneUpdate): FormModelGroup<PhoneUpdate> {
         return this.fb.group({
             id: [update.id],
             member_id: [update.member_id],

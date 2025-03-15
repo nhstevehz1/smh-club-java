@@ -53,18 +53,18 @@ describe('PhoneService', () => {
   });
 
   it('should return phone create form', () => {
-    const form = service.generatePhoneCreateForm();
+    const form = service.generateCreateForm();
     expect(form).toBeTruthy();
   });
 
   it('should return phone update form', () => {
-    const form = service.generatePhoneUpdateForm(generatePhoneUpdate());
+    const form = service.generateUpdateForm(generatePhoneUpdate());
     expect(form).toBeTruthy();
   });
 
   it('should return the correct phone update form', () => {
     const model = generatePhoneUpdate();
-    const val = service.generatePhoneUpdateForm(model).value;
+    const val = service.generateUpdateForm(model).value;
     expect(val).toEqual(model);
   });
 });
