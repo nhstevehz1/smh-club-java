@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {generateMember} from "../test/member-test";
+import {generateMember, generateMemberCreateForm} from "../test/member-test";
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
 import {Observable, Subject, throwError} from "rxjs";
 import {Member} from "../models/member";
@@ -15,6 +15,13 @@ import {MatButtonHarness} from "@angular/material/button/testing";
 import {By} from "@angular/platform-browser";
 import {TranslateModule} from "@ngx-translate/core";
 import {HarnessLoader} from "@angular/cdk/testing";
+import {AddressService} from "../../addresses/services/address.service";
+import {EmailService} from "../../emails/services/email.service";
+import {PhoneService} from "../../phones/services/phone.service";
+import {generateAddressCreateForm} from "../../addresses/test/address-test";
+import {generateEmailCreateForm} from "../../emails/test/email-test";
+import {generatePhoneCreateForm} from "../../phones/test/phone-test";
+import {Validators} from "@angular/forms";
 
 describe('AddMemberComponent', () => {
   let component: AddMemberComponent;
@@ -22,6 +29,9 @@ describe('AddMemberComponent', () => {
   let loader: HarnessLoader;
 
   let memberSvcMock: jasmine.SpyObj<MembersService>;
+  let addressSvcMock: jasmine.SpyObj<AddressService>;
+  let emailSvcMock: jasmine.SpyObj<EmailService>;
+  let phoneSvcMock: jasmine.SpyObj<PhoneService>;
   let routerMock: jasmine.SpyObj<Router>;
   const memberMock: Member = generateMember(1);
 
@@ -29,11 +39,19 @@ describe('AddMemberComponent', () => {
   let createMember$: Observable<Member>;
 
   beforeEach(async () => {
-    memberSvcMock = jasmine.createSpyObj<MembersService>('MembersService', ['createMember']);
+    memberSvcMock = jasmine.createSpyObj<MembersService>('MembersService', ['createMember', 'generateCreateForm']);
+    addressSvcMock = jasmine.createSpyObj<AddressService>('AddressService', ['generateCreateForm']);
+    emailSvcMock = jasmine.createSpyObj<EmailService>('EmailService', ['generateCreateForm']);
+    phoneSvcMock = jasmine.createSpyObj<PhoneService>('PhoneService', ['generateCreateForm']);
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
     createSubject$ = new Subject<Member>();
     createMember$ = createSubject$.asObservable();
+
+    addressSvcMock.generateCreateForm.and.returnValue(generateAddressCreateForm());
+    emailSvcMock.generateCreateForm.and.returnValue(generateEmailCreateForm());
+    phoneSvcMock.generateCreateForm.and.returnValue(generatePhoneCreateForm());
+    memberSvcMock.generateCreateForm.and.returnValue(generateMemberCreateForm())
 
     await TestBed.configureTestingModule({
       imports: [
@@ -45,14 +63,22 @@ describe('AddMemberComponent', () => {
         provideHttpClientTesting(),
         provideNoopAnimations(),
         {provide: MembersService, useValue: {}},
+        {provide: AddressService, useValue: {}},
+        {provide: EmailService, useValue: {}},
+        {provide: PhoneService, useValue: {}},
         {provide: Router, useValue: routerMock}
       ]
     }).overrideProvider(MembersService, {useValue: memberSvcMock})
+        .overrideProvider(AddressService, {useValue: addressSvcMock})
+        .overrideProvider(EmailService, {useValue: emailSvcMock})
+        .overrideProvider(PhoneService, {useValue: phoneSvcMock})
       .compileComponents();
 
     fixture = TestBed.createComponent(AddMemberComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
+    // set one validator so the form is not 'valid'
+    component.createFormSignal().controls.first_name.setValidators(Validators.required);
   });
 
   it('should create', async () => {
@@ -235,7 +261,7 @@ describe('AddMemberComponent', () => {
       expect(button).toBeTruthy();
     });
 
-    it('should call onAAddress when add address button is clicked', fakeAsync(async () => {
+    it('should call onAAddress when add address button is clicked', fakeAsync(() => {
       const spy = spyOn(component, 'onAddAddress').and.stub();
 
       fixture.debugElement.query(By.css('.add-address')).nativeElement.click();

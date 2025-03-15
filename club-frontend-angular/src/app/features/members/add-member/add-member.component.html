@@ -1,14 +1,11 @@
 <div class="container">
     @if(!submitted()) {
-        <form data-testid="createForm"
-                [formGroup]="createFormSignal()"
-                (ngSubmit)="onSave()">
+        <form [formGroup]="createFormSignal()" (ngSubmit)="onSave()">
             <mat-card data-testid="card">
                 <div class="title-container">
                     <mat-card-title>{{'members.add.title' | translate}}</mat-card-title>
-                    <mat-error>{{ 'members.add.required' | translate }}</mat-error>
+                    <mat-error>* = {{ 'members.add.required' | translate }}</mat-error>
                 </div>
-
                 <mat-card-content class="content">
                     <!-- member section -->
                     <div class="section-container" >
@@ -117,9 +114,9 @@
 
                     </div>
                 </mat-card-content>
-                <div class="action-row">
+                <mat-card-actions align="end">
                     <button class="cancel"
-                            mat-raised-button
+                            mat-button
                             type="button"
                             (click)="onOkOrCancel()"
                             matTooltip="Return to members list">
@@ -127,14 +124,14 @@
                         Cancel
                     </button>
                     <button class="submit"
-                            mat-raised-button
+                            mat-button
                             type="submit"
                             [disabled]="createFormSignal().invalid"
                             matTooltip="Save member data">
                         <mat-icon>save</mat-icon>
                         Save
                     </button>
-                </div>
+                </mat-card-actions>
             </mat-card>
         </form>
     } @else {

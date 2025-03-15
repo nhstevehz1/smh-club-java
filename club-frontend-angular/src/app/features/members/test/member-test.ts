@@ -2,6 +2,10 @@ import {Member, MemberDetails, MemberUpdate} from '../models/member';
 import {DateTime} from 'luxon';
 import {PagedData} from '../../../shared/models/paged-data';
 import {generatePagedData} from '../../../shared/test-helpers/test-helpers';
+import {FormArray, FormControl, FormGroup} from "@angular/forms";
+import {generateAddressCreateForm} from "../../addresses/test/address-test";
+import {generateEmailCreateForm} from "../../emails/test/email-test";
+import {generatePhoneCreateForm} from "../../phones/test/phone-test";
 
 export function generateMemberPageData(page: number, size: number, total: number): PagedData<MemberDetails> {
     const content = generateMemberList(size);
@@ -39,6 +43,21 @@ export function generateMember(prefix: number): Member {
         birth_date: DateTime.now(),
         joined_date: DateTime.now(),
     }
+}
+
+export function generateMemberCreateForm(): FormGroup {
+    return new FormGroup({
+        member_number: new FormControl(0, {nonNullable: true}),
+       first_name: new FormControl('', {nonNullable: true}),
+       middle_name: new FormControl('', {nonNullable: true}),
+       last_name: new FormControl('', {nonNullable: true}),
+       suffix: new FormControl('', {nonNullable: true}),
+       birth_date: new FormControl<DateTime>(DateTime.now(), {nonNullable: true}),
+       joined_date: new FormControl<DateTime>(DateTime.now(), {nonNullable: true}),
+       addresses: new FormArray([generateAddressCreateForm()]),
+       emails: new FormArray([generateEmailCreateForm()]),
+       phones: new FormArray([generatePhoneCreateForm()])
+    });
 }
 
 export function generateMemberUpdate(): MemberUpdate {
