@@ -61,16 +61,14 @@
       "titleMessage": "Haga clic en el botón para iniciar sesión"
     },
     "profile": {
-      "card": {
-        "list": {
-          "defaultMessage": "No se pueden leer los datos del perfil.",
-          "email": "Correo electrónico",
-          "fullName": "Nombre y apellidos",
-          "roles": "Funciones",
-          "username": "Nombre de usuario"
-        },
-        "title": "Detalles del perfil"
-      }
+      "list": {
+        "defaultMessage": "No se pueden leer los datos del perfil.",
+        "email": "Correo electrónico",
+        "fullName": "Nombre y apellidos",
+        "roles": "Funciones",
+        "username": "Nombre de usuario"
+      },
+      "title": "Detalles del perfil"
     }
   },
   "emails": {

@@ -61,16 +61,14 @@
       "titleMessage": "Please click the button to log in"
     },
     "profile": {
-      "card": {
-        "list": {
-          "defaultMessage": "Cannot read profile data!",
-          "email": "Email",
-          "fullName": "Full Name",
-          "roles": "Roles",
-          "username": "Username"
-        },
-        "title": "Profile details"
-      }
+      "list": {
+        "defaultMessage": "Cannot read profile data!",
+        "email": "Email",
+        "fullName": "Full Name",
+        "roles": "Roles",
+        "username": "Username"
+      },
+      "title": "Profile details"
     }
   },
   "emails": {

@@ -61,16 +61,14 @@
       "titleMessage": "Cliquez sur le bouton pour vous connecter"
     },
     "profile": {
-      "card": {
-        "list": {
-          "defaultMessage": "Impossible de lire les données du profil !",
-          "email": "Courriel",
-          "fullName": "Nom complet",
-          "roles": "Rôles",
-          "username": "Nom d'utilisateur"
-        },
-        "title": "Détails du profil"
-      }
+      "list": {
+        "defaultMessage": "Impossible de lire les données du profil !",
+        "email": "Courriel",
+        "fullName": "Nom complet",
+        "roles": "Rôles",
+        "username": "Nom d'utilisateur"
+      },
+      "title": "Détails du profil"
     }
   },
   "emails": {
