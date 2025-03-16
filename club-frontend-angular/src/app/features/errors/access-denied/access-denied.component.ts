@@ -1,16 +1,10 @@
-import { Component } from '@angular/core';
-import {MatCard, MatCardHeader, MatCardSubtitle, MatCardTitle, MatCardTitleGroup} from "@angular/material/card";
-import {MatIcon} from "@angular/material/icon";
+import {Component} from '@angular/core';
+import {TitlePageComponent} from "../../../shared/components/title-page/title-page.component";
 
 @Component({
   selector: 'app-access-denied',
     imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardSubtitle,
-        MatCardTitle,
-        MatCardTitleGroup,
-        MatIcon
+        TitlePageComponent
     ],
   templateUrl: './access-denied.component.html',
   styleUrl: './access-denied.component.scss'

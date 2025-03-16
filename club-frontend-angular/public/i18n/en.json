@@ -102,16 +102,12 @@
   },
   "errors": {
     "accessDenied": {
-      "card": {
-        "subtitle": "Please select a page from the menu.",
-        "title": "Page not found!"
-      }
+      "subTitle": "Please contact the site administrator",
+      "title": "You do not have access to this resource"
     },
     "pageNotFound": {
-      "card": {
-        "subtitle": "Please contact the site administrator",
-        "title": "You do not have access to this resource"
-      }
+      "subTitle": "Please select a page from the menu.",
+      "title": "Page not found!"
     }
   },
   "home": {
