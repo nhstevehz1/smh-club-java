@@ -221,6 +221,7 @@
       }
     },
     "list": {
+      "addNewMember": "Ajouter un nouveau membre",
       "columns": {
         "birthDate": "Date de naissance",
         "firstName": "Prénom",
