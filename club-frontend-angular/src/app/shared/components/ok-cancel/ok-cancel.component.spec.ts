@@ -1,12 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { OkCancelComponent } from './ok-cancel.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {OkCancelComponent} from './ok-cancel.component';
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {By} from "@angular/platform-browser";
 import {MatButtonHarness} from "@angular/material/button/testing";
+import {TranslateModule} from "@ngx-translate/core";
 
-describe('SuccessComponent', () => {
+describe('OkCancelComponent', () => {
   let component: OkCancelComponent;
   let fixture: ComponentFixture<OkCancelComponent>;
   let loader: HarnessLoader;
@@ -14,7 +15,10 @@ describe('SuccessComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OkCancelComponent],
+      imports: [
+          OkCancelComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [provideNoopAnimations()]
     })
     .compileComponents();
