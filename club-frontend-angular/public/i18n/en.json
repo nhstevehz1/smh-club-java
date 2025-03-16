@@ -61,16 +61,14 @@
       "titleMessage": "Please click the button to log in"
     },
     "profile": {
-      "card": {
-        "list": {
-          "defaultMessage": "Cannot read profile data!",
-          "email": "Email",
-          "fullName": "Full Name",
-          "roles": "Roles",
-          "username": "Username"
-        },
-        "title": "Profile details"
-      }
+      "list": {
+        "defaultMessage": "Cannot read profile data!",
+        "email": "Email",
+        "fullName": "Full Name",
+        "roles": "Roles",
+        "username": "Username"
+      },
+      "title": "Profile details"
     }
   },
   "emails": {
@@ -223,6 +221,7 @@
       }
     },
     "list": {
+      "addNewMember": "Add new member",
       "columns": {
         "birthDate": "Birth date",
         "firstName": "First name",
@@ -271,6 +270,15 @@
         "renewalDate": "Renewal date",
         "renewalYear": "For year"
       }
+    }
+  },
+  "table": {
+    "paginator": {
+      "firstPage": "First page",
+      "itemsPerPage": "Items per page",
+      "lastPage": "Last page",
+      "nextPage": "Next page",
+      "previousPage": "Previous page"
     }
   }
 }

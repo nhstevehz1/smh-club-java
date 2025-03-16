@@ -61,16 +61,14 @@
       "titleMessage": "Cliquez sur le bouton pour vous connecter"
     },
     "profile": {
-      "card": {
-        "list": {
-          "defaultMessage": "Impossible de lire les données du profil !",
-          "email": "Courriel",
-          "fullName": "Nom complet",
-          "roles": "Rôles",
-          "username": "Nom d'utilisateur"
-        },
-        "title": "Détails du profil"
-      }
+      "list": {
+        "defaultMessage": "Impossible de lire les données du profil !",
+        "email": "Courriel",
+        "fullName": "Nom complet",
+        "roles": "Rôles",
+        "username": "Nom d'utilisateur"
+      },
+      "title": "Détails du profil"
     }
   },
   "emails": {
@@ -223,6 +221,7 @@
       }
     },
     "list": {
+      "addNewMember": "Ajouter un nouveau membre",
       "columns": {
         "birthDate": "Date de naissance",
         "firstName": "Prénom",
@@ -271,6 +270,15 @@
         "renewalDate": "Date de renouvellement",
         "renewalYear": "Pour l'année"
       }
+    }
+  },
+  "table": {
+    "paginator": {
+      "firstPage": "Première page",
+      "itemsPerPage": "Articles par page",
+      "lastPage": "Dernière page",
+      "nextPage": "Page suivante",
+      "previousPage": "Page précédente"
     }
   }
 }

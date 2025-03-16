@@ -1,6 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {LoginComponent} from './login.component';
 import {AuthService} from "../../services/auth.service";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -12,7 +13,10 @@ describe('LoginComponent', () => {
     authSvcMock = jasmine.createSpyObj('AuthService', ['login']);
 
     await TestBed.configureTestingModule({
-      imports: [LoginComponent],
+      imports: [
+          LoginComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [ {provide: AuthService, useValue: {}}]
     }).overrideComponent(LoginComponent,
         {set: {providers: [{provide: AuthService, useValue: authSvcMock}]}

@@ -5,6 +5,7 @@ import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatListHarness} from "@angular/material/list/testing";
 import {AuthUser} from "../../models/auth-user";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -24,7 +25,10 @@ describe('ProfileComponent', () => {
     authSvcMock = jasmine.createSpyObj('AuthService', ['getCurrentUser']);
 
     await TestBed.configureTestingModule({
-      imports: [ProfileComponent],
+      imports: [
+          ProfileComponent,
+          TranslateModule.forRoot({})
+      ],
       providers: [
         {provide: AuthService, userValue: {}}
       ]
@@ -67,7 +71,7 @@ describe('ProfileComponent', () => {
   it('list should contain Username', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
-    const items = await  listHarness.getItems({title: 'Username'});
+    const items = await  listHarness.getItems({title: 'auth.profile.list.username'});
 
     expect(items.length).toEqual(1);
     const txt = await items[0].getSecondaryText();
@@ -77,7 +81,7 @@ describe('ProfileComponent', () => {
   it('list should contain Full name', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
-    const items = await  listHarness.getItems({title: 'Full name'});
+    const items = await  listHarness.getItems({title: 'auth.profile.list.fullName'});
 
     expect(items.length).toEqual(1);
     const txt = await items[0].getSecondaryText();
@@ -87,7 +91,7 @@ describe('ProfileComponent', () => {
   it('list should contain Email', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
-    const items = await  listHarness.getItems({title: 'Email'});
+    const items = await  listHarness.getItems({title: 'auth.profile.list.email'});
 
     expect(items.length).toEqual(1);
     const txt = await items[0].getSecondaryText();
@@ -97,7 +101,7 @@ describe('ProfileComponent', () => {
   it('list should contain Roles', async () => {
     authSvcMock.getCurrentUser.and.returnValue(currUser);
     const listHarness = await loader.getHarness(MatListHarness);
-    const items = await  listHarness.getItems({title: 'Roles'});
+    const items = await  listHarness.getItems({title: 'auth.profile.list.roles'});
 
     expect(items.length).toEqual(1);
     const txt = await items[0].getSecondaryText();
@@ -111,6 +115,6 @@ describe('ProfileComponent', () => {
 
     expect(items.length).toEqual(1);
     const txt = await items[0].getFullText();
-    expect(txt).toBe('Cannot read profile data!');
+    expect(txt).toBe('auth.profile.list.defaultMessage');
   });
 });

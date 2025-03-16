@@ -2,10 +2,11 @@ import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {ColumnDef} from "./models/column-def";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
-import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
+import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {_, TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {map} from "rxjs/operators";
 import {Observable, of} from "rxjs";
+import {CustomMatPaginatorIntlService} from "./services/custom-mat-paginator-intl.service";
 
 @Component({
   selector: 'app-sortable-pageable-table',
@@ -15,7 +16,13 @@ import {Observable, of} from "rxjs";
     MatPaginatorModule,
     TranslatePipe
   ],
-  providers: [TranslateService],
+  providers: [
+    TranslateService,
+    {
+      provide: MatPaginatorIntl,
+      useClass: CustomMatPaginatorIntlService
+    }
+  ],
   templateUrl: './sortable-pageable-table.component.html',
   styleUrl: './sortable-pageable-table.component.scss'
 })

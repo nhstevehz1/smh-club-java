@@ -61,16 +61,14 @@
       "titleMessage": "Haga clic en el botón para iniciar sesión"
     },
     "profile": {
-      "card": {
-        "list": {
-          "defaultMessage": "No se pueden leer los datos del perfil.",
-          "email": "Correo electrónico",
-          "fullName": "Nombre y apellidos",
-          "roles": "Funciones",
-          "username": "Nombre de usuario"
-        },
-        "title": "Detalles del perfil"
-      }
+      "list": {
+        "defaultMessage": "No se pueden leer los datos del perfil.",
+        "email": "Correo electrónico",
+        "fullName": "Nombre y apellidos",
+        "roles": "Funciones",
+        "username": "Nombre de usuario"
+      },
+      "title": "Detalles del perfil"
     }
   },
   "emails": {
@@ -223,6 +221,7 @@
       }
     },
     "list": {
+      "addNewMember": "Añadir nuevo miembro",
       "columns": {
         "birthDate": "Fecha de nacimiento",
         "firstName": "Nombre",
@@ -271,6 +270,15 @@
         "renewalDate": "Fecha de renovación",
         "renewalYear": "Por año"
       }
+    }
+  },
+  "table": {
+    "paginator": {
+      "firstPage": "Primera página",
+      "itemsPerPage": "Elementos por página",
+      "lastPage": "Última página",
+      "nextPage": "Página siguiente",
+      "previousPage": "Pagina anterior"
     }
   }
 }

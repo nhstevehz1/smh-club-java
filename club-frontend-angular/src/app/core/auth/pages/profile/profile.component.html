@@ -1,31 +1,33 @@
 <div class="container">
     <mat-card appearance="raised">
-        <mat-card-title>Profile Info</mat-card-title>
+        <mat-card-title>{{'auth.profile.title' | translate}}</mat-card-title>
         <mat-divider></mat-divider>
         <mat-card-content>
             <mat-list>
                 @if(user) {
                     <mat-list-item>
-                        <span matListItemTitle>Username</span>
+                        <span matListItemTitle>{{'auth.profile.list.username' | translate }}</span>
                         <span matListItemLine>{{user.preferredUserName}}</span>
                     </mat-list-item>
 
                     <mat-list-item>
-                        <span matListItemTitle>Full name</span>
+                        <span matListItemTitle>{{'auth.profile.list.fullName' | translate}}</span>
                         <span matListItemLine>{{user.fullName}}</span>
                     </mat-list-item>
 
                     <mat-list-item>
-                        <span matListItemTitle>Email</span>
+                        <span matListItemTitle>{{'auth.profile.list.email' | translate}}</span>
                         <span matListItemLine>{{user.email}}</span>
                     </mat-list-item>
 
                     <mat-list-item>
-                        <span matListItemTitle>Roles</span>
+                        <span matListItemTitle>{{'auth.profile.list.roles' | translate}}</span>
                         <span matListItemLine>{{user.roles}}</span>
                     </mat-list-item>
                 } @else {
-                    <mat-list-item>Cannot read profile data!</mat-list-item>
+                    <mat-list-item>
+                        <span matListItemTitle>{{'auth.profile.list.defaultMessage' | translate}}</span>
+                    </mat-list-item>
                 }
             </mat-list>
         </mat-card-content>

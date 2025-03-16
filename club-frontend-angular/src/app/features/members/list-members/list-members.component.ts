@@ -17,7 +17,7 @@ import {DateTime} from "luxon";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
 import {AuthService} from "../../../core/auth/services/auth.service";
 import {PermissionType} from "../../../core/auth/models/permission-type";
-import {TranslateService} from "@ngx-translate/core";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-list-members',
@@ -25,7 +25,8 @@ import {TranslateService} from "@ngx-translate/core";
         SortablePageableTableComponent,
         MatIconModule,
         MatButtonModule,
-        MatTooltip
+        MatTooltip,
+        TranslatePipe
     ],
     providers: [
         MembersService,
