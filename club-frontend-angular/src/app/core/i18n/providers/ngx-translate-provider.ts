@@ -12,6 +12,6 @@ export function provideNgxTranslate(): EnvironmentProviders {
             provide: TranslateLoader,
             useFactory: httpLoaderFactory,
             deps: [HttpClient]
-        }
+        },
     }));
 }

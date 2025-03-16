@@ -270,5 +270,14 @@
         "renewalYear": "Por año"
       }
     }
+  },
+  "table": {
+    "paginator": {
+      "firstPage": "Primera página",
+      "itemsPerPage": "Elementos por página",
+      "lastPage": "Última página",
+      "nextPage": "Página siguiente",
+      "previousPage": "Pagina anterior"
+    }
   }
 }
