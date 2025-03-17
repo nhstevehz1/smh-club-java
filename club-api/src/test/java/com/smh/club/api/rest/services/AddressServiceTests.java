@@ -59,7 +59,7 @@ public class AddressServiceTests extends ServiceTests {
 
     @ParameterizedTest
     @CsvSource({"id, id", "address1, address1", "city, city", "state, state",
-            "zip, zip", "address_type, addressType",
+            "postal_code, postalCode", "address_type, addressType",
             "member_number, member.memberNumber", "full_name, member.lastName"})
     public void getPage(String sort, String actual) {
         // setup

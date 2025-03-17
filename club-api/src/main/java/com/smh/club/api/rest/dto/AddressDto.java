@@ -47,8 +47,8 @@ public class AddressDto {
 
     @PostalCode
     @NotBlank
-    @JsonProperty("zip")
-    private String zip;
+    @JsonProperty("postal_code")
+    private String postalCode;
 
     @NotNull()
     @JsonProperty("address_type")

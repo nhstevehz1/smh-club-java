@@ -31,8 +31,8 @@ public class AddressEntity {
     @Column(name = "state", nullable = false, length = 30)
     private String state;
 
-    @Column(name = "zip", nullable = false, length = 10)
-    private String zip;
+    @Column(name = "postal_code", nullable = false, length = 10)
+    private String postalCode;
 
     @Builder.Default
     @Column(name = "address_type", nullable = false)

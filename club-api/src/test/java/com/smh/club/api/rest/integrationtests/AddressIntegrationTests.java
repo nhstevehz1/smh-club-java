@@ -209,7 +209,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @CsvSource({"id,id", "address1,address1", "city,city", "state,state", "zip,zip",
+    @CsvSource({"id,id", "address1,address1", "city,city", "state,state", "postal_code,postalCode",
         "address_type,addressType", "member_number,member.memberNumber", "full_name,member.lastName" })
     public void getListPage_sortColumn(String sort, String entitySort) {
         var entitySize = 50;
@@ -301,7 +301,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         var create = Instancio.of(AddressDto.class)
                 .generate(field(AddressDto::getMemberId),
                     g -> g.oneOf(memberIdList))
-                .generate(field(AddressDto::getZip), g -> g.text().pattern(validPattern))
+                .generate(field(AddressDto::getPostalCode), g -> g.text().pattern(validPattern))
                 .setBlank(field(AddressDto::getId))
                 .create();
 
@@ -348,7 +348,7 @@ public class AddressIntegrationTests extends IntegrationTests {
             .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
             .ignore(field(AddressDto::getId))
-            .setBlank(field(AddressDto::getZip))
+            .setBlank(field(AddressDto::getPostalCode))
             .create();
 
         // perform POST
@@ -387,7 +387,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
         var create = Instancio.of(AddressDto.class)
-            .set(field(AddressDto::getZip), "AAA")
+            .set(field(AddressDto::getPostalCode), "AAA")
             .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
             .ignore(field(AddressDto::getId))
@@ -408,7 +408,7 @@ public class AddressIntegrationTests extends IntegrationTests {
             Instancio.of(AddressDto.class)
                 .set(field(AddressDto::getId), id)
                 .set(field(AddressDto::getMemberId), memberId)
-                .generate(field(AddressDto::getZip), g -> g.text().pattern(pattern))
+                .generate(field(AddressDto::getPostalCode), g -> g.text().pattern(pattern))
                 .create();
 
         // perform PUT
@@ -448,7 +448,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         var update = Instancio.of(AddressDto.class)
             .set(field(AddressDto::getId), id)
             .set(field(AddressDto::getMemberId), memberId)
-            .setBlank(field(AddressDto::getZip))
+            .setBlank(field(AddressDto::getPostalCode))
             .create();
 
         // perform POST
@@ -488,7 +488,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         var update = Instancio.of(AddressDto.class)
             .set(field(AddressDto::getId), id)
             .set(field(AddressDto::getMemberId), memberId)
-            .generate(field(AddressDto::getZip), g -> g.text().pattern(pattern))
+            .generate(field(AddressDto::getPostalCode), g -> g.text().pattern(pattern))
             .create();
 
         // perform POST
@@ -532,7 +532,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getAddress2(), actual.getAddress2());
         assertEquals(expected.getCity(), actual.getCity());
         assertEquals(expected.getState(), actual.getState());
-        assertEquals(expected.getZip(), actual.getZip());
+        assertEquals(expected.getPostalCode(), actual.getPostalCode());
         assertEquals(expected.getAddressType(), actual.getAddressType());
     }
 
@@ -542,7 +542,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getAddress2(), actual.getAddress2());
         assertEquals(expected.getCity(), actual.getCity());
         assertEquals(expected.getState(), actual.getState());
-        assertEquals(expected.getZip(), actual.getZip());
+        assertEquals(expected.getPostalCode(), actual.getPostalCode());
         assertEquals(expected.getAddressType(), actual.getAddressType());
     }
 
@@ -555,7 +555,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getAddress2(), actual.getAddress2());
         assertEquals(expected.getCity(), actual.getCity());
         assertEquals(expected.getState(), actual.getState());
-        assertEquals(expected.getZip(), actual.getZip());
+        assertEquals(expected.getPostalCode(), actual.getPostalCode());
         assertEquals(expected.getAddressType(), actual.getAddressType());
     }
 
@@ -585,8 +585,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         map.put("state", SortFields.of(Comparator.comparing(AddressEntity::getState),
             Comparator.comparing(AddressMemberDto::getState)));
 
-        map.put("zip", SortFields.of(Comparator.comparing(AddressEntity::getZip),
-            Comparator.comparing(AddressMemberDto::getZip)));
+        map.put("postal_code", SortFields.of(Comparator.comparing(AddressEntity::getPostalCode),
+            Comparator.comparing(AddressMemberDto::getPostalCode)));
 
         map.put("address_type", SortFields.of(Comparator.comparing(AddressEntity::getAddressType),
             Comparator.comparing(AddressMemberDto::getAddressType)));
