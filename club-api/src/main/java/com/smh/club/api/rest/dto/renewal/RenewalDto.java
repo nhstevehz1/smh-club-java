@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.dto;
+package com.smh.club.api.rest.dto.renewal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.rest.domain.annotations.SortExclude;
@@ -12,20 +12,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * DTO for renewals.
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@ValidRenewal
-@SortTarget(RenewalEntity.class)
+@SuperBuilder
 public class RenewalDto {
-
-    @JsonProperty("id")
-    private int id;
 
     @SortExclude
     @JsonProperty("member_id")
