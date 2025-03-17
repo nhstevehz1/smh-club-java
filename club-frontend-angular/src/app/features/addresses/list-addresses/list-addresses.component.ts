@@ -9,6 +9,7 @@ import {AddressMember} from "../models/address";
 import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {AddressType} from "../models/address-type";
 
 @Component({
   selector: 'app-list-addresses',
@@ -25,6 +26,12 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
   resultsLength = 0;
   datasource = new MatTableDataSource<AddressMember>();
   columns: ColumnDef<AddressMember>[] = [];
+
+  private readonly addressTypeMap: Map<AddressType, string> = new Map<AddressType, string>([
+      [AddressType.Home, 'addresses.type.home'],
+      [AddressType.Work, 'addresses.type.work'],
+      [AddressType.Other, 'addresses.type.other']
+  ]);
 
   constructor(private svc: AddressService) {
     super();
@@ -100,7 +107,7 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
         columnName: 'address_type',
         displayName: 'addresses.list.columns.addressType',
         isSortable: false,
-        cell: (element: AddressMember) => `${element.address_type}`
+        cell: (element: AddressMember) => this.addressTypeMap.get(element.address_type)//`${element.address_type}`
       },
       {
         columnName: 'full_name',
@@ -116,4 +123,6 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
     const street2 = address.address2 || ''
     return street2.length > 0 ? `${street1}, ${street2}` : street1;
   }
+
+
 }

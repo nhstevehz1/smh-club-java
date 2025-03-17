@@ -24,9 +24,9 @@
                         <div class="title-container">
                             <mat-card-subtitle>
                                 @if(addressFormsComputed().length > 1) {
-                                    {{'members.add.card.address.subtitle.addresses' | translate }}
+                                    {{'members.add.card.addresses.subtitle.addresses' | translate }}
                                 } @else {
-                                    {{'members.add.card.address.subtitle.address' | translate }}
+                                    {{'members.add.card.addresses.subtitle.address' | translate }}
                                 }
                             </mat-card-subtitle>
                             <button class="add-address"
@@ -119,17 +119,17 @@
                             mat-button
                             type="button"
                             (click)="onOkOrCancel()"
-                            matTooltip="Return to members list">
+                            matTooltip="{{'members.add.card.action.cancelToolTip' | translate}}">
                         <mat-icon>cancel</mat-icon>
-                        Cancel
+                        <span>{{'members.add.card.action.cancel' | translate}}</span>
                     </button>
                     <button class="submit"
                             mat-button
                             type="submit"
                             [disabled]="createFormSignal().invalid"
-                            matTooltip="Save member data">
+                            matTooltip="{{'members.add.card.action.submitToolTip' | translate}}}">
                         <mat-icon>save</mat-icon>
-                        Save
+                        <span>{{'members.add.card.action.submit' | translate}}</span>
                     </button>
                 </mat-card-actions>
             </mat-card>
@@ -137,8 +137,8 @@
     } @else {
         <div class="flex-row center">
             <app-ok-cancel
-                    title="Member saved!"
-                    buttonToolTip="Return to members list"
+                    title="{{'members.add.card.action.okCancel.title' | translate}}"
+                    buttonToolTip="{{'members.add.card.action.okCancel.toolTip' | translate}}"
                     (buttonClick)="onOkOrCancel()"
             ></app-ok-cancel>
         </div>
