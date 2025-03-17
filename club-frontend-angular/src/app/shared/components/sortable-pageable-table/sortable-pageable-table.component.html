@@ -3,23 +3,15 @@
         <ng-container [matColumnDef]=column.columnName>
             @if (column.isSortable) {
                 <mat-header-cell [attr.id]=column.columnName *matHeaderCellDef mat-sort-header>
-                    @if (shouldTranslate(column)){
-                        {{column.displayName | translate}}
-                    } @else {
-                        {{column.displayName}}
-                    }
+                    {{column.displayName | translate}}
                 </mat-header-cell>
             } @else {
                 <mat-header-cell [attr.id]=column.columnName *matHeaderCellDef>
-                    @if (shouldTranslate(column)){
-                        {{column.displayName | translate}}
-                    } @else {
-                        {{column.displayName}}
-                    }
+                    {{column.displayName | translate}}
                 </mat-header-cell>
             }
             <mat-cell *matCellDef="let row">
-                {{column.cell(row)}}
+                {{column.cell(row) | translate}}
             </mat-cell>
         </ng-container>
     }

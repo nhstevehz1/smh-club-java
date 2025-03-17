@@ -9,6 +9,7 @@ import {TableComponentBase} from "../../../shared/components/table-component-bas
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {EmailType} from "../models/email-type";
 
 @Component({
     selector: 'app-list-emails',
@@ -26,6 +27,12 @@ export class ListEmailsComponent
     resultsLength = 0;
     datasource = new MatTableDataSource<EmailMember>();
     columns: ColumnDef<EmailMember>[] = [];
+
+    private emailTypeMap = new Map<EmailType, string>([
+       [EmailType.Work, 'emails.type.work'],
+       [EmailType.Home, 'emails.type.home'],
+       [EmailType.Other, 'emails.type.other']
+    ]);
 
     constructor(private svc: EmailService) {
         super();
@@ -82,7 +89,7 @@ export class ListEmailsComponent
                 columnName: 'email_type',
                 displayName: 'emails.list.columns.emailType',
                 isSortable: false,
-                cell:(element: EmailMember) => `${element.email_type}`
+                cell:(element: EmailMember) => this.emailTypeMap.get(element.email_type)
             },
             {
                 columnName: 'full_name',

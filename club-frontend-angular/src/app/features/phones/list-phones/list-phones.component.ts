@@ -9,6 +9,7 @@ import {ColumnDef} from "../../../shared/components/sortable-pageable-table/mode
 import {MatTableDataSource} from "@angular/material/table";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {PhoneType} from "../models/phone-type";
 
 @Component({
   selector: 'app-list-phones',
@@ -25,6 +26,12 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
   resultsLength = 0;
   datasource = new MatTableDataSource<PhoneMember>();
   columns: ColumnDef<PhoneMember>[] = [];
+
+  private phoneTypeMap = new Map<PhoneType, string>([
+     [PhoneType.Work, 'phones.type.work'],
+     [PhoneType.Home, 'phones.type.home'],
+     [PhoneType.Mobile, 'phones.type.mobile']
+  ]);
 
   constructor(private svc: PhoneService) {
     super();
@@ -81,7 +88,7 @@ export class ListPhonesComponent extends TableComponentBase<PhoneMember> impleme
         columnName: 'phone_type',
         displayName: 'phones.list.columns.phoneType',
         isSortable: false,
-        cell: (element: PhoneMember) => `${element.phone_type}`
+        cell: (element: PhoneMember) => this.phoneTypeMap.get(element.phone_type)
       },
       {
         columnName: 'full_name',
