@@ -148,7 +148,7 @@
           },
           "submitToolTip": "Save member data"
         },
-        "address": {
+        "addresses": {
           "addToolTip": "Add address",
           "subtitle": {
             "address": "Address",
@@ -226,6 +226,10 @@
         "memberNumber": "Number"
       }
     }
+  },
+  "okCancel": {
+    "defaultTitleMessage": "Success",
+    "defaultToolTip": "Ok"
   },
   "phones": {
     "editor": {

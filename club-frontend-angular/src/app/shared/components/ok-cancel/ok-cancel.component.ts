@@ -19,7 +19,7 @@ import {TranslatePipe} from "@ngx-translate/core";
 })
 export class OkCancelComponent {
 
-  titleSignal = input<string>('okCancel.defaultTileMessage', {alias: 'title'});
+  titleSignal = input<string>('okCancel.defaultTitleMessage', {alias: 'title'});
 
   iconNameSignal = input<string>('checked', {alias: 'iconName'});
 

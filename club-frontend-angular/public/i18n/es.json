@@ -148,10 +148,10 @@
           },
           "submitToolTip": "Guardar los datos de los afiliados"
         },
-        "address": {
+        "addresses": {
           "addToolTip": "Añadir dirección",
           "subtitle": {
-            "address": "DIRECCIÓN",
+            "address": "Direccione",
             "addresses": "Direcciones"
           }
         },
@@ -174,7 +174,7 @@
         }
       },
       "required": "Requerido",
-      "title": ""
+      "title": "Añadir miembro"
     },
     "editor": {
       "birthDate": {
@@ -226,6 +226,10 @@
         "memberNumber": "Número"
       }
     }
+  },
+  "okCancel": {
+    "defaultTitleMessage": "Éxito",
+    "defaultToolTip": "Ok"
   },
   "phones": {
     "editor": {

@@ -148,7 +148,7 @@
           },
           "submitToolTip": "Sauvegarder les données des membres"
         },
-        "address": {
+        "addresses": {
           "addToolTip": "Ajouter une adresse",
           "subtitle": {
             "address": "Adresse",
@@ -174,7 +174,7 @@
         }
       },
       "required": "Exigée",
-      "title": ""
+      "title": "Ajouter un membre"
     },
     "editor": {
       "birthDate": {
@@ -226,6 +226,10 @@
         "memberNumber": "Nombre"
       }
     }
+  },
+  "okCancel": {
+    "defaultTitleMessage": "Succès",
+    "defaultToolTip": "Ok"
   },
   "phones": {
     "editor": {

@@ -10,7 +10,7 @@
                     <!-- member section -->
                     <div class="section-container" >
                         <div class="flex-row start">
-                            <mat-card-subtitle>Member Info</mat-card-subtitle>
+                            <mat-card-subtitle>{{'members.add.card.member.subTitle' | translate}}</mat-card-subtitle>
                         </div>
                         <mat-divider></mat-divider>
                         <app-member-editor
@@ -24,14 +24,14 @@
                         <div class="title-container">
                             <mat-card-subtitle>
                                 @if(addressFormsComputed().length > 1) {
-                                    Addresses
+                                    {{'members.add.card.address.subtitle.addresses' | translate }}
                                 } @else {
-                                    Address
+                                    {{'members.add.card.address.subtitle.address' | translate }}
                                 }
                             </mat-card-subtitle>
                             <button class="add-address"
                                     mat-icon-button
-                                    matTooltip="Add address"
+                                    matTooltip="{{'members.add.card.addresses.addToolTip' | translate}}"
                                     (click)="onAddAddress()">
                                 <mat-icon>add</mat-icon>
                             </button>
@@ -55,14 +55,14 @@
                         <div class="title-container">
                             <mat-card-subtitle>
                                 @if(phoneFormsComputed().length > 1) {
-                                    Phone Numbers
+                                    {{'members.add.card.phones.subtitle.phoneNumbers' | translate }}
                                 } @else {
-                                    Phone Number
+                                    {{'members.add.card.phones.subtitle.phoneNumber' | translate }}
                                 }
                             </mat-card-subtitle>
                             <button class="add-phone"
                                     mat-icon-button
-                                    matTooltip="Add phone"
+                                    matTooltip="{{'members.add.phones.addToolTip' | translate}}}"
                                     (click)="onAddPhone()">
                                 <mat-icon>add</mat-icon>
                             </button>
@@ -86,14 +86,14 @@
                         <div class="title-container">
                             <mat-card-subtitle>
                                 @if(emailFormsComputed().length > 1) {
-                                    Email Addresses
+                                    {{'members.add.card.emails.subtitle.emails' | translate }}
                                 } @else {
-                                    Email Address
+                                    {{'members.add.card.emails.subtitle.email' | translate }}
                                 }
                             </mat-card-subtitle>
                             <button class="add-email"
                                     mat-icon-button
-                                    matTooltip="Add email"
+                                    matTooltip="{{'members.add.card.emails.addToolTip' | translate }}"
                                     (click)="onAddEmail()">
                                 <mat-icon>add</mat-icon>
                             </button>
