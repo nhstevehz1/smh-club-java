@@ -35,7 +35,7 @@ describe('OkCancelComponent', () => {
 
   it('should show a title message', async() => {
     const title = 'title';
-    component.titleMessage = title;
+    fixture.componentRef.setInput('title', title);
 
     fixture.detectChanges()
     await fixture.whenStable();
