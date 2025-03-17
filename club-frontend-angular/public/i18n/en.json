@@ -141,11 +141,13 @@
     "add": {
       "card": {
         "action": {
+          "cancel": "Cancel",
           "cancelToolTip": "Return to members list",
           "okCancel": {
             "title": "Member saved!",
             "toolTip": "Return to members list"
           },
+          "submit": "Save",
           "submitToolTip": "Save member data"
         },
         "addresses": {

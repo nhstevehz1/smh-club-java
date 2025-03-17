@@ -141,11 +141,13 @@
     "add": {
       "card": {
         "action": {
+          "cancel": "Cancelar",
           "cancelToolTip": "Volver a la lista de miembros",
           "okCancel": {
             "title": "¡Miembro salvado!",
             "toolTip": "Volver a la lista de miembros"
           },
+          "submit": "Guardar",
           "submitToolTip": "Guardar los datos de los afiliados"
         },
         "addresses": {
