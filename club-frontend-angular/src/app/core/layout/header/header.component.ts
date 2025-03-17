@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {Component, computed, inject, input, output} from '@angular/core';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
@@ -29,33 +29,31 @@ import {TranslatePipe} from "@ngx-translate/core";
 export class HeaderComponent {
   private document: Document = inject(DOCUMENT);
 
-  @Input('name') userName?: string;
+  userNameSignal
+      = input<string | undefined>(undefined, {alias: 'userName'});
 
-  @Input('isLoggedIn')
-  isLoggedIn: boolean = false;
+  isLoggedInSignal
+      = input<boolean>(false, {alias: 'isLoggedIn'});
 
-  @Input('lastLogin')
-  lastLogin?: string;
+  showUserName = computed<boolean>(() =>
+        !!this.userNameSignal() && this.isLoggedInSignal());
 
-  @Output()
-  profileClick = new EventEmitter<void>();
+  profileClickSignal = output({alias: 'profileClick'});
 
-  @Output()
-  logoutClick = new EventEmitter<void>();
+  logoutClickSignal = output({alias: 'logoutClick'});
 
-  @Output()
-  toggleSidenav = new EventEmitter<void>();
+  toggleSidenavSignal = output({alias: 'toggleSidenav'});
 
   profileHandler() {
-    this.profileClick.next();
+    this.profileClickSignal.emit();
   }
 
   logoutHandler() {
-    this.logoutClick.next();
+    this.logoutClickSignal.emit();
   }
 
   toggleSideNavHandler() {
-      this.toggleSidenav.next();
+      this.toggleSidenavSignal.emit();
   }
 
   onThemeChanged(event: MatSlideToggleChange): void {
