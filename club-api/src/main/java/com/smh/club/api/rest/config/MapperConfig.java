@@ -34,8 +34,8 @@ public class MapperConfig {
     }
 
     private void memberSettings(ModelMapper modelMapper) {
-        TypeMap<CreateMemberDto, MemberEntity> entityTypeMap
-                = modelMapper.createTypeMap(CreateMemberDto.class, MemberEntity.class);
+        TypeMap<MemberCreateDto, MemberEntity> entityTypeMap
+                = modelMapper.createTypeMap(MemberCreateDto.class, MemberEntity.class);
         entityTypeMap.addMappings(m -> {
             m.skip(MemberEntity::setId);
             m.skip(MemberEntity::setAddresses);

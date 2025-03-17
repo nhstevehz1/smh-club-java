@@ -3,7 +3,7 @@ package com.smh.club.api.rest.services;
 import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.CreateMemberDto;
+import com.smh.club.api.rest.dto.MemberCreateDto;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import java.util.Optional;
@@ -232,7 +232,7 @@ public class MemberServiceTests extends ServiceTests {
     @Test
     public void createMember_returns_member() {
         // setup
-        var create = Instancio.create(CreateMemberDto.class);
+        var create = Instancio.create(MemberCreateDto.class);
         var member = Instancio.create(MemberDto.class);
         var entity = Instancio.create(MemberEntity.class);
 

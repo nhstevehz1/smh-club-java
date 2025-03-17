@@ -5,7 +5,7 @@ import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
-import com.smh.club.api.rest.dto.CreateMemberDto;
+import com.smh.club.api.rest.dto.MemberCreateDto;
 import com.smh.club.api.rest.dto.MemberDetailDto;
 import com.smh.club.api.rest.dto.MemberDto;
 import java.util.List;
@@ -31,7 +31,7 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
      * {@inheritDoc}
      */
     @Override
-    public MemberEntity toEntity(CreateMemberDto dto) {
+    public MemberEntity toEntity(MemberCreateDto dto) {
         var entity = modelMapper.map(dto, MemberEntity.class);
         dto.getAddresses().forEach(a -> entity.addAddress(modelMapper.map(a, AddressEntity.class)));
         dto.getEmails().forEach(e -> entity.addEmail(modelMapper.map(e, EmailEntity.class)));

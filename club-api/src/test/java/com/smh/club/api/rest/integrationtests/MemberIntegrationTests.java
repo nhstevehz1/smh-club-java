@@ -21,6 +21,7 @@ import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
 import org.instancio.settings.Keys;
+import org.instancio.settings.Mode;
 import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,7 +90,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         Settings.create().set(Keys.SET_BACK_REFERENCES, true)
             .set(Keys.JPA_ENABLED, true)
             .set(Keys.COLLECTION_MAX_SIZE, 0)
-            .set(Keys.BEAN_VALIDATION_ENABLED, true);
+            .set(Keys.BEAN_VALIDATION_ENABLED, true)
+            .set(Keys.MODE, Mode.LENIENT);
 
     @Autowired
     public MemberIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
@@ -277,7 +279,7 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     @Test
     public void create_returns_dto_status_created() throws Exception {
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
             .ignore(field(MemberDto::getId))
@@ -302,7 +304,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_returns_memberNumber_equal_to_one() throws Exception {
         // when table is empty, the member service will assign 1 to the member number
         // setup
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
@@ -326,7 +328,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         // when the available numbers has a gap ex: {1,2,3,5,6,...},
         // the member service will assign 4 to the member number
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
@@ -356,7 +358,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @MethodSource("nonNullableFields")
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .ignore(field(MemberDto::getId))
             .setBlank(nonNullableField)
             .generate(field(MemberDto::getBirthDate),
@@ -373,7 +375,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void create_with_null_birthDate_returns_bad_request() throws Exception {
         // setup
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .ignore(field(MemberDto::getId))
             .setBlank(field(MemberDto::getBirthDate))
             .set(field(MemberDto::getJoinedDate), Instant.now())
@@ -386,7 +388,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void create_with_null_joinedDate_returns_bad_request() throws Exception {
         // setup
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .ignore(field(MemberDto::getId))
             .setBlank(field(MemberDto::getJoinedDate))
             .generate(field(MemberDto::getBirthDate),
@@ -411,7 +413,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @MethodSource("nullableFields")
     public void create_nullableField_returns_dto_status_created(Selector nullableField) throws Exception {
         // create address
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
             .setBlank(nullableField)
@@ -435,7 +437,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void create_with_invalid_memberNumber_returns_bad_request() throws Exception {
         // setup
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .set(field(MemberDto::getMemberNumber), 0)
             .set(field(MemberDto::getJoinedDate), Instant.now())
             .ignore(field(MemberDto::getId))
@@ -448,7 +450,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void create_with_invalid_birthDate_returns_bad_request() throws Exception {
         // setup
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .set(field(MemberDto::getBirthDate), Instant.now())
             .ignore(field(MemberDto::getId))
             .create();
@@ -462,7 +464,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var joinedDate = ZonedDateTime.now().minusYears(10).toInstant();
         var birthDate = ZonedDateTime.now().minusYears(22).toInstant();
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .set(field(MemberDto::getJoinedDate), joinedDate)
             .set(field(MemberDto::getBirthDate), birthDate)
             .ignore(field(MemberDto::getId))
@@ -672,8 +674,13 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
     }
 
-    private void verify(CreateMemberDto expected, MemberEntity actual) {
-        verify(expected.getMember(), actual);
+    private void verify(MemberCreateDto expected, MemberEntity actual) {
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getMiddleName(), actual.getMiddleName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getSuffix(), actual.getSuffix());
+        assertEquals(expected.getBirthDate(), actual.getBirthDate());
+        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
 
         assertEquals(expected.getAddresses().size(), actual.getAddresses().size());
         var actAddress = actual.getAddresses().getFirst();
@@ -682,7 +689,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(expAddress.getAddress2(), actAddress.getAddress2());
         assertEquals(expAddress.getCity(), actAddress.getCity());
         assertEquals(expAddress.getState(), actAddress.getState());
-        assertEquals(expAddress.getZip(), actAddress.getZip());
+        assertEquals(expAddress.getPostalCode(), actAddress.getPostalCode());
         assertEquals(expAddress.getAddressType(), actAddress.getAddressType());
 
         assertEquals(expected.getEmails().size(), actual.getEmails().size());
