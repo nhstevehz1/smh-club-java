@@ -114,11 +114,13 @@ describe('SelectFormFieldComponent', () => {
 
     beforeEach(async () => {
       harness = await loader.getHarness(MatSelectHarness);
+      // need to call open before examining the options list.
+      await harness.open();
     });
 
     it('should contain the correct number of options', async () => {
       const options = await harness.getOptions();
-      expect(options.length).toEqual(stringOptions.keys.length);
+      expect(options.length).toEqual(stringOptions.length);
     });
 
     it('should contain the correct labels', async() => {

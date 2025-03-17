@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {MatCardTitle} from "@angular/material/card";
 import {MatFabButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -19,19 +19,15 @@ import {TranslatePipe} from "@ngx-translate/core";
 })
 export class OkCancelComponent {
 
-  @Input()
-  public titleMessage = 'Success';
+  titleSignal = input<string>('okCancel.defaultTitleMessage', {alias: 'title'});
 
-  @Input()
-  public iconName = 'checked';
+  iconNameSignal = input<string>('checked', {alias: 'iconName'});
 
-  @Input()
-  public buttonToolTip = 'Ok';
+  buttonToolTipSignal = input<string>('okCancel.defaultToolTip', {alias: 'buttonToolTip'});
 
-  @Output()
-  public buttonClick: EventEmitter<any> = new EventEmitter();
+  buttonClickSignal = output({alias: 'buttonClick'});
 
   onButtonClicked(): void {
-    this.buttonClick.next(null);
+    this.buttonClickSignal.emit();
   }
 }

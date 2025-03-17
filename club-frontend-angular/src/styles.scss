@@ -41,6 +41,38 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+// common
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5%;
+
+  .title-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    gap: 15px;
+    box-shadow: var(--mat-sys-level3);
+    background-color: var(--mat-sys-surface-container-high);
+
+    .title {
+      font-family: var(--mat-sys-title-large-font), serif ;
+      font-size: var(--mat-sys-title-large-size);
+      line-height: var(--mat-sys-title-large-line-height);
+    }
+
+    .subTitle {
+      font-family: var(--mat-sys-title-medium-font), serif ;
+      font-size: var(--mat-sys-title-medium-size);
+      line-height: var(--mat-sys-title-medium-line-height);
+    }
+  }
+}
+
+
+
 // flexbox stuff
 .flex-row {
   display: flex;

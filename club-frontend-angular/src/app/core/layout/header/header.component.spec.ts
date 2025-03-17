@@ -50,30 +50,24 @@ describe('HeaderComponent', () => {
   });
 
   describe('test event emitters', () => {
-    it('should call profileClick.next()', () => {
-      const spy = spyOn(component.profileClick, 'next');
+    it('should call profileClick.emit()', () => {
+      const spy = spyOn(component.profileClickSignal, 'emit');
       component.profileHandler();
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should call logoutClick.next()', () => {
-      const spy = spyOn(component.logoutClick, 'next');
+    it('should call logoutClick.emit()', () => {
+      const spy = spyOn(component.logoutClickSignal, 'emit');
       component.logoutHandler();
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should call toggleSideNave.next()', () => {
-      const spy = spyOn(component.toggleSidenav, 'next');
+    it('should call toggleSideNave.emit()', () => {
+      const spy = spyOn(component.toggleSidenavSignal, 'emit');
       component.toggleSideNavHandler();
       expect(spy).toHaveBeenCalled();
     });
-
-    it('should call toggleSideNave.next()', () => {
-      const spy = spyOn(component.toggleSidenav, 'next');
-      component.toggleSideNavHandler();
-      expect(spy).toHaveBeenCalled();
-    });
-
+    
     it('should call document.body.classList.toggle(dark-mode, true)', () => {
       const classList = TestBed.inject(DOCUMENT).body.classList;
       const spy = spyOn(classList, 'toggle');
@@ -102,7 +96,7 @@ describe('HeaderComponent', () => {
 
     beforeEach(() => {
       loader = TestbedHarnessEnvironment.loader(fixture);
-      component.isLoggedIn = true;
+      fixture.componentRef.setInput('isLoggedIn', true);
     });
 
     it('should contain two mat-icon-buttons', async () => {
@@ -148,7 +142,7 @@ describe('HeaderComponent', () => {
     });
 
     it('account button click should not open menu when loggedIn is false', async () => {
-      component.isLoggedIn = false;
+      fixture.componentRef.setInput('isLoggedIn', false);
       const buttonHarnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'icon'}));
       const buttonHarness = buttonHarnesses[1];
       const menuHarness = await loader.getHarness(MatMenuHarness);
@@ -215,8 +209,8 @@ describe('HeaderComponent', () => {
     });
 
     it('user name should be visible when isLogged in is true and userName is truthy', async () => {
-      component.isLoggedIn = true;
-      component.userName = 'USER';
+      fixture.componentRef.setInput('isLoggedIn', true);
+      fixture.componentRef.setInput('userName', 'USER');
 
       fixture.detectChanges();
 
@@ -226,7 +220,7 @@ describe('HeaderComponent', () => {
     });
 
     it('user name should not be visible when isLogged in is true and userName is not set', async () => {
-      component.isLoggedIn = true;
+      fixture.componentRef.setInput('isLoggedIn', true);
 
       fixture.detectChanges();
 
@@ -235,8 +229,8 @@ describe('HeaderComponent', () => {
     });
 
     it('user name should be visible when isLogged in is false and userName is truthy', async () => {
-      component.isLoggedIn = false;
-      component.userName = 'USER';
+      fixture.componentRef.setInput('isLoggedIn', false);
+      fixture.componentRef.setInput('userName', 'USER');
 
       fixture.detectChanges();
 

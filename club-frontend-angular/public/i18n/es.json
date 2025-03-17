@@ -102,16 +102,12 @@
   },
   "errors": {
     "accessDenied": {
-      "card": {
-        "subtitle": "Seleccione una página del menú.",
-        "title": "Página no encontrada"
-      }
+      "subTitle": "Póngase en contacto con el administrador del sitio",
+      "title": "No tiene acceso a este recurso"
     },
     "pageNotFound": {
-      "card": {
-        "subtitle": "Póngase en contacto con el administrador del sitio",
-        "title": "No tiene acceso a este recurso"
-      }
+      "subTitle": "Seleccione una página del menú.",
+      "title": "Página no encontrada"
     }
   },
   "home": {
@@ -152,10 +148,10 @@
           },
           "submitToolTip": "Guardar los datos de los afiliados"
         },
-        "address": {
+        "addresses": {
           "addToolTip": "Añadir dirección",
           "subtitle": {
-            "address": "DIRECCIÓN",
+            "address": "Direccione",
             "addresses": "Direcciones"
           }
         },
@@ -178,7 +174,7 @@
         }
       },
       "required": "Requerido",
-      "title": ""
+      "title": "Añadir miembro"
     },
     "editor": {
       "birthDate": {
@@ -230,6 +226,10 @@
         "memberNumber": "Número"
       }
     }
+  },
+  "okCancel": {
+    "defaultTitleMessage": "Éxito",
+    "defaultToolTip": "Ok"
   },
   "phones": {
     "editor": {
