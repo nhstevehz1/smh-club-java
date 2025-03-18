@@ -1,9 +1,7 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.MemberService;
-import com.smh.club.api.rest.dto.MemberCreateDto;
-import com.smh.club.api.rest.dto.MemberDetailDto;
-import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.dto.member.*;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -39,11 +37,11 @@ public class MemberController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberDto}.
+     * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberMinDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
-    public ResponseEntity<PagedDto<MemberDto>> page(
+    public ResponseEntity<PagedDto<MemberMinDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(MemberDto.class)
         Pageable pageable) {
@@ -87,7 +85,6 @@ public class MemberController {
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MemberDto> create(
         @NotNull @Valid @RequestBody MemberCreateDto member) {
-        //member.getMember().setMemberNumber(memberSvc.getNextMemberNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
 
@@ -95,14 +92,14 @@ public class MemberController {
      * Endpoint for updating a member.
      *
      * @param id The id of the member to update in the database.
-     * @param member The {@link MemberDto} that contains the updated info.
+     * @param member The {@link MemberUpdateDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link MemberDto} that represents the updated member.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MemberDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody MemberDto member) {
+        @NotNull @Valid @RequestBody MemberUpdateDto member) {
 
         var ret = memberSvc.updateMember(id,  member);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

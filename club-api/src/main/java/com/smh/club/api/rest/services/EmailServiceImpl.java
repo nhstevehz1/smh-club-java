@@ -5,8 +5,10 @@ import com.smh.club.api.rest.contracts.services.EmailService;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.domain.repos.EmailRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.EmailDto;
-import com.smh.club.api.rest.dto.EmailMemberDto;
+import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.rest.dto.email.EmailFullNameDto;
+import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<EmailMemberDto> getPage(Pageable pageable) {
+    public PagedDto<EmailFullNameDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -63,7 +65,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public EmailDto createEmail(EmailDto createDto) {
+    public EmailDto createEmail(EmailCreateDto createDto) {
         log.debug("creating email: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -76,7 +78,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public Optional<EmailDto> updateEmail(int id, EmailDto updateDto) {
+    public Optional<EmailDto> updateEmail(int id, EmailUpdateDto updateDto) {
         log.debug("Updating email, id: {}, with data: {}", id, updateDto);
 
         return emailRepo.findByIdAndMemberId(id, updateDto.getMemberId())
@@ -114,7 +116,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), EmailMemberDto.class, EmailEntity.class)
+                    getSort(o.getProperty(), EmailFullNameDto.class, EmailEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

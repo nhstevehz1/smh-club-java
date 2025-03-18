@@ -1,7 +1,9 @@
 package com.smh.club.api.rest.contracts.services;
 
-import com.smh.club.api.rest.dto.RenewalDto;
-import com.smh.club.api.rest.dto.RenewalMemberDto;
+import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
+import com.smh.club.api.rest.dto.renewal.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalFullNameDto;
+import com.smh.club.api.rest.dto.renewal.RenewalUpdateDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +17,9 @@ public interface RenewalService {
      * Retrieves a page of renewals from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link RenewalMemberDto}.
+     * @return A {@link PagedDto} of type {@link RenewalFullNameDto}.
      */
-    PagedDto<RenewalMemberDto> getPage(Pageable pageable);
+    PagedDto<RenewalFullNameDto> getPage(Pageable pageable);
 
     /**
      * Retrieves a renewal from the database.
@@ -30,19 +32,19 @@ public interface RenewalService {
     /**
      * Creates a renewal and stores it in the database.
      *
-     * @param renewal The {@link RenewalDto} used to create the renewal.
+     * @param renewal The {@link RenewalCreateDto} used to create the renewal.
      * @return The newly created renewal.
      */
-    RenewalDto createRenewal(RenewalDto renewal);
+    RenewalDto createRenewal(RenewalCreateDto renewal);
 
     /**
      * Updates a renewal in the database.
      *
      * @param id The id of the renewal to update.
-     * @param renewal The {@link RenewalDto} containing the updates.
+     * @param renewal The {@link RenewalUpdateDto} containing the updates.
      * @return The updated {@link RenewalDto}.
      */
-    Optional<RenewalDto> updateRenewal(int id, RenewalDto renewal);
+    Optional<RenewalDto> updateRenewal(int id, RenewalUpdateDto renewal);
 
     /**
      * Deletes a renewal from the database.

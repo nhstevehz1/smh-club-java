@@ -2,8 +2,10 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
-import com.smh.club.api.rest.dto.PhoneDto;
-import com.smh.club.api.rest.dto.PhoneMemberDto;
+import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
+import com.smh.club.api.rest.dto.phone.PhoneDto;
+import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -27,7 +29,7 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
      * {@inheritDoc}
      */
     @Override
-    public PhoneEntity toEntity(PhoneDto createPhoneDto) {
+    public PhoneEntity toEntity(PhoneCreateDto createPhoneDto) {
         return modelMapper.map(createPhoneDto, PhoneEntity.class);
     }
 
@@ -43,15 +45,15 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
      * {@inheritDoc}
      */
     @Override
-    public PhoneMemberDto toPhoneMemberDto(PhoneEntity entity) {
-        return modelMapper.map(entity, PhoneMemberDto.class);
+    public PhoneFullNameDto toPhoneMemberDto(PhoneEntity entity) {
+        return modelMapper.map(entity, PhoneFullNameDto.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public PhoneEntity updateEntity(PhoneDto dto, PhoneEntity entity) {
+    public PhoneEntity updateEntity(PhoneUpdateDto dto, PhoneEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }
@@ -68,7 +70,7 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
      * {@inheritDoc}
      */
     @Override
-    public Page<PhoneMemberDto> toPage(Page<PhoneEntity> page) {
+    public Page<PhoneFullNameDto> toPage(Page<PhoneEntity> page) {
         return page.map(this::toPhoneMemberDto);
     }
 }

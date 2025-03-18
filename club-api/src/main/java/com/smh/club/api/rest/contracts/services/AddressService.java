@@ -1,7 +1,9 @@
 package com.smh.club.api.rest.contracts.services;
 
-import com.smh.club.api.rest.dto.AddressDto;
-import com.smh.club.api.rest.dto.AddressMemberDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressFullNameDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +17,9 @@ public interface AddressService {
      * Retrieves a page of addresses from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link AddressMemberDto}.
+     * @return A {@link PagedDto} of type {@link AddressFullNameDto}.
      */
-    PagedDto<AddressMemberDto> getPage(Pageable pageable);
+    PagedDto<AddressFullNameDto> getPage(Pageable pageable);
 
     /**
      * Retrieves an address from the database.
@@ -31,15 +33,16 @@ public interface AddressService {
      * @param address The {@link AddressDto} used to create the address.
      * @return The newly created address.
      */
-    AddressDto createAddress(AddressDto address);
+    AddressDto createAddress(AddressCreateDto address);
 
     /**
      * Updates an address in the database.
+     *
      * @param id The id of the address to update.
      * @param address The {@link AddressDto} containing the updates.
      * @return The updated {@link AddressDto}.
      */
-    Optional<AddressDto> updateAddress(int id, AddressDto address);
+    Optional<AddressDto> updateAddress(int id, AddressUpdateDto address);
 
     /**
      * Deletes an address from the database.

@@ -1,8 +1,10 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.PhoneService;
-import com.smh.club.api.rest.dto.PhoneDto;
-import com.smh.club.api.rest.dto.PhoneMemberDto;
+import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
+import com.smh.club.api.rest.dto.phone.PhoneDto;
+import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -36,13 +38,13 @@ public class PhoneController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link PhoneMemberDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link PhoneFullNameDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
-    public ResponseEntity<PagedDto<PhoneMemberDto>> page(
+    public ResponseEntity<PagedDto<PhoneFullNameDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(PhoneMemberDto.class)
+        @SortConstraint(PhoneFullNameDto.class)
         Pageable pageable) {
 
         var page = phoneSvc.getPage(pageable);
@@ -77,13 +79,14 @@ public class PhoneController {
 
     /**
      * Endpoint for creating a phone.
-     * @param phone The {@link PhoneDto} used to create the object in the database
+     *
+     * @param phone The {@link PhoneCreateDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} representing the newly created object.
      */
     @PostMapping
     @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<PhoneDto> create(
-        @NotNull @Valid @RequestBody PhoneDto phone) {
+        @NotNull @Valid @RequestBody PhoneCreateDto phone) {
         return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(phone));
     }
 
@@ -91,14 +94,14 @@ public class PhoneController {
      * Endpoint for updating a phone.
      *
      * @param id The id of the phone to update in the database.
-     * @param phone The {@link PhoneDto} that contains the updated info.
+     * @param phone The {@link PhoneUpdateDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} that represents the updated phone.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping("{id}")
     public ResponseEntity<PhoneDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody PhoneDto phone) {
+        @NotNull @Valid @RequestBody PhoneUpdateDto phone) {
 
         var ret = phoneSvc.updatePhone(id, phone);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

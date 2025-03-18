@@ -5,9 +5,10 @@ import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
-import com.smh.club.api.rest.dto.MemberCreateDto;
-import com.smh.club.api.rest.dto.MemberDetailDto;
-import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.dto.member.MemberCreateDto;
+import com.smh.club.api.rest.dto.member.MemberDetailDto;
+import com.smh.club.api.rest.dto.member.MemberMinDto;
+import com.smh.club.api.rest.dto.member.MemberUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -43,15 +44,15 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
      * {@inheritDoc}
      */
     @Override
-    public MemberDto toDto(MemberEntity entity) {
-        return modelMapper.map(entity, MemberDto.class);
+    public MemberMinDto toDto(MemberEntity entity) {
+        return modelMapper.map(entity, MemberMinDto.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public MemberEntity updateEntity(MemberDto createMemberDto, MemberEntity memberEntity) {
+    public MemberEntity updateEntity(MemberUpdateDto createMemberDto, MemberEntity memberEntity) {
         modelMapper.map(createMemberDto, memberEntity);
         return memberEntity;
     }
@@ -60,15 +61,15 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
      * {@inheritDoc}
      */
     @Override
-    public List<MemberDto> toDtoList(List<MemberEntity> entityList) {
-        return mapList(entityList, MemberDto.class);
+    public List<MemberMinDto> toDtoList(List<MemberEntity> entityList) {
+        return mapList(entityList, MemberMinDto.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Page<MemberDto> toPage(Page<MemberEntity> page) {
+    public Page<MemberMinDto> toPage(Page<MemberEntity> page) {
         return page.map(this::toDto);
     }
 

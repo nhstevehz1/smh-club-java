@@ -5,8 +5,10 @@ import com.smh.club.api.rest.contracts.services.PhoneService;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.PhoneRepo;
-import com.smh.club.api.rest.dto.PhoneDto;
-import com.smh.club.api.rest.dto.PhoneMemberDto;
+import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
+import com.smh.club.api.rest.dto.phone.PhoneDto;
+import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<PhoneMemberDto> getPage(Pageable pageable) {
+    public PagedDto<PhoneFullNameDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -63,7 +65,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public PhoneDto createPhone(PhoneDto createDto) {
+    public PhoneDto createPhone(PhoneCreateDto createDto) {
         log.debug("creating phone: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -76,7 +78,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public Optional<PhoneDto> updatePhone(int id, PhoneDto updateDto) {
+    public Optional<PhoneDto> updatePhone(int id, PhoneUpdateDto updateDto) {
         log.debug("Updating phone, id: {}, with data: {}", id, updateDto);
 
         return phoneRepo.findByIdAndMemberId(id, updateDto.getMemberId())
@@ -114,7 +116,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), PhoneMemberDto.class, PhoneEntity.class)
+                    getSort(o.getProperty(), PhoneFullNameDto.class, PhoneEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

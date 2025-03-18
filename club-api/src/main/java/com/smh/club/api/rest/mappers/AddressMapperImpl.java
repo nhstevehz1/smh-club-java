@@ -2,8 +2,10 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.contracts.mappers.AddressMapper;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
-import com.smh.club.api.rest.dto.AddressDto;
-import com.smh.club.api.rest.dto.AddressMemberDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressFullNameDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -27,7 +29,7 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
      * {@inheritDoc}
      */
     @Override
-    public AddressEntity toEntity(AddressDto dto) {
+    public AddressEntity toEntity(AddressCreateDto dto) {
         return modelMapper.map(dto, AddressEntity.class);
     }
 
@@ -43,15 +45,15 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
      * {@inheritDoc}
      */
     @Override
-    public AddressMemberDto toAddressMemberDto(AddressEntity entity) {
-        return modelMapper.map(entity, AddressMemberDto.class);
+    public AddressFullNameDto toAddressMemberDto(AddressEntity entity) {
+        return modelMapper.map(entity, AddressFullNameDto.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public AddressEntity updateEntity(AddressDto dto, AddressEntity entity) {
+    public AddressEntity updateEntity(AddressUpdateDto dto, AddressEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }
@@ -68,7 +70,7 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
      * {@inheritDoc}
      */
     @Override
-    public Page<AddressMemberDto> toPage(Page<AddressEntity> page) {
+    public Page<AddressFullNameDto> toPage(Page<AddressEntity> page) {
         return page.map(this::toAddressMemberDto);
     }
 }
