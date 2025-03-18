@@ -1,0 +1,55 @@
+/*plugins {
+  id 'build-logic.spring-boot-conventions'
+}*/
+
+plugins {
+  id 'java'
+  id 'org.springframework.boot' version '3.4.1'
+  id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.smh.club'
+version = '0.0.1-SNAPSHOT'
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+dependencies {
+  implementation project(':services')
+  implementation project(':repository')
+  implementation 'org.springframework.boot:spring-boot-starter.web'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+  compileOnly 'org.projectlombok:lombok'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+  annotationProcessor 'org.projectlombok:lombok'
+
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.security:spring-security-test'
+
+  testAnnotationProcessor 'org.projectlombok:lombok'
+  testCompileOnly 'org.projectlombok:lombok'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+  // Dependencies managed by a catalog
+  // located at ./gradle/libs.versions.toml
+  /*implementation libs.com.model.mapper.model.mapper
+  testImplementation libs.org.instanctio.junit5
+  testImplementation libs.io.rest.assured.spring.mock.mvc*/
+
+  //mockitoAgent('org.mockito:mockito-core') { transitive = false}
+}
+
+/*tasks {
+  test {
+    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}" // need double quotes here
+  }
+}*/
