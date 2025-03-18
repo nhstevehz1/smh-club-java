@@ -2,8 +2,10 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.contracts.mappers.EmailMapper;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
-import com.smh.club.api.rest.dto.EmailDto;
-import com.smh.club.api.rest.dto.EmailMemberDto;
+import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.rest.dto.email.EmailFullNameDto;
+import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -27,7 +29,7 @@ public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
      * {@inheritDoc}
      */
     @Override
-    public EmailEntity toEntity(EmailDto dto) {
+    public EmailEntity toEntity(EmailCreateDto dto) {
         return modelMapper.map(dto, EmailEntity.class);
     }
 
@@ -43,15 +45,15 @@ public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
      * {@inheritDoc}
      */
     @Override
-    public EmailMemberDto toEmailMemberDto(EmailEntity entity) {
-        return modelMapper.map(entity, EmailMemberDto.class);
+    public EmailFullNameDto toEmailMemberDto(EmailEntity entity) {
+        return modelMapper.map(entity, EmailFullNameDto.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public EmailEntity updateEntity(EmailDto dto, EmailEntity entity) {
+    public EmailEntity updateEntity(EmailUpdateDto dto, EmailEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }
@@ -68,7 +70,7 @@ public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
      * {@inheritDoc}
      */
     @Override
-    public Page<EmailMemberDto> toPage(Page<EmailEntity> page) {
+    public Page<EmailFullNameDto> toPage(Page<EmailEntity> page) {
         return page.map(this::toEmailMemberDto);
     }
 }

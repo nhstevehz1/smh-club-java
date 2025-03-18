@@ -5,8 +5,10 @@ import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.EmailRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.EmailDto;
-import com.smh.club.api.rest.dto.EmailMemberDto;
+import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.rest.dto.email.EmailFullNameDto;
+import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -67,7 +69,7 @@ public class EmailServiceTests extends ServiceTests {
        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-       var list = Instancio.ofList(EmailMemberDto.class)
+       var list = Instancio.ofList(EmailFullNameDto.class)
            .size(20)
            .create();
 
@@ -122,7 +124,7 @@ public class EmailServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(EmailMemberDto.class)
+        var list = Instancio.ofList(EmailFullNameDto.class)
             .size(20)
             .create();
 
@@ -162,7 +164,7 @@ public class EmailServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(EmailMemberDto.class)
+        var list = Instancio.ofList(EmailFullNameDto.class)
             .size(pageSize)
             .create();
 
@@ -223,9 +225,10 @@ public class EmailServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(EmailDto.class)
+        var create = Instancio.of(EmailCreateDto.class)
                 .set(field(EmailDto::getMemberId), member.getId())
                 .create();
+
         var email = Instancio.of(EmailDto.class)
                 .set(field(EmailDto::getMemberId), member.getId())
                 .create();
@@ -256,9 +259,11 @@ public class EmailServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(EmailEntity.class);
-        var update = Instancio.of(EmailDto.class)
+
+        var update = Instancio.of(EmailUpdateDto.class)
                 .set(field(EmailDto::getMemberId), id)
                 .create();
+
         var email = Instancio.create(EmailDto.class);
 
         when(emailRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));

@@ -1,7 +1,22 @@
 package com.smh.club.api.rest.config;
 
 import com.smh.club.api.rest.domain.entities.*;
-import com.smh.club.api.rest.dto.*;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressFullNameDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
+import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.rest.dto.email.EmailFullNameDto;
+import com.smh.club.api.rest.dto.email.EmailUpdateDto;
+import com.smh.club.api.rest.dto.member.MemberCreateDto;
+import com.smh.club.api.rest.dto.member.MemberUpdateDto;
+import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
+import com.smh.club.api.rest.dto.phone.PhoneDto;
+import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
+import com.smh.club.api.rest.dto.renewal.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalFullNameDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -17,26 +32,28 @@ public class MapperConfig {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         memberSettings(modelMapper);
-
         addressSettings(modelMapper);
-        addressMemberSettings(modelMapper);
-
         emailSettings(modelMapper);
-        emailMemberSettings(modelMapper);
-
         phoneSettings(modelMapper);
-        phoneMemberSettings(modelMapper);
-
         renewalSetting(modelMapper);
-        renewalMemberSettings(modelMapper);
 
         return modelMapper;
     }
 
     private void memberSettings(ModelMapper modelMapper) {
-        TypeMap<CreateMemberDto, MemberEntity> entityTypeMap
-                = modelMapper.createTypeMap(CreateMemberDto.class, MemberEntity.class);
-        entityTypeMap.addMappings(m -> {
+        TypeMap<MemberCreateDto, MemberEntity> createMap
+                = modelMapper.createTypeMap(MemberCreateDto.class, MemberEntity.class);
+        createMap.addMappings(m -> {
+            m.skip(MemberEntity::setId);
+            m.skip(MemberEntity::setAddresses);
+            m.skip(MemberEntity::setEmails);
+            m.skip(MemberEntity::setPhones);
+            m.skip(MemberEntity::setRenewals);
+        });
+
+        TypeMap<MemberUpdateDto, MemberEntity> updateMap
+            = modelMapper.createTypeMap(MemberUpdateDto.class, MemberEntity.class);
+        updateMap.addMappings(m -> {
             m.skip(MemberEntity::setId);
             m.skip(MemberEntity::setAddresses);
             m.skip(MemberEntity::setEmails);
@@ -48,28 +65,38 @@ public class MapperConfig {
     }
 
     private void addressSettings(ModelMapper modelMapper) {
-        // Address settings
-        TypeMap<AddressEntity, AddressDto> dtoTypeMap
-                = modelMapper.createTypeMap(AddressEntity.class, AddressDto.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), AddressDto::setMemberId));
+       TypeMap<AddressCreateDto, AddressEntity> createMap
+           = modelMapper.createTypeMap(AddressCreateDto.class, AddressEntity.class);
+       createMap.addMappings(m -> {
+          m.skip(AddressEntity::setId);
+          m.skip(AddressEntity::setMember);
+       });
 
+       TypeMap<AddressUpdateDto, AddressEntity> updateMap
+           = modelMapper.createTypeMap(AddressUpdateDto.class, AddressEntity.class);
+       updateMap.addMappings(m -> {
+          m.skip(AddressEntity::setId);
+          m.skip(AddressEntity::setMember);
+       });
 
-        TypeMap<AddressDto, AddressEntity> entTypeMap
-                = modelMapper.createTypeMap(AddressDto.class, AddressEntity.class);
-        entTypeMap.addMappings(m -> {
-            m.skip(AddressEntity::setMember);
-            m.skip(AddressEntity::setId);
-        });
-        modelMapper.validate();
+       TypeMap<AddressEntity, AddressDto> dtoMap
+           = modelMapper.createTypeMap(AddressEntity.class, AddressDto.class);
+       dtoMap.addMappings(m ->
+          m.map(src -> src.getMember().getId(), AddressDto::setMemberId));
+
+        addressMemberSettings(modelMapper);
+
+       modelMapper.validate();
     }
 
     private void addressMemberSettings(ModelMapper modelMapper) {
         // AddressMember settings
-        TypeMap<AddressEntity, AddressMemberDto> dtoTypeMap
-            = modelMapper.createTypeMap(AddressEntity.class, AddressMemberDto.class);
+        TypeMap<AddressEntity, AddressFullNameDto> dtoTypeMap
+            = modelMapper.createTypeMap(AddressEntity.class, AddressFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
-            m.map(src -> src.getMember().getMemberNumber(), AddressMemberDto::setMemberNumber);
+            m.map(src -> src.getMember().getId(), AddressFullNameDto::setMemberId);
+            m.map(src -> src.getMember().getMemberNumber(), AddressFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
             m.map(src -> src.getMember().getMiddleName(),
@@ -85,26 +112,38 @@ public class MapperConfig {
 
     private void emailSettings(ModelMapper modelMapper) {
         // Email settings
-        TypeMap<EmailEntity, EmailDto> dtoTypeMap
-                = modelMapper.createTypeMap(EmailEntity.class, EmailDto.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), EmailDto::setMemberId));
+        TypeMap<EmailCreateDto, EmailEntity> createMap
+                = modelMapper.createTypeMap(EmailCreateDto.class, EmailEntity.class);
+        createMap.addMappings(m -> {
+            m.skip(EmailEntity::setId);
+            m.skip(EmailEntity::setMember);
+        });
 
-        TypeMap<EmailDto, EmailEntity> entTypeMap
-                = modelMapper.createTypeMap(EmailDto.class, EmailEntity.class);
-        entTypeMap.addMappings(m -> {
+        TypeMap<EmailUpdateDto, EmailEntity> updateMap
+                = modelMapper.createTypeMap(EmailUpdateDto.class, EmailEntity.class);
+        updateMap.addMappings(m -> {
             m.skip(EmailEntity::setMember);
             m.skip(EmailEntity::setId);
         });
+
+        TypeMap<EmailEntity, EmailDto> dtoMap
+            = modelMapper.createTypeMap(EmailEntity.class, EmailDto.class);
+        dtoMap.addMappings(m ->
+            m.map(src -> src.getMember().getId(), EmailDto::setMemberId));
+
+        emailMemberSettings(modelMapper);
+
         modelMapper.validate();
     }
 
     private void emailMemberSettings(ModelMapper modelMapper) {
         // EmailMember settings
-        TypeMap<EmailEntity, EmailMemberDto> dtoTypeMap
-            = modelMapper.createTypeMap(EmailEntity.class, EmailMemberDto.class);
+        TypeMap<EmailEntity, EmailFullNameDto> dtoTypeMap
+            = modelMapper.createTypeMap(EmailEntity.class, EmailFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
-            m.map(src -> src.getMember().getMemberNumber(), EmailMemberDto::setMemberNumber);
+            m.map(src -> src.getMember().getId(), EmailFullNameDto::setMemberId);
+            m.map(src -> src.getMember().getMemberNumber(), EmailFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
             m.map(src -> src.getMember().getMiddleName(),
@@ -115,31 +154,42 @@ public class MapperConfig {
                 (dest, v) -> dest.getFullName().setSuffix(String.valueOf(v)));
         });
 
-        modelMapper.validate();
     }
 
     private void phoneSettings(ModelMapper modelMapper) {
         // Phone settings
-        TypeMap<PhoneEntity, PhoneDto> dtoTypeMap
-                = modelMapper.createTypeMap(PhoneEntity.class, PhoneDto.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), PhoneDto::setMemberId));
-
-        TypeMap<PhoneDto, PhoneEntity> entTypeMap
-                = modelMapper.createTypeMap(PhoneDto.class, PhoneEntity.class);
-        entTypeMap.addMappings(m -> {
+        TypeMap<PhoneCreateDto, PhoneEntity> createMap
+                = modelMapper.createTypeMap(PhoneCreateDto.class, PhoneEntity.class);
+        createMap.addMappings(m -> {
             m.skip(PhoneEntity::setMember);
             m.skip(PhoneEntity::setId);
         });
+
+        TypeMap<PhoneDto, PhoneEntity> updateMap
+                = modelMapper.createTypeMap(PhoneDto.class, PhoneEntity.class);
+        updateMap.addMappings(m -> {
+            m.skip(PhoneEntity::setMember);
+            m.skip(PhoneEntity::setId);
+        });
+
+        TypeMap<PhoneEntity, PhoneDto> dtoMap
+            = modelMapper.createTypeMap(PhoneEntity.class, PhoneDto.class);
+        dtoMap.addMappings(m ->
+            m.map(src -> src.getMember().getId(), PhoneDto::setMemberId));
+
+        phoneMemberSettings(modelMapper);
+
         modelMapper.validate();
     }
 
     private void phoneMemberSettings(ModelMapper modelMapper) {
         // PhoneMember settings
-        TypeMap<PhoneEntity, PhoneMemberDto> dtoTypeMap
-            = modelMapper.createTypeMap(PhoneEntity.class, PhoneMemberDto.class);
+        TypeMap<PhoneEntity, PhoneFullNameDto> dtoTypeMap
+            = modelMapper.createTypeMap(PhoneEntity.class, PhoneFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
-            m.map(src -> src.getMember().getMemberNumber(), PhoneMemberDto::setMemberNumber);
+            m.map(src -> src.getMember().getId(), PhoneFullNameDto::setMemberId);
+            m.map(src -> src.getMember().getMemberNumber(), PhoneFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
             m.map(src -> src.getMember().getMiddleName(),
@@ -155,9 +205,12 @@ public class MapperConfig {
 
     private void renewalSetting(ModelMapper modelMapper) {
         // Renewals settings
-        TypeMap<RenewalEntity, RenewalDto> dtoTypeMap
-                = modelMapper.createTypeMap(RenewalEntity.class, RenewalDto.class);
-        dtoTypeMap.addMappings(m -> m.map(src -> src.getMember().getId(), RenewalDto::setMemberId));
+        TypeMap<RenewalCreateDto, RenewalEntity> creatMap
+                = modelMapper.createTypeMap(RenewalCreateDto.class, RenewalEntity.class);
+        creatMap.addMappings(m -> {
+            m.skip(RenewalEntity::setMember);
+            m.skip(RenewalEntity::setId);
+        });
 
         TypeMap<RenewalDto, RenewalEntity> entTypeMap
                 = modelMapper.createTypeMap(RenewalDto.class, RenewalEntity.class);
@@ -165,16 +218,25 @@ public class MapperConfig {
             m.skip(RenewalEntity::setMember);
             m.skip(RenewalEntity::setId);
         });
+
+        TypeMap<RenewalEntity, RenewalDto> dtoMap
+            = modelMapper.createTypeMap(RenewalEntity.class, RenewalDto.class);
+        dtoMap.addMappings(m ->
+            m.map(src -> src.getMember().getId(), RenewalDto::setMemberId));
+
+        renewalMemberSettings(modelMapper);
+
         modelMapper.validate();
     }
 
     private void renewalMemberSettings(ModelMapper modelMapper) {
         // RenewalMember settings
-        TypeMap<RenewalEntity, RenewalMemberDto> dtoTypeMap
-            = modelMapper.createTypeMap(RenewalEntity.class, RenewalMemberDto.class);
+        TypeMap<RenewalEntity, RenewalFullNameDto> dtoTypeMap
+            = modelMapper.createTypeMap(RenewalEntity.class, RenewalFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
-            m.map(src -> src.getMember().getMemberNumber(), RenewalMemberDto::setMemberNumber);
+            m.map(src -> src.getMember().getId(), RenewalFullNameDto::setMemberId);
+            m.map(src -> src.getMember().getMemberNumber(), RenewalFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
             m.map(src -> src.getMember().getMiddleName(),
@@ -184,7 +246,5 @@ public class MapperConfig {
             m.map(src -> src.getMember().getSuffix(),
                 (dest, v) -> dest.getFullName().setSuffix(String.valueOf(v)));
         });
-
-        modelMapper.validate();
     }
 }

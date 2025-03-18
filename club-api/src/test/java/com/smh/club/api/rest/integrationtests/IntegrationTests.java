@@ -64,7 +64,7 @@ public abstract class IntegrationTests {
             .expect(jsonPath("$.validation-errors.length()").isNotEmpty());
     }
 
-    protected <T> T sendValidUpdate(int id, T update, Class<T> clazz) throws JsonProcessingException {
+    protected <T,R> R sendValidUpdate(int id, T update, Class<R> clazz) throws JsonProcessingException {
         return given()
                 .auth().none()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,8 +1,10 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.AddressService;
-import com.smh.club.api.rest.dto.AddressDto;
-import com.smh.club.api.rest.dto.AddressMemberDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressFullNameDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -37,13 +39,13 @@ public class AddressController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link AddressMemberDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link AddressFullNameDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
-    public ResponseEntity<PagedDto<AddressMemberDto>> page(
+    public ResponseEntity<PagedDto<AddressFullNameDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(AddressMemberDto.class)
+        @SortConstraint(AddressFullNameDto.class)
         Pageable pageable) {
 
         var page = addressSvc.getPage(pageable);
@@ -84,7 +86,7 @@ public class AddressController {
     @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping
     public ResponseEntity<AddressDto> create(
-        @NotNull @Valid @RequestBody AddressDto address) {
+        @NotNull @Valid @RequestBody AddressCreateDto address) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createAddress(address));
     }
@@ -100,7 +102,7 @@ public class AddressController {
     @PutMapping("{id}")
     public ResponseEntity<AddressDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody AddressDto address) {
+        @NotNull @Valid @RequestBody AddressUpdateDto address) {
 
         var ret = addressSvc.updateAddress(id, address);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

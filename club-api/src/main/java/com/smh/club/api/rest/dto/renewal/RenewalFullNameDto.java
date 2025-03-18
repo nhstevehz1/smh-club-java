@@ -1,28 +1,24 @@
-package com.smh.club.api.rest.dto;
+package com.smh.club.api.rest.dto.renewal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.rest.domain.annotations.SortAlias;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
-import com.smh.club.api.rest.validation.constraints.ValidRenewal;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import java.time.Instant;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.smh.club.api.rest.dto.FullNameDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * DTO for renewals. Includes member info.
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@ValidRenewal
+@SuperBuilder
 @SortTarget(RenewalEntity.class)
-public class RenewalMemberDto {
+public class RenewalFullNameDto extends RenewalBaseDto{
 
   @JsonProperty("id")
   private int id;
@@ -35,11 +31,4 @@ public class RenewalMemberDto {
   @JsonProperty("full_name")
   private FullNameDto fullName;
 
-  @NotNull
-  @PastOrPresent
-  @JsonProperty("renewal_date")
-  private Instant renewalDate;
-
-  @JsonProperty("renewal_year")
-  private int renewalYear;
 }

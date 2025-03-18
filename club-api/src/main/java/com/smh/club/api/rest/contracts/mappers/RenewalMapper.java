@@ -1,8 +1,10 @@
 package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
-import com.smh.club.api.rest.dto.RenewalDto;
-import com.smh.club.api.rest.dto.RenewalMemberDto;
+import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
+import com.smh.club.api.rest.dto.renewal.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalFullNameDto;
+import com.smh.club.api.rest.dto.renewal.RenewalUpdateDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -12,12 +14,12 @@ import org.springframework.data.domain.Page;
 public interface RenewalMapper {
 
     /**
-     * Maps a {@link RenewalDto} to a {@link RenewalEntity}.
+     * Maps a {@link RenewalCreateDto} to a {@link RenewalEntity}.
      *
-     * @param dto The {@link RenewalDto} to map.
+     * @param dto The {@link RenewalCreateDto} to map.
      * @return The resulting {@link RenewalEntity}.
      */
-    RenewalEntity toEntity(RenewalDto dto);
+    RenewalEntity toEntity(RenewalCreateDto dto);
 
     /**
      * Maps a {@link RenewalEntity} to a {@link RenewalDto}.
@@ -28,12 +30,12 @@ public interface RenewalMapper {
     RenewalDto toDto(RenewalEntity entity);
 
     /**
-     * Maps a {@link RenewalEntity} to a {@link RenewalMemberDto}.
+     * Maps a {@link RenewalEntity} to a {@link RenewalFullNameDto}.
      *
      * @param entity {@link RenewalEntity} to map.
-     * @return The resulting {@link RenewalMemberDto}.
+     * @return The resulting {@link RenewalFullNameDto}.
      */
-    RenewalMemberDto toRenewalMemberDto(RenewalEntity entity);
+    RenewalFullNameDto toRenewalMemberDto(RenewalEntity entity);
 
     /**
      * Updates a renewal object
@@ -42,7 +44,7 @@ public interface RenewalMapper {
      * @param entity The {@link RenewalEntity} to be updated.
      * @return The updated {@link RenewalEntity}.
      */
-    RenewalEntity updateEntity(RenewalDto dto, RenewalEntity entity);
+    RenewalEntity updateEntity(RenewalUpdateDto dto, RenewalEntity entity);
 
     /**
      * Maps a list of {@link RenewalEntity} to a list of {@link RenewalDto}.
@@ -56,7 +58,7 @@ public interface RenewalMapper {
      * Maps a page of address entities to a page of DTOs.
      *
      * @param page The {@link Page} of {@link RenewalEntity} to map.
-     * @return A page of {@link RenewalMemberDto}
+     * @return A page of {@link RenewalFullNameDto}
      */
-    Page<RenewalMemberDto> toPage(Page<RenewalEntity> page);
+    Page<RenewalFullNameDto> toPage(Page<RenewalEntity> page);
 }

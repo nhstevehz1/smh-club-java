@@ -1,8 +1,10 @@
 package com.smh.club.api.rest.contracts.mappers;
 
 import com.smh.club.api.rest.domain.entities.AddressEntity;
-import com.smh.club.api.rest.dto.AddressDto;
-import com.smh.club.api.rest.dto.AddressMemberDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressFullNameDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -12,12 +14,13 @@ import org.springframework.data.domain.Page;
 public interface AddressMapper {
 
     /**
-     * Maps an {@link AddressDto} to an {@link AddressEntity}.
+     * Maps an {@link AddressCreateDto} to an {@link AddressEntity}.
      *
-     * @param dto The {@link AddressDto} to map.
+     * @param dto The {@link AddressCreateDto} to map.
      * @return The resulting {@link AddressEntity}.
      */
-    AddressEntity toEntity(AddressDto dto);
+    AddressEntity toEntity(AddressCreateDto dto);
+
 
     /**
      * Maps an {@link AddressEntity} to an {@link AddressDto}
@@ -28,12 +31,12 @@ public interface AddressMapper {
     AddressDto toDto(AddressEntity entity);
 
     /**
-     * Maps an {@link AddressEntity} to an {@link AddressMemberDto}
+     * Maps an {@link AddressEntity} to an {@link AddressFullNameDto}
      *      *
      *      * @param entity {@link AddressEntity} to map.
-     *      * @return The resulting {@link AddressMemberDto}.
+     *      * @return The resulting {@link AddressFullNameDto}.
      */
-    AddressMemberDto toAddressMemberDto(AddressEntity entity);
+    AddressFullNameDto toAddressMemberDto(AddressEntity entity);
 
     /**
      * Updates an address object
@@ -42,7 +45,7 @@ public interface AddressMapper {
      * @param entity The {@link AddressEntity} to be updated.
      * @return The updated {@link AddressEntity}.
      */
-    AddressEntity updateEntity(AddressDto dto, AddressEntity entity);
+    AddressEntity updateEntity(AddressUpdateDto dto, AddressEntity entity);
 
     /**
      * Maps a list of {@link AddressEntity} to a list of {@link AddressDto}.
@@ -56,7 +59,7 @@ public interface AddressMapper {
      * Maps a page of address entities to a page of DTOs.
      *
      * @param page The {@link Page} of {@link AddressEntity} to map.
-     * @return A page of {@link AddressMemberDto}
+     * @return A page of {@link AddressFullNameDto}
      */
-    Page<AddressMemberDto> toPage(Page<AddressEntity> page);
+    Page<AddressFullNameDto> toPage(Page<AddressEntity> page);
 }

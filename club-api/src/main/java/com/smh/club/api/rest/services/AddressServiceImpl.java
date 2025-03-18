@@ -5,8 +5,10 @@ import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.repos.AddressRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.AddressDto;
-import com.smh.club.api.rest.dto.AddressMemberDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressFullNameDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<AddressMemberDto> getPage(Pageable pageable) {
+    public PagedDto<AddressFullNameDto> getPage(Pageable pageable) {
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
@@ -62,7 +64,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public AddressDto createAddress(AddressDto address) {
+    public AddressDto createAddress(AddressCreateDto address) {
         log.debug("creating address: {}", address);
 
         var memberRef = memberRepo.getReferenceById(address.getMemberId());
@@ -76,7 +78,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public Optional<AddressDto> updateAddress(int id, AddressDto addressDto) {
+    public Optional<AddressDto> updateAddress(int id, AddressUpdateDto addressDto) {
         log.debug("Updating address id: {}, with data: {}", id, addressDto);
 
         return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())
@@ -114,7 +116,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), AddressMemberDto.class, AddressEntity.class)
+                    getSort(o.getProperty(), AddressFullNameDto.class, AddressEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

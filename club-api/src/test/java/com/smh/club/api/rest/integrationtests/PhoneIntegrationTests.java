@@ -7,8 +7,7 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.PhoneRepo;
-import com.smh.club.api.rest.dto.PhoneDto;
-import com.smh.club.api.rest.dto.PhoneMemberDto;
+import com.smh.club.api.rest.dto.phone.*;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
@@ -117,12 +116,12 @@ public class PhoneIntegrationTests extends IntegrationTests {
                 .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
-        var testParams = PageTestParams.of(PhoneMemberDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(PhoneMemberDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(PhoneFullNameDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -140,12 +139,12 @@ public class PhoneIntegrationTests extends IntegrationTests {
         Map<String, String> map = new HashMap<>();
         map.put(sortParamName,  "id,desc");
 
-        var testParams = PageTestParams.of(PhoneMemberDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneMemberDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(PhoneFullNameDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -163,13 +162,13 @@ public class PhoneIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(sizeParamName, String.valueOf(pageSize));
 
-        var testParams = PageTestParams.of(PhoneMemberDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             0, pageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneMemberDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(PhoneFullNameDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -187,13 +186,13 @@ public class PhoneIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(pageParamName, String.valueOf(page));
 
-        var testParams = PageTestParams.of(PhoneMemberDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             page, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(PhoneMemberDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(PhoneFullNameDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -217,7 +216,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
         map.put(sortParamName, sort);
         map.put(sizeParamName, String.valueOf(entitySize));
 
-        var testParams = PageTestParams.of(PhoneMemberDto.class, map, path, expected.getTotalElements(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, expected.getTotalElements(),
             0, entitySize);
 
         var actual = executeListPage(testParams);
@@ -271,19 +270,19 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(PhoneDto.class)
-            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(PhoneDto::getId))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .create();
 
         // perform POST
-        var ret = sendValidCreate(create, PhoneDto.class);
+        var actual = sendValidCreate(create, PhoneDto.class);
 
         // verify
-        var entity =  repo.findById(ret.getId());
+        var entity =  repo.findById(actual.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
+        verify(actual, entity.get());
     }
 
     // used with test that follows
@@ -298,9 +297,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(PhoneDto.class)
-            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(PhoneDto::getId))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .setBlank(nonNullableField)
             .create();
 
@@ -313,10 +311,9 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void create_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(PhoneDto.class)
-            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(PhoneDto::getId))
-            .generate(field(PhoneDto::getPhoneNumber), g -> g.text().pattern(pattern))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+            .generate(field(PhoneCreateDto::getPhoneNumber), g -> g.text().pattern(pattern))
             .create();
 
         // perform POST
@@ -330,9 +327,9 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(PhoneDto.class)
-            .set(field(PhoneDto::getId), id)
-            .set(field(PhoneDto::getMemberId), memberId)
+        var update = Instancio.of(PhoneUpdateDto.class)
+            .set(field(PhoneUpdateDto::getId), id)
+            .set(field(PhoneUpdateDto::getMemberId), memberId)
             .create();
 
         // perform PUT
@@ -343,6 +340,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
         assertTrue(phone.isPresent());
         verify(update, phone.get());
+        verify(actual, phone.get());
     }
 
     @Test
@@ -448,8 +446,23 @@ public class PhoneIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
+    private void verify(PhoneCreateDto expected, PhoneEntity actual) {
+        verify((PhoneBaseDto)expected, actual);
+    }
+
+    private void verify(PhoneUpdateDto expected, PhoneEntity actual) {
+        assertEquals(expected.getId(), actual.getId());
+        verify((PhoneBaseDto)expected, actual);
+    }
+
     private void verify(PhoneDto expected, PhoneEntity actual) {
+        assertEquals(expected.getId(), actual.getId());
+        verify((PhoneBaseDto)expected, actual);
+    }
+
+    private void verify(PhoneBaseDto expected, PhoneEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
+        assertEquals(expected.getCountryCode(), actual.getCountryCode());
         assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(expected.getPhoneType(), actual.getPhoneType());
     }
@@ -460,7 +473,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
         assertEquals(expected.getPhoneType(), actual.getPhoneType());
     }
 
-    private void verify(PhoneEntity expected, PhoneMemberDto actual) {
+    private void verify(PhoneEntity expected, PhoneFullNameDto actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(expected.getPhoneType(), actual.getPhoneType());
@@ -471,7 +484,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
         assertEquals(expected.getMember().getSuffix(), actual.getFullName().getSuffix());
     }
 
-    private void verify(List<PhoneEntity> expected, List<PhoneMemberDto> actual) {
+    private void verify(List<PhoneEntity> expected, List<PhoneFullNameDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
@@ -479,21 +492,21 @@ public class PhoneIntegrationTests extends IntegrationTests {
         });
     }
 
-    private Map<String, SortFields<PhoneEntity, PhoneMemberDto>> getSorts() {
+    private Map<String, SortFields<PhoneEntity, PhoneFullNameDto>> getSorts() {
 
-        Map<String, SortFields<PhoneEntity, PhoneMemberDto>> map = new HashMap<>();
+        Map<String, SortFields<PhoneEntity, PhoneFullNameDto>> map = new HashMap<>();
         map.put("id", SortFields.of(Comparator.comparingInt(PhoneEntity::getId),
-            Comparator.comparingInt(PhoneMemberDto::getId)));
+            Comparator.comparingInt(PhoneFullNameDto::getId)));
 
         map.put("phone_number", SortFields.of(Comparator.comparing(PhoneEntity::getPhoneNumber),
-            Comparator.comparing(PhoneMemberDto::getPhoneNumber)));
+            Comparator.comparing(PhoneFullNameDto::getPhoneNumber)));
 
         map.put("phone_type", SortFields.of(Comparator.comparing(PhoneEntity::getPhoneType),
-            Comparator.comparing(PhoneMemberDto::getPhoneType)));
+            Comparator.comparing(PhoneFullNameDto::getPhoneType)));
 
         map.put("member_number", SortFields.of(
             Comparator.comparing(e -> e.getMember().getMemberNumber()),
-            Comparator.comparing(PhoneMemberDto::getMemberNumber)));
+            Comparator.comparing(PhoneFullNameDto::getMemberNumber)));
 
         map.put("full_name", SortFields.of(
             Comparator.comparing(e -> e.getMember().getLastName()),

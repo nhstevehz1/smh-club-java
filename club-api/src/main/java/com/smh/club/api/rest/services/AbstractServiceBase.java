@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.rest.domain.annotations.SortAlias;
 import com.smh.club.api.rest.domain.annotations.SortExclude;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -38,7 +36,7 @@ public abstract class AbstractServiceBase {
     }
 
     private <S> Optional<SortFieldData> getSortFieldData(String key, Class<S> source) {
-        return Arrays.stream(source.getDeclaredFields())
+        return getAllFields(source).stream()
             .filter(f -> isNotExcluded(f) &&
                 (Objects.equals(getJsonPropValue(f), key)
                     || f.getName().equals(key))
@@ -52,10 +50,24 @@ public abstract class AbstractServiceBase {
     }
 
     private <T> Optional<String> getSortFieldName(Class<T> target, String sortField) {
-        return Arrays.stream(target.getDeclaredFields())
+        return getAllFields(target).stream()
             .filter(f -> isNotExcluded(f) && f.getName().equals(sortField))
             .map(Field::getName)
             .findFirst();
+    }
+
+    // Supports only one level of inheritance.
+    private <T> List<Field> getAllFields(Class<T> clazz) {
+        List<Field> fields =
+            new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
+        Class<?> superClass = clazz.getSuperclass();
+
+        if (superClass != null) {
+
+          fields.addAll(Arrays.asList(superClass.getDeclaredFields()));
+        }
+
+        return fields;
     }
 
     private boolean isNotExcluded(Field field) {

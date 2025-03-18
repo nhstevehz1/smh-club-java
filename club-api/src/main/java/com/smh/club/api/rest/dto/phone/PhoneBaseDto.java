@@ -1,39 +1,23 @@
-package com.smh.club.api.rest.dto;
+package com.smh.club.api.rest.dto.phone;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.domain.annotations.SortAlias;
-import com.smh.club.api.rest.domain.annotations.SortTarget;
-import com.smh.club.api.rest.domain.entities.PhoneEntity;
+import com.smh.club.api.rest.domain.annotations.SortExclude;
 import com.smh.club.api.rest.domain.entities.PhoneType;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-/**
- * DTO for phones. Includes attached member info.
- */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@SortTarget(PhoneEntity.class)
-public class PhoneMemberDto {
-
-  @JsonProperty("id")
-  private int id;
-
-  @SortAlias("member.memberNumber")
-  @JsonProperty("member_number")
-  private int memberNumber;
-
-  @SortAlias("member.lastName")
-  @JsonProperty("full_name")
-  private FullNameDto fullName;
+@SuperBuilder
+public abstract class PhoneBaseDto {
+  @SortExclude
+  @JsonProperty("member_id")
+  private int memberId;
 
   @NotBlank
   @Size(min = 1, max = 5)

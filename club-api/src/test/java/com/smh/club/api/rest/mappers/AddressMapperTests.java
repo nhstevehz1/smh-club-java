@@ -2,7 +2,8 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
-import com.smh.club.api.rest.dto.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -33,7 +34,7 @@ public class AddressMapperTests {
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var address = Instancio.create(AddressDto.class);
+        var address = Instancio.create(AddressCreateDto.class);
 
         // execute
         var entity = mapper.toEntity(address);
@@ -44,7 +45,7 @@ public class AddressMapperTests {
         assertEquals(address.getAddress2(), entity.getAddress2());
         assertEquals(address.getCity(), entity.getCity());
         assertEquals(address.getState(), entity.getState());
-        assertEquals(address.getZip(), entity.getZip());
+        assertEquals(address.getPostalCode(), entity.getPostalCode());
         assertEquals(address.getAddressType(), entity.getAddressType());
 
         // id should be zero
@@ -69,7 +70,7 @@ public class AddressMapperTests {
         assertEquals(entity.getAddress2(), address.getAddress2());
         assertEquals(entity.getCity(), address.getCity());
         assertEquals(entity.getState(), address.getState());
-        assertEquals(entity.getZip(), address.getZip());
+        assertEquals(entity.getPostalCode(), address.getPostalCode());
         assertEquals(entity.getAddressType(), address.getAddressType());
     }
 
@@ -87,7 +88,7 @@ public class AddressMapperTests {
         assertEquals(entity.getAddress2(), address.getAddress2());
         assertEquals(entity.getCity(), address.getCity());
         assertEquals(entity.getState(), address.getState());
-        assertEquals(entity.getZip(), address.getZip());
+        assertEquals(entity.getPostalCode(), address.getPostalCode());
         assertEquals(entity.getAddressType(), address.getAddressType());
         assertEquals(entity.getMember().getMemberNumber(), address.getMemberNumber());
         assertEquals(entity.getMember().getFirstName(), address.getFullName().getFirstName());
@@ -100,7 +101,7 @@ public class AddressMapperTests {
     public void update_entity_from_updateDto() {
         // setup
         var entity = Instancio.create(AddressEntity.class);
-        var update = Instancio.create(AddressDto.class);
+        var update = Instancio.create(AddressUpdateDto.class);
 
         // execute
         var updatedEntity = mapper.updateEntity(update, entity);
@@ -112,7 +113,7 @@ public class AddressMapperTests {
         assertEquals(update.getAddress2(), updatedEntity.getAddress2());
         assertEquals(update.getCity(), updatedEntity.getCity());
         assertEquals(update.getState(), updatedEntity.getState());
-        assertEquals(update.getZip(), updatedEntity.getZip());
+        assertEquals(update.getPostalCode(), updatedEntity.getPostalCode());
         assertEquals(update.getAddressType(), updatedEntity.getAddressType());
     }
 
@@ -145,7 +146,7 @@ public class AddressMapperTests {
             assertEquals(entity.getAddress2(), address.getAddress2());
             assertEquals(entity.getCity(), address.getCity());
             assertEquals(entity.getState(), address.getState());
-            assertEquals(entity.getZip(), address.getZip());
+            assertEquals(entity.getPostalCode(), address.getPostalCode());
             assertEquals(entity.getAddressType(), address.getAddressType());
         }
     }

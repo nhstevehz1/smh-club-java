@@ -5,8 +5,10 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.PhoneRepo;
-import com.smh.club.api.rest.dto.PhoneDto;
-import com.smh.club.api.rest.dto.PhoneMemberDto;
+import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
+import com.smh.club.api.rest.dto.phone.PhoneDto;
+import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -66,7 +68,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneMemberDto.class)
+        var list = Instancio.ofList(PhoneFullNameDto.class)
             .size(20)
             .create();
 
@@ -121,7 +123,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneMemberDto.class)
+        var list = Instancio.ofList(PhoneFullNameDto.class)
             .size(20)
             .create();
 
@@ -160,7 +162,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneMemberDto.class)
+        var list = Instancio.ofList(PhoneFullNameDto.class)
             .size(pageSize)
             .create();
 
@@ -221,9 +223,10 @@ public class PhoneServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(PhoneDto.class)
+        var create = Instancio.of(PhoneCreateDto.class)
                 .set(field(PhoneDto::getMemberId), member.getId())
                 .create();
+
         var phone = Instancio.of(PhoneDto.class)
                 .set(field(PhoneDto::getMemberId), member.getId())
                 .create();
@@ -254,7 +257,8 @@ public class PhoneServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(PhoneEntity.class);
-        var update = Instancio.of(PhoneDto.class)
+
+        var update = Instancio.of(PhoneUpdateDto.class)
                 .set(field(PhoneDto::getMemberId), id)
                 .create();
         var phone = Instancio.create(PhoneDto.class);

@@ -1,8 +1,10 @@
 package com.smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.EmailService;
-import com.smh.club.api.rest.dto.EmailDto;
-import com.smh.club.api.rest.dto.EmailMemberDto;
+import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.rest.dto.email.EmailFullNameDto;
+import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import com.smh.club.api.rest.response.CountResponse;
 import com.smh.club.api.rest.response.PagedDto;
 import com.smh.club.api.rest.validation.constraints.SortConstraint;
@@ -36,13 +38,13 @@ public class EmailController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link EmailMemberDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link EmailFullNameDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
-    public ResponseEntity<PagedDto<EmailMemberDto>> page(
+    public ResponseEntity<PagedDto<EmailFullNameDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(EmailMemberDto.class)
+        @SortConstraint(EmailFullNameDto.class)
         Pageable pageable) {
 
         var page = emailSvc.getPage(pageable);
@@ -77,13 +79,13 @@ public class EmailController {
     /**
      * Endpoint for creating an email.
      *
-     * @param email The {@link EmailDto} used to create the object in the database
+     * @param email The {@link EmailCreateDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing an {@link EmailDto} representing the newly created object.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping
     public ResponseEntity<EmailDto> create(
-        @NotNull @Valid @RequestBody EmailDto email) {
+        @NotNull @Valid @RequestBody EmailCreateDto email) {
         return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(email));
     }
 
@@ -98,7 +100,7 @@ public class EmailController {
     @PutMapping("{id}")
     public ResponseEntity<EmailDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody EmailDto email) {
+        @NotNull @Valid @RequestBody EmailUpdateDto email) {
 
         var ret = emailSvc.updateEmail(id, email);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

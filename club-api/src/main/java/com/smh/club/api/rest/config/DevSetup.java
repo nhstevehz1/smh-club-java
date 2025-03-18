@@ -94,7 +94,7 @@ public class DevSetup implements CommandLineRunner {
           .address2(street2)
           .city(city)
           .state(state)
-          .zip(zip)
+          .postalCode(zip)
           .addressType(types[ii])
           .build();
       results.add(address);

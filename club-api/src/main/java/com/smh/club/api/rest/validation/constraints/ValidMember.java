@@ -7,7 +7,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.time.LocalDate;
+import java.time.Instant;
 
 /**
  * A constraint validator used on LocalDate fields.
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Target({ElementType.TYPE_USE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidMember {
-  Class<?> value() default LocalDate.class;
+  Class<?> value() default Instant.class;
   String message () default "Invalid Member data.  Joined date must at lease minAge after birth date";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};

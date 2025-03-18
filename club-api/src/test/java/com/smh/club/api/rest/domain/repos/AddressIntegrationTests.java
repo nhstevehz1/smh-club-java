@@ -113,7 +113,7 @@ class AddressIntegrationTests extends PersistenceTestsBase {
     public void save_zip_is_null_throws() {
         // setup
         var address = createEntity(this.members);
-        address.setZip(null);
+        address.setPostalCode(null);
 
         // execute and verify
         assertThrows(Exception.class, () -> addressRepo.save(address));

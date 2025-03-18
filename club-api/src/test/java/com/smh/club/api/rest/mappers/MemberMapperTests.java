@@ -2,8 +2,8 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
-import com.smh.club.api.rest.dto.CreateMemberDto;
-import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.dto.member.MemberCreateDto;
+import com.smh.club.api.rest.dto.member.MemberUpdateDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -35,7 +35,7 @@ public class MemberMapperTests {
     @Test
     public void from_create_to_entity() {
         // setup
-        var create = Instancio.of(CreateMemberDto.class)
+        var create = Instancio.of(MemberCreateDto.class)
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .create();
 
@@ -44,13 +44,13 @@ public class MemberMapperTests {
 
         // verify
         assertEquals(0, entity.getId());
-        assertEquals(create.getMember().getMemberNumber(), entity.getMemberNumber());
-        assertEquals(create.getMember().getFirstName(), entity.getFirstName());
-        assertEquals(create.getMember().getMiddleName(), entity.getMiddleName());
-        assertEquals(create.getMember().getLastName(), entity.getLastName());
-        assertEquals(create.getMember().getSuffix(), entity.getSuffix());
-        assertEquals(create.getMember().getBirthDate(), entity.getBirthDate());
-        assertEquals(create.getMember().getJoinedDate(), entity.getJoinedDate());
+        assertEquals(create.getMemberNumber(), entity.getMemberNumber());
+        assertEquals(create.getFirstName(), entity.getFirstName());
+        assertEquals(create.getMiddleName(), entity.getMiddleName());
+        assertEquals(create.getLastName(), entity.getLastName());
+        assertEquals(create.getSuffix(), entity.getSuffix());
+        assertEquals(create.getBirthDate(), entity.getBirthDate());
+        assertEquals(create.getJoinedDate(), entity.getJoinedDate());
 
 
         assertEquals(create.getAddresses().size(), entity.getAddresses().size());
@@ -60,7 +60,7 @@ public class MemberMapperTests {
         assertEquals(expAddress.getAddress2(), actAddress.getAddress2());
         assertEquals(expAddress.getCity(), actAddress.getCity());
         assertEquals(expAddress.getState(), actAddress.getState());
-        assertEquals(expAddress.getZip(), actAddress.getZip());
+        assertEquals(expAddress.getPostalCode(), actAddress.getPostalCode());
         assertEquals(expAddress.getAddressType(), actAddress.getAddressType());
 
         assertEquals(create.getEmails().size(), entity.getEmails().size());
@@ -103,7 +103,7 @@ public class MemberMapperTests {
     @Test
     public void update_entity_from_updateDto() {
         // setup
-        var update = Instancio.create(MemberDto.class);
+        var update = Instancio.create(MemberUpdateDto.class);
         var entity = Instancio.create(MemberEntity.class);
 
 
@@ -206,7 +206,7 @@ public class MemberMapperTests {
             assertEquals(addressEntity.getAddress2(), detailAddress.getAddress2());
             assertEquals(addressEntity.getCity(), detailAddress.getCity());
             assertEquals(addressEntity.getState(), detailAddress.getState());
-            assertEquals(addressEntity.getZip(), detailAddress.getZip());
+            assertEquals(addressEntity.getPostalCode(), detailAddress.getPostalCode());
             assertEquals(addressEntity.getAddressType(), detailAddress.getAddressType());
         }
     }

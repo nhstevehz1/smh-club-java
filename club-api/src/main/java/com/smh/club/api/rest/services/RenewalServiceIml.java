@@ -5,8 +5,10 @@ import com.smh.club.api.rest.contracts.services.RenewalService;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.RenewalsRepo;
-import com.smh.club.api.rest.dto.RenewalDto;
-import com.smh.club.api.rest.dto.RenewalMemberDto;
+import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
+import com.smh.club.api.rest.dto.renewal.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalFullNameDto;
+import com.smh.club.api.rest.dto.renewal.RenewalUpdateDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<RenewalMemberDto> getPage(Pageable pageable) {
+    public PagedDto<RenewalFullNameDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -63,7 +65,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public RenewalDto createRenewal(RenewalDto renewal) {
+    public RenewalDto createRenewal(RenewalCreateDto renewal) {
         log.debug("creating renewal: {}", renewal);
 
         var memberRef = memberRepo.getReferenceById(renewal.getMemberId());
@@ -76,7 +78,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public Optional<RenewalDto> updateRenewal(int id, RenewalDto renewalDto) {
+    public Optional<RenewalDto> updateRenewal(int id, RenewalUpdateDto renewalDto) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
 
         return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())
@@ -114,7 +116,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), RenewalMemberDto.class, RenewalEntity.class)
+                    getSort(o.getProperty(), RenewalFullNameDto.class, RenewalEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);
