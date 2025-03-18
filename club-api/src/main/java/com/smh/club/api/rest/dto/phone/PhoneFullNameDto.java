@@ -6,7 +6,6 @@ import com.smh.club.api.rest.domain.annotations.SortExclude;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -16,7 +15,6 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @SuperBuilder
 @SortTarget(PhoneEntity.class)
 public class PhoneFullNameDto extends PhoneBaseDto {
@@ -33,4 +31,7 @@ public class PhoneFullNameDto extends PhoneBaseDto {
   @JsonProperty("full_name")
   private FullNameDto fullName;
 
+  public PhoneFullNameDto() {
+    super();
+  }
 }
