@@ -5,7 +5,9 @@ import com.smh.club.api.rest.domain.annotations.SortAlias;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -29,4 +31,7 @@ public class EmailFullNameDto extends EmailBaseDto {
   @JsonProperty("full_name")
   private FullNameDto fullName;
 
+  public EmailFullNameDto() {
+    super();
+  }
 }

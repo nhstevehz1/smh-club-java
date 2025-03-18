@@ -13,4 +13,8 @@ import lombok.experimental.SuperBuilder;
 public class EmailUpdateDto extends EmailBaseDto {
   @JsonProperty("id")
   private int id;
+
+  public EmailUpdateDto() {
+    super();
+  }
 }

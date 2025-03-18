@@ -3,7 +3,6 @@ package com.smh.club.api.rest.mappers;
 import com.smh.club.api.rest.config.MapperConfig;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.dto.email.EmailCreateDto;
-import com.smh.club.api.rest.dto.email.EmailDto;
 import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -35,9 +34,7 @@ public class EmailMapperTests {
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var create = Instancio.of(EmailCreateDto.class)
-                .ignore(field(EmailDto::getId))
-                .create();
+        var create = Instancio.create(EmailCreateDto.class);
 
         // execute
         var entity = mapper.toEntity(create);
