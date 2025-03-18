@@ -486,6 +486,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         var member = repo.findById(id);
 
         assertTrue(member.isPresent());
+        verify(update, actual);
         verify(update, member.get());
     }
 
@@ -576,6 +577,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         var member = repo.findById(id);
 
         assertTrue(member.isPresent());
+        verify(update, actual);
         verify(update, member.get());
     }
 
@@ -655,6 +657,15 @@ public class MemberIntegrationTests extends IntegrationTests {
                 .create();
 
         return repo.saveAllAndFlush(entities);
+    }
+
+    private void verify(MemberUpdateDto expected, MemberDto actual) {
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getMiddleName(), actual.getMiddleName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getSuffix(), actual.getSuffix());
+        assertEquals(expected.getBirthDate(), actual.getBirthDate());
+        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
     }
 
     private void verify(MemberUpdateDto expected, MemberEntity actual) {
