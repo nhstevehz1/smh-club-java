@@ -6,6 +6,7 @@ import com.smh.club.api.rest.dto.address.AddressDto;
 import com.smh.club.api.rest.dto.address.AddressFullNameDto;
 import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.rest.dto.email.EmailDto;
 import com.smh.club.api.rest.dto.email.EmailFullNameDto;
 import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import com.smh.club.api.rest.dto.member.MemberCreateDto;
@@ -80,9 +81,8 @@ public class MapperConfig {
 
        TypeMap<AddressEntity, AddressDto> dtoMap
            = modelMapper.createTypeMap(AddressEntity.class, AddressDto.class);
-       dtoMap.addMappings(m -> {
-          m.map(src -> src.getMember().getId(), AddressDto::setMemberId);
-       });
+       dtoMap.addMappings(m ->
+          m.map(src -> src.getMember().getId(), AddressDto::setMemberId));
 
         addressMemberSettings(modelMapper);
 
@@ -126,6 +126,11 @@ public class MapperConfig {
             m.skip(EmailEntity::setId);
         });
 
+        TypeMap<EmailEntity, EmailDto> dtoMap
+            = modelMapper.createTypeMap(EmailEntity.class, EmailDto.class);
+        dtoMap.addMappings(m ->
+            m.map(src -> src.getMember().getId(), EmailDto::setMemberId));
+
         emailMemberSettings(modelMapper);
 
         modelMapper.validate();
@@ -166,6 +171,11 @@ public class MapperConfig {
             m.skip(PhoneEntity::setMember);
             m.skip(PhoneEntity::setId);
         });
+
+        TypeMap<PhoneEntity, PhoneDto> dtoMap
+            = modelMapper.createTypeMap(PhoneEntity.class, PhoneDto.class);
+        dtoMap.addMappings(m ->
+            m.map(src -> src.getMember().getId(), PhoneDto::setMemberId));
 
         phoneMemberSettings(modelMapper);
 
@@ -208,6 +218,11 @@ public class MapperConfig {
             m.skip(RenewalEntity::setMember);
             m.skip(RenewalEntity::setId);
         });
+
+        TypeMap<RenewalEntity, RenewalDto> dtoMap
+            = modelMapper.createTypeMap(RenewalEntity.class, RenewalDto.class);
+        dtoMap.addMappings(m ->
+            m.map(src -> src.getMember().getId(), RenewalDto::setMemberId));
 
         renewalMemberSettings(modelMapper);
 
