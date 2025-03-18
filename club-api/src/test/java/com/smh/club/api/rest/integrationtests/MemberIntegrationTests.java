@@ -439,7 +439,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_with_invalid_memberNumber_returns_bad_request() throws Exception {
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .set(field(MemberCreateDto::getMemberNumber), 0)
+            .set(field(MemberCreateDto::getMemberNumber), -1)
             .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .create();
 

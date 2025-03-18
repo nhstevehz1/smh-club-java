@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 public abstract class MemberBaseDto {
 
     @JsonProperty("member_number")
-    @Min(1)
+    @Min(0)
     private int memberNumber;
 
     @NotBlank
