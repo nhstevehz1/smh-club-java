@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @SortTarget(RenewalEntity.class)
-public class RenewalFullNameDto extends RenewalDto{
+public class RenewalFullNameDto extends RenewalBaseDto{
 
   @JsonProperty("id")
   @SortExclude

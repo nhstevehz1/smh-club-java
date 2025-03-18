@@ -9,6 +9,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @SuperBuilder
-public class AddressCreateDto extends AddressDto {
+public class AddressCreateDto extends AddressBaseDto {
 
 }

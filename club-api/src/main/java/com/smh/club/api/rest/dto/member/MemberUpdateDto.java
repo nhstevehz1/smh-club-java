@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @ValidMember
-public class MemberUpdateDto extends MemberDto {
+public class MemberUpdateDto extends MemberBaseDto {
   @JsonProperty("id")
   private int id;
 }

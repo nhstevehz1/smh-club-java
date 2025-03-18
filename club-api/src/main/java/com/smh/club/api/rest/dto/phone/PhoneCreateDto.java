@@ -11,5 +11,5 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @ValidRenewal
-public class PhoneCreateDto extends PhoneDto {
+public class PhoneCreateDto extends PhoneBaseDto {
 }

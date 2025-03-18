@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @SuperBuilder
-public class MemberDetailDto extends MemberDto {
+public class MemberDetailDto extends MemberBaseDto {
 
     @JsonProperty("id")
     private int id;

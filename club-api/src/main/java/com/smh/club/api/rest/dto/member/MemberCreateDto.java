@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)/**/
 @AllArgsConstructor
 @ValidMember
-public class MemberCreateDto extends MemberDto{
+public class MemberCreateDto extends MemberBaseDto {
 
   @Valid
   @NotNull

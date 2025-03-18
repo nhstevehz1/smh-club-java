@@ -7,8 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)/**/
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @SuperBuilder
 @ValidRenewal
-public class RenewalCreateDto extends RenewalDto {}
+public class RenewalCreateDto extends RenewalBaseDto {}

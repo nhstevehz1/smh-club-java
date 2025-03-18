@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)/**/
 @AllArgsConstructor
 @SuperBuilder
-public class EmailUpdateDto extends EmailDto {
+public class EmailUpdateDto extends EmailBaseDto {
   @JsonProperty("id")
   private int id;
 }

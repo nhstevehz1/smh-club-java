@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @SortTarget(EmailEntity.class)
-public class EmailFullNameDto extends EmailDto {
+public class EmailFullNameDto extends EmailBaseDto {
 
   @JsonProperty("id")
   private int id;

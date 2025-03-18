@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @SortTarget(PhoneEntity.class)
-public class PhoneFullNameDto extends PhoneDto {
+public class PhoneFullNameDto extends PhoneBaseDto {
 
   @JsonProperty("id")
   @SortExclude

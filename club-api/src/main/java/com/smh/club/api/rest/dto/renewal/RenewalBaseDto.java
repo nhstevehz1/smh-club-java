@@ -5,20 +5,23 @@ import com.smh.club.api.rest.domain.annotations.SortExclude;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.Instant;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-/**
- * DTO for renewals.
- */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
+@NoArgsConstructor
 @SuperBuilder
-public class RenewalDto extends RenewalBaseDto {
-    @JsonProperty("id")
-    private int id;
+public abstract class RenewalBaseDto {
+  @SortExclude
+  @JsonProperty("member_id")
+  private int memberId;
+
+  @NotNull
+  @PastOrPresent
+  @JsonProperty("renewal_date")
+  private Instant renewalDate;
+
+  @JsonProperty("renewal_year")
+  private int renewalYear;
 }

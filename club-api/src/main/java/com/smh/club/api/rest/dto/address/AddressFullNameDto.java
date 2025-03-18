@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @SortTarget(AddressEntity.class)
-public class AddressFullNameDto extends AddressDto {
+public class AddressFullNameDto extends AddressBaseDto {
 
   @JsonProperty("id")
   @SortExclude

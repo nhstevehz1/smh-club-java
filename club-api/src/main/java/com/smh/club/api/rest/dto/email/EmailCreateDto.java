@@ -9,4 +9,4 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)/**/
 @AllArgsConstructor
 @SuperBuilder
-public class EmailCreateDto extends EmailDto {}
+public class EmailCreateDto extends EmailBaseDto {}
