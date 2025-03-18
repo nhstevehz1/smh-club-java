@@ -5,7 +5,12 @@ import static java.util.Comparator.comparingInt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.*;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.rest.dto.member.MemberCreateDto;
+import com.smh.club.api.rest.dto.member.MemberDto;
+import com.smh.club.api.rest.dto.member.MemberUpdateDto;
+import com.smh.club.api.rest.dto.phone.PhoneDto;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.time.Instant;
@@ -282,12 +287,11 @@ public class MemberIntegrationTests extends IntegrationTests {
         var create = Instancio.of(MemberCreateDto.class)
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
-            .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
             .ignore(field(PhoneDto::getMemberId))
-            .set(field(MemberDto::getJoinedDate), Instant.now())
-            .set(field(MemberDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
+            .set(field(MemberCreateDto::getJoinedDate), Instant.now())
+            .set(field(MemberCreateDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
             .create();
 
         // perform POST
@@ -305,12 +309,11 @@ public class MemberIntegrationTests extends IntegrationTests {
         // when table is empty, the member service will assign 1 to the member number
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
             .ignore(field(PhoneDto::getMemberId))
-            .set(field(MemberDto::getJoinedDate), Instant.now())
-            .set(field(MemberDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
+            .set(field(MemberCreateDto::getJoinedDate), Instant.now())
+            .set(field(MemberCreateDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
             .create();
 
         // perform POST
@@ -329,12 +332,11 @@ public class MemberIntegrationTests extends IntegrationTests {
         // when the available numbers has a gap ex: {1,2,3,5,6,...},
         // the member service will assign 4 to the member number
         var create = Instancio.of(MemberCreateDto.class)
-            .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
             .ignore(field(PhoneDto::getMemberId))
-            .set(field(MemberDto::getJoinedDate), Instant.now())
-            .set(field(MemberDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
+            .set(field(MemberCreateDto::getJoinedDate), Instant.now())
+            .set(field(MemberCreateDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
             .create();
 
         // perform POST
@@ -350,8 +352,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     // used with test that follows
     private static Stream<Arguments> nonNullableFields() {
         return Stream.of(
-            arguments(field(MemberDto::getFirstName)),
-            arguments(field(MemberDto::getLastName)));
+            arguments(field(MemberCreateDto::getFirstName)),
+            arguments(field(MemberCreateDto::getLastName)));
     }
 
     @ParameterizedTest
@@ -359,13 +361,12 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .ignore(field(MemberDto::getId))
             .setBlank(nonNullableField)
-            .generate(field(MemberDto::getBirthDate),
+            .generate(field(MemberCreateDto::getBirthDate),
                 g -> g.temporal().instant().range(
                     ZonedDateTime.now().minusYears(100).toInstant(),
                     ZonedDateTime.now().minusYears(21).toInstant()))
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+            .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -376,9 +377,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_with_null_birthDate_returns_bad_request() throws Exception {
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .ignore(field(MemberDto::getId))
-            .setBlank(field(MemberDto::getBirthDate))
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+            .setBlank(field(MemberCreateDto::getBirthDate))
+            .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -389,9 +389,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_with_null_joinedDate_returns_bad_request() throws Exception {
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .ignore(field(MemberDto::getId))
-            .setBlank(field(MemberDto::getJoinedDate))
-            .generate(field(MemberDto::getBirthDate),
+            .setBlank(field(MemberCreateDto::getJoinedDate))
+            .generate(field(MemberCreateDto::getBirthDate),
                 g -> g.temporal().instant().range(
                     ZonedDateTime.now().minusYears(100).toInstant(),
                     ZonedDateTime.now().minusYears(21).toInstant()))
@@ -405,8 +404,8 @@ public class MemberIntegrationTests extends IntegrationTests {
 
     private static Stream<Arguments> nullableFields() {
         return Stream.of(
-            arguments(field(MemberDto::getMiddleName)),
-            arguments(field(MemberDto::getSuffix)));
+            arguments(field(MemberCreateDto::getMiddleName)),
+            arguments(field(MemberCreateDto::getSuffix)));
     }
 
     @ParameterizedTest
@@ -417,11 +416,10 @@ public class MemberIntegrationTests extends IntegrationTests {
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
             .setBlank(nullableField)
-            .ignore(field(MemberDto::getId))
             .ignore(field(AddressDto::getMemberId))
             .ignore(field(EmailDto::getMemberId))
             .ignore(field(PhoneDto::getMemberId))
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+            .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -438,9 +436,8 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_with_invalid_memberNumber_returns_bad_request() throws Exception {
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .set(field(MemberDto::getMemberNumber), 0)
-            .set(field(MemberDto::getJoinedDate), Instant.now())
-            .ignore(field(MemberDto::getId))
+            .set(field(MemberCreateDto::getMemberNumber), 0)
+            .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -451,8 +448,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     public void create_with_invalid_birthDate_returns_bad_request() throws Exception {
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .set(field(MemberDto::getBirthDate), Instant.now())
-            .ignore(field(MemberDto::getId))
+            .set(field(MemberCreateDto::getBirthDate), Instant.now())
             .create();
 
         // perform POST
@@ -465,9 +461,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         var joinedDate = ZonedDateTime.now().minusYears(10).toInstant();
         var birthDate = ZonedDateTime.now().minusYears(22).toInstant();
         var create = Instancio.of(MemberCreateDto.class)
-            .set(field(MemberDto::getJoinedDate), joinedDate)
-            .set(field(MemberDto::getBirthDate), birthDate)
-            .ignore(field(MemberDto::getId))
+            .set(field(MemberCreateDto::getJoinedDate), joinedDate)
+            .set(field(MemberCreateDto::getBirthDate), birthDate)
             .create();
 
         // perform POST
@@ -479,9 +474,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getId), id)
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+        var update = Instancio.of(MemberUpdateDto.class)
+            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
 
             .create();
 
@@ -492,14 +486,13 @@ public class MemberIntegrationTests extends IntegrationTests {
         var member = repo.findById(id);
 
         assertTrue(member.isPresent());
-        assertEquals(update, actual);
         verify(update, member.get());
     }
 
     @Test
     public void update_returns_status_badRequest() throws Exception {
         // Setup
-        var update = Instancio.create(MemberDto.class);
+        var update = Instancio.create(MemberUpdateDto.class);
 
         // perform put
         given()
@@ -521,10 +514,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getId), id)
+        var update = Instancio.of(MemberUpdateDto.class)
+            .set(field(MemberUpdateDto::getId), id)
             .setBlank(nonNullableField)
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -536,10 +529,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getId), id)
-            .setBlank(field(MemberDto::getBirthDate))
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+        var update = Instancio.of(MemberUpdateDto.class)
+            .set(field(MemberUpdateDto::getId), id)
+            .setBlank(field(MemberUpdateDto::getBirthDate))
+            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -551,10 +544,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getId), id)
-            .setBlank(field(MemberDto::getJoinedDate))
-            .generate(field(MemberDto::getBirthDate),
+        var update = Instancio.of(MemberUpdateDto.class)
+            .set(field(MemberUpdateDto::getId), id)
+            .setBlank(field(MemberUpdateDto::getJoinedDate))
+            .generate(field(MemberUpdateDto::getBirthDate),
                 g -> g.temporal().instant().range(
                     ZonedDateTime.now().minusYears(100).toInstant(),
                     ZonedDateTime.now().minusYears(21).toInstant()))
@@ -570,10 +563,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getId), id)
+        var update = Instancio.of(MemberUpdateDto.class)
+            .set(field(MemberUpdateDto::getId), id)
             .setBlank(nullableField)
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform put
@@ -583,7 +576,6 @@ public class MemberIntegrationTests extends IntegrationTests {
         var member = repo.findById(id);
 
         assertTrue(member.isPresent());
-        assertEquals(update, actual);
         verify(update, member.get());
     }
 
@@ -592,10 +584,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getId), id)
-            .set(field(MemberDto::getBirthDate), ZonedDateTime.now().minusYears(10).toInstant())
-            .set(field(MemberDto::getJoinedDate), Instant.now())
+        var update = Instancio.of(MemberUpdateDto.class)
+            .set(field(MemberUpdateDto::getId), id)
+            .set(field(MemberUpdateDto::getBirthDate), ZonedDateTime.now().minusYears(10).toInstant())
+            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform put
@@ -607,10 +599,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberDto.class)
-            .set(field(MemberDto::getId), id)
-            .set(field(MemberDto::getBirthDate), entity.getBirthDate())
-            .set(field(MemberDto::getJoinedDate),
+        var update = Instancio.of(MemberUpdateDto.class)
+            .set(field(MemberUpdateDto::getId), id)
+            .set(field(MemberUpdateDto::getBirthDate), entity.getBirthDate())
+            .set(field(MemberUpdateDto::getJoinedDate),
                 entity.getBirthDate().atZone(ZoneId.systemDefault()).minusYears(1).toInstant())
             .create();
 
@@ -665,7 +657,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(MemberDto expected, MemberEntity actual) {
+    private void verify(MemberUpdateDto expected, MemberEntity actual) {
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getMiddleName(), actual.getMiddleName());
         assertEquals(expected.getLastName(), actual.getLastName());
