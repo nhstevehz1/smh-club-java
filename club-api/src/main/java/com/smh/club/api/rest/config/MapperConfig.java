@@ -2,6 +2,7 @@ package com.smh.club.api.rest.config;
 
 import com.smh.club.api.rest.domain.entities.*;
 import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
 import com.smh.club.api.rest.dto.address.AddressFullNameDto;
 import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import com.smh.club.api.rest.dto.email.EmailCreateDto;
@@ -77,6 +78,12 @@ public class MapperConfig {
           m.skip(AddressEntity::setMember);
        });
 
+       TypeMap<AddressEntity, AddressDto> dtoMap
+           = modelMapper.createTypeMap(AddressEntity.class, AddressDto.class);
+       dtoMap.addMappings(m -> {
+          m.map(src -> src.getMember().getId(), AddressDto::setMemberId);
+       });
+
         addressMemberSettings(modelMapper);
 
        modelMapper.validate();
@@ -88,6 +95,7 @@ public class MapperConfig {
             = modelMapper.createTypeMap(AddressEntity.class, AddressFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
+            m.map(src -> src.getMember().getId(), AddressFullNameDto::setMemberId);
             m.map(src -> src.getMember().getMemberNumber(), AddressFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
@@ -129,6 +137,7 @@ public class MapperConfig {
             = modelMapper.createTypeMap(EmailEntity.class, EmailFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
+            m.map(src -> src.getMember().getId(), EmailFullNameDto::setMemberId);
             m.map(src -> src.getMember().getMemberNumber(), EmailFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
@@ -169,6 +178,7 @@ public class MapperConfig {
             = modelMapper.createTypeMap(PhoneEntity.class, PhoneFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
+            m.map(src -> src.getMember().getId(), PhoneFullNameDto::setMemberId);
             m.map(src -> src.getMember().getMemberNumber(), PhoneFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
@@ -210,6 +220,7 @@ public class MapperConfig {
             = modelMapper.createTypeMap(RenewalEntity.class, RenewalFullNameDto.class);
 
         dtoTypeMap.addMappings(m -> {
+            m.map(src -> src.getMember().getId(), RenewalFullNameDto::setMemberId);
             m.map(src -> src.getMember().getMemberNumber(), RenewalFullNameDto::setMemberNumber);
             m.map(src -> src.getMember().getFirstName(),
                 (dest, v) -> dest.getFullName().setFirstName(String.valueOf(v)));
