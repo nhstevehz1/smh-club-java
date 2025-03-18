@@ -2,7 +2,9 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
-import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
+import com.smh.club.api.rest.dto.renewal.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalUpdateDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -33,7 +35,7 @@ public class RenewalMapperTests {
     @Test
     public void from_createDto_to_entity() {
         // setup
-        var create = Instancio.of(RenewalDto.class)
+        var create = Instancio.of(RenewalCreateDto.class)
                 .ignore(field(RenewalDto::getId))
                 .create();
 
@@ -87,9 +89,9 @@ public class RenewalMapperTests {
     }
 
     @Test
-    public void update_entity_from_createDto() {
+    public void update_entity_from_updateDto() {
         // setup
-        var update = Instancio.create(RenewalDto.class);
+        var update = Instancio.create(RenewalUpdateDto.class);
         var entity = Instancio.create(RenewalEntity.class);
 
         // execute
