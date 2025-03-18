@@ -32,7 +32,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<MemberMinDto> getPage(Pageable pageable) {
+    public PagedDto<MemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -50,7 +50,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public Optional<MemberDto> getMember(int id) {
+    public Optional<MemberBaseDto> getMember(int id) {
         log.debug("Getting member by id: {}", id);
 
         return membersRepo.findById(id).map(memberMapper::toDto);
@@ -60,7 +60,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public MemberDto createMember(MemberCreateDto member) {
+    public MemberBaseDto createMember(MemberCreateDto member) {
         log.info("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);
@@ -77,7 +77,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public Optional<MemberDto> updateMember(int id, MemberUpdateDto member) {
+    public Optional<MemberBaseDto> updateMember(int id, MemberUpdateDto member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)
@@ -126,7 +126,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), MemberDto.class, MemberEntity.class)
+                    getSort(o.getProperty(), MemberBaseDto.class, MemberEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

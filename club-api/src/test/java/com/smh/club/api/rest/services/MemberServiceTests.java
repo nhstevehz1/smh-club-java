@@ -3,9 +3,10 @@ package com.smh.club.api.rest.services;
 import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.MemberCreateDto;
-import com.smh.club.api.rest.dto.MemberDetailDto;
-import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.dto.member.MemberCreateDto;
+import com.smh.club.api.rest.dto.member.MemberDetailDto;
+import com.smh.club.api.rest.dto.member.MemberDto;
+import com.smh.club.api.rest.dto.member.MemberUpdateDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -257,7 +258,7 @@ public class MemberServiceTests extends ServiceTests {
     public void updateMember_returns_member() {
         // setup
         int id = 1;
-        var update = Instancio.create(MemberDto.class);
+        var update = Instancio.create(MemberUpdateDto.class);
         var member = Instancio.create(MemberDto.class);
         var entity = Instancio.create(MemberEntity.class);
 

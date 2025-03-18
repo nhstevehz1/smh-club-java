@@ -5,8 +5,10 @@ import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.AddressRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.AddressDto;
-import com.smh.club.api.rest.dto.AddressMemberDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.address.AddressDto;
+import com.smh.club.api.rest.dto.address.AddressFullNameDto;
+import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import java.util.Optional;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -69,7 +71,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressMemberDto.class)
+        var list = Instancio.ofList(AddressFullNameDto.class)
             .size(20)
             .create();
 
@@ -139,7 +141,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressMemberDto.class)
+        var list = Instancio.ofList(AddressFullNameDto.class)
             .size(20)
             .create();
 
@@ -179,7 +181,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressMemberDto.class)
+        var list = Instancio.ofList(AddressFullNameDto.class)
             .size(pageSize)
             .create();
 
@@ -240,9 +242,10 @@ public class AddressServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(AddressDto.class)
-                .set(field(AddressDto::getMemberId), member.getId())
+        var create = Instancio.of(AddressCreateDto.class)
+                .set(field(AddressCreateDto::getMemberId), member.getId())
                 .create();
+
         var address = Instancio.of(AddressDto.class)
                 .set(field(AddressDto::getMemberId), member.getId())
                 .create();
@@ -273,9 +276,11 @@ public class AddressServiceTests extends ServiceTests {
         // setup
         int id = 1;
         var entity = Instancio.create(AddressEntity.class);
-        var update = Instancio.of(AddressDto.class)
-                .set(field(AddressDto::getMemberId), id)
+
+        var update = Instancio.of(AddressUpdateDto.class)
+                .set(field(AddressUpdateDto::getMemberId), id)
                 .create();
+
         var address = Instancio.create(AddressDto.class);
 
         when(addRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
