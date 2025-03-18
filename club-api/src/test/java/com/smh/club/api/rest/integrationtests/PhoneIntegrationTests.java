@@ -327,9 +327,9 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(PhoneDto.class)
-            .set(field(PhoneDto::getId), id)
-            .set(field(PhoneDto::getMemberId), memberId)
+        var update = Instancio.of(PhoneUpdateDto.class)
+            .set(field(PhoneUpdateDto::getId), id)
+            .set(field(PhoneUpdateDto::getMemberId), memberId)
             .create();
 
         // perform PUT
