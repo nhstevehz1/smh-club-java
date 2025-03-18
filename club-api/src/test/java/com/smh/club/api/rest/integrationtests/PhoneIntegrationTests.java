@@ -7,8 +7,7 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.PhoneRepo;
-import com.smh.club.api.rest.dto.phone.PhoneDto;
-import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.rest.dto.phone.*;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
@@ -271,19 +270,19 @@ public class PhoneIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(PhoneDto.class)
-            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(PhoneDto::getId))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .create();
 
         // perform POST
-        var ret = sendValidCreate(create, PhoneDto.class);
+        var actual = sendValidCreate(create, PhoneDto.class);
 
         // verify
-        var entity =  repo.findById(ret.getId());
+        var entity =  repo.findById(actual.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
+        verify(actual, entity.get());
     }
 
     // used with test that follows
@@ -298,9 +297,8 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(PhoneDto.class)
-            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(PhoneDto::getId))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .setBlank(nonNullableField)
             .create();
 
@@ -313,10 +311,9 @@ public class PhoneIntegrationTests extends IntegrationTests {
     public void create_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(PhoneDto.class)
-            .generate(field(PhoneDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(PhoneDto::getId))
-            .generate(field(PhoneDto::getPhoneNumber), g -> g.text().pattern(pattern))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+            .generate(field(PhoneCreateDto::getPhoneNumber), g -> g.text().pattern(pattern))
             .create();
 
         // perform POST
@@ -343,6 +340,7 @@ public class PhoneIntegrationTests extends IntegrationTests {
 
         assertTrue(phone.isPresent());
         verify(update, phone.get());
+        verify(actual, phone.get());
     }
 
     @Test
@@ -448,8 +446,23 @@ public class PhoneIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
+    private void verify(PhoneCreateDto expected, PhoneEntity actual) {
+        verify((PhoneBaseDto)expected, actual);
+    }
+
+    private void verify(PhoneUpdateDto expected, PhoneEntity actual) {
+        assertEquals(expected.getId(), actual.getId());
+        verify((PhoneBaseDto)expected, actual);
+    }
+
     private void verify(PhoneDto expected, PhoneEntity actual) {
+        assertEquals(expected.getId(), actual.getId());
+        verify((PhoneBaseDto)expected, actual);
+    }
+
+    private void verify(PhoneBaseDto expected, PhoneEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
+        assertEquals(expected.getCountryCode(), actual.getCountryCode());
         assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(expected.getPhoneType(), actual.getPhoneType());
     }
