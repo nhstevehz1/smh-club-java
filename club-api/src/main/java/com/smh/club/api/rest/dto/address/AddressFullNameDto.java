@@ -6,7 +6,9 @@ import com.smh.club.api.rest.domain.annotations.SortExclude;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -26,7 +28,7 @@ public class AddressFullNameDto extends AddressDto {
   private int id;
 
   @SortAlias("member.memberNumber")
-  private int memberNumber;;
+  private int memberNumber;
 
   @SortAlias("member.lastName")
   @JsonProperty("full_name")

@@ -66,9 +66,6 @@ public class MapperConfig {
           m.skip(AddressEntity::setMember);
        });
 
-        TypeMap<AddressEntity, AddressFullNameDto> dtoTypeMap
-            = modelMapper.createTypeMap(AddressEntity.class, AddressFullNameDto.class);
-
         addressMemberSettings(modelMapper);
 
        modelMapper.validate();
