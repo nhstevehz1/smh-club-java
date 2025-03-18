@@ -12,18 +12,18 @@ public interface MemberMapper {
 
     /**
      * Maps a {@link MemberCreateDto} to a {@link MemberEntity}.
-     * @param dto The {@link MemberDto} to map.
+     * @param dto The {@link MemberBaseDto} to map.
      * @return The resulting {@link MemberEntity}.
      */
     MemberEntity toEntity(MemberCreateDto dto);
 
     /**
-     * Maps a {@link MemberEntity} to a {@link MemberDto}
+     * Maps a {@link MemberEntity} to a {@link MemberBaseDto}
      *
      * @param entity {@link MemberEntity} to map.
-     * @return The resulting {@link MemberMinDto}.
+     * @return The resulting {@link MemberDto}.
      */
-    MemberMinDto toDto(MemberEntity entity);
+    MemberDto toDto(MemberEntity entity);
 
     /**
      * Updates a member object
@@ -35,20 +35,20 @@ public interface MemberMapper {
     MemberEntity updateEntity(MemberUpdateDto dto, MemberEntity entity);
 
     /**
-     * Maps a list of {@link MemberEntity} to a list of {@link MemberDto}.
+     * Maps a list of {@link MemberEntity} to a list of {@link MemberBaseDto}.
      *
      * @param entityList the {@link List} of {@link MemberEntity} to map.
-     * @return A list of {@link MemberDto}.
+     * @return A list of {@link MemberBaseDto}.
      */
-    List<MemberMinDto> toDtoList(List<MemberEntity> entityList);
+    List<MemberDto> toDtoList(List<MemberEntity> entityList);
 
     /**
      * Maps a page of address entities to a page of DTOs.
      *
      * @param page The {@link Page} of {@link MemberEntity} to map.
-     * @return A page of {@link MemberMinDto}
+     * @return A page of {@link MemberDto}
      */
-    Page<MemberMinDto> toPage(Page<MemberEntity> page);
+    Page<MemberDto> toPage(Page<MemberEntity> page);
 
     MemberDetailDto toMemberDetailDto(MemberEntity entity);
 }

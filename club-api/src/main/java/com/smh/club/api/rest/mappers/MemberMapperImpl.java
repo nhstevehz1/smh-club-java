@@ -7,7 +7,7 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.member.MemberCreateDto;
 import com.smh.club.api.rest.dto.member.MemberDetailDto;
-import com.smh.club.api.rest.dto.member.MemberMinDto;
+import com.smh.club.api.rest.dto.member.MemberDto;
 import com.smh.club.api.rest.dto.member.MemberUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
@@ -44,8 +44,8 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
      * {@inheritDoc}
      */
     @Override
-    public MemberMinDto toDto(MemberEntity entity) {
-        return modelMapper.map(entity, MemberMinDto.class);
+    public MemberDto toDto(MemberEntity entity) {
+        return modelMapper.map(entity, MemberDto.class);
     }
 
     /**
@@ -61,15 +61,15 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
      * {@inheritDoc}
      */
     @Override
-    public List<MemberMinDto> toDtoList(List<MemberEntity> entityList) {
-        return mapList(entityList, MemberMinDto.class);
+    public List<MemberDto> toDtoList(List<MemberEntity> entityList) {
+        return mapList(entityList, MemberDto.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Page<MemberMinDto> toPage(Page<MemberEntity> page) {
+    public Page<MemberDto> toPage(Page<MemberEntity> page) {
         return page.map(this::toDto);
     }
 

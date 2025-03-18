@@ -2,7 +2,7 @@ package com.smh.club.api.rest.validation;
 
 import static java.time.temporal.ChronoUnit.YEARS;
 
-import com.smh.club.api.rest.dto.MemberDto;
+import com.smh.club.api.rest.dto.member.MemberBaseDto;
 import com.smh.club.api.rest.validation.constraints.BirthDate;
 import com.smh.club.api.rest.validation.constraints.ValidMember;
 import jakarta.validation.ConstraintValidator;
@@ -12,7 +12,7 @@ import java.time.ZoneId;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MemberValidator implements ConstraintValidator<ValidMember, MemberDto> {
+public class MemberValidator implements ConstraintValidator<ValidMember, MemberBaseDto> {
 
 
   @Override
@@ -22,7 +22,7 @@ public class MemberValidator implements ConstraintValidator<ValidMember, MemberD
   }
 
   @Override
-  public boolean isValid(MemberDto memberDto, ConstraintValidatorContext constraintValidatorContext) {
+  public boolean isValid(MemberBaseDto memberDto, ConstraintValidatorContext constraintValidatorContext) {
 
     try {
       var field = memberDto.getClass().getDeclaredField("birthDate");

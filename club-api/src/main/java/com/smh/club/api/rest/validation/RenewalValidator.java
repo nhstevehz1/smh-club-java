@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.validation;
 
-import com.smh.club.api.rest.dto.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalDto;
 import com.smh.club.api.rest.validation.constraints.ValidRenewal;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

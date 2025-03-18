@@ -13,17 +13,17 @@ public interface MemberService {
     /**
      * Retrieves a page of members from the database.
      *
-     * @param pageable@return A {@link PagedDto} of type {@link MemberMinDto}.
+     * @param pageable@return A {@link PagedDto} of type {@link MemberDto}.
      */
-    PagedDto<MemberMinDto> getPage(Pageable pageable);
+    PagedDto<MemberDto> getPage(Pageable pageable);
 
     /**
      * Retrieves a member from the database.
      *
      * @param id The id of the member
-     * @return An {@link MemberDto} type {@link Optional}
+     * @return An {@link MemberBaseDto} type {@link Optional}
      */
-    Optional<MemberDto> getMember(int id);
+    Optional<MemberBaseDto> getMember(int id);
 
     /**
      * Creates a member and stores it in the database.
@@ -31,16 +31,16 @@ public interface MemberService {
      * @param member The {@link MemberCreateDto} used to create the member.
      * @return The newly created member.
      */
-    MemberDto createMember(MemberCreateDto member);
+    MemberBaseDto createMember(MemberCreateDto member);
 
     /**
      * Updates a member in the database.
      *
      * @param id The id of the member to update.
      * @param member The {@link MemberUpdateDto} containing the updates.
-     * @return The updated {@link MemberDto}.
+     * @return The updated {@link MemberBaseDto}.
      */
-    Optional<MemberDto> updateMember(int id, MemberUpdateDto member);
+    Optional<MemberBaseDto> updateMember(int id, MemberUpdateDto member);
 
     /**
      * Deletes a member from the database.

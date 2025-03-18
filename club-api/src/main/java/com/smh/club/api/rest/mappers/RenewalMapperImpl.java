@@ -2,8 +2,10 @@ package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
-import com.smh.club.api.rest.dto.RenewalDto;
-import com.smh.club.api.rest.dto.RenewalMemberDto;
+import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
+import com.smh.club.api.rest.dto.renewal.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalFullNameDto;
+import com.smh.club.api.rest.dto.renewal.RenewalUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -27,7 +29,7 @@ public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper
      * {@inheritDoc}
      */
     @Override
-    public RenewalEntity toEntity(RenewalDto dto) {
+    public RenewalEntity toEntity(RenewalCreateDto dto) {
         return modelMapper.map(dto, RenewalEntity.class);
     }
 
@@ -43,15 +45,15 @@ public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper
      * {@inheritDoc}
      */
     @Override
-    public RenewalMemberDto toRenewalMemberDto(RenewalEntity entity) {
-        return modelMapper.map(entity, RenewalMemberDto.class);
+    public RenewalFullNameDto toRenewalMemberDto(RenewalEntity entity) {
+        return modelMapper.map(entity, RenewalFullNameDto.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public RenewalEntity updateEntity(RenewalDto dto, RenewalEntity entity) {
+    public RenewalEntity updateEntity(RenewalUpdateDto dto, RenewalEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }
@@ -68,7 +70,7 @@ public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper
      * {@inheritDoc}
      */
     @Override
-    public Page<RenewalMemberDto> toPage(Page<RenewalEntity> page) {
+    public Page<RenewalFullNameDto> toPage(Page<RenewalEntity> page) {
         return page.map(this::toRenewalMemberDto);
     }
 }

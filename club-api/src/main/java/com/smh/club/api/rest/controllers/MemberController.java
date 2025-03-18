@@ -37,13 +37,13 @@ public class MemberController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberMinDto}.
+     * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping
-    public ResponseEntity<PagedDto<MemberMinDto>> page(
+    public ResponseEntity<PagedDto<MemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(MemberDto.class)
+        @SortConstraint(MemberBaseDto.class)
         Pageable pageable) {
 
         var page = memberSvc.getPage(pageable);
@@ -55,11 +55,11 @@ public class MemberController {
      * Endpoint for retrieving a single member from the database.
      *
      * @param id The id of the member.
-     * @return @return A {@link ResponseEntity} containing a {@link MemberDto}
+     * @return @return A {@link ResponseEntity} containing a {@link MemberBaseDto}
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("{id}")
-    public ResponseEntity<MemberDto> get(@PathVariable int id) {
+    public ResponseEntity<MemberBaseDto> get(@PathVariable int id) {
         var ret = memberSvc.getMember(id);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -79,11 +79,11 @@ public class MemberController {
      * Endpoint for creating a member.
      *
      * @param member The {@link MemberCreateDto} used to create the object in the database
-     * @return A {@link ResponseEntity} containing a {@link MemberDto} representing the newly created object.
+     * @return A {@link ResponseEntity} containing a {@link MemberBaseDto} representing the newly created object.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MemberDto> create(
+    public ResponseEntity<MemberBaseDto> create(
         @NotNull @Valid @RequestBody MemberCreateDto member) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSvc.createMember(member));
     }
@@ -93,11 +93,11 @@ public class MemberController {
      *
      * @param id The id of the member to update in the database.
      * @param member The {@link MemberUpdateDto} that contains the updated info.
-     * @return A {@link ResponseEntity} containing a {@link MemberDto} that represents the updated member.
+     * @return A {@link ResponseEntity} containing a {@link MemberBaseDto} that represents the updated member.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MemberDto> update(
+    public ResponseEntity<MemberBaseDto> update(
         @PathVariable int id,
         @NotNull @Valid @RequestBody MemberUpdateDto member) {
 

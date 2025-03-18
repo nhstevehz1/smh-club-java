@@ -8,6 +8,7 @@ import com.smh.club.api.rest.dto.email.EmailCreateDto;
 import com.smh.club.api.rest.dto.email.EmailFullNameDto;
 import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import com.smh.club.api.rest.dto.member.MemberCreateDto;
+import com.smh.club.api.rest.dto.member.MemberUpdateDto;
 import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
 import com.smh.club.api.rest.dto.phone.PhoneDto;
 import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
@@ -38,9 +39,19 @@ public class MapperConfig {
     }
 
     private void memberSettings(ModelMapper modelMapper) {
-        TypeMap<MemberCreateDto, MemberEntity> entityTypeMap
+        TypeMap<MemberCreateDto, MemberEntity> createMap
                 = modelMapper.createTypeMap(MemberCreateDto.class, MemberEntity.class);
-        entityTypeMap.addMappings(m -> {
+        createMap.addMappings(m -> {
+            m.skip(MemberEntity::setId);
+            m.skip(MemberEntity::setAddresses);
+            m.skip(MemberEntity::setEmails);
+            m.skip(MemberEntity::setPhones);
+            m.skip(MemberEntity::setRenewals);
+        });
+
+        TypeMap<MemberUpdateDto, MemberEntity> updateMap
+            = modelMapper.createTypeMap(MemberUpdateDto.class, MemberEntity.class);
+        updateMap.addMappings(m -> {
             m.skip(MemberEntity::setId);
             m.skip(MemberEntity::setAddresses);
             m.skip(MemberEntity::setEmails);
