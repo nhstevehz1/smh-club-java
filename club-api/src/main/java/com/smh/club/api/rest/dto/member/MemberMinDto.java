@@ -7,7 +7,6 @@ import com.smh.club.api.rest.domain.entities.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
@@ -16,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @SortTarget(MemberEntity.class)
 public class MemberMinDto extends MemberDto {
+
   @JsonProperty("id")
   @SortExclude
   private int id;

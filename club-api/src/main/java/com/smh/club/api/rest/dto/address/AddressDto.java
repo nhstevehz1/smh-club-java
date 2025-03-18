@@ -2,13 +2,10 @@ package com.smh.club.api.rest.dto.address;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.rest.domain.annotations.SortExclude;
-import com.smh.club.api.rest.domain.annotations.SortTarget;
-import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.entities.AddressType;
 import com.smh.club.api.rest.validation.constraints.PostalCode;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
