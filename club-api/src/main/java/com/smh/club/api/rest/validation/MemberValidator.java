@@ -25,7 +25,7 @@ public class MemberValidator implements ConstraintValidator<ValidMember, MemberB
   public boolean isValid(MemberBaseDto memberDto, ConstraintValidatorContext constraintValidatorContext) {
 
     try {
-      var field = memberDto.getClass().getDeclaredField("birthDate");
+      var field = memberDto.getClass().getSuperclass().getDeclaredField("birthDate");
       var anno = field.getAnnotationsByType(BirthDate.class);
       var minAge = anno[0].minAge();
       log.debug("Min age value set in BirthDate constraint is: {}", minAge );

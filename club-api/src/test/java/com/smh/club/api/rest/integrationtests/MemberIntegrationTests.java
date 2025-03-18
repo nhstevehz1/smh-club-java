@@ -5,12 +5,13 @@ import static java.util.Comparator.comparingInt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.address.AddressDto;
-import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.rest.dto.address.AddressCreateDto;
+import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.rest.dto.member.MemberBaseDto;
 import com.smh.club.api.rest.dto.member.MemberCreateDto;
 import com.smh.club.api.rest.dto.member.MemberDto;
 import com.smh.club.api.rest.dto.member.MemberUpdateDto;
-import com.smh.club.api.rest.dto.phone.PhoneDto;
+import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.time.Instant;
@@ -287,21 +288,22 @@ public class MemberIntegrationTests extends IntegrationTests {
         var create = Instancio.of(MemberCreateDto.class)
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
-            .ignore(field(AddressDto::getMemberId))
-            .ignore(field(EmailDto::getMemberId))
-            .ignore(field(PhoneDto::getMemberId))
+            .ignore(field(AddressCreateDto::getMemberId))
+            .ignore(field(EmailCreateDto::getMemberId))
+            .ignore(field(PhoneCreateDto::getMemberId))
             .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .set(field(MemberCreateDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
             .create();
 
         // perform POST
-        var ret = sendValidCreate(create, MemberDto.class);
+        var actual = sendValidCreate(create, MemberDto.class);
 
         // verify
-        var entity =  repo.findById(ret.getId());
+        var entity =  repo.findById(actual.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
+        verify(actual, entity.get());
     }
 
     @Test
@@ -309,9 +311,9 @@ public class MemberIntegrationTests extends IntegrationTests {
         // when table is empty, the member service will assign 1 to the member number
         // setup
         var create = Instancio.of(MemberCreateDto.class)
-            .ignore(field(AddressDto::getMemberId))
-            .ignore(field(EmailDto::getMemberId))
-            .ignore(field(PhoneDto::getMemberId))
+            .ignore(field(AddressCreateDto::getMemberId))
+            .ignore(field(EmailCreateDto::getMemberId))
+            .ignore(field(PhoneCreateDto::getMemberId))
             .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .set(field(MemberCreateDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
             .create();
@@ -332,9 +334,9 @@ public class MemberIntegrationTests extends IntegrationTests {
         // when the available numbers has a gap ex: {1,2,3,5,6,...},
         // the member service will assign 4 to the member number
         var create = Instancio.of(MemberCreateDto.class)
-            .ignore(field(AddressDto::getMemberId))
-            .ignore(field(EmailDto::getMemberId))
-            .ignore(field(PhoneDto::getMemberId))
+            .ignore(field(AddressCreateDto::getMemberId))
+            .ignore(field(EmailCreateDto::getMemberId))
+            .ignore(field(PhoneCreateDto::getMemberId))
             .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .set(field(MemberCreateDto::getBirthDate), ZonedDateTime.now().minusYears(22).toInstant())
             .create();
@@ -416,20 +418,21 @@ public class MemberIntegrationTests extends IntegrationTests {
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .withSetting(Keys.COLLECTION_MIN_SIZE, 1)
             .setBlank(nullableField)
-            .ignore(field(AddressDto::getMemberId))
-            .ignore(field(EmailDto::getMemberId))
-            .ignore(field(PhoneDto::getMemberId))
+            .ignore(field(AddressCreateDto::getMemberId))
+            .ignore(field(EmailCreateDto::getMemberId))
+            .ignore(field(PhoneCreateDto::getMemberId))
             .set(field(MemberCreateDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
-        var ret = sendValidCreate(create, MemberDto.class);
+        var actual = sendValidCreate(create, MemberDto.class);
 
         // verify
-        var entity =  repo.findById(ret.getId());
+        var entity =  repo.findById(actual.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
+        verify(actual, entity.get());
     }
 
     @Test
@@ -476,7 +479,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var update = Instancio.of(MemberUpdateDto.class)
             .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
-
+            .set(field(MemberUpdateDto::getId), id)
             .create();
 
         // perform put
@@ -486,8 +489,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         var member = repo.findById(id);
 
         assertTrue(member.isPresent());
-        verify(update, actual);
         verify(update, member.get());
+        verify(actual, member.get());
     }
 
     @Test
@@ -577,8 +580,8 @@ public class MemberIntegrationTests extends IntegrationTests {
         var member = repo.findById(id);
 
         assertTrue(member.isPresent());
-        verify(update, actual);
         verify(update, member.get());
+        verify(actual, member.get());
     }
 
     @Test
@@ -659,31 +662,18 @@ public class MemberIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(MemberUpdateDto expected, MemberDto actual) {
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getMiddleName(), actual.getMiddleName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getSuffix(), actual.getSuffix());
-        assertEquals(expected.getBirthDate(), actual.getBirthDate());
-        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
+    private void verify(MemberDto expected, MemberEntity actual) {
+        assertEquals(expected.getId(), actual.getId());
+        verify((MemberBaseDto) expected, actual);
     }
 
     private void verify(MemberUpdateDto expected, MemberEntity actual) {
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getMiddleName(), actual.getMiddleName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getSuffix(), actual.getSuffix());
-        assertEquals(expected.getBirthDate(), actual.getBirthDate());
-        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
+        assertEquals(expected.getId(), actual.getId());
+        verify((MemberBaseDto) expected, actual);
     }
 
     private void verify(MemberCreateDto expected, MemberEntity actual) {
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getMiddleName(), actual.getMiddleName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getSuffix(), actual.getSuffix());
-        assertEquals(expected.getBirthDate(), actual.getBirthDate());
-        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
+        verify((MemberBaseDto) expected, actual);
 
         assertEquals(expected.getAddresses().size(), actual.getAddresses().size());
         var actAddress = actual.getAddresses().getFirst();
@@ -708,6 +698,15 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(expPhone.getPhoneType(), actPhone.getPhoneType());
 
         assertTrue(actual.getRenewals().isEmpty());
+    }
+
+    private void verify(MemberBaseDto expected, MemberEntity actual) {
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getMiddleName(), actual.getMiddleName());
+        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getSuffix(), actual.getSuffix());
+        assertEquals(expected.getBirthDate(), actual.getBirthDate());
+        assertEquals(expected.getJoinedDate(), actual.getJoinedDate());
     }
 
     private void verify(MemberEntity expected, MemberDto actual) {

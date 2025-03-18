@@ -4,7 +4,10 @@ import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.contracts.services.MemberService;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.member.*;
+import com.smh.club.api.rest.dto.member.MemberCreateDto;
+import com.smh.club.api.rest.dto.member.MemberDetailDto;
+import com.smh.club.api.rest.dto.member.MemberDto;
+import com.smh.club.api.rest.dto.member.MemberUpdateDto;
 import com.smh.club.api.rest.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +53,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public Optional<MemberBaseDto> getMember(int id) {
+    public Optional<MemberDto> getMember(int id) {
         log.debug("Getting member by id: {}", id);
 
         return membersRepo.findById(id).map(memberMapper::toDto);
@@ -60,7 +63,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public MemberBaseDto createMember(MemberCreateDto member) {
+    public MemberDto createMember(MemberCreateDto member) {
         log.info("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);
@@ -77,7 +80,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public Optional<MemberBaseDto> updateMember(int id, MemberUpdateDto member) {
+    public Optional<MemberDto> updateMember(int id, MemberUpdateDto member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)
