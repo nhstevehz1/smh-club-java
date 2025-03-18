@@ -7,8 +7,7 @@ import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.EmailRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.dto.email.EmailDto;
-import com.smh.club.api.rest.dto.email.EmailFullNameDto;
+import com.smh.club.api.rest.dto.email.*;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
@@ -270,19 +269,19 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailDto.class)
-            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore((field(EmailDto::getId)))
+        var create = Instancio.of(EmailCreateDto.class)
+            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .create();
 
         // perform POST
-        var ret = sendValidCreate(create, EmailDto.class);
+        var actual = sendValidCreate(create, EmailDto.class);
 
         // verify
-        var entity =  repo.findById(ret.getId());
+        var entity =  repo.findById(actual.getId());
 
         assertTrue(entity.isPresent());
         verify(create, entity.get());
+        verify(actual, entity.get());
     }
 
     // used with test that follows
@@ -297,9 +296,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailDto.class)
-            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(EmailDto::getId))
+        var create = Instancio.of(EmailCreateDto.class)
+            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .setBlank(nonNullableField)
             .create();
 
@@ -311,9 +309,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void create_with_invalid_email_returns_bad_request() throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailDto.class)
-            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
-            .ignore(field(EmailDto::getId))
+        var create = Instancio.of(EmailCreateDto.class)
+            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .set(field(EmailDto::getEmail), "X")
             .create();
 
@@ -328,9 +325,9 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailDto.class)
-            .set(field(EmailDto::getId), id)
-            .set(field(EmailDto::getMemberId), memberId)
+        var update = Instancio.of(EmailUpdateDto.class)
+            .set(field(EmailUpdateDto::getId), id)
+            .set(field(EmailUpdateDto::getMemberId), memberId)
             .create();
 
         // perform PUT
@@ -341,12 +338,13 @@ public class EmailIntegrationTests extends IntegrationTests {
 
         assertTrue(email.isPresent());
         verify(update, email.get());
+        verify(actual, email.get());
     }
 
     @Test
     public void update_returns_status_bad_request() throws Exception {
         // Setup
-        var update = Instancio.create(EmailDto.class);
+        var update = Instancio.create(EmailUpdateDto.class);
 
         // perform put
         given()
@@ -370,9 +368,9 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailDto.class)
-            .set(field(EmailDto::getId), id)
-            .set(field(EmailDto::getMemberId), memberId)
+        var update = Instancio.of(EmailUpdateDto.class)
+            .set(field(EmailUpdateDto::getId), id)
+            .set(field(EmailUpdateDto::getMemberId), memberId)
             .ignore(nonNullableField)
             .create();
 
@@ -386,10 +384,10 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailDto.class)
-            .set(field(EmailDto::getId), id)
-            .set(field(EmailDto::getMemberId), memberId)
-            .set(field(EmailDto::getEmail), "XXX")
+        var update = Instancio.of(EmailUpdateDto.class)
+            .set(field(EmailUpdateDto::getId), id)
+            .set(field(EmailUpdateDto::getMemberId), memberId)
+            .set(field(EmailUpdateDto::getEmail), "XXX")
             .create();
 
         sendInvalidUpdate(id, update);
@@ -444,7 +442,21 @@ public class EmailIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
+    private void verify(EmailCreateDto expected, EmailEntity actual) {
+        verify((EmailBaseDto) expected, actual);
+    }
+
+    private void verify(EmailUpdateDto expected, EmailEntity actual) {
+        assertEquals(expected.getId(), actual.getId());
+        verify((EmailBaseDto) expected, actual);
+    }
+
     private void verify(EmailDto expected, EmailEntity actual) {
+        assertEquals(expected.getId(), actual.getId());
+        verify((EmailBaseDto) expected, actual);
+    }
+
+    private void verify(EmailBaseDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType(), actual.getEmailType());
