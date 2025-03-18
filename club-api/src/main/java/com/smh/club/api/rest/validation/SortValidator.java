@@ -8,6 +8,7 @@ import com.smh.club.api.rest.validation.constraints.SortConstraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -61,9 +62,14 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
     var entityFields = Arrays.stream(sortEntity.value().getDeclaredFields())
         .map(Field::getName).toList();
 
-    // Get a list of fields from the dto along with other metadata
-    var dtoFields = Arrays.stream(constraintAnnotation.value().getDeclaredFields())
-        .map(DtoSortField::of).toList();
+    // Get a list of fields from the dto and its base class along with other metadata
+    var fields = new ArrayList<>(Arrays.asList(constraintAnnotation.value().getDeclaredFields()));
+    var supperClass = constraintAnnotation.value().getSuperclass();
+    if(supperClass != null) {
+      fields.addAll(Arrays.asList(supperClass.getDeclaredFields()));
+    }
+
+    var dtoFields = fields.stream().map(DtoSortField::of).toList();
 
     var sortAliases =
         dtoFields

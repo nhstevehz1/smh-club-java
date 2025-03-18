@@ -1,6 +1,6 @@
 package com.smh.club.api.rest.validation;
 
-import com.smh.club.api.rest.dto.renewal.RenewalDto;
+import com.smh.club.api.rest.dto.renewal.RenewalBaseDto;
 import com.smh.club.api.rest.validation.constraints.ValidRenewal;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -8,10 +8,10 @@ import java.time.ZoneId;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class RenewalValidator implements ConstraintValidator<ValidRenewal, RenewalDto> {
+public class RenewalValidator implements ConstraintValidator<ValidRenewal, RenewalBaseDto> {
 
   @Override
-  public boolean isValid(RenewalDto renewal, ConstraintValidatorContext constraintValidatorContext) {
+  public boolean isValid(RenewalBaseDto renewal, ConstraintValidatorContext constraintValidatorContext) {
 
     // we are not validating on null.
     if (renewal == null || renewal.getRenewalDate() == null) {
