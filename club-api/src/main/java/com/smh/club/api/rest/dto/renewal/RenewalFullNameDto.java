@@ -6,7 +6,8 @@ import com.smh.club.api.rest.domain.annotations.SortExclude;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -14,7 +15,6 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @SuperBuilder
 @SortTarget(RenewalEntity.class)
 public class RenewalFullNameDto extends RenewalBaseDto{
@@ -30,5 +30,9 @@ public class RenewalFullNameDto extends RenewalBaseDto{
   @SortAlias("member.lastName")
   @JsonProperty("full_name")
   private FullNameDto fullName;
+
+  public RenewalFullNameDto() {
+    super();
+  }
 
 }
