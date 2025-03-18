@@ -2,7 +2,6 @@ package com.smh.club.api.rest.dto.phone;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.rest.domain.annotations.SortAlias;
-import com.smh.club.api.rest.domain.annotations.SortExclude;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
@@ -22,7 +21,6 @@ import lombok.experimental.SuperBuilder;
 public class PhoneFullNameDto extends PhoneBaseDto {
 
   @JsonProperty("id")
-  @SortExclude
   private int id;
 
   @SortAlias("member.memberNumber")

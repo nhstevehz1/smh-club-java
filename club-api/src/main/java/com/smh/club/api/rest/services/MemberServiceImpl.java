@@ -126,7 +126,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), MemberBaseDto.class, MemberEntity.class)
+                    getSort(o.getProperty(), MemberDto.class, MemberEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);
