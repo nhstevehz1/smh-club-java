@@ -8,6 +8,7 @@ import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -15,6 +16,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @SuperBuilder
 @SortTarget(PhoneEntity.class)
 public class PhoneFullNameDto extends PhoneBaseDto {
@@ -31,7 +33,4 @@ public class PhoneFullNameDto extends PhoneBaseDto {
   @JsonProperty("full_name")
   private FullNameDto fullName;
 
-  public PhoneFullNameDto() {
-    super();
-  }
 }

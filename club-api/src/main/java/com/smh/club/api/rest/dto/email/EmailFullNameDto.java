@@ -5,9 +5,9 @@ import com.smh.club.api.rest.domain.annotations.SortAlias;
 import com.smh.club.api.rest.domain.annotations.SortTarget;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
+@NoArgsConstructor
 @SuperBuilder
 @SortTarget(EmailEntity.class)
 public class EmailFullNameDto extends EmailBaseDto {
@@ -30,8 +30,4 @@ public class EmailFullNameDto extends EmailBaseDto {
   @SortAlias("member.lastName")
   @JsonProperty("full_name")
   private FullNameDto fullName;
-
-  public EmailFullNameDto() {
-    super();
-  }
 }

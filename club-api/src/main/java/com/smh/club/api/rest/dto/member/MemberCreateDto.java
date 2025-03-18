@@ -8,13 +8,13 @@ import com.smh.club.api.rest.validation.constraints.ValidMember;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)/**/
-@AllArgsConstructor
+@NoArgsConstructor
 @ValidMember
 public class MemberCreateDto extends MemberBaseDto {
 

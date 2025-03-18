@@ -7,12 +7,15 @@ import com.smh.club.api.rest.dto.phone.PhoneDto;
 import com.smh.club.api.rest.dto.renewal.RenewalDto;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
+@NoArgsConstructor
 @SuperBuilder
 public class MemberDetailDto extends MemberBaseDto {
 

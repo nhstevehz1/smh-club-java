@@ -8,6 +8,7 @@ import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.dto.FullNameDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -17,6 +18,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @SuperBuilder
 @SortTarget(AddressEntity.class)
 public class AddressFullNameDto extends AddressBaseDto {
@@ -31,8 +33,4 @@ public class AddressFullNameDto extends AddressBaseDto {
   @SortAlias("member.lastName")
   @JsonProperty("full_name")
   private FullNameDto fullName;
-
-  public AddressFullNameDto() {
-    super();
-  }
 }
