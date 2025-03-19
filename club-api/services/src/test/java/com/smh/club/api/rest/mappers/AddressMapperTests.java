@@ -91,7 +91,8 @@ public class AddressMapperTests {
         assertEquals(entity.getCity(), address.getCity());
         assertEquals(entity.getState(), address.getState());
         assertEquals(entity.getPostalCode(), address.getPostalCode());
-        assertEquals(entity.getAddressType(), address.getAddressType());
+        assertEquals(entity.getAddressType().getAddressTypeName(),
+            address.getAddressType().getAddressTypeName());
         assertEquals(entity.getMember().getMemberNumber(), address.getMemberNumber());
         assertEquals(entity.getMember().getFirstName(), address.getFullName().getFirstName());
         assertEquals(entity.getMember().getLastName(), address.getFullName().getLastName());
