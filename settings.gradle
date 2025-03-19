@@ -10,7 +10,6 @@ plugins {
 
 rootProject.name = 'smh-club-java'
 
-include 'club-gateway'
-include 'club-api'
-include 'club-oauth2'
-include 'club-api-hateoas'
+include('club-api-hateoas')
+include('club-gateway')
+include('club-oauth2')
