@@ -80,7 +80,8 @@ public class EmailMapperTests {
         assertEquals(entity.getId(), email.getId());
         assertEquals(entity.getMember().getMemberNumber(), email.getMemberNumber());
         assertEquals(entity.getEmail(), email.getEmail());
-        assertEquals(entity.getEmailType(), email.getEmailType());
+        assertEquals(entity.getEmailType().getEmailTypeName(),
+            email.getEmailType().getEmailTypeName());
         assertEquals(entity.getMember().getFirstName(), email.getFullName().getFirstName());
         assertEquals(entity.getMember().getMiddleName(), email.getFullName().getMiddleName());
         assertEquals(entity.getMember().getLastName(), email.getFullName().getLastName());
