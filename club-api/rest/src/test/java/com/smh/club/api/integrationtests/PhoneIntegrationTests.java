@@ -1,13 +1,13 @@
-package com.smh.club.api.domain.repos.integrationtests;
+package com.smh.club.api.integrationtests;
 
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.dto.email.*;
-import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.repos.EmailRepo;
+import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.domain.repos.PhoneRepo;
+import com.smh.club.api.dto.phone.*;
 import com.smh.club.api.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.util.Comparator;
@@ -60,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         provider = ZONKY,
         type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-public class EmailIntegrationTests extends IntegrationTests {
+public class PhoneIntegrationTests extends IntegrationTests {
 
     // need to mock the decoder otherwise an initialization error is thrown
     @MockitoBean
@@ -82,7 +82,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     private MembersRepo memberRepo;
 
     @Autowired
-    private EmailRepo repo;
+    private PhoneRepo repo;
 
     @WithSettings // Instancio settings
     Settings settings =
@@ -92,37 +92,36 @@ public class EmailIntegrationTests extends IntegrationTests {
             .set(Keys.BEAN_VALIDATION_ENABLED, true);
 
     @Autowired
-    public EmailIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
-        super(mockMvc, mapper, "/api/v1/emails");
+    public PhoneIntegrationTests(MockMvc mockMvc, ObjectMapper mapper) {
+        super(mockMvc, mapper, "/api/v1/phones");
     }
 
     @BeforeEach
     public void init() {
         // there seems to be a bug where @WithSettings is not recognized in before all
         var members = Instancio.ofList(MemberEntity.class)
-                .size(100)
-                .ignore(field(MemberEntity::getId))
-                .withUnique(field(MemberEntity::getMemberNumber))
-                .create();
-
+            .size(100)
+            .ignore(field(MemberEntity::getId))
+            .withUnique(field(MemberEntity::getMemberNumber))
+            .create();
         memberRepo.saveAllAndFlush(members);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_no_params(int entitySize)  {
+    public void getListPage_no_params(int entitySize) {
         addEntitiesToDb(entitySize);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(EmailFullNameDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(PhoneFullNameDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -131,21 +130,21 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 20, 50})
-    public void getListPage_sortDir_desc(int entitySize) {
-        addEntitiesToDb(entitySize);
+    public void getListPage_sortDir_desc() {
+        addEntitiesToDb(15);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(EmailEntity::getId).reversed()).toList();
+                .sorted(Comparator.comparingInt(PhoneEntity::getId).reversed()).toList();
+
         Map<String, String> map = new HashMap<>();
         map.put(sortParamName,  "id,desc");
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
-
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(EmailFullNameDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(PhoneFullNameDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -158,17 +157,18 @@ public class EmailIntegrationTests extends IntegrationTests {
         addEntitiesToDb(15);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
         map.put(sizeParamName, String.valueOf(pageSize));
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             0, pageSize);
 
         var actual = executeListPage(testParams);
+
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(EmailFullNameDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(PhoneFullNameDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -181,17 +181,18 @@ public class EmailIntegrationTests extends IntegrationTests {
         addEntitiesToDb(150);
 
         var sorted = repo.findAll().stream()
-                .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
+                .sorted(Comparator.comparingInt(PhoneEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
         map.put(pageParamName, String.valueOf(page));
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, sorted.size(),
             page, defaultPageSize);
 
         var actual = executeListPage(testParams);
+
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(EmailFullNameDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(PhoneFullNameDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -200,8 +201,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     }
 
     @ParameterizedTest
-    @CsvSource({"id,id", "email,email", "email_type,emailType",
-        "member_number,member.memberNumber", "full_name,member.lastName" })
+    @CsvSource({"id,id", "phone_number,phoneNumber", "phone_type,phoneType",
+        "member_number,member.memberNumber", "full_name,member.lastName"})
     public void getListPage_sortColumn(String sort, String entitySort) {
         var entitySize = 50;
         addEntitiesToDb(entitySize);
@@ -215,7 +216,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         map.put(sortParamName, sort);
         map.put(sizeParamName, String.valueOf(entitySize));
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, expected.getTotalElements(),
+        var testParams = PageTestParams.of(PhoneFullNameDto.class, map, path, expected.getTotalElements(),
             0, entitySize);
 
         var actual = executeListPage(testParams);
@@ -227,10 +228,10 @@ public class EmailIntegrationTests extends IntegrationTests {
     }
 
     @Test
-    public void get_returns_dto_status_ok() {
+    public void get_returns_model_status_ok() {
         // setup
-        var email = addEntitiesToDb(20).get(10);
-        var id = email.getId();
+        var phone = addEntitiesToDb(20).get(10);
+        var id = phone.getId();
 
         // perform get
         var actual =
@@ -243,16 +244,16 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .then()
                 .assertThat().status(HttpStatus.OK)
                 .assertThat().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract().body().as(EmailDto.class);
+                .extract().body().as(PhoneDto.class);
 
-        verify(email, actual);
+        verify(phone, actual);
     }
 
     @Test
     public void get_returns_status_notFound() {
         // Setup
         var entities = addEntitiesToDb(5);
-        var highest = entities.stream().max(comparingInt(EmailEntity::getId)).map(EmailEntity::getId).orElseThrow();
+        var highest = entities.stream().max(comparingInt(PhoneEntity::getId)).map(PhoneEntity::getId).orElseThrow();
         var id = highest + 100;
 
         // perform get and verify
@@ -269,12 +270,12 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailCreateDto.class)
-            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .create();
 
         // perform POST
-        var actual = sendValidCreate(create, EmailDto.class);
+        var actual = sendValidCreate(create, PhoneDto.class);
 
         // verify
         var entity =  repo.findById(actual.getId());
@@ -287,8 +288,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     // used with test that follows
     private static Stream<Arguments> nonNullableFields() {
         return Stream.of(
-            arguments(field(EmailDto::getEmail)),
-            arguments(field(EmailDto::getEmailType)));
+            arguments(field(PhoneDto::getPhoneNumber)),
+            arguments(field(PhoneDto::getPhoneType)));
     }
 
     @ParameterizedTest
@@ -296,22 +297,23 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailCreateDto.class)
-            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
             .setBlank(nonNullableField)
             .create();
 
         // perform POST
-       sendInvalidCreate(create);
+        sendInvalidCreate(create);
     }
 
-    @Test
-    public void create_with_invalid_email_returns_bad_request() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"#d#d#d", "#c#c#c#c#c#c#c#c#c#c"})
+    public void create_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailCreateDto.class)
-            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
-            .set(field(EmailDto::getEmail), "X")
+        var create = Instancio.of(PhoneCreateDto.class)
+            .generate(field(PhoneCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+            .generate(field(PhoneCreateDto::getPhoneNumber), g -> g.text().pattern(pattern))
             .create();
 
         // perform POST
@@ -325,26 +327,26 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailUpdateDto.class)
-            .set(field(EmailUpdateDto::getId), id)
-            .set(field(EmailUpdateDto::getMemberId), memberId)
+        var update = Instancio.of(PhoneUpdateDto.class)
+            .set(field(PhoneUpdateDto::getId), id)
+            .set(field(PhoneUpdateDto::getMemberId), memberId)
             .create();
 
         // perform PUT
-        var actual = sendValidUpdate(id, update, EmailDto.class);
+        var actual = sendValidUpdate(id, update, PhoneDto.class);
 
         // verify
-        var email = repo.findById(actual.getId());
+        var phone = repo.findById(actual.getId());
 
-        assertTrue(email.isPresent());
-        verify(update, email.get());
-        verify(actual, email.get());
+        assertTrue(phone.isPresent());
+        verify(update, phone.get());
+        verify(actual, phone.get());
     }
 
     @Test
-    public void update_returns_status_bad_request() throws Exception {
+    public void update_returns_status_badRequest() throws Exception {
         // Setup
-        var update = Instancio.create(EmailUpdateDto.class);
+        var update = Instancio.create(PhoneDto.class);
 
         // perform put
         given()
@@ -362,34 +364,37 @@ public class EmailIntegrationTests extends IntegrationTests {
 
     @ParameterizedTest
     @MethodSource("nonNullableFields")
-    public void update_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
+    public void update_with_nonNullable_fields_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var entity = addEntitiesToDb(20).get(10);
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailUpdateDto.class)
-            .set(field(EmailUpdateDto::getId), id)
-            .set(field(EmailUpdateDto::getMemberId), memberId)
-            .ignore(nonNullableField)
+        var update = Instancio.of(PhoneDto.class)
+            .set(field(PhoneDto::getId), id)
+            .set(field(PhoneDto::getMemberId), memberId)
+            .setBlank(nonNullableField)
             .create();
 
+        // perform PUT
         sendInvalidUpdate(id, update);
     }
 
-    @Test
-    public void update_with_invalid_email_returns_bad_request() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"#d#d#d", "#c#c#c#c#c#c#c#c#c#c"})
+    public void update_with_invalid_phoneNumber_returns_bad_request(String pattern) throws Exception {
         // setup
         var entity = addEntitiesToDb(20).get(10);
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailUpdateDto.class)
-            .set(field(EmailUpdateDto::getId), id)
-            .set(field(EmailUpdateDto::getMemberId), memberId)
-            .set(field(EmailUpdateDto::getEmail), "XXX")
+        var update = Instancio.of(PhoneDto.class)
+            .set(field(PhoneDto::getId), id)
+            .set(field(PhoneDto::getMemberId), memberId)
+            .generate(field(PhoneDto::getPhoneNumber), g -> g.text().pattern(pattern))
             .create();
 
+        // perform PUT
         sendInvalidUpdate(id, update);
     }
 
@@ -407,8 +412,8 @@ public class EmailIntegrationTests extends IntegrationTests {
             .then()
             .assertThat().status(HttpStatus.NO_CONTENT);
 
-        var email = repo.findById(id);
-        assertTrue(email.isEmpty());
+        var phone = repo.findById(id);
+        assertTrue(phone.isEmpty());
     }
 
     @Test
@@ -430,51 +435,51 @@ public class EmailIntegrationTests extends IntegrationTests {
         assertEquals(count, result.getCount());
     }
 
-    private List<EmailEntity> addEntitiesToDb(int size) {
+    private List<PhoneEntity> addEntitiesToDb(int size) {
         var members = memberRepo.findAll();
 
-        var entities = Instancio.ofList(EmailEntity.class)
-                .size(size)
-                .ignore(field(EmailEntity::getId))
-                .generate(field(EmailEntity::getMember), g -> g.oneOf(members))
-                .create();
-
+        var entities = Instancio.ofList(PhoneEntity.class)
+            .size(size)
+            .generate(field(PhoneEntity::getMember), g -> g.oneOf(members))
+            .ignore(field(PhoneEntity::getId))
+            .create();
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(EmailCreateDto expected, EmailEntity actual) {
-        verify((EmailBaseDto) expected, actual);
+    private void verify(PhoneCreateDto expected, PhoneEntity actual) {
+        verify((PhoneBaseDto)expected, actual);
     }
 
-    private void verify(EmailUpdateDto expected, EmailEntity actual) {
+    private void verify(PhoneUpdateDto expected, PhoneEntity actual) {
         assertEquals(expected.getId(), actual.getId());
-        verify((EmailBaseDto) expected, actual);
+        verify((PhoneBaseDto)expected, actual);
     }
 
-    private void verify(EmailDto expected, EmailEntity actual) {
+    private void verify(PhoneDto expected, PhoneEntity actual) {
         assertEquals(expected.getId(), actual.getId());
-        verify((EmailBaseDto) expected, actual);
+        verify((PhoneBaseDto)expected, actual);
     }
 
-    private void verify(EmailBaseDto expected, EmailEntity actual) {
+    private void verify(PhoneBaseDto expected, PhoneEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
-        assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getEmailType().getEmailTypeName(),
-            actual.getEmailType().getEmailTypeName());
+        assertEquals(expected.getCountryCode(), actual.getCountryCode());
+        assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(expected.getPhoneType().getPhoneTypeName(),
+            actual.getPhoneType().getPhoneTypeName());
     }
 
-    private void verify(EmailEntity expected, EmailDto actual) {
+    private void verify(PhoneEntity expected, PhoneDto actual) {
         assertEquals(expected.getMember().getId(), actual.getMemberId());
-        assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getEmailType().getEmailTypeName(),
-            actual.getEmailType().getEmailTypeName());
+        assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(expected.getPhoneType().getPhoneTypeName(),
+            actual.getPhoneType().getPhoneTypeName());
     }
 
-    private void verify(EmailEntity expected, EmailFullNameDto actual) {
+    private void verify(PhoneEntity expected, PhoneFullNameDto actual) {
         assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getEmailType().getEmailTypeName(),
-            actual.getEmailType().getEmailTypeName());
+        assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(expected.getPhoneType().getPhoneTypeName(),
+            actual.getPhoneType().getPhoneTypeName());
         assertEquals(expected.getMember().getMemberNumber(), actual.getMemberNumber());
         assertEquals(expected.getMember().getFirstName(), actual.getFullName().getFirstName());
         assertEquals(expected.getMember().getMiddleName(), actual.getFullName().getMiddleName());
@@ -482,7 +487,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         assertEquals(expected.getMember().getSuffix(), actual.getFullName().getSuffix());
     }
 
-    private void verify(List<EmailEntity> expected, List<EmailFullNameDto> actual) {
+    private void verify(List<PhoneEntity> expected, List<PhoneFullNameDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
@@ -490,21 +495,21 @@ public class EmailIntegrationTests extends IntegrationTests {
         });
     }
 
-    private Map<String, SortFields<EmailEntity, EmailFullNameDto>> getSorts() {
+    private Map<String, SortFields<PhoneEntity, PhoneFullNameDto>> getSorts() {
 
-        Map<String, SortFields<EmailEntity, EmailFullNameDto>> map = new HashMap<>();
-        map.put("id", SortFields.of(Comparator.comparingInt(EmailEntity::getId),
-            Comparator.comparingInt(EmailFullNameDto::getId)));
+        Map<String, SortFields<PhoneEntity, PhoneFullNameDto>> map = new HashMap<>();
+        map.put("id", SortFields.of(Comparator.comparingInt(PhoneEntity::getId),
+            Comparator.comparingInt(PhoneFullNameDto::getId)));
 
-        map.put("email", SortFields.of(Comparator.comparing(EmailEntity::getEmail),
-            Comparator.comparing(EmailFullNameDto::getEmail)));
+        map.put("phone_number", SortFields.of(Comparator.comparing(PhoneEntity::getPhoneNumber),
+            Comparator.comparing(PhoneFullNameDto::getPhoneNumber)));
 
-        map.put("email_type", SortFields.of(Comparator.comparing(EmailEntity::getEmailType),
-            Comparator.comparing(EmailFullNameDto::getEmailType)));
+        map.put("phone_type", SortFields.of(Comparator.comparing(PhoneEntity::getPhoneType),
+            Comparator.comparing(PhoneFullNameDto::getPhoneType)));
 
         map.put("member_number", SortFields.of(
             Comparator.comparing(e -> e.getMember().getMemberNumber()),
-            Comparator.comparing(EmailFullNameDto::getMemberNumber)));
+            Comparator.comparing(PhoneFullNameDto::getMemberNumber)));
 
         map.put("full_name", SortFields.of(
             Comparator.comparing(e -> e.getMember().getLastName()),
@@ -512,5 +517,4 @@ public class EmailIntegrationTests extends IntegrationTests {
 
         return map;
     }
-
 }

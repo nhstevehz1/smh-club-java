@@ -1,4 +1,4 @@
-package com.smh.club.api.domain.repos.integrationtests;
+package com.smh.club.api.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smh.club.api.dto.address.*;

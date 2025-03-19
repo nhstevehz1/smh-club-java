@@ -1,4 +1,4 @@
-package com.smh.club.api.domain.repos.integrationtests;
+package com.smh.club.api.integrationtests;
 
 import static java.util.Comparator.comparingInt;
 
