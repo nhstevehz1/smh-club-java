@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.services.exceptionhandlers;
+package smh.club.api.rest.exceptionhandlers;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;

@@ -1,5 +1,6 @@
-package com.smh.club.api.rest.services.exceptionhandlers;
+package smh.club.api.rest.exceptionhandlers;
 
+import com.smh.club.api.rest.services.exceptionhandlers.ValidationError;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.AccessLevel;

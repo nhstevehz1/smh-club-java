@@ -1,10 +1,7 @@
 package com.smh.club.api.rest.domain.repos;
 
 import com.smh.club.api.rest.domain.entities.*;
-import com.smh.club.api.rest.domain.repos.*;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import java.util.Comparator;
-import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -19,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Comparator;
+import java.util.List;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.all;

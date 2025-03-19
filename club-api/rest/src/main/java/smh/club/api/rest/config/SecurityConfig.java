@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.services.config;
+package smh.club.api.rest.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

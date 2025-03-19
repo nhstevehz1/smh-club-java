@@ -16,4 +16,4 @@ plugins {
 }
 
 rootProject.name = 'club-api'
-include('rest', 'services', 'repository');
+include('rest', 'services', 'repository')
