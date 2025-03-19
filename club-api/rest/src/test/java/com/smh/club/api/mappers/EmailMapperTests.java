@@ -4,7 +4,6 @@ import com.smh.club.api.config.MapperConfig;
 import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailUpdateDto;
-import com.smh.club.api.mappers.EmailMapperImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

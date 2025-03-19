@@ -4,7 +4,6 @@ import com.smh.club.api.config.MapperConfig;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressUpdateDto;
-import com.smh.club.api.mappers.AddressMapperImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
