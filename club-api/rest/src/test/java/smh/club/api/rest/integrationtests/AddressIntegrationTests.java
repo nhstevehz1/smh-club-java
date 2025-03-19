@@ -1,21 +1,12 @@
 package smh.club.api.rest.integrationtests;
 
-import static java.util.Comparator.comparingInt;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.rest.dto.address.*;
+import com.smh.club.api.dto.address.*;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.repos.AddressRepo;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import lombok.Setter;
 import org.instancio.Instancio;
 import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
@@ -44,8 +35,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static java.util.Comparator.comparingInt;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
