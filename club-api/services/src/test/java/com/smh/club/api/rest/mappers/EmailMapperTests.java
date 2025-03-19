@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
-import com.smh.club.api.rest.mappers.EmailMapperImpl;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.dto.email.EmailCreateDto;
 import com.smh.club.api.rest.dto.email.EmailUpdateDto;
@@ -43,7 +42,8 @@ public class EmailMapperTests {
         // verify
         assertNull(entity.getMember());
         assertEquals(create.getEmail(), entity.getEmail());
-        assertEquals(create.getEmailType(), entity.getEmailType());
+        assertEquals(create.getEmailType().getEmailTypeName(),
+            entity.getEmailType().getEmailTypeName());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -64,7 +64,8 @@ public class EmailMapperTests {
         assertEquals(entity.getId(), email.getId());
         assertEquals(entity.getMember().getId(), email.getMemberId());
         assertEquals(entity.getEmail(), email.getEmail());
-        assertEquals(entity.getEmailType(), email.getEmailType());
+        assertEquals(entity.getEmailType().getEmailTypeName(),
+            email.getEmailType().getEmailTypeName());
     }
 
     @Test
@@ -99,7 +100,8 @@ public class EmailMapperTests {
         assertEquals(entity.getId(), updatedEntity.getId());
         assertEquals(entity.getMember(), updatedEntity.getMember());
         assertEquals(update.getEmail(), updatedEntity.getEmail());
-        assertEquals(update.getEmailType(), updatedEntity.getEmailType());
+        assertEquals(update.getEmailType().getEmailTypeName(),
+            updatedEntity.getEmailType().getEmailTypeName());
     }
 
     @ParameterizedTest
@@ -128,7 +130,8 @@ public class EmailMapperTests {
             assertEquals(entity.getId(), email.getId());
             assertEquals(entity.getMember().getId(), email.getMemberId());
             assertEquals(entity.getEmail(), email.getEmail());
-            assertEquals(entity.getEmailType(), email.getEmailType());
+            assertEquals(entity.getEmailType().getEmailTypeName(),
+                email.getEmailType().getEmailTypeName());
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
-import com.smh.club.api.rest.mappers.PhoneMapperImpl;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
 import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
@@ -43,7 +42,8 @@ public class PhoneMapperTests {
         // verify
         assertNull(entity.getMember());
         assertEquals(create.getPhoneNumber(), entity.getPhoneNumber());
-        assertEquals(create.getPhoneType(), entity.getPhoneType());
+        assertEquals(create.getPhoneType().getPhoneTypeName(),
+            entity.getPhoneType().getPhoneTypeName());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -64,7 +64,8 @@ public class PhoneMapperTests {
         assertEquals(entity.getId(), ret.getId());
         assertEquals(entity.getMember().getId(), ret.getMemberId());
         assertEquals(entity.getPhoneNumber(), ret.getPhoneNumber());
-        assertEquals(entity.getPhoneType(), ret.getPhoneType());
+        assertEquals(entity.getPhoneType().getPhoneTypeName(),
+            ret.getPhoneType().getPhoneTypeName());
     }
 
     @Test
@@ -78,7 +79,8 @@ public class PhoneMapperTests {
         // verify
         assertEquals(entity.getId(), ret.getId());
         assertEquals(entity.getPhoneNumber(), ret.getPhoneNumber());
-        assertEquals(entity.getPhoneType(), ret.getPhoneType());
+        assertEquals(entity.getPhoneType().getPhoneTypeName(),
+            ret.getPhoneType().getPhoneTypeName());
         assertEquals(entity.getMember().getMemberNumber(), ret.getMemberNumber());
         assertEquals(entity.getMember().getFirstName(), ret.getFullName().getFirstName());
         assertEquals(entity.getMember().getMiddleName(), ret.getFullName().getMiddleName());
@@ -99,7 +101,8 @@ public class PhoneMapperTests {
         assertEquals(entity.getId(), updatedEntity.getId());
         assertEquals(entity.getMember(), updatedEntity.getMember());
         assertEquals(update.getPhoneNumber(), entity.getPhoneNumber());
-        assertEquals(update.getPhoneType(), entity.getPhoneType());
+        assertEquals(entity.getPhoneType().getPhoneTypeName(),
+            updatedEntity.getPhoneType().getPhoneTypeName());
     }
 
     @ParameterizedTest
@@ -128,7 +131,8 @@ public class PhoneMapperTests {
             assertEquals(entity.getId(), phone.getId());
             assertEquals(entity.getMember().getId(), phone.getMemberId());
             assertEquals(entity.getPhoneNumber(), phone.getPhoneNumber());
-            assertEquals(entity.getPhoneType(), phone.getPhoneType());
+            assertEquals(entity.getPhoneType().getPhoneTypeName(),
+                phone.getPhoneType().getPhoneTypeName());
         }
     }
 }

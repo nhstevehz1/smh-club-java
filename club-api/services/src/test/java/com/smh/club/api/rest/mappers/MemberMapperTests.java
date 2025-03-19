@@ -1,7 +1,6 @@
 package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
-import com.smh.club.api.rest.mappers.MemberMapperImpl;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.dto.member.MemberCreateDto;
 import com.smh.club.api.rest.dto.member.MemberUpdateDto;
@@ -62,19 +61,22 @@ public class MemberMapperTests {
         assertEquals(expAddress.getCity(), actAddress.getCity());
         assertEquals(expAddress.getState(), actAddress.getState());
         assertEquals(expAddress.getPostalCode(), actAddress.getPostalCode());
-        assertEquals(expAddress.getAddressType(), actAddress.getAddressType());
+        assertEquals(expAddress.getAddressType().getAddressTypeName(),
+            actAddress.getAddressType().getAddressTypeName());
 
         assertEquals(create.getEmails().size(), entity.getEmails().size());
         var expEmail = create.getEmails().getFirst();
         var actEmail = entity.getEmails().getFirst();
         assertEquals(expEmail.getEmail(), actEmail.getEmail());
-        assertEquals(expEmail.getEmailType(), actEmail.getEmailType());
+        assertEquals(expEmail.getEmailType().getEmailTypeName(),
+            actEmail.getEmailType().getEmailTypeName());
 
         assertEquals(create.getPhones().size(), entity.getPhones().size());
         var expPhone = create.getPhones().getFirst();
         var actPhone = entity.getPhones().getFirst();
         assertEquals(expPhone.getPhoneNumber(), actPhone.getPhoneNumber());
-        assertEquals(expPhone.getPhoneType(), actPhone.getPhoneType());
+        assertEquals(expPhone.getPhoneType().getPhoneTypeName(),
+            actPhone.getPhoneType().getPhoneTypeName());
 
         assertEquals(0, entity.getRenewals().size());
 
@@ -208,7 +210,8 @@ public class MemberMapperTests {
             assertEquals(addressEntity.getCity(), detailAddress.getCity());
             assertEquals(addressEntity.getState(), detailAddress.getState());
             assertEquals(addressEntity.getPostalCode(), detailAddress.getPostalCode());
-            assertEquals(addressEntity.getAddressType(), detailAddress.getAddressType());
+            assertEquals(addressEntity.getAddressType().getAddressTypeName(),
+                detailAddress.getAddressType().getAddressTypeName());
         }
     }
 
@@ -234,7 +237,8 @@ public class MemberMapperTests {
             assertEquals(entityEmail.getId(), detailEmail.getId());
             assertEquals(entityEmail.getMember().getId(), detailEmail.getMemberId());
             assertEquals(entityEmail.getEmail(), detailEmail.getEmail());
-            assertEquals(entityEmail.getEmailType(), detailEmail.getEmailType());
+            assertEquals(entityEmail.getEmailType().getEmailTypeName(),
+                detailEmail.getEmailType().getEmailTypeName());
         }
     }
 
@@ -260,7 +264,8 @@ public class MemberMapperTests {
             assertEquals(entityPhone.getId(), detailPhone.getId());
             assertEquals(entityPhone.getMember().getId(), detailPhone.getMemberId());
             assertEquals(entityPhone.getPhoneNumber(), detailPhone.getPhoneNumber());
-            assertEquals(entityPhone.getPhoneType(), detailPhone.getPhoneType());
+            assertEquals(entityPhone.getPhoneType().getPhoneTypeName(),
+                detailPhone.getPhoneType().getPhoneTypeName());
         }
     }
 
