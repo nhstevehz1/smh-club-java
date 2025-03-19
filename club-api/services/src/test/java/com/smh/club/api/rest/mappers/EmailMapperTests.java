@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.services.mappers;
+package com.smh.club.api.rest.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
 import com.smh.club.api.rest.mappers.EmailMapperImpl;

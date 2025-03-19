@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.services.services;
+package com.smh.club.api.rest.services;
 
 import com.smh.club.api.rest.contracts.mappers.EmailMapper;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
@@ -11,7 +11,6 @@ import com.smh.club.api.rest.dto.email.EmailFullNameDto;
 import com.smh.club.api.rest.dto.email.EmailUpdateDto;
 import java.util.Optional;
 
-import com.smh.club.api.rest.services.EmailServiceImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

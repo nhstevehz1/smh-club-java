@@ -1,17 +1,16 @@
-package com.smh.club.api.rest.services.services;
+package com.smh.club.api.rest.services;
 
-import com.smh.club.api.rest.contracts.mappers.RenewalMapper;
+import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
-import com.smh.club.api.rest.domain.entities.RenewalEntity;
+import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
-import com.smh.club.api.rest.domain.repos.RenewalsRepo;
-import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
-import com.smh.club.api.rest.dto.renewal.RenewalDto;
-import com.smh.club.api.rest.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.rest.dto.renewal.RenewalUpdateDto;
+import com.smh.club.api.rest.domain.repos.PhoneRepo;
+import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
+import com.smh.club.api.rest.dto.phone.PhoneDto;
+import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
 import java.util.Optional;
 
-import com.smh.club.api.rest.services.RenewalServiceIml;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -21,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -42,17 +40,16 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(InstancioExtension.class)
-public class RenewalServiceTests extends ServiceTests {
+public class PhoneServiceTests extends ServiceTests {
     
     @Mock private MembersRepo memRepoMock;
-    @Mock private RenewalsRepo renRepoMock;
-    @Mock private RenewalMapper renMapMock;
+    @Mock private PhoneRepo phnRepoMock;
+    @Mock private PhoneMapper phnMapMock;
 
-    @InjectMocks
-    private RenewalServiceIml svc;
+    @InjectMocks private PhoneServiceImpl svc;
 
     @Mock private Pageable pageableMock;
-    @Mock private Page<RenewalEntity> pageMock;
+    @Mock private Page<PhoneEntity> pageMock;
 
     @Captor private ArgumentCaptor<PageRequest> acPageRequest;
 
@@ -63,8 +60,8 @@ public class RenewalServiceTests extends ServiceTests {
             .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @ParameterizedTest
-    @CsvSource({"id, id", "renewal_date, renewalDate", "renewal_year, renewalYear"})
-    public void getPage(String sort, String actual) {
+    @CsvSource({"id, id", "phone_number, phoneNumber", "phone_type, phoneType"})
+    public void getPhoneListPage(String sort, String actual) {
         // setup
         var pageNumber = 10;
         var pageSize = 20;
@@ -72,20 +69,20 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalFullNameDto.class)
+        var list = Instancio.ofList(PhoneFullNameDto.class)
             .size(20)
             .create();
 
         var page = createPage(list, pageableMock,100);
 
-        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(renMapMock.toPage(pageMock)).thenReturn(page);
+        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(phnMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
         svc.getPage(pageable);
 
         // verify
-        verify(renRepoMock).findAll(acPageRequest.capture());
+        verify(phnRepoMock).findAll(acPageRequest.capture());
 
         var pageRequest = acPageRequest.getValue();
         assertEquals(pageSize, pageRequest.getPageSize());
@@ -95,23 +92,10 @@ public class RenewalServiceTests extends ServiceTests {
         var order = pageRequest.getSort().get().findFirst().orElseThrow();
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(actual, order.getProperty());
-        verify(renRepoMock).findAll(any(PageRequest.class));
+        verify(phnRepoMock).findAll(any(PageRequest.class));
 
-        verifyNoMoreInteractions(renRepoMock, renMapMock);
-    }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"member-id", "memberId"})
-    public void getPage_excludes_throws_exception(String sort) {
-        // setup
-        var pageNumber = 10;
-        var pageSize = 20;
-        var direction = "ASC";
-        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
-        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
-
-        // execute and verify
-        assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock);
     }
 
     @Test
@@ -127,7 +111,7 @@ public class RenewalServiceTests extends ServiceTests {
         // execute and verify
         assertThrows(IllegalArgumentException.class, () -> svc.getPage(pageable));
 
-        verifyNoMoreInteractions(renRepoMock, renMapMock);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock);
     }
 
     @Test
@@ -140,20 +124,20 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalFullNameDto.class)
+        var list = Instancio.ofList(PhoneFullNameDto.class)
             .size(20)
             .create();
 
         var page = createPage(list, pageableMock,100);
 
-        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(renMapMock.toPage(pageMock)).thenReturn(page);
+        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(phnMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
         svc.getPage(pageable);
 
         // verify
-        verify(renRepoMock).findAll(acPageRequest.capture());
+        verify(phnRepoMock).findAll(acPageRequest.capture());
 
         var pageRequest = acPageRequest.getValue();
         assertEquals(pageSize, pageRequest.getPageSize());
@@ -163,9 +147,9 @@ public class RenewalServiceTests extends ServiceTests {
         var order = pageRequest.getSort().get().findFirst().orElseThrow();
         assertTrue(direction.equalsIgnoreCase(order.getDirection().toString()));
         assertEquals(sort, order.getProperty());
-        verify(renRepoMock).findAll(any(PageRequest.class));
-        verify(renMapMock).toPage(pageMock);
-        verifyNoMoreInteractions(renRepoMock, renMapMock);
+        verify(phnRepoMock).findAll(any(PageRequest.class));
+        verify(phnMapMock).toPage(pageMock);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock);
     }
 
     @Test
@@ -179,14 +163,14 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalFullNameDto.class)
+        var list = Instancio.ofList(PhoneFullNameDto.class)
             .size(pageSize)
             .create();
 
         var page = createPage(list, pageableMock, total);
 
-        when(renRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
-        when(renMapMock.toPage(pageMock)).thenReturn(page);
+        when(phnRepoMock.findAll(any(PageRequest.class))).thenReturn(pageMock);
+        when(phnMapMock.toPage(pageMock)).thenReturn(page);
 
         // execute
         var ret = svc.getPage(pageable);
@@ -194,120 +178,136 @@ public class RenewalServiceTests extends ServiceTests {
         // verify
         assertEquals(total, ret.getMetadata().totalElements());
         assertEquals(pageSize, ret.getContent().size());
-        verify(renRepoMock).findAll(any(PageRequest.class));
-        verify(renMapMock).toPage(pageMock);
-        verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
+        verify(phnRepoMock).findAll(any(PageRequest.class));
+        verify(phnMapMock).toPage(pageMock);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void getItem_returns_renewal() {
+    public void getItem_returns_phone() {
         // setup
-        int id = 1;
-        var entity = Instancio.of(RenewalEntity.class).set(field(RenewalEntity::getId), id).create();
-        var renewal = Instancio.of(RenewalDto.class).set(field(RenewalDto::getId), id).create();
+        var id = 1;
+        var entity = Instancio.of(PhoneEntity.class).set(field(PhoneEntity::getId), id).create();
+        var phone = Instancio.of(PhoneDto.class).set(field(PhoneDto::getId), id).create();
 
-        when(renRepoMock.findById(id)).thenReturn(Optional.of(entity));
-        when(renMapMock.toDto(entity)).thenReturn(renewal);
+        when(phnRepoMock.findById(id)).thenReturn(Optional.of(entity));
+        when(phnMapMock.toDto(entity)).thenReturn(phone);
 
         // execute
-        var ret = svc.getRenewal(id);
+        var member = svc.getPhone(id);
 
         // verify
-        assertNotNull(ret);
-        verify(renRepoMock).findById(id);
-        verify(renMapMock).toDto(any(RenewalEntity.class));
-        verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
+        assertTrue(member.isPresent());
+        verify(phnRepoMock).findById(id);
+        verify(phnMapMock).toDto(entity);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
     public void getItem_notFound_returns_empty_optional() {
         // setup
         int id = 1;
-        when(renRepoMock.findById(id)).thenReturn(Optional.empty());
+        when(phnRepoMock.findById(id)).thenReturn(Optional.empty());
 
         // execute
-        var ret = svc.getRenewal(id);
+        var ret = svc.getPhone(id);
 
-        //verify
+        // and verify
         assertFalse(ret.isPresent());
-        verify(renRepoMock).findById(id);
-        verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
+        verify(phnRepoMock).findById(id);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void createItem_returns_renewal() {
+    public void create_phone_returns_phone() {
         // setup
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(RenewalCreateDto.class)
-                .set(field(RenewalDto::getMemberId), member.getId())
+        var create = Instancio.of(PhoneCreateDto.class)
+                .set(field(PhoneDto::getMemberId), member.getId())
                 .create();
 
-        var renewal = Instancio.of(RenewalDto.class)
-                .set(field(RenewalDto::getMemberId), member.getId())
+        var phone = Instancio.of(PhoneDto.class)
+                .set(field(PhoneDto::getMemberId), member.getId())
                 .create();
 
-        var entity = Instancio.of(RenewalEntity.class)
-                .set(field(RenewalEntity::getMember), member)
+        var entity = Instancio.of(PhoneEntity.class)
+                .set(field(PhoneEntity::getMember), member)
                 .create();
 
-        when(renRepoMock.save(entity)).thenReturn(entity);
-        when(renMapMock.toEntity(create)).thenReturn(entity);
-        when(renMapMock.toDto(entity)).thenReturn(renewal);
+        when(phnRepoMock.save(entity)).thenReturn(entity);
+        when(phnMapMock.toEntity(create)).thenReturn(entity);
+        when(phnMapMock.toDto(entity)).thenReturn(phone);
 
         // execute
-        var ret = svc.createRenewal(create);
+        var ret = svc.createPhone(create);
 
         // verify
         assertNotNull(ret);
-        assertEquals(renewal, ret);
+        assertEquals(phone, ret);
         verify(memRepoMock).getReferenceById(member.getId());
-        verify(renRepoMock).save(entity);
-        verify(renMapMock).toEntity(create);
-        verify(renMapMock).toDto(entity);
-        verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
+        verify(phnRepoMock).save(entity);
+        verify(phnMapMock).toEntity(create);
+        verify(phnMapMock).toDto(entity);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void updateItem_returns_renewal() {
+    public void updateItem_returns_phone() {
         // setup
         int id = 1;
-        var entity = Instancio.create(RenewalEntity.class);
+        var entity = Instancio.create(PhoneEntity.class);
 
-        var update = Instancio.of(RenewalUpdateDto.class)
-                .set(field(RenewalDto::getMemberId), id)
+        var update = Instancio.of(PhoneUpdateDto.class)
+                .set(field(PhoneDto::getMemberId), id)
                 .create();
+        var phone = Instancio.create(PhoneDto.class);
 
-        var renewal = Instancio.create(RenewalDto.class);
-        
-        when(renRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
-        when(renMapMock.updateEntity(update, entity)).thenReturn(entity);
-        when(renMapMock.toDto(entity)).thenReturn(renewal);
+        when(phnRepoMock.findByIdAndMemberId(id, id)).thenReturn(Optional.of(entity));
+
+        when(phnMapMock.updateEntity(update, entity)).thenReturn(entity);
+        when(phnMapMock.toDto(entity)).thenReturn(phone);
 
         // execute
-        var ret = svc.updateRenewal(id, update);
+        var ret = svc.updatePhone(id, update);
 
         // verify
         assertTrue(ret.isPresent());
-        verify(renRepoMock).findByIdAndMemberId(id, id);
+        verify(phnRepoMock).findByIdAndMemberId(id, id);
 
-        verify(renMapMock).updateEntity(update, entity);
-        verify(renMapMock).toDto(entity);
-        verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
+        verify(phnMapMock).updateEntity(update, entity);
+        verify(phnMapMock).toDto(entity);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
     @Test
-    public void deleteItem_deletes_renewal() {
+    public void deleteItem_deletes_phone() {
         // setup
         int id = 1;
-        doNothing().when(renRepoMock).deleteById(id);
+        doNothing().when(phnRepoMock).deleteById(id);
 
         // execute
-        svc.deleteRenewal(id);
+        svc.deletePhone(id);
 
         //verify
-        verify(renRepoMock).deleteById(id);
-        verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
+        verify(phnRepoMock).deleteById(id);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
+
+    @Test
+    public void getCount_returns_phone_count() {
+        // setup
+        long count = 5;
+        when(phnRepoMock.count()).thenReturn(count);
+
+        // execute
+        var response = svc.getPhoneCount();
+
+        // verify
+        assertEquals(count, response);
+        verify(phnRepoMock).count();
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.services.services;
+package com.smh.club.api.rest.services;
 
 import com.smh.club.api.rest.contracts.mappers.AddressMapper;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
@@ -11,7 +11,6 @@ import com.smh.club.api.rest.dto.address.AddressFullNameDto;
 import com.smh.club.api.rest.dto.address.AddressUpdateDto;
 import java.util.Optional;
 
-import com.smh.club.api.rest.services.AddressServiceImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
