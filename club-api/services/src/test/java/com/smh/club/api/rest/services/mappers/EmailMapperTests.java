@@ -1,6 +1,7 @@
-package com.smh.club.api.rest.mappers;
+package com.smh.club.api.rest.services.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
+import com.smh.club.api.rest.mappers.EmailMapperImpl;
 import com.smh.club.api.rest.domain.entities.EmailEntity;
 import com.smh.club.api.rest.dto.email.EmailCreateDto;
 import com.smh.club.api.rest.dto.email.EmailUpdateDto;

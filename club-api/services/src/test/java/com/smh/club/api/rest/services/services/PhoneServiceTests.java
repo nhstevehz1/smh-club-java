@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.services;
+package com.smh.club.api.rest.services.services;
 
 import com.smh.club.api.rest.contracts.mappers.PhoneMapper;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
@@ -10,6 +10,8 @@ import com.smh.club.api.rest.dto.phone.PhoneDto;
 import com.smh.club.api.rest.dto.phone.PhoneFullNameDto;
 import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
 import java.util.Optional;
+
+import com.smh.club.api.rest.services.PhoneServiceImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

@@ -1,6 +1,7 @@
-package com.smh.club.api.rest.mappers;
+package com.smh.club.api.rest.services.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
+import com.smh.club.api.rest.mappers.AddressMapperImpl;
 import com.smh.club.api.rest.domain.entities.AddressEntity;
 import com.smh.club.api.rest.dto.address.AddressCreateDto;
 import com.smh.club.api.rest.dto.address.AddressUpdateDto;

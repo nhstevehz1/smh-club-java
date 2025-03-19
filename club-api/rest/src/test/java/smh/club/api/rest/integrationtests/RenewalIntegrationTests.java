@@ -1,13 +1,13 @@
-package com.smh.club.api.rest.integrationtests;
+package smh.club.api.rest.integrationtests;
 
 import static java.util.Comparator.comparingInt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smh.club.api.rest.dto.renewal.*;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.domain.repos.MembersRepo;
 import com.smh.club.api.rest.domain.repos.RenewalsRepo;
-import com.smh.club.api.rest.dto.renewal.*;
 import com.smh.club.api.rest.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import java.time.Instant;

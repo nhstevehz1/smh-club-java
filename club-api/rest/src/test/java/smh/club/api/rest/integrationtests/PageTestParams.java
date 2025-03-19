@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.integrationtests;
+package smh.club.api.rest.integrationtests;
 
 import java.util.HashMap;
 import java.util.Map;

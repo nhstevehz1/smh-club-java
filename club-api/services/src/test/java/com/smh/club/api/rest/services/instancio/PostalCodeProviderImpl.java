@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.instancio;
+package com.smh.club.api.rest.services.instancio;
 
 import com.smh.club.api.rest.validation.constraints.PostalCode;
 import java.lang.reflect.Field;

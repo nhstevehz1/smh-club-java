@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.integrationtests;
+package smh.club.api.rest.integrationtests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

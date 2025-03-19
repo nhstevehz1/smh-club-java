@@ -1,8 +1,8 @@
 package com.smh.club.api.rest.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.domain.annotations.SortAlias;
-import com.smh.club.api.rest.domain.annotations.SortExclude;
+import com.smh.club.api.rest.annotations.SortAlias;
+import com.smh.club.api.rest.annotations.SortExclude;
 import java.lang.reflect.Field;
 import java.util.*;
 import org.springframework.data.domain.Sort;

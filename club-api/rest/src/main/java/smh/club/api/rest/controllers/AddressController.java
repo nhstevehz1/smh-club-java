@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.controllers;
+package smh.club.api.rest.controllers;
 
 import com.smh.club.api.rest.contracts.services.AddressService;
 import com.smh.club.api.rest.dto.address.AddressCreateDto;

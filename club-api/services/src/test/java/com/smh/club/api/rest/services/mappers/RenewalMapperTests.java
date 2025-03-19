@@ -1,6 +1,7 @@
-package com.smh.club.api.rest.mappers;
+package com.smh.club.api.rest.services.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
+import com.smh.club.api.rest.mappers.RenewalMapperImpl;
 import com.smh.club.api.rest.domain.entities.RenewalEntity;
 import com.smh.club.api.rest.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.rest.dto.renewal.RenewalUpdateDto;

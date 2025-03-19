@@ -1,4 +1,4 @@
-package com.smh.club.api;
+package smh.club.api.rest;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;

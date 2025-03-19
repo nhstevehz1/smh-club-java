@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.config;
+package com.smh.club.api.rest.services.config;
 
 import java.util.Collection;
 import java.util.Map;

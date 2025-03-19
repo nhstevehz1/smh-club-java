@@ -1,4 +1,4 @@
-package com.smh.club.api.rest.services;
+package com.smh.club.api.rest.services.services;
 
 import com.smh.club.api.rest.contracts.mappers.MemberMapper;
 import com.smh.club.api.rest.domain.entities.MemberEntity;
@@ -8,6 +8,8 @@ import com.smh.club.api.rest.dto.member.MemberDetailDto;
 import com.smh.club.api.rest.dto.member.MemberDto;
 import com.smh.club.api.rest.dto.member.MemberUpdateDto;
 import java.util.Optional;
+
+import com.smh.club.api.rest.services.MemberServiceImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;

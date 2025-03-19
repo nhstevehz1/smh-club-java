@@ -1,6 +1,7 @@
-package com.smh.club.api.rest.mappers;
+package com.smh.club.api.rest.services.mappers;
 
 import com.smh.club.api.rest.config.MapperConfig;
+import com.smh.club.api.rest.mappers.PhoneMapperImpl;
 import com.smh.club.api.rest.domain.entities.PhoneEntity;
 import com.smh.club.api.rest.dto.phone.PhoneCreateDto;
 import com.smh.club.api.rest.dto.phone.PhoneUpdateDto;
