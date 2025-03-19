@@ -23,6 +23,7 @@ class ClubApiApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// use to test contexct loading only.
 	}
 
 }

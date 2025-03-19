@@ -683,19 +683,22 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(expAddress.getCity(), actAddress.getCity());
         assertEquals(expAddress.getState(), actAddress.getState());
         assertEquals(expAddress.getPostalCode(), actAddress.getPostalCode());
-        assertEquals(expAddress.getAddressType(), actAddress.getAddressType());
+        assertEquals(expAddress.getAddressType().getAddressTypeName(),
+            actAddress.getAddressType().getAddressTypeName());
 
         assertEquals(expected.getEmails().size(), actual.getEmails().size());
         var actEmail = actual.getEmails().getFirst();
         var expEmail = expected.getEmails().getFirst();
         assertEquals(expEmail.getEmail(), actEmail.getEmail());
-        assertEquals(expEmail.getEmailType(), actEmail.getEmailType());
+        assertEquals(expEmail.getEmailType().getEmailTypeName(),
+            actEmail.getEmailType().getEmailTypeName());
 
         assertEquals(expected.getPhones().size(), actual.getPhones().size());
         var actPhone = actual.getPhones().getFirst();
         var expPhone = expected.getPhones().getFirst();
         assertEquals(expPhone.getPhoneNumber(), actPhone.getPhoneNumber());
-        assertEquals(expPhone.getPhoneType(), actPhone.getPhoneType());
+        assertEquals(expPhone.getPhoneType().getPhoneTypeName(),
+            actPhone.getPhoneType().getPhoneTypeName());
 
         assertTrue(actual.getRenewals().isEmpty());
     }

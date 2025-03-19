@@ -464,13 +464,15 @@ public class PhoneIntegrationTests extends IntegrationTests {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getCountryCode(), actual.getCountryCode());
         assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getPhoneType().getPhoneTypeName(),
+            actual.getPhoneType().getPhoneTypeName());
     }
 
     private void verify(PhoneEntity expected, PhoneDto actual) {
         assertEquals(expected.getMember().getId(), actual.getMemberId());
         assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());
-        assertEquals(expected.getPhoneType(), actual.getPhoneType());
+        assertEquals(expected.getPhoneType().getPhoneTypeName(),
+            actual.getPhoneType().getPhoneTypeName());
     }
 
     private void verify(PhoneEntity expected, PhoneFullNameDto actual) {

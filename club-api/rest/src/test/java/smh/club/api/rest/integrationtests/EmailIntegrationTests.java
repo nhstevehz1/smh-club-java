@@ -459,19 +459,22 @@ public class EmailIntegrationTests extends IntegrationTests {
     private void verify(EmailBaseDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getEmailType(), actual.getEmailType());
+        assertEquals(expected.getEmailType().getEmailTypeName(),
+            actual.getEmailType().getEmailTypeName());
     }
 
     private void verify(EmailEntity expected, EmailDto actual) {
         assertEquals(expected.getMember().getId(), actual.getMemberId());
         assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getEmailType(), actual.getEmailType());
+        assertEquals(expected.getEmailType().getEmailTypeName(),
+            actual.getEmailType().getEmailTypeName());
     }
 
     private void verify(EmailEntity expected, EmailFullNameDto actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getEmailType(), actual.getEmailType());
+        assertEquals(expected.getEmailType().getEmailTypeName(),
+            actual.getEmailType().getEmailTypeName());
         assertEquals(expected.getMember().getMemberNumber(), actual.getMemberNumber());
         assertEquals(expected.getMember().getFirstName(), actual.getFullName().getFirstName());
         assertEquals(expected.getMember().getMiddleName(), actual.getFullName().getMiddleName());

@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import lombok.Setter;
 import org.instancio.Instancio;
 import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
@@ -544,7 +546,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getCity(), actual.getCity());
         assertEquals(expected.getState(), actual.getState());
         assertEquals(expected.getPostalCode(), actual.getPostalCode());
-        assertEquals(expected.getAddressType(), actual.getAddressType());
+        assertEquals(expected.getAddressType().getAddressTypeName(),
+            actual.getAddressType().getAddressTypeName());
     }
 
     private void verify(AddressEntity expected, AddressDto actual) {
@@ -554,7 +557,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getCity(), actual.getCity());
         assertEquals(expected.getState(), actual.getState());
         assertEquals(expected.getPostalCode(), actual.getPostalCode());
-        assertEquals(expected.getAddressType(), actual.getAddressType());
+        assertEquals(expected.getAddressType().getAddressTypeName(),
+            actual.getAddressType().getAddressTypeName());
     }
 
     private void verify(AddressEntity expected, AddressFullNameDto actual) {
@@ -567,7 +571,8 @@ public class AddressIntegrationTests extends IntegrationTests {
         assertEquals(expected.getCity(), actual.getCity());
         assertEquals(expected.getState(), actual.getState());
         assertEquals(expected.getPostalCode(), actual.getPostalCode());
-        assertEquals(expected.getAddressType(), actual.getAddressType());
+        assertEquals(expected.getAddressType().getAddressTypeName(),
+            actual.getAddressType().getAddressTypeName());
     }
 
     private void verify(List<AddressEntity> expected, List<AddressFullNameDto> actual) {
