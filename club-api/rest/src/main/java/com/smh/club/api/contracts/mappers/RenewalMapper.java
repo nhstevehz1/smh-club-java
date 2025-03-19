@@ -1,6 +1,6 @@
 package com.smh.club.api.contracts.mappers;
 
-import com.smh.club.api.rest.domain.entities.RenewalEntity;
+import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;

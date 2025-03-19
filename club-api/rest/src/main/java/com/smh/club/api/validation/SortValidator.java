@@ -1,9 +1,9 @@
 package com.smh.club.api.validation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortAlias;
-import com.smh.club.api.rest.annotations.SortExclude;
-import com.smh.club.api.rest.annotations.SortTarget;
+import com.smh.club.api.annotations.SortAlias;
+import com.smh.club.api.annotations.SortExclude;
+import com.smh.club.api.annotations.SortTarget;
 import com.smh.club.api.validation.constraints.SortConstraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

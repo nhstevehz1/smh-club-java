@@ -1,10 +1,10 @@
 package com.smh.club.api.dto.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.dto.address.AddressCreateDto;
-import com.smh.club.api.rest.dto.email.EmailCreateDto;
+import com.smh.club.api.dto.address.AddressCreateDto;
+import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
-import com.smh.club.api.rest.validation.constraints.ValidMember;
+import com.smh.club.api.validation.constraints.ValidMember;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;

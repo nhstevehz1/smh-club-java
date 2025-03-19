@@ -1,8 +1,13 @@
 package com.smh.club.api.contracts.mappers;
 
-import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.domain.entities.MemberEntity;
 
 import java.util.List;
+
+import com.smh.club.api.dto.member.MemberCreateDto;
+import com.smh.club.api.dto.member.MemberDetailDto;
+import com.smh.club.api.dto.member.MemberDto;
+import com.smh.club.api.dto.member.MemberUpdateDto;
 import org.springframework.data.domain.Page;
 
 /**
@@ -12,13 +17,13 @@ public interface MemberMapper {
 
     /**
      * Maps a {@link MemberCreateDto} to a {@link MemberEntity}.
-     * @param dto The {@link MemberBaseDto} to map.
+     * @param dto The {@link MemberCreateDto} to map.
      * @return The resulting {@link MemberEntity}.
      */
     MemberEntity toEntity(MemberCreateDto dto);
 
     /**
-     * Maps a {@link MemberEntity} to a {@link MemberBaseDto}
+     * Maps a {@link MemberEntity} to a {@link MemberEntity}
      *
      * @param entity {@link MemberEntity} to map.
      * @return The resulting {@link MemberDto}.
@@ -35,10 +40,10 @@ public interface MemberMapper {
     MemberEntity updateEntity(MemberUpdateDto dto, MemberEntity entity);
 
     /**
-     * Maps a list of {@link MemberEntity} to a list of {@link MemberBaseDto}.
+     * Maps a list of {@link MemberEntity} to a list of {@link MemberEntity}.
      *
      * @param entityList the {@link List} of {@link MemberEntity} to map.
-     * @return A list of {@link MemberBaseDto}.
+     * @return A list of {@link MemberDto}.
      */
     List<MemberDto> toDtoList(List<MemberEntity> entityList);
 

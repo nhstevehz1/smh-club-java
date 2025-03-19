@@ -1,14 +1,14 @@
 package com.smh.club.api.dto.email;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortAlias;
-import com.smh.club.api.rest.annotations.SortTarget;
+import com.smh.club.api.annotations.SortAlias;
+import com.smh.club.api.annotations.SortTarget;
 import com.smh.club.api.dto.FullNameDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import com.smh.club.api.rest.domain.entities.EmailEntity;
+import com.smh.club.api.domain.entities.EmailEntity;
 
 /**
  * DTO for emails.  Includes attached member info.

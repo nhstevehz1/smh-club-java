@@ -1,6 +1,6 @@
 package com.smh.club.api.contracts.mappers;
 
-import com.smh.club.api.rest.domain.entities.EmailEntity;
+import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;

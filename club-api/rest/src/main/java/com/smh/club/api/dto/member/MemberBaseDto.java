@@ -1,8 +1,8 @@
 package com.smh.club.api.dto.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortExclude;
-import com.smh.club.api.rest.validation.constraints.BirthDate;
+import com.smh.club.api.annotations.SortExclude;
+import com.smh.club.api.validation.constraints.BirthDate;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

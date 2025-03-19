@@ -1,15 +1,15 @@
 package com.smh.club.api.services;
 
-import com.smh.club.api.rest.contracts.mappers.EmailMapper;
-import com.smh.club.api.rest.contracts.services.EmailService;
-import com.smh.club.api.rest.domain.entities.EmailEntity;
-import com.smh.club.api.rest.domain.repos.EmailRepo;
-import com.smh.club.api.rest.domain.repos.MembersRepo;
+import com.smh.club.api.contracts.mappers.EmailMapper;
+import com.smh.club.api.contracts.services.EmailService;
+import com.smh.club.api.domain.entities.EmailEntity;
+import com.smh.club.api.domain.repos.EmailRepo;
+import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
 import com.smh.club.api.dto.email.EmailUpdateDto;
-import com.smh.club.api.rest.response.PagedDto;
+import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.smh.club.api.dto.phone;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortExclude;
+import com.smh.club.api.annotations.SortExclude;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

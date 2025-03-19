@@ -1,7 +1,7 @@
 package com.smh.club.api.dto.renewal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.validation.constraints.ValidRenewal;
+import com.smh.club.api.validation.constraints.ValidRenewal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

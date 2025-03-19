@@ -1,10 +1,10 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.rest.contracts.mappers.MemberMapper;
-import com.smh.club.api.rest.domain.entities.AddressEntity;
-import com.smh.club.api.rest.domain.entities.EmailEntity;
-import com.smh.club.api.rest.domain.entities.MemberEntity;
-import com.smh.club.api.rest.domain.entities.PhoneEntity;
+import com.smh.club.api.contracts.mappers.MemberMapper;
+import com.smh.club.api.domain.entities.AddressEntity;
+import com.smh.club.api.domain.entities.EmailEntity;
+import com.smh.club.api.domain.entities.MemberEntity;
+import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;

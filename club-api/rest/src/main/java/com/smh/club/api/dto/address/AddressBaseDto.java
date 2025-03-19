@@ -1,8 +1,8 @@
 package com.smh.club.api.dto.address;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortExclude;
-import com.smh.club.api.rest.validation.constraints.PostalCode;
+import com.smh.club.api.annotations.SortExclude;
+import com.smh.club.api.validation.constraints.PostalCode;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

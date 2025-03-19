@@ -1,8 +1,8 @@
 package com.smh.club.api.dto.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.dto.address.AddressDto;
-import com.smh.club.api.rest.dto.email.EmailDto;
+import com.smh.club.api.dto.address.AddressDto;
+import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import java.util.ArrayList;

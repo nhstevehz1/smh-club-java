@@ -1,6 +1,6 @@
 package com.smh.club.api.config;
 
-import com.smh.club.api.rest.domain.entities.*;
+import com.smh.club.api.domain.entities.*;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;

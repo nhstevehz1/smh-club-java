@@ -1,7 +1,7 @@
 package com.smh.club.api.dto.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.validation.constraints.ValidMember;
+import com.smh.club.api.validation.constraints.ValidMember;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

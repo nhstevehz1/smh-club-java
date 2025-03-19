@@ -1,7 +1,7 @@
 package com.smh.club.api.dto.email;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortExclude;
+import com.smh.club.api.annotations.SortExclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

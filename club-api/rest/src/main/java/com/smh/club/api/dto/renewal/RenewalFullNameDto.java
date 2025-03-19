@@ -1,9 +1,9 @@
 package com.smh.club.api.dto.renewal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortAlias;
-import com.smh.club.api.rest.annotations.SortTarget;
-import com.smh.club.api.rest.domain.entities.RenewalEntity;
+import com.smh.club.api.annotations.SortAlias;
+import com.smh.club.api.annotations.SortTarget;
+import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.dto.FullNameDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

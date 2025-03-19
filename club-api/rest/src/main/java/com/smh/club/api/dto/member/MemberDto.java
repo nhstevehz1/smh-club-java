@@ -1,12 +1,12 @@
 package com.smh.club.api.dto.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smh.club.api.rest.annotations.SortTarget;
+import com.smh.club.api.annotations.SortTarget;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import com.smh.club.api.rest.domain.entities.MemberEntity;
+import com.smh.club.api.domain.entities.MemberEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

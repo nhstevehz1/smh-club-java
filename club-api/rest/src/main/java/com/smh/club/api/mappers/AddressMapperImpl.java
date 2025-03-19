@@ -1,7 +1,7 @@
 package com.smh.club.api.mappers;
 
-import com.smh.club.api.rest.domain.entities.AddressEntity;
-import com.smh.club.api.rest.contracts.mappers.AddressMapper;
+import com.smh.club.api.domain.entities.AddressEntity;
+import com.smh.club.api.contracts.mappers.AddressMapper;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;

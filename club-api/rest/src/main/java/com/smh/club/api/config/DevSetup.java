@@ -2,8 +2,8 @@ package com.smh.club.api.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.rest.domain.entities.*;
-import com.smh.club.api.rest.domain.repos.MembersRepo;
+import com.smh.club.api.domain.entities.*;
+import com.smh.club.api.domain.repos.MembersRepo;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
