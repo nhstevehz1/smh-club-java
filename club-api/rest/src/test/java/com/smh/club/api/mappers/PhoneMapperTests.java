@@ -43,7 +43,8 @@ public class PhoneMapperTests {
         // verify
         assertNull(entity.getMember());
         assertEquals(create.getPhoneNumber(), entity.getPhoneNumber());
-        assertEquals(create.getPhoneType(), entity.getPhoneType());
+        assertEquals(create.getPhoneType().getPhoneTypeName(),
+            entity.getPhoneType().getPhoneTypeName());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -64,7 +65,8 @@ public class PhoneMapperTests {
         assertEquals(entity.getId(), ret.getId());
         assertEquals(entity.getMember().getId(), ret.getMemberId());
         assertEquals(entity.getPhoneNumber(), ret.getPhoneNumber());
-        assertEquals(entity.getPhoneType(), ret.getPhoneType());
+        assertEquals(entity.getPhoneType().getPhoneTypeName(),
+            ret.getPhoneType().getPhoneTypeName());
     }
 
     @Test
@@ -78,7 +80,8 @@ public class PhoneMapperTests {
         // verify
         assertEquals(entity.getId(), ret.getId());
         assertEquals(entity.getPhoneNumber(), ret.getPhoneNumber());
-        assertEquals(entity.getPhoneType(), ret.getPhoneType());
+        assertEquals(entity.getPhoneType().getPhoneTypeName(),
+            ret.getPhoneType().getPhoneTypeName());
         assertEquals(entity.getMember().getMemberNumber(), ret.getMemberNumber());
         assertEquals(entity.getMember().getFirstName(), ret.getFullName().getFirstName());
         assertEquals(entity.getMember().getMiddleName(), ret.getFullName().getMiddleName());

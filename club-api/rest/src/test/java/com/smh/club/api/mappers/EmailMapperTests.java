@@ -65,7 +65,8 @@ public class EmailMapperTests {
         assertEquals(entity.getId(), email.getId());
         assertEquals(entity.getMember().getId(), email.getMemberId());
         assertEquals(entity.getEmail(), email.getEmail());
-        assertEquals(entity.getEmailType(), email.getEmailType());
+        assertEquals(entity.getEmailType().getEmailTypeName(),
+            email.getEmailType().getEmailTypeName());
     }
 
     @Test
@@ -80,7 +81,8 @@ public class EmailMapperTests {
         assertEquals(entity.getId(), email.getId());
         assertEquals(entity.getMember().getMemberNumber(), email.getMemberNumber());
         assertEquals(entity.getEmail(), email.getEmail());
-        assertEquals(entity.getEmailType(), email.getEmailType());
+        assertEquals(entity.getEmailType().getEmailTypeName(),
+            email.getEmailType().getEmailTypeName());
         assertEquals(entity.getMember().getFirstName(), email.getFullName().getFirstName());
         assertEquals(entity.getMember().getMiddleName(), email.getFullName().getMiddleName());
         assertEquals(entity.getMember().getLastName(), email.getFullName().getLastName());
@@ -100,7 +102,8 @@ public class EmailMapperTests {
         assertEquals(entity.getId(), updatedEntity.getId());
         assertEquals(entity.getMember(), updatedEntity.getMember());
         assertEquals(update.getEmail(), updatedEntity.getEmail());
-        assertEquals(update.getEmailType(), updatedEntity.getEmailType());
+        assertEquals(update.getEmailType().getEmailTypeName(),
+            updatedEntity.getEmailType().getEmailTypeName());
     }
 
     @ParameterizedTest

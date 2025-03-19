@@ -47,7 +47,8 @@ public class AddressMapperTests {
         assertEquals(address.getCity(), entity.getCity());
         assertEquals(address.getState(), entity.getState());
         assertEquals(address.getPostalCode(), entity.getPostalCode());
-        assertEquals(address.getAddressType(), entity.getAddressType());
+        assertEquals(address.getAddressType().getAddressTypeName(),
+            entity.getAddressType().getAddressTypeName());
 
         // id should be zero
         assertEquals(0, entity.getId());
@@ -72,7 +73,8 @@ public class AddressMapperTests {
         assertEquals(entity.getCity(), address.getCity());
         assertEquals(entity.getState(), address.getState());
         assertEquals(entity.getPostalCode(), address.getPostalCode());
-        assertEquals(entity.getAddressType(), address.getAddressType());
+        assertEquals(entity.getAddressType().getAddressTypeName(),
+            address.getAddressType().getAddressTypeName());
     }
 
     @Test
@@ -90,7 +92,8 @@ public class AddressMapperTests {
         assertEquals(entity.getCity(), address.getCity());
         assertEquals(entity.getState(), address.getState());
         assertEquals(entity.getPostalCode(), address.getPostalCode());
-        assertEquals(entity.getAddressType(), address.getAddressType());
+        assertEquals(entity.getAddressType().getAddressTypeName(),
+            address.getAddressType().getAddressTypeName());
         assertEquals(entity.getMember().getMemberNumber(), address.getMemberNumber());
         assertEquals(entity.getMember().getFirstName(), address.getFullName().getFirstName());
         assertEquals(entity.getMember().getLastName(), address.getFullName().getLastName());
@@ -115,7 +118,8 @@ public class AddressMapperTests {
         assertEquals(update.getCity(), updatedEntity.getCity());
         assertEquals(update.getState(), updatedEntity.getState());
         assertEquals(update.getPostalCode(), updatedEntity.getPostalCode());
-        assertEquals(update.getAddressType(), updatedEntity.getAddressType());
+        assertEquals(update.getAddressType().getAddressTypeName(),
+            updatedEntity.getAddressType().getAddressTypeName());
     }
 
     @ParameterizedTest
@@ -148,7 +152,8 @@ public class AddressMapperTests {
             assertEquals(entity.getCity(), address.getCity());
             assertEquals(entity.getState(), address.getState());
             assertEquals(entity.getPostalCode(), address.getPostalCode());
-            assertEquals(entity.getAddressType(), address.getAddressType());
+            assertEquals(entity.getAddressType().getAddressTypeName(),
+                address.getAddressType().getAddressTypeName());
         }
     }
 
