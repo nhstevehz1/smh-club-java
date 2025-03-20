@@ -17,3 +17,4 @@ plugins {
 
 rootProject.name = 'smh-club-rest'
 include('server')
+include('client')
