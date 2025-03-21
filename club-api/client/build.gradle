@@ -1,3 +1,50 @@
+import com.github.gradle.node.npm.task.NpmTask
+
 plugins{
   id 'build-logic.node-conventions'
+}
+
+tasks.register('lintTask', NpmTask) {
+  dependsOn npmInstall
+  npmCommand = ['run', 'lint']
+  inputs.files('package.json', 'package-lock.json', 'angular.json', 'tsconfig.json', 'tsconfig.app.json')
+  inputs.dir('src')
+  inputs.dir(fileTree('node_modules').exclude('.cache'))
+  outputs.dir('dist')
+}
+
+tasks.register('buildTask', NpmTask) {
+  dependsOn npmInstall
+  npmCommand = ['run', 'build']
+  args = ['--omit=dev']
+  inputs.files('angular.json', 'tsconfig.json', 'tsconfig.app.json')
+  inputs.dir('src')
+  inputs.dir(fileTree('node_modules').exclude('.cache'))
+  outputs.dir('dist/')
+}
+
+tasks.register('testTask', NpmTask) {
+  dependsOn npmInstall
+  npmCommand = ['test']
+  args = ['--prod']
+  inputs.files('angular.json', 'tsconfig.json', 'tsconfig.spec.json', 'karma.conf.js')
+  inputs.dir('src')
+  inputs.dir(fileTree('node_modules').exclude('.cache'))
+  outputs.dir('dist/club-client')
+}
+
+
+sourceSets {
+  java {
+    main {
+      resources {
+        // This makes the processResources task automatically depend on the buildClient one
+        srcDir(buildTask)
+      }
+    }
+  }
+}
+
+tasks.test {
+  dependsOn('testTask')
 }

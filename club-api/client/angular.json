@@ -3,11 +3,11 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "club-frontend-angular": {
+    "club-client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style" : "scss"
+          "style": "scss"
         }
       },
       "root": "",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/club-frontend-angular",
+            "outputPath": "dist/club-client",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -66,10 +66,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "club-frontend-angular:build:production"
+              "buildTarget": "club-client:build:production"
             },
             "development": {
-              "buildTarget": "club-frontend-angular:build:development"
+              "buildTarget": "club-client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -97,8 +97,22 @@
             "scripts": [],
             "karmaConfig": "karma.conf.js"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
+  },
+  "cli": {
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }
