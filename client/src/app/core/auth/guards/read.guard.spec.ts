@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {ActivatedRouteSnapshot, CanActivateFn, provideRouter, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivateFn, provideRouter, Router} from '@angular/router';
 
 import {readGuard} from './read.guard';
 import {AuthService} from "../services/auth.service";

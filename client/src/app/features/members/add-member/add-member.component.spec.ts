@@ -14,7 +14,6 @@ import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {By} from "@angular/platform-browser";
 import {TranslateModule} from "@ngx-translate/core";
-import {HarnessLoader} from "@angular/cdk/testing";
 import {AddressService} from "../../addresses/services/address.service";
 import {EmailService} from "../../emails/services/email.service";
 import {PhoneService} from "../../phones/services/phone.service";
