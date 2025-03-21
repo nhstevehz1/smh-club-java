@@ -29,9 +29,9 @@ describe('EmailServiceService', () => {
   });
 
   it('should call api with no parameters when page request is empty', () => {
-    let pageRequest: PageRequest = PageRequest.of(undefined, undefined);
+    const pageRequest: PageRequest = PageRequest.of(undefined, undefined);
 
-    service.getEmails(pageRequest).subscribe(() => {});
+    service.getEmails(pageRequest).subscribe((): void => {});
 
     const req = controller.expectOne(baseUri);
     expect(req.request.method).toBe('GET');
@@ -41,10 +41,10 @@ describe('EmailServiceService', () => {
   });
 
   it('should call api with parameters when page request is populated', () => {
-    let pageRequest: PageRequest = PageRequest.of(0, 0);
+    const pageRequest: PageRequest = PageRequest.of(0, 0);
     const uri = baseUri + pageRequest.createQuery();
 
-    service.getEmails(pageRequest).subscribe(() => {});
+    service.getEmails(pageRequest).subscribe((): void => {});
 
     const req = controller.expectOne(uri);
     expect(req.request.method).toBe('GET');

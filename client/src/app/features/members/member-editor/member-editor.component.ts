@@ -41,32 +41,32 @@ export class MemberEditorComponent extends BaseEditorComponent<MemberCreate> {
     firstNameSignal
         = computed(() => this.editorFormSignal().controls.first_name);
     firstNameErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'firstNameErrors'});
+        = input<FormControlError[]>(undefined, {alias: 'firstNameErrors'});
 
     middleNameSignal
         = computed(() => this.editorFormSignal().controls.middle_name);
     middleNameErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'middleNameErrors'});
+        = input<FormControlError[]>(undefined, {alias: 'middleNameErrors'});
 
     lastNameSignal
         = computed(() => this.editorFormSignal().controls.last_name);
     lastNameErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'lastNameErrors'});
+        = input<FormControlError[]>(undefined, {alias: 'lastNameErrors'});
 
     suffixSignal
         = computed(() => this.editorFormSignal().controls.suffix);
     suffixErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'suffixErrors'});
+        = input<FormControlError[]>(undefined, {alias: 'suffixErrors'});
 
     birthDateSignal
         = computed(() => this.editorFormSignal().controls.birth_date);
     birthDateErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'birthDateErrors'});
+        = input<FormControlError[]>(undefined, {alias: 'birthDateErrors'});
 
     joinedDateSignal
         = computed(() => this.editorFormSignal().controls.joined_date);
     joinedDateErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'joinedDateErrors'});
+        = input<FormControlError[]>(undefined, {alias: 'joinedDateErrors'});
 
     constructor() {
         super();

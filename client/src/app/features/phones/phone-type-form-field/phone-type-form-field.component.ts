@@ -27,10 +27,10 @@ export class PhoneTypeFormFieldComponent {
         = input<string>(undefined, {alias: 'label'});
 
     controlErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'controlErrors'});
+        = input<FormControlError[]>(undefined, {alias: 'controlErrors'});
 
     optionsSignal
-        = signal<Array<PhoneTypeOption>>([]);
+        = signal<PhoneTypeOption[]>([]);
 
     constructor() {
         this.optionsSignal.set([

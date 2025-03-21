@@ -12,7 +12,7 @@ import {AuthService} from "./core/auth/services/auth.service";
 import {DOCUMENT} from "@angular/common";
 import {provideNgxTranslate} from "./core/i18n/providers/ngx-translate-provider";
 
-export let appConfig: ApplicationConfig;
+export let  appConfig: ApplicationConfig;
 appConfig = {
   providers: [
     provideAnimations(),
@@ -41,7 +41,7 @@ appConfig = {
       }),
       {
           provide: Window,
-          useFactory: (): Window => <Window>inject(DOCUMENT)?.defaultView,
+          useFactory: (): Window => inject(DOCUMENT)?.defaultView as Window
       }
 
   ]

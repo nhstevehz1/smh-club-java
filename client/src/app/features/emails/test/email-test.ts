@@ -10,11 +10,11 @@ export function generateEmailPagedData(page: number, size: number, total: number
     return generatePagedData(page, size, total, content);
 }
 
-export function generateEmailList(size: number): Array<EmailMember> {
-    let list: Array<EmailMember> = [];
+export function generateEmailList(size: number): EmailMember[] {
+    const list: EmailMember[] = [];
 
     for (let ii = 0; ii < size; ii++) {
-        let emailMember = {
+        const emailMember = {
             id: ii,
             member_id: ii,
             email: `${ii}email@${ii}domain.com`,

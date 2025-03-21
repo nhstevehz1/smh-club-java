@@ -1,5 +1,5 @@
 export interface PagedData<T> {
-    _content: Array<T>;
+    _content: T[];
     page: Page;
 }
 

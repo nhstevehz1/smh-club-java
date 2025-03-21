@@ -12,7 +12,7 @@ describe('ProfileComponent', () => {
   let fixture: ComponentFixture<ProfileComponent>;
   let authSvcMock: jasmine.SpyObj<AuthService>;
   let loader: HarnessLoader;
-  let currUser: AuthUser = {
+  const currUser: AuthUser = {
     preferredUserName: 'user',
     givenName: 'First',
     familyName: 'Last',

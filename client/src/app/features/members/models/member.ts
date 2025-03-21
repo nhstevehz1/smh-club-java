@@ -18,9 +18,9 @@ export interface MemberDetails extends Member {
 }
 
 export interface MemberCreate extends Member {
-    addresses: Array<AddressCreate>;
-    emails: Array<EmailCreate>;
-    phones: Array<PhoneCreate>;
+    addresses: AddressCreate[];
+    emails: EmailCreate[];
+    phones: PhoneCreate[];
 }
 
 export interface MemberUpdate extends MemberDetails {}

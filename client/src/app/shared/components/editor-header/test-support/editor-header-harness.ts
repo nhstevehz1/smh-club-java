@@ -16,7 +16,7 @@ export class EditorHeaderHarness extends ContentContainerComponentHarness {
 
     async isButtonVisible(): Promise<boolean> {
         const button = await this.getButtonHarness();
-        let visible = (button !== null);
+        const visible = (button !== null);
         return Promise.resolve(visible)
     }
 

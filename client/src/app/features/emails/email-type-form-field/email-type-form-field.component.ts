@@ -27,10 +27,10 @@ export class EmailTypeFormFieldComponent {
       input<string>(undefined, {alias: 'label'});
 
   optionsSignal
-      = signal<Array<EmailTypeOption>> ([]);
+      = signal<EmailTypeOption[]> ([]);
 
   controlErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'controlErrors'})
+      = input<FormControlError[]>(undefined, {alias: 'controlErrors'})
 
   constructor() {
     this.optionsSignal.set([

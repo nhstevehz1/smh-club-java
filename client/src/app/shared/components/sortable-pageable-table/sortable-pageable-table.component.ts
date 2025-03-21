@@ -25,13 +25,13 @@ import {TranslatePipe} from "@ngx-translate/core";
 })
 export class SortablePageableTableComponent<T> implements AfterViewInit {
   columnsSignal
-      = input.required<Array<ColumnDef<T>>>({alias: 'columns'});
+      = input.required<ColumnDef<T>[]>({alias: 'columns'});
 
   dataSourceSignal
       = input.required<MatTableDataSource<T>>({alias: 'dataSource'});
 
   pageSizesSignal
-      = input<Array<number>>([5,10,25,100], {alias: 'pageSizes'});
+      = input<number[]>([5,10,25,100], {alias: 'pageSizes'});
 
   pageSizeSignal
       = input<number>(5, {alias: 'pageSize'});
@@ -39,7 +39,7 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   resultsLengthSignal
       = input<number>(0, {alias: 'resultsLength'});
 
-  columnNamesSignal= computed<Array<string>>(() =>
+  columnNamesSignal= computed<string[]>(() =>
       this.columnsSignal().map(c => c.columnName));
 
   @ViewChild(MatSort, {static: true})

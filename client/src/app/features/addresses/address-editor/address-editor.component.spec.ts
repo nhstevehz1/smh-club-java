@@ -23,7 +23,7 @@ describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;
   let fixture: ComponentFixture<AddressEditorComponent>;
   let loader: HarnessLoader;
-  
+
   const formGroup: FormModelGroup<AddressUpdate> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
@@ -112,17 +112,17 @@ describe('AddressEditorComponent', () => {
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-      
+
     });
 
     describe('address2 field tests', () =>  {
-      
+
       beforeEach( async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with({
               floatingLabelText: 'addresses.editor.address2.label'}));
       });
-      
+
       it('should contain address2 field', async () => {
         expect(harness).not.toBeNull();
       });
@@ -143,17 +143,17 @@ describe('AddressEditorComponent', () => {
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-      
+
     });
 
     describe('city field tests', () =>  {
-      
+
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with({
               floatingLabelText: 'addresses.editor.city.label'}));
       });
-      
+
       it('should contain city field', async () => {
         expect(harness).not.toBeNull();
       });
@@ -166,25 +166,25 @@ describe('AddressEditorComponent', () => {
 
       it('city should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
-        let appearance = await harness?.getAppearance();
+        const appearance = await harness?.getAppearance();
         expect(appearance).toBe(outline);
       });
 
       it('city should use fill appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', fill);
-        let appearance = await harness?.getAppearance();
+        const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
     });
 
     describe('state field tests', () =>  {
-      
+
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with({
               floatingLabelText: 'addresses.editor.state.label'}));
       });
-      
+
       it('should contain state field', async () => {
         expect(harness).not.toBeNull();
       });
@@ -197,19 +197,19 @@ describe('AddressEditorComponent', () => {
 
       it('state should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
-        let appearance = await harness?.getAppearance();
+        const appearance = await harness?.getAppearance();
         expect(appearance).toBe(outline);
       });
 
       it('state should use fill appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', fill);
-        let appearance = await harness?.getAppearance();
+        const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
     });
 
     describe('postal code field tests', () =>  {
-      
+
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with({
@@ -240,13 +240,13 @@ describe('AddressEditorComponent', () => {
     });
 
     describe('address type field tests', ()=>  {
-      
+
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with({
               floatingLabelText: 'addresses.editor.addressType.label'}));
       });
-      
+
       it('should contain AddressType field', async () => {
         expect(harness).not.toBeNull();
       });
@@ -269,10 +269,10 @@ describe('AddressEditorComponent', () => {
       });
     });
   });
-  
+
   describe('address remove button and title tests', () => {
     let headerHarness: EditorHeaderHarness | null;
-    
+
     beforeEach(async () => {
       fixture.componentRef.setInput('editorForm', formGroup);
       headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);

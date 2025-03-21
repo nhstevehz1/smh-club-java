@@ -44,8 +44,8 @@ describe('EmailTypeFormFieldComponent', () => {
   it('should contain the correct option values', () => {
     const options = component.optionsSignal();
 
-    for ( let emailType of Object.values(EmailType)) {
-      let values = options.map(v => v.value);
+    for ( const emailType of Object.values(EmailType)) {
+      const values = options.map(v => v.value);
       expect(values).toContain(emailType);
     }
   });

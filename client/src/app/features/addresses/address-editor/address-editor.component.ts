@@ -32,27 +32,27 @@ export class AddressEditorComponent extends BaseEditorComponent<AddressCreate> {
 
   address1Signal = computed(() => this.editorFormSignal().controls.address1);
   address1ErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'address1Errors'});
+      = input<FormControlError[]>(undefined, {alias: 'address1Errors'});
 
   address2Signal = computed(() => this.editorFormSignal().controls.address2);
   address2ErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'address2Errors'});
+      = input<FormControlError[]>(undefined, {alias: 'address2Errors'});
 
   citySignal = computed(() => this.editorFormSignal().controls.city);
   cityErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'cityErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'cityErrors'});
 
   stateSignal = computed(() => this.editorFormSignal().controls.state);
   stateErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'stateErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'stateErrors'});
 
   postalCodeSignal = computed(() => this.editorFormSignal().controls.postal_code);
   postalCodeErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'postalCodeErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'postalCodeErrors'});
 
   addressTypeSignal = computed(() => this.editorFormSignal().controls.address_type);
   addressTypeErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'addressTypeErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'addressTypeErrors'});
 
   constructor() {
     super();

@@ -46,6 +46,6 @@ export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
 };
 
 export function checkUrl(url: string, allowedUrls: string[]): boolean {
-  let found = allowedUrls.find(u => url.startsWith(u));
+  const found = allowedUrls.find(u => url.startsWith(u));
   return !!found;
 }

@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {CanActivateFn, provideRouter, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivateFn, provideRouter, Router, RouterStateSnapshot} from '@angular/router';
 
 import {readGuard} from './read.guard';
 import {AuthService} from "../services/auth.service";
@@ -7,7 +7,7 @@ import {Observable, Subject} from "rxjs";
 import {PermissionType} from "../models/permission-type";
 
 describe('readGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
+  const executeGuard: CanActivateFn = (...guardParameters) =>
       TestBed.runInInjectionContext(() => readGuard(...guardParameters));
 
   let authServiceMock: jasmine.SpyObj<AuthService>;
@@ -16,7 +16,7 @@ describe('readGuard', () => {
   let readIsAuthedSubject$: Subject<boolean>;
   let readIsAuthedEvent$: Observable<boolean>
 
-  const route: any = {};
+  const route = new ActivatedRouteSnapshot();
   const state: any = {};
 
   beforeEach(async () => {

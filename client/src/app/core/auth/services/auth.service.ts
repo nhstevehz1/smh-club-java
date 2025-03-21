@@ -17,7 +17,7 @@ export class AuthService {
 
   private user?: AuthUser;
 
-  private permissionsMap: Map<PermissionType, string[]> = new Map();
+  private permissionsMap = new Map<PermissionType, string[]>();
 
   private isLoadedSubject$ = new BehaviorSubject<boolean>(false);
   public isLoaded$ = this.isLoadedSubject$.asObservable();
@@ -65,7 +65,7 @@ export class AuthService {
   }
 
   private loadCurrentUser(): void {
-    let roles = this.parseRoles().filter(r => r.startsWith('club-'));
+    const roles = this.parseRoles().filter(r => r.startsWith('club-'));
     const claims = this.oauthService.getIdentityClaims();
     this.user = {
       preferredUserName: claims['preferred_username'],

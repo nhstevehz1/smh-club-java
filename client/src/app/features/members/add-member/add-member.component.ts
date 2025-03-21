@@ -72,12 +72,12 @@ export class AddMemberComponent {
 
     phoneFormsComputed = computed(() =>
         this.createFormSignal().controls.phones as unknown as FormArray<FormModelGroup<PhoneCreate>>);
-    
+
     fieldAppearance
         = signal<MatFormFieldAppearance>('outline');
-    
+
     errorMessage = signal<string | null>(null);
-    
+
     submitted = signal(false);
 
 
@@ -97,7 +97,7 @@ export class AddMemberComponent {
 
     onSave(): void {
         if (this.createFormSignal().valid) {
-            this.memberSvc.createMember(<MemberCreate>this.createFormSignal().value).subscribe({
+            this.memberSvc.createMember(this.createFormSignal().value as MemberCreate).subscribe({
               next: () =>  {
                   this.errorMessage.set(null)
                   this.submitted.set(true);

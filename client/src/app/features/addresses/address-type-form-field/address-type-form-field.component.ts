@@ -24,13 +24,13 @@ export class AddressTypeFormFieldComponent {
       = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
 
   optionsSignal
-      = signal<Array<AddressTypeOption>>([]);
+      = signal<AddressTypeOption[]>([]);
 
   labelSignal =
       input<string>(undefined, {alias: 'label'});
 
   controlErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'controlErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'controlErrors'});
 
   constructor() {
     this.optionsSignal.set([

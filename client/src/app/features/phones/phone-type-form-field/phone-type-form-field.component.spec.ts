@@ -44,8 +44,8 @@ describe('PhoneTypeFormFieldComponent', () => {
   it('should contain the correct option values', () => {
     const options = component.optionsSignal();
 
-    for ( let phoneType of Object.values(PhoneType)) {
-      let values = options.map(v => v.value);
+    for ( const phoneType of Object.values(PhoneType)) {
+      const values = options.map(v => v.value);
       expect(values).toContain(phoneType);
     }
   });

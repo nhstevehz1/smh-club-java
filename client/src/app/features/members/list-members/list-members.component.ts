@@ -64,7 +64,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
                 startWith({}),
                 switchMap(() => {
                     // assemble the dynamic page request
-                    let pr = this.getPageRequest(
+                    const pr = this.getPageRequest(
                         this._table.paginator.pageIndex, this._table.paginator.pageSize,
                         this._table.sort.active, this._table.sort.direction);
 
@@ -94,7 +94,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
     }
 
     addMemberHandler(): void {
-        this.router.navigate(['p/members/add']).then(() => {});
+        this.router.navigate(['p/members/add']).then(():void => {});
     }
 
     // assemble the column defs which will be consumed by the pageable sortable table component

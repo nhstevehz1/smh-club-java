@@ -8,11 +8,11 @@ export function generateRenewalPageData(page: number, size: number, total: numbe
     return generatePagedData(page, size, total, content);
 }
 
-export function generateRenewalList(size: number): Array<RenewalMember> {
-    let list: Array<RenewalMember> = [];
+export function generateRenewalList(size: number): RenewalMember[] {
+    const list: RenewalMember[] = [];
 
     for (let ii = 0; ii < size; ii++) {
-        let renewalMember = {
+        const renewalMember = {
             id: ii,
             member_id: ii,
             member_number: ii,

@@ -12,11 +12,11 @@ export function generateMemberPageData(page: number, size: number, total: number
     return generatePagedData(page, size, total, content);
 }
 
-export function generateMemberList(size: number): Array<MemberDetails> {
-    let list: Array<MemberDetails> = [];
+export function generateMemberList(size: number): MemberDetails[] {
+    const list: MemberDetails[] = [];
 
     for(let ii = 0; ii < size; ii++) {
-        let member: MemberDetails = generateMemberDetails(ii);
+        const member: MemberDetails = generateMemberDetails(ii);
         list.push(member);
     }
     return list;

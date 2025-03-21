@@ -26,7 +26,6 @@ import {Validators} from "@angular/forms";
 describe('AddMemberComponent', () => {
   let component: AddMemberComponent;
   let fixture: ComponentFixture<AddMemberComponent>;
-  let loader: HarnessLoader;
 
   let memberSvcMock: jasmine.SpyObj<MembersService>;
   let addressSvcMock: jasmine.SpyObj<AddressService>;
@@ -76,7 +75,6 @@ describe('AddMemberComponent', () => {
 
     fixture = TestBed.createComponent(AddMemberComponent);
     component = fixture.componentInstance;
-    loader = TestbedHarnessEnvironment.loader(fixture);
     // set one validator so the form is not 'valid'
     component.createFormSignal().controls.first_name.setValidators(Validators.required);
   });

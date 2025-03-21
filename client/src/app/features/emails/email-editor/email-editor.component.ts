@@ -33,12 +33,12 @@ export class EmailEditorComponent extends BaseEditorComponent<EmailCreate> {
   emailSignal
       = computed(() => this.editorFormSignal().controls.email);
   emailErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'emailErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'emailErrors'});
 
   emailTypeSignal
     = computed(() => this.editorFormSignal().controls.email_type);
   emailTypeErrorsSignal
-    = input<Array<FormControlError>>(undefined, {alias: 'emailTypeErrors'});
+    = input<FormControlError[]>(undefined, {alias: 'emailTypeErrors'});
 
   constructor() {
     super();

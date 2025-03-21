@@ -97,7 +97,7 @@ describe('InputFormFieldComponent', () => {
     });
 
     it('input should use the correct appearance', async () => {
-      const val = <MatFormFieldAppearance>'fill'
+      const val = 'fill' as MatFormFieldAppearance;
       fixture.componentRef.setInput('appearance', val);
       const appearance = await harness.getAppearance();
       console.debug(component.appearanceSignal());
@@ -153,7 +153,7 @@ describe('InputFormFieldComponent', () => {
 
   describe('error tests, validators present', ()=> {
     let harness: MatInputHarness;
-    let errors: FormControlError[]  = [
+    const errors: FormControlError[]  = [
       {type: 'required', message:'required message'}
     ]
     beforeEach( async () => {

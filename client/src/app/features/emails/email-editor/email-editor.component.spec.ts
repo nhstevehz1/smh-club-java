@@ -20,7 +20,7 @@ describe('EmailEditorComponent', () => {
   let fixture: ComponentFixture<EmailEditorComponent>;
   let loader: HarnessLoader;
 
-  let formGroup: FormModelGroup<EmailUpdate> = new FormGroup({
+  const formGroup: FormModelGroup<EmailUpdate> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
     email: new FormControl<string>('email@email.com', {nonNullable: true}),

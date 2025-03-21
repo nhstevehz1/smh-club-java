@@ -20,8 +20,8 @@ export class MembersService {
               private fb: NonNullableFormBuilder) {}
 
   getMembers(pageRequest: PageRequest): Observable<PagedData<MemberDetails>> {
-    let query = pageRequest.createQuery();
-    let uri = query == null ? this.BASE_API : this.BASE_API + query;
+    const query = pageRequest.createQuery();
+    const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
     return this.http.get<PagedData<MemberDetails>>(uri).pipe(
         map(pd => {

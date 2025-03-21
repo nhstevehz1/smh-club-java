@@ -10,11 +10,11 @@ export function generateAddressPagedData(page: number, size: number, total: numb
     return generatePagedData(page, size, total, content);
 }
 
-export function generateAddressList(size: number): Array<AddressMember> {
-    let list: Array<AddressMember> = [];
+export function generateAddressList(size: number): AddressMember[] {
+    let list: AddressMember[] = [];
 
     for (let ii = 0; ii < size; ii++) {
-        let addressMember: AddressMember = {
+        const addressMember: AddressMember = {
             id: ii,
             member_id: ii,
             address1: ii + " Street",

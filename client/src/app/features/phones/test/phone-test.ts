@@ -10,11 +10,11 @@ export function generatePhonePageData(page: number, size: number, total: number)
     return generatePagedData(page, size, total, content);
 }
 
-export function generatePhoneList(size: number): Array<PhoneMember> {
-    let list: Array<PhoneMember> = [];
+export function generatePhoneList(size: number): PhoneMember[] {
+    const list: PhoneMember[] = [];
 
     for(let ii = 0; ii < size; ii++) {
-        let phone: PhoneMember = {
+        const phone: PhoneMember = {
             id: ii,
             member_id: ii,
             country_code: '1',

@@ -11,9 +11,9 @@ export abstract class InputComponentBase<T> {
         input.required<FormControl<T>>({alias: 'formControl'});
 
     appearanceSignal
-        = input( <MatFormFieldAppearance>('outline'), { alias: 'appearance',
+        = input(('outline'), { alias: 'appearance',
             transform(value: MatFormFieldAppearance | undefined) {
-                const defaultVal = <MatFormFieldAppearance>('outline');
+                const defaultVal = ('outline') as MatFormFieldAppearance;
                 return value || defaultVal;
         }
     });
@@ -23,7 +23,7 @@ export abstract class InputComponentBase<T> {
     controlErrorsSignal
         = input(<FormControlError[]>[], { alias: 'controlErrors',
             transform(value: FormControlError[] | undefined | null) {
-                return value || <FormControlError[]>[];
+                return value || [] as FormControlError[];
         }
     });
 
@@ -31,8 +31,8 @@ export abstract class InputComponentBase<T> {
 
     protected invalidMessageSignal = computed<string>(() => {
         if(this.invalidSignal()) {
-            for (let val of this.controlErrorsSignal()) {
-                let hasError = this.formControlSignal().hasError(val.type);
+            for (const val of this.controlErrorsSignal()) {
+                const hasError = this.formControlSignal().hasError(val.type);
                 if (hasError) {
                     return val.message;
                 }

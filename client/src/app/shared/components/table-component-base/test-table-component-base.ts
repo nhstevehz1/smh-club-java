@@ -4,7 +4,7 @@ import {PageRequest} from "../../models/page-request";
 import {SortDirection} from "@angular/material/sort";
 import {FullName} from "../../models/full-name";
 
-export class TestTableComponentBase extends TableComponentBase<any> {
+export class TestTableComponentBase<T> extends TableComponentBase<T> {
 
     public getPageRequestExternal(pageIndex?: number, pageSize?: number,
                                   sort?: string, direction?: SortDirection ): PageRequest {
@@ -16,7 +16,7 @@ export class TestTableComponentBase extends TableComponentBase<any> {
         return this.getFullName(fullName);
     }
 
-    protected getColumns(): ColumnDef<any>[] {
+    protected getColumns(): ColumnDef<T>[] {
         return [];
     }
 

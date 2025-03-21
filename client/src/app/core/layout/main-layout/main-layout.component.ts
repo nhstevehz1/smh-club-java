@@ -37,7 +37,7 @@ export class MainLayoutComponent {
   }
 
   profileHandler(): void {
-    this.router.navigate(['p/profile']).then(() => {});
+    this.router.navigate(['p/profile']).then((): void => {});
   }
 
   logoutHandler(): void {

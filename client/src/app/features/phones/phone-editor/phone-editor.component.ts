@@ -33,17 +33,17 @@ export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | Phon
   countryCodeSignal
       = computed(() => this.editorFormSignal().controls.country_code);
   countryCodeErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'countryCodeErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'countryCodeErrors'});
 
   phoneNumberSignal
       = computed(() => this.editorFormSignal().controls.phone_number);
   phoneNumberErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'phoneNumberErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'phoneNumberErrors'});
 
   phoneTypeSignal
       = computed(() => this.editorFormSignal().controls.phone_type);
   phoneTypeErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'phoneTypeErrors'});
+      = input<FormControlError[]>(undefined, {alias: 'phoneTypeErrors'});
 
   constructor() {
     super();
