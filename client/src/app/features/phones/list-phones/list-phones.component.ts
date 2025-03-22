@@ -3,7 +3,7 @@ import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {PhoneService} from "../services/phone.service";
-import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
+import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {PhoneMember} from "../models/phone";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MatTableDataSource} from "@angular/material/table";
@@ -18,7 +18,7 @@ import {PhoneType} from "../models/phone-type";
   templateUrl: './list-phones.component.html',
   styleUrl: './list-phones.component.scss'
 })
-export class ListPhonesComponent extends TableComponentBase<PhoneMember> implements OnInit, AfterViewInit {
+export class ListPhonesComponent extends BaseTableComponent<PhoneMember> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<PhoneMember>;

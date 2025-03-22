@@ -7,7 +7,7 @@ import {ColumnDef} from "../../../shared/components/sortable-pageable-table/mode
 import {MembersService} from "../services/members.service";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
+import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {Router} from "@angular/router";
@@ -36,7 +36,7 @@ import {TranslatePipe, TranslateService} from "@ngx-translate/core";
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent extends TableComponentBase<MemberDetails> implements OnInit, AfterViewInit{
+export class ListMembersComponent extends BaseTableComponent<MemberDetails> implements OnInit, AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
     private _table!: SortablePageableTableComponent<MemberDetails>;
 

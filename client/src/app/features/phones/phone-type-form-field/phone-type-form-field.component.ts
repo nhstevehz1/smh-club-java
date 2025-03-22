@@ -28,7 +28,7 @@ export class PhoneTypeFormFieldComponent {
     controlErrors
         = input<FormControlError[]>();
 
-    protected options = signal<PhoneTypeOption[]>([]);
+    options = signal<PhoneTypeOption[]>([]);
 
     constructor() {
         this.options.set([

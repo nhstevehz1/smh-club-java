@@ -1,17 +1,17 @@
 import {FormControl} from "@angular/forms";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {computed, Directive, input, signal} from "@angular/core";
-import {FormControlError} from "./form-control-error";
+import {FormControlError} from './models/form-control-error';
 
 @Directive()
-export abstract class InputComponentBase<T> {
+export abstract class BaseInputComponent<T> {
 
 
     formControl =
         input.required<FormControl<T>>();
 
     appearance
-        = input(('outline'), {
+        = input(('outline' as MatFormFieldAppearance), {
             transform(value: MatFormFieldAppearance | undefined) {
                 const defaultVal = ('outline') as MatFormFieldAppearance;
                 return value || defaultVal;

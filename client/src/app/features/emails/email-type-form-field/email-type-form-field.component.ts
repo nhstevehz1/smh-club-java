@@ -25,7 +25,7 @@ export class EmailTypeFormFieldComponent {
 
   controlErrors= input<FormControlError[]>()
 
-  protected options= signal<EmailTypeOption[]> ([]);
+  options= signal<EmailTypeOption[]> ([]);
 
   constructor() {
     this.options.set([

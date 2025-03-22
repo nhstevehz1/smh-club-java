@@ -4,7 +4,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {TranslatePipe} from "@ngx-translate/core";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {DateTime} from "luxon";
-import {InputComponentBase} from "../models/input-component";
+import {BaseInputComponent} from "../base-input-component";
 import {MatInputModule} from "@angular/material/input";
 
 @Component({
@@ -19,6 +19,6 @@ import {MatInputModule} from "@angular/material/input";
   templateUrl: './date-form-field.component.html',
   styleUrl: './date-form-field.component.scss'
 })
-export class DateFormFieldComponent extends InputComponentBase<DateTime>{
+export class DateFormFieldComponent extends BaseInputComponent<DateTime>{
 
 }

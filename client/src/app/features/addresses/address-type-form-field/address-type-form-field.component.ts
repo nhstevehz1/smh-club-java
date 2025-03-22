@@ -25,7 +25,7 @@ export class AddressTypeFormFieldComponent {
 
   controlErrors = input<FormControlError[]>();
 
-  protected options= signal<AddressTypeOption[]>([]);
+  options= signal<AddressTypeOption[]>([]);
 
   constructor() {
     this.options.set([

@@ -45,12 +45,12 @@ describe('AddressTypeFormFieldComponent', () => {
   });
 
   it('should contain the correct number of options',  () => {
-    const options = component.optionsSignal();
+    const options = component.options();
     expect(options.length).toEqual(Object.entries(AddressType).length);
   });
 
   it('should contain the correct option values', () => {
-    const options = component.optionsSignal();
+    const options = component.options();
 
     for (const addressType of Object.values(AddressType)) {
       const values = options.map(v => v.value);

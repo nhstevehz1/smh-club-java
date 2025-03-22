@@ -3,7 +3,7 @@ import {SortDirection} from "@angular/material/sort";
 import {PageRequest, SortDef} from "../../models/page-request";
 import {FullName} from "../../models/full-name";
 
-export abstract class TableComponentBase <T> {
+export abstract class BaseTableComponent<T> {
 
     protected getPageRequest(pageIndex?: number, pageSize?: number,
                              sort?: string, direction?: SortDirection ): PageRequest {
