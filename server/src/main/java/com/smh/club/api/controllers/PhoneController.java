@@ -4,7 +4,6 @@ import com.smh.club.api.contracts.services.PhoneService;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
-import com.smh.club.api.dto.phone.PhoneUpdateDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -94,14 +93,14 @@ public class PhoneController {
      * Endpoint for updating a phone.
      *
      * @param id The id of the phone to update in the database.
-     * @param phone The {@link PhoneUpdateDto} that contains the updated info.
+     * @param phone The {@link PhoneDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} that represents the updated phone.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping("{id}")
     public ResponseEntity<PhoneDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody PhoneUpdateDto phone) {
+        @NotNull @Valid @RequestBody PhoneDto phone) {
 
         var ret = phoneSvc.updatePhone(id, phone);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

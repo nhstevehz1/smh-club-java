@@ -3,7 +3,6 @@ package com.smh.club.api.contracts.services;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
-import com.smh.club.api.dto.phone.PhoneUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -41,10 +40,10 @@ public interface PhoneService {
      * Updates a phone in the database.
      *
      * @param id The id of the phone to update.
-     * @param phone The {@link PhoneUpdateDto} containing the updates.
+     * @param phone The {@link PhoneDto} containing the updates.
      * @return The updated {@link PhoneDto}.
      */
-    Optional<PhoneDto> updatePhone(int id, PhoneUpdateDto phone);
+    Optional<PhoneDto> updatePhone(int id, PhoneDto phone);
 
     /**
      * Deletes a phone from the database.

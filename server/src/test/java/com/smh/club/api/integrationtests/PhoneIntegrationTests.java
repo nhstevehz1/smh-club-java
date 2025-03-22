@@ -327,9 +327,9 @@ public class PhoneIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(PhoneUpdateDto.class)
-            .set(field(PhoneUpdateDto::getId), id)
-            .set(field(PhoneUpdateDto::getMemberId), memberId)
+        var update = Instancio.of(PhoneDto.class)
+            .set(field(PhoneDto::getId), id)
+            .set(field(PhoneDto::getMemberId), memberId)
             .create();
 
         // perform PUT
@@ -446,21 +446,13 @@ public class PhoneIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(PhoneCreateDto expected, PhoneEntity actual) {
-        verify((PhoneBaseDto)expected, actual);
-    }
-
-    private void verify(PhoneUpdateDto expected, PhoneEntity actual) {
-        assertEquals(expected.getId(), actual.getId());
-        verify((PhoneBaseDto)expected, actual);
-    }
 
     private void verify(PhoneDto expected, PhoneEntity actual) {
         assertEquals(expected.getId(), actual.getId());
-        verify((PhoneBaseDto)expected, actual);
+        verify((PhoneCreateDto)expected, actual);
     }
 
-    private void verify(PhoneBaseDto expected, PhoneEntity actual) {
+    private void verify(PhoneCreateDto expected, PhoneEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getCountryCode(), actual.getCountryCode());
         assertEquals(expected.getPhoneNumber(), actual.getPhoneNumber());

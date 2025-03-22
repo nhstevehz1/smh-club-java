@@ -18,7 +18,7 @@ import com.smh.club.api.domain.entities.PhoneEntity;
 @NoArgsConstructor
 @SuperBuilder
 @SortTarget(PhoneEntity.class)
-public class PhoneFullNameDto extends PhoneBaseDto {
+public class PhoneFullNameDto extends PhoneCreateDto {
 
   @JsonProperty("id")
   private int id;

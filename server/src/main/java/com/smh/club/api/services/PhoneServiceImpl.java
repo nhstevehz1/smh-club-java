@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.PhoneRepo;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
-import com.smh.club.api.dto.phone.PhoneUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +77,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public Optional<PhoneDto> updatePhone(int id, PhoneUpdateDto updateDto) {
+    public Optional<PhoneDto> updatePhone(int id, PhoneDto updateDto) {
         log.debug("Updating phone, id: {}, with data: {}", id, updateDto);
 
         return phoneRepo.findByIdAndMemberId(id, updateDto.getMemberId())
