@@ -4,7 +4,6 @@ import com.smh.club.api.config.MapperConfig;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
-import com.smh.club.api.mappers.RenewalMapperImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
