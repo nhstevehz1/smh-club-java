@@ -17,23 +17,18 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class AddressTypeFormFieldComponent {
 
-  formControlSignal
-      = input.required<FormControl<AddressType>>({alias: 'formControl'});
+  formControl= input.required<FormControl<AddressType>>();
 
-  appearanceSignal
-      = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
+  appearance= input<MatFormFieldAppearance>();
 
-  optionsSignal
-      = signal<AddressTypeOption[]>([]);
+  label = input<string>();
 
-  labelSignal =
-      input<string>(undefined, {alias: 'label'});
+  controlErrors = input<FormControlError[]>();
 
-  controlErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'controlErrors'});
+  protected options= signal<AddressTypeOption[]>([]);
 
   constructor() {
-    this.optionsSignal.set([
+    this.options.set([
       {label: 'addresses.type.home', value:AddressType.Home},
       {label: 'addresses.type.work', value:AddressType.Work},
       {label: 'addresses.type.other', value:AddressType.Other}

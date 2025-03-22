@@ -70,27 +70,27 @@ describe('SortablePageableTableComponent', () => {
     });
 
     it('should input columns', () => {
-      expect(component.columnsSignal()).toEqual(columnDefs);
+      expect(component.column()).toEqual(columnDefs);
 
       columnDefs.forEach(columnDef => {
-        expect(component.columnsSignal().map((c => c.columnName))).toContain(columnDef.columnName);
+        expect(component.column().map((c => c.columnName))).toContain(columnDef.columnName);
       })
     });
 
     it('should return column names', () => {
-      const columnNames = component.columnsSignal().map(c => c.columnName);
-      expect(component.columnNamesSignal()).toEqual(columnNames);
+      const columnNames = component.column().map(c => c.columnName);
+      expect(component.columnNames()).toEqual(columnNames);
     });
 
     it('table should bind dataSource input', () => {
-      expect(component.dataSourceSignal()).toBeTruthy();
+      expect(component.dataSource()).toBeTruthy();
     })
 
     it('table datasource should have items', async () => {
       fixture.componentRef.setInput('dataSource', new MatTableDataSource<TestModel>(data));
       fixture.detectChanges();
       await fixture.whenStable();
-      expect(component.dataSourceSignal().data.length).toEqual(data.length);
+      expect(component.dataSource().data.length).toEqual(data.length);
     })
 
     it('should should bind paginator inputs', () =>  {

@@ -17,23 +17,18 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class EmailTypeFormFieldComponent {
 
-  formControlSignal
-      = input.required<FormControl<EmailType>>({alias: 'formControl'});
+  formControl= input.required<FormControl<EmailType>>();
 
-  appearanceSignal
-      = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
+  appearance= input<MatFormFieldAppearance>();
 
-  labelSignal =
-      input<string>(undefined, {alias: 'label'});
+  label = input<string>();
 
-  optionsSignal
-      = signal<EmailTypeOption[]> ([]);
+  controlErrors= input<FormControlError[]>()
 
-  controlErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'controlErrors'})
+  protected options= signal<EmailTypeOption[]> ([]);
 
   constructor() {
-    this.optionsSignal.set([
+    this.options.set([
       {label: 'emails.type.home', value: EmailType.Home},
       {label: 'emails.type.work', value: EmailType.Work},
       {label: 'emails.type.other', value: EmailType.Other}

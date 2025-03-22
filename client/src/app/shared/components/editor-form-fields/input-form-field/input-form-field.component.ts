@@ -19,10 +19,10 @@ import {InputComponentBase} from "../models/input-component";
 })
 export class InputFormFieldComponent extends InputComponentBase<number | string> {
 
-    prefixTextSignal
-        = input<string>(undefined, {alias: 'textPrefix'});
+    prefixText
+        = input<string>();
 
-    inputTypeSignal =
-        input<InputType>(InputType.Text, {alias: 'inputType'});
+    inputType =
+        input<InputType>(InputType.Text);
 
 }

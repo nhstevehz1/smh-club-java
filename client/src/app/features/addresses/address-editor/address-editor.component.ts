@@ -30,29 +30,23 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class AddressEditorComponent extends BaseEditorComponent<AddressCreate> {
 
-  address1Signal = computed(() => this.editorFormSignal().controls.address1);
-  address1ErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'address1Errors'});
+  address1 = computed(() => this.editorForm().controls.address1);
+  address1Errors = input<FormControlError[]>();
 
-  address2Signal = computed(() => this.editorFormSignal().controls.address2);
-  address2ErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'address2Errors'});
+  address2 = computed(() => this.editorForm().controls.address2);
+  address2Errors= input<FormControlError[]>();
 
-  citySignal = computed(() => this.editorFormSignal().controls.city);
-  cityErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'cityErrors'});
+  city = computed(() => this.editorForm().controls.city);
+  cityErrors = input<FormControlError[]>();
 
-  stateSignal = computed(() => this.editorFormSignal().controls.state);
-  stateErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'stateErrors'});
+  state = computed(() => this.editorForm().controls.state);
+  stateErrors = input<FormControlError[]>();
 
-  postalCodeSignal = computed(() => this.editorFormSignal().controls.postal_code);
-  postalCodeErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'postalCodeErrors'});
+  postalCode = computed(() => this.editorForm().controls.postal_code);
+  postalCodeErrors = input<FormControlError[]>();
 
-  addressTypeSignal = computed(() => this.editorFormSignal().controls.address_type);
-  addressTypeErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'addressTypeErrors'});
+  addressType = computed(() => this.editorForm().controls.address_type);
+  addressTypeErrors = input<FormControlError[]>();
 
   constructor() {
     super();

@@ -7,32 +7,32 @@ import {FormControlError} from "./form-control-error";
 export abstract class InputComponentBase<T> {
 
 
-    formControlSignal =
-        input.required<FormControl<T>>({alias: 'formControl'});
+    formControl =
+        input.required<FormControl<T>>();
 
-    appearanceSignal
-        = input(('outline'), { alias: 'appearance',
+    appearance
+        = input(('outline'), {
             transform(value: MatFormFieldAppearance | undefined) {
                 const defaultVal = ('outline') as MatFormFieldAppearance;
                 return value || defaultVal;
         }
     });
 
-    labelSignal = input<string>(undefined, {alias: 'label'});
+    label = input<string>();
 
-    controlErrorsSignal
-        = input(<FormControlError[]>[], { alias: 'controlErrors',
+    controlErrors
+        = input([] as FormControlError[], {
             transform(value: FormControlError[] | undefined | null) {
                 return value || [] as FormControlError[];
         }
     });
 
-    protected invalidSignal = signal<boolean>(false);
+    protected invalid = signal<boolean>(false);
 
-    protected invalidMessageSignal = computed<string>(() => {
-        if(this.invalidSignal()) {
-            for (const val of this.controlErrorsSignal()) {
-                const hasError = this.formControlSignal().hasError(val.type);
+    protected invalidMessage = computed<string>(() => {
+        if(this.invalid()) {
+            for (const val of this.controlErrors()) {
+                const hasError = this.formControl().hasError(val.type);
                 if (hasError) {
                     return val.message;
                 }
@@ -43,6 +43,6 @@ export abstract class InputComponentBase<T> {
     });
 
     protected onBlur(): void {
-        this.invalidSignal.set(this.formControlSignal().invalid);
+        this.invalid.set(this.formControl().invalid);
     }
 }

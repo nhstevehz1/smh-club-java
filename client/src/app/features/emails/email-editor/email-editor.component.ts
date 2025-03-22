@@ -30,15 +30,11 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class EmailEditorComponent extends BaseEditorComponent<EmailCreate> {
 
-  emailSignal
-      = computed(() => this.editorFormSignal().controls.email);
-  emailErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'emailErrors'});
+  email = computed(() => this.editorForm().controls.email);
+  emailErrors = input<FormControlError[]>();
 
-  emailTypeSignal
-    = computed(() => this.editorFormSignal().controls.email_type);
-  emailTypeErrorsSignal
-    = input<FormControlError[]>(undefined, {alias: 'emailTypeErrors'});
+  emailType = computed(() => this.editorForm().controls.email_type);
+  emailTypeErrors = input<FormControlError[]>();
 
   constructor() {
     super();

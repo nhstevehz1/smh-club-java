@@ -19,6 +19,6 @@ import {SelectOption} from "../models/select-option";
 })
 export class SelectFormFieldComponent<T> extends InputComponentBase<T> {
 
-    optionsSignal
-        = input.required<SelectOption<T>[]>({alias: 'options'});
+    options
+        = input.required<SelectOption<T>[]>();
 }

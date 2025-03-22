@@ -30,20 +30,14 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | PhoneUpdate> {
 
-  countryCodeSignal
-      = computed(() => this.editorFormSignal().controls.country_code);
-  countryCodeErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'countryCodeErrors'});
+  countryCode = computed(() => this.editorForm().controls.country_code);
+  countryCodeErrors = input<FormControlError[]>();
 
-  phoneNumberSignal
-      = computed(() => this.editorFormSignal().controls.phone_number);
-  phoneNumberErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'phoneNumberErrors'});
+  phoneNumber = computed(() => this.editorForm().controls.phone_number);
+  phoneNumberErrors= input<FormControlError[]>();
 
-  phoneTypeSignal
-      = computed(() => this.editorFormSignal().controls.phone_type);
-  phoneTypeErrorsSignal
-      = input<FormControlError[]>(undefined, {alias: 'phoneTypeErrors'});
+  phoneType= computed(() => this.editorForm().controls.phone_type);
+  phoneTypeErrors = input<FormControlError[]>();
 
   constructor() {
     super();

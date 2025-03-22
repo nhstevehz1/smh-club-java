@@ -17,23 +17,21 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class PhoneTypeFormFieldComponent {
 
-    formControlSignal
-        = input.required<FormControl<PhoneType>>({alias: 'formControl'});
+    formControl
+        = input.required<FormControl<PhoneType>>();
 
-    appearanceSignal
-        = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
+    appearance
+        = input<MatFormFieldAppearance>();
 
-    labelSignal
-        = input<string>(undefined, {alias: 'label'});
+    label = input<string>();
 
-    controlErrorsSignal
-        = input<FormControlError[]>(undefined, {alias: 'controlErrors'});
+    controlErrors
+        = input<FormControlError[]>();
 
-    optionsSignal
-        = signal<PhoneTypeOption[]>([]);
+    protected options = signal<PhoneTypeOption[]>([]);
 
     constructor() {
-        this.optionsSignal.set([
+        this.options.set([
             {label: 'phones.type.home', value: PhoneType.Home },
             {label: 'phones.type.mobile', value: PhoneType.Mobile},
             {label: 'phones.type.work', value: PhoneType.Work}

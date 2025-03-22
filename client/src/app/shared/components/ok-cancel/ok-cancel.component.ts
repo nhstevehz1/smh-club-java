@@ -19,15 +19,15 @@ import {TranslatePipe} from "@ngx-translate/core";
 })
 export class OkCancelComponent {
 
-  titleSignal = input<string>('okCancel.defaultTitleMessage', {alias: 'title'});
+  title = input<string>('okCancel.defaultTitleMessage');
 
-  iconNameSignal = input<string>('checked', {alias: 'iconName'});
+  iconName = input<string>('checked');
 
-  buttonToolTipSignal = input<string>('okCancel.defaultToolTip', {alias: 'buttonToolTip'});
+  buttonToolTip = input<string>('okCancel.defaultToolTip');
 
-  buttonClickSignal = output({alias: 'buttonClick'});
+  buttonClick = output();
 
   onButtonClicked(): void {
-    this.buttonClickSignal.emit();
+    this.buttonClick.emit();
   }
 }

@@ -11,7 +11,7 @@ export function generateAddressPagedData(page: number, size: number, total: numb
 }
 
 export function generateAddressList(size: number): AddressMember[] {
-    let list: AddressMember[] = [];
+    const list: AddressMember[] = [];
 
     for (let ii = 0; ii < size; ii++) {
         const addressMember: AddressMember = {

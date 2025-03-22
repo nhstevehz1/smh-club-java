@@ -37,12 +37,12 @@ describe('EmailTypeFormFieldComponent', () => {
   });
 
   it('should contain the correct number of options', () => {
-    const options = component.optionsSignal();
+    const options = component.options();
     expect(options.length).toEqual(Object.entries(EmailType).length);
   });
 
   it('should contain the correct option values', () => {
-    const options = component.optionsSignal();
+    const options = component.options();
 
     for ( const emailType of Object.values(EmailType)) {
       const values = options.map(v => v.value);
