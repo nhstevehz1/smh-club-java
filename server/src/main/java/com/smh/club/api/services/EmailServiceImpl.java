@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
-import com.smh.club.api.dto.email.EmailUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +77,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public Optional<EmailDto> updateEmail(int id, EmailUpdateDto updateDto) {
+    public Optional<EmailDto> updateEmail(int id, EmailDto updateDto) {
         log.debug("Updating email, id: {}, with data: {}", id, updateDto);
 
         return emailRepo.findByIdAndMemberId(id, updateDto.getMemberId())

@@ -1,13 +1,29 @@
 package com.smh.club.api.dto.email;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smh.club.api.annotations.SortExclude;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)/**/
 @NoArgsConstructor
 @SuperBuilder
-public class EmailCreateDto extends EmailBaseDto {
+public abstract class EmailCreateDto {
+
+  @SortExclude
+  @JsonProperty("member_id")
+  private int memberId;
+
+  @NotEmpty
+  @Email
+  @JsonProperty("email")
+  private String email;
+
+  @NotNull
+  @JsonProperty("email_type")
+  private EmailType emailType;
 }

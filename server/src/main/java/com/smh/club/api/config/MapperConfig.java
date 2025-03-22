@@ -7,7 +7,6 @@ import com.smh.club.api.dto.address.AddressFullNameDto;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
-import com.smh.club.api.dto.email.EmailUpdateDto;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberUpdateDto;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
@@ -115,12 +114,9 @@ public class MapperConfig {
             m.skip(EmailEntity::setMember);
         });
 
-        TypeMap<EmailUpdateDto, EmailEntity> updateMap
-                = modelMapper.createTypeMap(EmailUpdateDto.class, EmailEntity.class);
-        updateMap.addMappings(m -> {
-            m.skip(EmailEntity::setMember);
-            m.skip(EmailEntity::setId);
-        });
+        TypeMap<EmailDto, EmailEntity> updateMap
+                = modelMapper.createTypeMap(EmailDto.class, EmailEntity.class);
+        updateMap.addMappings(m -> m.skip(EmailEntity::setId));
 
         TypeMap<EmailEntity, EmailDto> dtoMap
             = modelMapper.createTypeMap(EmailEntity.class, EmailDto.class);

@@ -325,9 +325,9 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailUpdateDto.class)
-            .set(field(EmailUpdateDto::getId), id)
-            .set(field(EmailUpdateDto::getMemberId), memberId)
+        var update = Instancio.of(EmailDto.class)
+            .set(field(EmailDto::getId), id)
+            .set(field(EmailDto::getMemberId), memberId)
             .create();
 
         // perform PUT
@@ -344,7 +344,7 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Test
     public void update_returns_status_bad_request() throws Exception {
         // Setup
-        var update = Instancio.create(EmailUpdateDto.class);
+        var update = Instancio.create(EmailDto.class);
 
         // perform put
         given()
@@ -368,9 +368,9 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailUpdateDto.class)
-            .set(field(EmailUpdateDto::getId), id)
-            .set(field(EmailUpdateDto::getMemberId), memberId)
+        var update = Instancio.of(EmailDto.class)
+            .set(field(EmailDto::getId), id)
+            .set(field(EmailDto::getMemberId), memberId)
             .ignore(nonNullableField)
             .create();
 
@@ -384,10 +384,10 @@ public class EmailIntegrationTests extends IntegrationTests {
         var id = entity.getId();
         var memberId = entity.getMember().getId();
 
-        var update = Instancio.of(EmailUpdateDto.class)
-            .set(field(EmailUpdateDto::getId), id)
-            .set(field(EmailUpdateDto::getMemberId), memberId)
-            .set(field(EmailUpdateDto::getEmail), "XXX")
+        var update = Instancio.of(EmailDto.class)
+            .set(field(EmailDto::getId), id)
+            .set(field(EmailDto::getMemberId), memberId)
+            .set(field(EmailDto::getEmail), "XXX")
             .create();
 
         sendInvalidUpdate(id, update);
@@ -442,21 +442,12 @@ public class EmailIntegrationTests extends IntegrationTests {
         return repo.saveAllAndFlush(entities);
     }
 
-    private void verify(EmailCreateDto expected, EmailEntity actual) {
-        verify((EmailBaseDto) expected, actual);
-    }
-
-    private void verify(EmailUpdateDto expected, EmailEntity actual) {
-        assertEquals(expected.getId(), actual.getId());
-        verify((EmailBaseDto) expected, actual);
-    }
-
     private void verify(EmailDto expected, EmailEntity actual) {
         assertEquals(expected.getId(), actual.getId());
-        verify((EmailBaseDto) expected, actual);
+        verify((EmailCreateDto) expected, actual);
     }
 
-    private void verify(EmailBaseDto expected, EmailEntity actual) {
+    private void verify(EmailCreateDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType().getEmailTypeName(),

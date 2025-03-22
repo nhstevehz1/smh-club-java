@@ -3,7 +3,6 @@ package com.smh.club.api.contracts.services;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
-import com.smh.club.api.dto.email.EmailUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -41,10 +40,10 @@ public interface EmailService {
      * Updates an email int he database.
      *
      * @param id The id of the email to update.
-     * @param email The {@link EmailUpdateDto} containing the updates.
+     * @param email The {@link EmailDto} containing the updates.
      * @return The updated {@link EmailDto}.
      */
-    Optional<EmailDto> updateEmail(int id, EmailUpdateDto email);
+    Optional<EmailDto> updateEmail(int id, EmailDto email);
 
     /**
      * Deletes an email from the database.
