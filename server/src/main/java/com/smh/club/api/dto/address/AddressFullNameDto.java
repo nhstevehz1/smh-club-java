@@ -20,10 +20,7 @@ import com.smh.club.api.domain.entities.AddressEntity;
 @NoArgsConstructor
 @SuperBuilder
 @SortTarget(AddressEntity.class)
-public class AddressFullNameDto extends AddressCreateDto {
-
-  @JsonProperty("id")
-  private int id;
+public class AddressFullNameDto extends AddressDto {
 
   @SortAlias("member.memberNumber")
   @JsonProperty("member_number")

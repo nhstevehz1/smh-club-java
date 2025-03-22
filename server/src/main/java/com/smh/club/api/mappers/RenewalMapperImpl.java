@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.dto.renewal.RenewalUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -53,7 +52,7 @@ public class RenewalMapperImpl extends DomainDataMapper implements RenewalMapper
      * {@inheritDoc}
      */
     @Override
-    public RenewalEntity updateEntity(RenewalUpdateDto dto, RenewalEntity entity) {
+    public RenewalEntity updateEntity(RenewalDto dto, RenewalEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }

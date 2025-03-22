@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder
-public class RenewalDto extends RenewalBaseDto {
+public class RenewalDto extends RenewalCreateDto {
     @JsonProperty("id")
     private int id;
 }

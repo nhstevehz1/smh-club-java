@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.RenewalsRepo;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.dto.renewal.RenewalUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +77,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public Optional<RenewalDto> updateRenewal(int id, RenewalUpdateDto renewalDto) {
+    public Optional<RenewalDto> updateRenewal(int id, RenewalDto renewalDto) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
 
         return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())

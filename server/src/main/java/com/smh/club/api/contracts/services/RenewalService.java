@@ -3,7 +3,6 @@ package com.smh.club.api.contracts.services;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.dto.renewal.RenewalUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -41,10 +40,10 @@ public interface RenewalService {
      * Updates a renewal in the database.
      *
      * @param id The id of the renewal to update.
-     * @param renewal The {@link RenewalUpdateDto} containing the updates.
+     * @param renewal The {@link RenewalDto} containing the updates.
      * @return The updated {@link RenewalDto}.
      */
-    Optional<RenewalDto> updateRenewal(int id, RenewalUpdateDto renewal);
+    Optional<RenewalDto> updateRenewal(int id, RenewalDto renewal);
 
     /**
      * Deletes a renewal from the database.

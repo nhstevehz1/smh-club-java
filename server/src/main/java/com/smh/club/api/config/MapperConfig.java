@@ -109,10 +109,7 @@ public class MapperConfig {
         // Email settings
         TypeMap<EmailCreateDto, EmailEntity> createMap
                 = modelMapper.createTypeMap(EmailCreateDto.class, EmailEntity.class);
-        createMap.addMappings(m -> {
-            m.skip(EmailEntity::setId);
-            m.skip(EmailEntity::setMember);
-        });
+        createMap.addMappings(m -> m.skip(EmailEntity::setId));
 
         TypeMap<EmailDto, EmailEntity> updateMap
                 = modelMapper.createTypeMap(EmailDto.class, EmailEntity.class);
@@ -159,10 +156,7 @@ public class MapperConfig {
 
         TypeMap<PhoneDto, PhoneEntity> updateMap
                 = modelMapper.createTypeMap(PhoneDto.class, PhoneEntity.class);
-        updateMap.addMappings(m -> {
-            m.skip(PhoneEntity::setMember);
-            m.skip(PhoneEntity::setId);
-        });
+        updateMap.addMappings(m -> m.skip(PhoneEntity::setId));
 
         TypeMap<PhoneEntity, PhoneDto> dtoMap
             = modelMapper.createTypeMap(PhoneEntity.class, PhoneDto.class);
