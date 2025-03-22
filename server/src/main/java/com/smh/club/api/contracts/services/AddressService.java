@@ -3,7 +3,6 @@ package com.smh.club.api.contracts.services;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
-import com.smh.club.api.dto.address.AddressUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;

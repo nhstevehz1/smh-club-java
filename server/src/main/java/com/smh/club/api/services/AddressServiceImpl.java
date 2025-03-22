@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
-import com.smh.club.api.dto.address.AddressUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

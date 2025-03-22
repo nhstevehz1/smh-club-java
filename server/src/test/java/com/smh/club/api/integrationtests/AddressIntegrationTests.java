@@ -401,10 +401,10 @@ public class AddressIntegrationTests extends IntegrationTests {
         var memberId = entity.getMember().getId();
         var id = entity.getId();
         var update =
-            Instancio.of(AddressUpdateDto.class)
-                .set(field(AddressUpdateDto::getId), id)
-                .set(field(AddressUpdateDto::getMemberId), memberId)
-                .generate(field(AddressUpdateDto::getPostalCode), g -> g.text().pattern(pattern))
+            Instancio.of(AddressDto.class)
+                .set(field(AddressDto::getId), id)
+                .set(field(AddressDto::getMemberId), memberId)
+                .generate(field(AddressDto::getPostalCode), g -> g.text().pattern(pattern))
                 .create();
 
         // perform PUT
@@ -425,9 +425,9 @@ public class AddressIntegrationTests extends IntegrationTests {
         var entity = addEntitiesToDb(5).get(2);
         var memberId = entity.getMember().getId();
         var id = entity.getId();
-        var update = Instancio.of(AddressUpdateDto.class)
-            .set(field(AddressUpdateDto::getId), id)
-            .set(field(AddressUpdateDto::getMemberId), memberId)
+        var update = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getId), id)
+            .set(field(AddressDto::getMemberId), memberId)
             .setBlank(nonNullableField)
             .create();
 
@@ -441,10 +441,10 @@ public class AddressIntegrationTests extends IntegrationTests {
         var entity = addEntitiesToDb(5).get(2);
         var memberId = entity.getMember().getId();
         var id = entity.getId();
-        var update = Instancio.of(AddressUpdateDto.class)
-            .set(field(AddressUpdateDto::getId), id)
-            .set(field(AddressUpdateDto::getMemberId), memberId)
-            .setBlank(field(AddressUpdateDto::getPostalCode))
+        var update = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getId), id)
+            .set(field(AddressDto::getMemberId), memberId)
+            .setBlank(field(AddressDto::getPostalCode))
             .create();
 
         // perform POST
@@ -458,9 +458,9 @@ public class AddressIntegrationTests extends IntegrationTests {
         var entity = addEntitiesToDb(5).get(2);
         var memberId = entity.getMember().getId();
         var id = entity.getId();
-        var update = Instancio.of(AddressUpdateDto.class)
-            .set(field(AddressUpdateDto::getId), id)
-            .set(field(AddressUpdateDto::getMemberId), memberId)
+        var update = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getId), id)
+            .set(field(AddressDto::getMemberId), memberId)
             .ignore(nullableField)
             .create();
 
@@ -482,10 +482,10 @@ public class AddressIntegrationTests extends IntegrationTests {
         var entity = addEntitiesToDb(5).get(2);
         var memberId = entity.getMember().getId();
         var id = entity.getId();
-        var update = Instancio.of(AddressUpdateDto.class)
-            .set(field(AddressUpdateDto::getId), id)
-            .set(field(AddressUpdateDto::getMemberId), memberId)
-            .generate(field(AddressUpdateDto::getPostalCode), g -> g.text().pattern(pattern))
+        var update = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getId), id)
+            .set(field(AddressDto::getMemberId), memberId)
+            .generate(field(AddressDto::getPostalCode), g -> g.text().pattern(pattern))
             .create();
 
         // perform POST
@@ -522,15 +522,7 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         return repo.saveAllAndFlush(entities);
     }
-
-    private void verify(AddressCreateDto expected, AddressEntity actual) {
-        verify((AddressCreateDto)expected, actual);
-    }
-
-    private void verify(AddressUpdateDto expected, AddressEntity actual) {
-        assertEquals(expected.getId(), actual.getId());
-        verify((AddressCreateDto)expected, actual);
-    }
+    
 
     private void verify(AddressDto expected, AddressEntity actual) {
         assertEquals(expected.getId(), actual.getId());
