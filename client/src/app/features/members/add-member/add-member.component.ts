@@ -14,9 +14,9 @@ import {PhoneEditorComponent} from "../../phones/phone-editor/phone-editor.compo
 import {EmailEditorComponent} from "../../emails/email-editor/email-editor.component";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {MemberCreate} from "../models/member";
-import {Address, AddressCreate} from "../../addresses/models/address";
-import {Email, EmailCreate} from "../../emails/models/email";
-import {Phone, PhoneCreate} from "../../phones/models/phone";
+import {AddressCreate} from "../../addresses/models/address";
+import {EmailCreate} from "../../emails/models/email";
+import {PhoneCreate} from "../../phones/models/phone";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatDivider} from "@angular/material/divider";
 import {MembersService} from "../services/members.service";
@@ -72,12 +72,12 @@ export class AddMemberComponent {
 
     phoneFormsComputed = computed(() =>
         this.createFormSignal().controls.phones as unknown as FormArray<FormModelGroup<PhoneCreate>>);
-    
+
     fieldAppearance
         = signal<MatFormFieldAppearance>('outline');
-    
+
     errorMessage = signal<string | null>(null);
-    
+
     submitted = signal(false);
 
 
@@ -97,12 +97,12 @@ export class AddMemberComponent {
 
     onSave(): void {
         if (this.createFormSignal().valid) {
-            this.memberSvc.createMember(<MemberCreate>this.createFormSignal().value).subscribe({
+            this.memberSvc.createMember(this.createFormSignal().value as MemberCreate).subscribe({
               next: () =>  {
                   this.errorMessage.set(null)
                   this.submitted.set(true);
               },
-              error: (err: any) => {
+              error: (err) => {
                   let errMsg: string;
                   if (err.error instanceof Error) {
                       // A client-side or network error occurred.
@@ -123,7 +123,7 @@ export class AddMemberComponent {
     }
 
     onOkOrCancel(): void {
-        this.router.navigate(['p/members']).then(() => {});
+        this.router.navigate(['p/members']).then();
     }
 
     onAddAddress(): void {
@@ -150,15 +150,15 @@ export class AddMemberComponent {
         this.getPhones().removeAt(idx);
     }
 
-    private getAddresses(): FormArray<FormModelGroup<Address>> {
-        return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<Address>>;
+    private getAddresses(): FormArray<FormModelGroup<AddressCreate>> {
+        return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<AddressCreate>>;
     }
 
-    private getEmails(): FormArray<FormModelGroup<Email>> {
-        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<Email>>;
+    private getEmails(): FormArray<FormModelGroup<EmailCreate>> {
+        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<EmailCreate>>;
     }
 
-    private getPhones(): FormArray<FormModelGroup<Phone>> {
-        return this.createFormSignal().get('phones') as FormArray<FormModelGroup<Phone>>;
+    private getPhones(): FormArray<FormModelGroup<PhoneCreate>> {
+        return this.createFormSignal().get('phones') as FormArray<FormModelGroup<PhoneCreate>>;
     }
 }

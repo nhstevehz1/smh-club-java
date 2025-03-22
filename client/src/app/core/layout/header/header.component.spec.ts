@@ -51,23 +51,23 @@ describe('HeaderComponent', () => {
 
   describe('test event emitters', () => {
     it('should call profileClick.emit()', () => {
-      const spy = spyOn(component.profileClickSignal, 'emit');
+      const spy = spyOn(component.profileClick, 'emit');
       component.profileHandler();
       expect(spy).toHaveBeenCalled();
     });
 
     it('should call logoutClick.emit()', () => {
-      const spy = spyOn(component.logoutClickSignal, 'emit');
+      const spy = spyOn(component.logoutClick, 'emit');
       component.logoutHandler();
       expect(spy).toHaveBeenCalled();
     });
 
     it('should call toggleSideNave.emit()', () => {
-      const spy = spyOn(component.toggleSidenavSignal, 'emit');
+      const spy = spyOn(component.toggleSidenav, 'emit');
       component.toggleSideNavHandler();
       expect(spy).toHaveBeenCalled();
     });
-    
+
     it('should call document.body.classList.toggle(dark-mode, true)', () => {
       const classList = TestBed.inject(DOCUMENT).body.classList;
       const spy = spyOn(classList, 'toggle');

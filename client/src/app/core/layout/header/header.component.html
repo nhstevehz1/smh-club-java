@@ -17,14 +17,14 @@
     <div class="flex-row end gap">
         @if(showUserName()) {
             <span class="user-name">
-                {{'layout.header.welcome' | translate}} {{userNameSignal()}}!
+                {{'layout.header.welcome' | translate}} {{userName()}}!
             </span>
         }
 
         <button mat-icon-button
                 matTooltip="My Account"
                 [matMenuTriggerFor]="userAccountMenu"
-                [disabled]="!isLoggedInSignal()">
+                [disabled]="!isLoggedIn()">
             <mat-icon>account_circle</mat-icon>
         </button>
         <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">

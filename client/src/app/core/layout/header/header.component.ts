@@ -29,31 +29,28 @@ import {TranslatePipe} from "@ngx-translate/core";
 export class HeaderComponent {
   private document: Document = inject(DOCUMENT);
 
-  userNameSignal
-      = input<string | undefined>(undefined, {alias: 'userName'});
+  userName= input<string>();
 
-  isLoggedInSignal
-      = input<boolean>(false, {alias: 'isLoggedIn'});
+  isLoggedIn= input<boolean>(false);
 
-  showUserName = computed<boolean>(() =>
-        !!this.userNameSignal() && this.isLoggedInSignal());
+  showUserName = computed<boolean>(() => !!this.userName() && this.isLoggedIn());
 
-  profileClickSignal = output({alias: 'profileClick'});
+  profileClick = output();
 
-  logoutClickSignal = output({alias: 'logoutClick'});
+  logoutClick = output();
 
-  toggleSidenavSignal = output({alias: 'toggleSidenav'});
+  toggleSidenav = output();
 
   profileHandler() {
-    this.profileClickSignal.emit();
+    this.profileClick.emit();
   }
 
   logoutHandler() {
-    this.logoutClickSignal.emit();
+    this.logoutClick.emit();
   }
 
   toggleSideNavHandler() {
-      this.toggleSidenavSignal.emit();
+      this.toggleSidenav.emit();
   }
 
   onThemeChanged(event: MatSlideToggleChange): void {

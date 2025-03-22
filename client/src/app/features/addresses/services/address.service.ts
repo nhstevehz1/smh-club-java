@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
 import {PagedData} from "../../../shared/models/paged-data";
-import {Address, AddressCreate, AddressDetails, AddressMember, AddressUpdate} from "../models/address";
+import {AddressCreate, Address, AddressMember} from "../models/address";
 import {map} from "rxjs/operators";
 import {AddressType} from "../models/address-type";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
@@ -29,10 +29,10 @@ export class AddressService {
     );
   }
 
-  createAddress(create: AddressCreate): Observable<AddressDetails> {
+  createAddress(create: AddressCreate): Observable<Address> {
     return this.http.post<AddressCreate>(this.BASE_API, create).pipe(
         map(data => JSON.stringify(data)),
-        map(data => JSON.parse(data) as AddressDetails),
+        map(data => JSON.parse(data) as Address),
         map(data => {
           data.address_type = data.address_type as unknown as AddressType;
           return data;
@@ -40,10 +40,10 @@ export class AddressService {
     );
   }
 
-  updateAddress(update: AddressUpdate): Observable<AddressDetails> {
-    return this.http.put<AddressCreate>(`${this.BASE_API}/`, update).pipe(
+  updateAddress(update: AddressCreate): Observable<Address> {
+    return this.http.put<Address>(`${this.BASE_API}/`, update).pipe(
         map(data => JSON.stringify(data)),
-        map(data => JSON.parse(data) as AddressDetails),
+        map(data => JSON.parse(data) as Address),
         map(data => {
           data.address_type = data.address_type as unknown as AddressType;
           return data;
@@ -51,7 +51,7 @@ export class AddressService {
     );
   }
 
-  generateCreateForm(): FormModelGroup<Address> {
+  generateCreateForm(): FormModelGroup<AddressCreate> {
     return this.fb.group({
       address1: ['', [Validators.required]],
       address2: [''],
@@ -62,7 +62,7 @@ export class AddressService {
     });
   }
 
-  generateUpdateForm(update: AddressUpdate): FormModelGroup<AddressUpdate> {
+  generateUpdateForm(update: Address): FormModelGroup<Address> {
     return this.fb.group({
       id: [update.id, Validators.required],
       member_id: [update.member_id, [Validators.required, Validators.min(1)]],

@@ -1,9 +1,9 @@
 <div class="title-container">
     <div class="title-content">
-        <span class="title">{{titleSignal() | translate}}</span>
-        @if(iconDefinedSignal()) {
-            <mat-icon>{{iconNameSignal()}}</mat-icon>
+        <span class="title">{{title() | translate}}</span>
+        @if(iconDefined()) {
+            <mat-icon>{{iconName()}}</mat-icon>
         }
-        <span class="subTitle">{{subTitleSignal() | translate}}</span>
+        <span class="subTitle">{{subTitle() | translate}}</span>
     </div>
 </div>

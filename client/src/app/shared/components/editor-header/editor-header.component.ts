@@ -20,19 +20,16 @@ import {NgClass} from "@angular/common";
   styleUrl: './editor-header.component.scss'
 })
 export class EditorHeaderComponent {
-  titleSignal = input<string>(undefined, {alias: 'title'});
+  title = input<string>();
 
-  showRemoveButtonSignal = input(false, {
-      alias: 'showRemoveButton',
-      transform: booleanAttribute
-  });
+  showRemoveButton = input(false, {transform: booleanAttribute});
 
-  removeSignal = output<void>({alias: 'removeClick'});
+  removeClick = output<void>();
 
-  protected titleDefinedSignal
-        = computed<boolean>(() => !!this.titleSignal());
+  protected titleDefined
+        = computed<boolean>(() => !!this.title());
 
   onRemove(): void {
-    this.removeSignal.emit();
+    this.removeClick.emit();
   }
 }

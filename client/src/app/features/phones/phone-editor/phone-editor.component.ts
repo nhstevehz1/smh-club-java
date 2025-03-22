@@ -3,7 +3,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {PhoneCreate, PhoneUpdate} from "../models/phone";
+import {PhoneCreate, Phone} from "../models/phone";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
@@ -28,22 +28,16 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './phone-editor.component.html',
   styleUrl: './phone-editor.component.scss'
 })
-export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | PhoneUpdate> {
+export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | Phone> {
 
-  countryCodeSignal
-      = computed(() => this.editorFormSignal().controls.country_code);
-  countryCodeErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'countryCodeErrors'});
+  countryCode = computed(() => this.editorForm().controls.country_code);
+  countryCodeErrors = input<FormControlError[]>();
 
-  phoneNumberSignal
-      = computed(() => this.editorFormSignal().controls.phone_number);
-  phoneNumberErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'phoneNumberErrors'});
+  phoneNumber = computed(() => this.editorForm().controls.phone_number);
+  phoneNumberErrors= input<FormControlError[]>();
 
-  phoneTypeSignal
-      = computed(() => this.editorFormSignal().controls.phone_type);
-  phoneTypeErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'phoneTypeErrors'});
+  phoneType= computed(() => this.editorForm().controls.phone_type);
+  phoneTypeErrors = input<FormControlError[]>();
 
   constructor() {
     super();

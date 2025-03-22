@@ -1,12 +1,16 @@
-import {TestTableComponentBase} from "./test-table-component-base";
+import {BaseTestTableComponent} from "./base-test-table-component";
 import {FullName} from "../../models/full-name";
 
+export interface TestType {
+  test: string;
+}
+
 describe('TableComponentBase', () => {
-    let component: TestTableComponentBase;
+    let component: BaseTestTableComponent<TestType>;
 
     beforeEach(() => {
-        component = new TestTableComponentBase();
-    })
+        component = new BaseTestTableComponent();
+    });
 
     it('when getPageRequest, should return PageRequest', () => {
        const pageIndex = 0;

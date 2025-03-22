@@ -12,7 +12,7 @@ import {HttpTestingController, provideHttpClientTesting} from "@angular/common/h
 import {Subject} from "rxjs";
 
 describe('defaultOauthInterceptor', () => {
-  const interceptor: HttpInterceptorFn = (req, next) => 
+  const interceptor: HttpInterceptorFn = (req, next) =>
     TestBed.runInInjectionContext(() => customOauthInterceptor(req, next));
 
   let testController: HttpTestingController;
@@ -23,10 +23,10 @@ describe('defaultOauthInterceptor', () => {
   let errorHandlerMock: jasmine.SpyObj<OAuthResourceServerErrorHandler>;
   let fakeModuleConfig: OAuthModuleConfig;
 
-  let eventSubject$ = new Subject<OAuthEvent>();
-  let eventObservable$ = eventSubject$.asObservable();
+  const eventSubject$ = new Subject<OAuthEvent>();
+  const eventObservable$ = eventSubject$.asObservable();
 
-  let url = '/test'
+  const url = '/test'
 
   beforeEach(() => {
     authStorageMock = jasmine.createSpyObj('OAuthStorage', ['getItem']);

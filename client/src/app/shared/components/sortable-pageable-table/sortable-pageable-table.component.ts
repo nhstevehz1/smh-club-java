@@ -24,23 +24,23 @@ import {TranslatePipe} from "@ngx-translate/core";
   styleUrl: './sortable-pageable-table.component.scss'
 })
 export class SortablePageableTableComponent<T> implements AfterViewInit {
-  columnsSignal
-      = input.required<Array<ColumnDef<T>>>({alias: 'columns'});
+  column
+      = input.required<ColumnDef<T>[]>();
 
-  dataSourceSignal
-      = input.required<MatTableDataSource<T>>({alias: 'dataSource'});
+  dataSource
+      = input.required<MatTableDataSource<T>>();
 
-  pageSizesSignal
-      = input<Array<number>>([5,10,25,100], {alias: 'pageSizes'});
+  pageSizes
+      = input<number[]>([5,10,25,100]);
 
-  pageSizeSignal
-      = input<number>(5, {alias: 'pageSize'});
+  pageSize
+      = input<number>(5);
 
-  resultsLengthSignal
-      = input<number>(0, {alias: 'resultsLength'});
+  resultsLength
+      = input<number>(0);
 
-  columnNamesSignal= computed<Array<string>>(() =>
-      this.columnsSignal().map(c => c.columnName));
+  columnNames= computed<string[]>(() =>
+      this.column().map(c => c.columnName));
 
   @ViewChild(MatSort, {static: true})
   sort!: MatSort;

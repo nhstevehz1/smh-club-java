@@ -9,7 +9,7 @@ export function asyncData<T>(data: T) {
     return defer(() => Promise.resolve(data));
 }
 
-export function generatePagedData<T>(page: number, size: number, total: number, content: Array<T>): PagedData<T> {
+export function generatePagedData<T>(page: number, size: number, total: number, content: T[]): PagedData<T> {
     const totalPages = Math.ceil(total / total);
     const hasNextPage = totalPages > (page + 1);
     const isLastPage = totalPages === (page + 1);

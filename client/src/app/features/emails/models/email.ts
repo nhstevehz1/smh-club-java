@@ -1,20 +1,16 @@
 import {EmailType} from "./email-type";
 import {FullName} from "../../../shared/models/full-name";
 
-export interface Email {
+export interface EmailCreate {
     email: string;
     email_type: EmailType;
 }
 
-export interface EmailDetails extends Email {
+export interface Email extends EmailCreate {
     id: number;
     member_id: number;
 }
 
-export interface EmailMember extends EmailDetails {
+export interface EmailMember extends Email {
     full_name: FullName;
 }
-
-export interface EmailCreate extends Email {}
-
-export interface EmailUpdate extends EmailDetails {}

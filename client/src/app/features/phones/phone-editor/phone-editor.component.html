@@ -1,17 +1,17 @@
-<div [formGroup]="editorFormSignal()">
+<div [formGroup]="editorForm()">
     <div class="flex-column space-evenly">
         <app-editor-header
-            [title]="titleSignal()"
-            [showRemoveButton]="showRemoveButtonSignal()"
+            [title]="title()"
+            [showRemoveButton]="showRemoveButton()"
             (removeClick)="onRemove()">
         </app-editor-header>
 
         <div class="flex-row start">
             <app-input-form-field
                 ngDefaultControl
-                [appearance]="fieldAppearanceSignal()"
-                [formControl]="countryCodeSignal()"
-                [controlErrors]="countryCodeErrorsSignal()"
+                [appearance]="fieldAppearance()"
+                [formControl]="countryCode()"
+                [controlErrors]="countryCodeErrors()"
                 label="phones.editor.countryCode.label">
             </app-input-form-field>
         </div>
@@ -19,17 +19,17 @@
         <div class="flex-row start gap">
             <app-input-form-field
                     ngDefaultControl
-                    [appearance]="fieldAppearanceSignal()"
-                    [formControl]="phoneNumberSignal()"
-                    [controlErrors]="phoneNumberErrorsSignal()"
+                    [appearance]="fieldAppearance()"
+                    [formControl]="phoneNumber()"
+                    [controlErrors]="phoneNumberErrors()"
                     label="phones.editor.phoneNumber.label">
             </app-input-form-field>
 
             <app-phone-type-form-field
                 ngDefaultControl
-                [appearance]="fieldAppearanceSignal()"
-                [formControl]="phoneTypeSignal()"
-                [controlErrors]="phoneTypeErrorsSignal()"
+                [appearance]="fieldAppearance()"
+                [formControl]="phoneType()"
+                [controlErrors]="phoneTypeErrors()"
                 label="phones.editor.phoneType.label">
             </app-phone-type-form-field>
         </div>

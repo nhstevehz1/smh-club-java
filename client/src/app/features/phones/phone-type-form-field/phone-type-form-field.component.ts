@@ -3,9 +3,10 @@ import {
     SelectFormFieldComponent
 } from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
 import {FormControl} from "@angular/forms";
-import {PhoneType, PhoneTypeOption} from "../models/phone-type";
+import {PhoneType} from "../models/phone-type";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
+import {SelectOption} from '../../../shared/components/editor-form-fields/models/select-option';
 
 @Component({
   selector: 'app-phone-type-form-field',
@@ -17,23 +18,21 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class PhoneTypeFormFieldComponent {
 
-    formControlSignal
-        = input.required<FormControl<PhoneType>>({alias: 'formControl'});
+    formControl
+        = input.required<FormControl<PhoneType>>();
 
-    appearanceSignal
-        = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
+    appearance
+        = input<MatFormFieldAppearance>();
 
-    labelSignal
-        = input<string>(undefined, {alias: 'label'});
+    label = input<string>();
 
-    controlErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'controlErrors'});
+    controlErrors
+        = input<FormControlError[]>();
 
-    optionsSignal
-        = signal<Array<PhoneTypeOption>>([]);
+    options = signal<SelectOption<PhoneType>[]>([]);
 
     constructor() {
-        this.optionsSignal.set([
+        this.options.set([
             {label: 'phones.type.home', value: PhoneType.Home },
             {label: 'phones.type.mobile', value: PhoneType.Mobile},
             {label: 'phones.type.work', value: PhoneType.Work}

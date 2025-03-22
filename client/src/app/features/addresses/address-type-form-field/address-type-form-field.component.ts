@@ -1,11 +1,12 @@
 import {Component, input, signal} from '@angular/core';
-import {AddressType, AddressTypeOption} from "../models/address-type";
+import {AddressType} from "../models/address-type";
 import {FormControl} from "@angular/forms";
 import {
   SelectFormFieldComponent
 } from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
+import {SelectOption} from '../../../shared/components/editor-form-fields/models/select-option';
 
 @Component({
   selector: 'app-address-type-form-field',
@@ -17,23 +18,18 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class AddressTypeFormFieldComponent {
 
-  formControlSignal
-      = input.required<FormControl<AddressType>>({alias: 'formControl'});
+  formControl= input.required<FormControl<AddressType>>();
 
-  appearanceSignal
-      = input<MatFormFieldAppearance>(undefined, {alias: 'appearance'});
+  appearance= input<MatFormFieldAppearance>();
 
-  optionsSignal
-      = signal<Array<AddressTypeOption>>([]);
+  label = input<string>();
 
-  labelSignal =
-      input<string>(undefined, {alias: 'label'});
+  controlErrors = input<FormControlError[]>();
 
-  controlErrorsSignal
-      = input<Array<FormControlError>>(undefined, {alias: 'controlErrors'});
+  options= signal<SelectOption<AddressType>[]>([]);
 
   constructor() {
-    this.optionsSignal.set([
+    this.options.set([
       {label: 'addresses.type.home', value:AddressType.Home},
       {label: 'addresses.type.work', value:AddressType.Work},
       {label: 'addresses.type.other', value:AddressType.Other}

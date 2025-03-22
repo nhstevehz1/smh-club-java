@@ -1,6 +1,6 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {PhoneCreate, PhoneMember, PhoneUpdate} from "../models/phone";
+import {PhoneCreate, PhoneMember, Phone} from "../models/phone";
 import {PhoneType} from "../models/phone-type";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -10,11 +10,11 @@ export function generatePhonePageData(page: number, size: number, total: number)
     return generatePagedData(page, size, total, content);
 }
 
-export function generatePhoneList(size: number): Array<PhoneMember> {
-    let list: Array<PhoneMember> = [];
+export function generatePhoneList(size: number): PhoneMember[] {
+    const list: PhoneMember[] = [];
 
     for(let ii = 0; ii < size; ii++) {
-        let phone: PhoneMember = {
+        const phone: PhoneMember = {
             id: ii,
             member_id: ii,
             country_code: '1',
@@ -41,7 +41,7 @@ export function generatePhoneCreateForm(): FormModelGroup<PhoneCreate> {
     });
 }
 
-export function generatePhoneUpdate(): PhoneUpdate {
+export function generatePhoneUpdate(): Phone {
     return {
         id: 0,
         member_id: 3,

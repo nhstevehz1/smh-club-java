@@ -12,8 +12,8 @@ import {TranslatePipe} from "@ngx-translate/core";
   styleUrl: './title-page.component.scss'
 })
 export class TitlePageComponent {
-  titleSignal = input.required<string>({alias: 'title'});
-  subTitleSignal = input.required<string>({alias: 'subTitle'});
-  iconNameSignal = input<string>(undefined, {alias: 'iconName'});
-  protected iconDefinedSignal = computed<boolean>(() => !!this.iconNameSignal());
+  title = input.required<string>();
+  subTitle = input.required<string>();
+  iconName = input<string>();
+  protected iconDefined = computed<boolean>(() => !!this.iconName());
 }

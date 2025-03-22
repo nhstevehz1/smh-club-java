@@ -5,19 +5,18 @@ import {FormModelGroup} from "./form-model-group";
 @Directive()
 export abstract class BaseEditorComponent<T> {
 
-  editorFormSignal = input.required<FormModelGroup<T>>({alias: 'editorForm'});
+  editorForm = input.required<FormModelGroup<T>>();
 
-  titleSignal = input<string>(undefined, {alias: 'title'});
+  title = input<string>();
 
-  fieldAppearanceSignal
-      = input<MatFormFieldAppearance>(undefined, {alias: 'fieldAppearance'});
+  fieldAppearance
+      = input<MatFormFieldAppearance>();
 
-  showRemoveButtonSignal = input(false, {
-    alias: 'showRemoveButton'});
+  showRemoveButton = input(false);
 
-  removeSignal = output<void>({alias: 'removeClick'});
+  remove = output<void>();
 
   onRemove(): void {
-    this.removeSignal.emit();
+    this.remove.emit();
   }
 }

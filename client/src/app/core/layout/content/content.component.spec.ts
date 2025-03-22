@@ -19,6 +19,7 @@ import {MatNavListHarness} from "@angular/material/list/testing";
 import {NavItem} from "./models/nav-item";
 import {MatIconHarness} from "@angular/material/icon/testing";
 import SpyObj = jasmine.SpyObj;
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('ContentComponent', () => {
   let fixture: ComponentFixture<ContentComponent>;
@@ -47,7 +48,8 @@ describe('ContentComponent', () => {
        ContentComponent,
        MatSidenavModule,
        MatListModule,
-       MatIconModule
+       MatIconModule,
+       TranslateModule.forRoot({})
      ],
      providers: [
        provideRouter([]),

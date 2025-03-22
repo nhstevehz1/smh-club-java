@@ -1,12 +1,12 @@
-@if (showRemoveButtonSignal() || titleDefinedSignal()) {
-    <div class="flex-row" [ngClass]="{'space-between': titleDefinedSignal(), 'end': !titleDefinedSignal()}">
-        @if(titleDefinedSignal()) {
+@if (showRemoveButton() || titleDefined()) {
+    <div class="flex-row" [ngClass]="{'space-between': titleDefined(), 'end': !titleDefined()}">
+        @if(titleDefined()) {
             <div class="flex-row">
-                <mat-label class="editor-title">{{(titleSignal() || '') | translate}}</mat-label>
+                <mat-label class="editor-title">{{(title() || '') | translate}}</mat-label>
             </div>
             <mat-divider></mat-divider>
         }
-        @if(showRemoveButtonSignal()) {
+        @if(showRemoveButton()) {
             <button mat-icon-button (click)="onRemove()">
                 <mat-icon>delete</mat-icon>
             </button>

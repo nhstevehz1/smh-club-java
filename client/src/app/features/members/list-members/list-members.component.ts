@@ -7,12 +7,12 @@ import {ColumnDef} from "../../../shared/components/sortable-pageable-table/mode
 import {MembersService} from "../services/members.service";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
+import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {Router} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
-import {MemberDetails} from "../models/member";
+import {Member} from "../models/member";
 import {DateTime} from "luxon";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
 import {AuthService} from "../../../core/auth/services/auth.service";
@@ -36,13 +36,13 @@ import {TranslatePipe, TranslateService} from "@ngx-translate/core";
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent extends TableComponentBase<MemberDetails> implements OnInit, AfterViewInit{
+export class ListMembersComponent extends BaseTableComponent<Member> implements OnInit, AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
-    private _table!: SortablePageableTableComponent<MemberDetails>;
+    private _table!: SortablePageableTableComponent<Member>;
 
     resultsLength = 0;
-    datasource = new MatTableDataSource<MemberDetails>();
-    columns: ColumnDef<MemberDetails>[] = [];
+    datasource = new MatTableDataSource<Member>();
+    columns: ColumnDef<Member>[] = [];
 
     readonly canAddMember: Signal<boolean> = computed(() => this.authSvc.hasPermission(PermissionType.write));
 
@@ -64,7 +64,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
                 startWith({}),
                 switchMap(() => {
                     // assemble the dynamic page request
-                    let pr = this.getPageRequest(
+                    const pr = this.getPageRequest(
                         this._table.paginator.pageIndex, this._table.paginator.pageSize,
                         this._table.sort.active, this._table.sort.direction);
 
@@ -94,35 +94,35 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
     }
 
     addMemberHandler(): void {
-        this.router.navigate(['p/members/add']).then(() => {});
+        this.router.navigate(['p/members/add']).then();
     }
 
     // assemble the column defs which will be consumed by the pageable sortable table component
-    protected getColumns(): ColumnDef<MemberDetails>[] {
+    protected getColumns(): ColumnDef<Member>[] {
         return [
             {
                 columnName: 'member_number',
                 displayName: 'members.list.columns.memberNumber',
                 translateDisplayName: false,
                 isSortable: true,
-                cell: (element: MemberDetails) => `${element.member_number}`},
+                cell: (element: Member) => `${element.member_number}`},
             {
                 columnName: 'first_name',
                 displayName: 'members.list.columns.firstName',
                 isSortable: true,
-                cell: (element: MemberDetails) => this.contactStrings(element.first_name, element.middle_name)
+                cell: (element: Member) => this.contactStrings(element.first_name, element.middle_name)
             },
             {
                 columnName: 'last_name',
                 displayName: 'members.list.columns.lastName',
                 isSortable: true,
-                cell: (element: MemberDetails) => this.contactStrings(element.last_name, element.suffix),
+                cell: (element: Member) => this.contactStrings(element.last_name, element.suffix),
             },
             {
                 columnName: 'birth_date',
                 displayName: 'members.list.columns.birthDate',
                 isSortable: true,
-                cell: (element: MemberDetails) => {
+                cell: (element: Member) => {
                     return this.dtFormat.transform(element.birth_date, DateTime.DATE_SHORT,
                         {locale: this.translate.currentLang});
                 }
@@ -131,7 +131,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
                 columnName: 'joined_date',
                 displayName: 'members.list.columns.joinedDate',
                 isSortable: true,
-                cell: (element: MemberDetails) => {
+                cell: (element: Member) => {
                     return this.dtFormat.transform(element.joined_date, DateTime.DATE_SHORT,
                         {locale: this.translate.currentLang});
                 }

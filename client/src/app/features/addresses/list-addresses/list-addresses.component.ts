@@ -6,7 +6,7 @@ import {AddressService} from "../services/address.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {AddressMember} from "../models/address";
-import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
+import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {AddressType} from "../models/address-type";
@@ -19,7 +19,7 @@ import {AddressType} from "../models/address-type";
   styleUrl: './list-addresses.component.scss',
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class ListAddressesComponent extends TableComponentBase<AddressMember> implements OnInit, AfterViewInit {
+export class ListAddressesComponent extends BaseTableComponent<AddressMember> implements OnInit, AfterViewInit {
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<ColumnDef<AddressMember>>;
 
@@ -47,7 +47,7 @@ export class ListAddressesComponent extends TableComponentBase<AddressMember> im
             startWith({}),
             switchMap(() => {
               // assemble the dynamic page request
-              let pr = this.getPageRequest(
+              const pr = this.getPageRequest(
                   this._table.paginator.pageIndex, this._table.paginator.pageSize,
                   this._table.sort.active, this._table.sort.direction);
 

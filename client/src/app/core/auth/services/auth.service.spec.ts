@@ -58,7 +58,7 @@ describe('AuthService', () => {
 
           const svc = TestBed.inject(AuthService);
 
-          // @ts-expect-error
+          // @ts-expect-error bug in testing framework
           const svcSpy = spyOn(svc, 'navigateToLogin').and.stub();
           svc.startupLoginSequence();
 
@@ -164,7 +164,7 @@ describe('AuthService', () => {
      it('isLoggedIn should return true', () => {
         const spy = oAuthMock.hasValidIdToken.and.returnValue(true);
 
-        let result = service.isLoggedIn();
+        const result = service.isLoggedIn();
 
         expect(spy).toHaveBeenCalled();
         expect(result).toEqual(true);
@@ -173,7 +173,7 @@ describe('AuthService', () => {
     it('isLoggedIn should return false', () => {
       const spy = oAuthMock.hasValidIdToken.and.returnValue(false);
 
-      let result = service.isLoggedIn();
+      const result = service.isLoggedIn();
 
       expect(spy).toHaveBeenCalled();
       expect(result).toEqual(false);

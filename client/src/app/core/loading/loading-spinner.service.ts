@@ -8,8 +8,8 @@ import {LoadingSpinnerComponent} from "./loading-spinner/loading-spinner.compone
 export class LoadingSpinnerService {
   private dialog = inject(MatDialog);
   private dialogRef: MatDialogRef<LoadingSpinnerComponent> | null = null;
-  private isLoading: boolean = false;
-  private loadingMap: Map<string, boolean> = new Map<string, boolean>();
+  private isLoading = false;
+  private loadingMap = new Map<string, boolean>();
 
   setLoading(loading: boolean, url: string): void {
     if (!url) {

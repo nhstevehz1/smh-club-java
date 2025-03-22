@@ -7,7 +7,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {TableComponentBase} from "../../../shared/components/table-component-base/table-component-base";
+import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {RenewalMember} from "../models/renewal";
 
 @Component({
@@ -18,7 +18,7 @@ import {RenewalMember} from "../models/renewal";
   styleUrl: './list-renewals.component.scss'
 })
 export class ListRenewalsComponent
-    extends TableComponentBase<RenewalMember> implements OnInit, AfterViewInit {
+    extends BaseTableComponent<RenewalMember> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<RenewalMember>;
@@ -41,7 +41,7 @@ export class ListRenewalsComponent
             startWith({}),
             switchMap(() => {
               // assemble the dynamic page request
-              let pr = this.getPageRequest(
+              const pr = this.getPageRequest(
                   this._table.paginator.pageIndex, this._table.paginator.pageSize,
                   this._table.sort.active, this._table.sort.direction);
 

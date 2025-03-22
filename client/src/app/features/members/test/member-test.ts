@@ -1,4 +1,4 @@
-import {Member, MemberDetails, MemberUpdate} from '../models/member';
+import {MemberBase, Member} from '../models/member';
 import {DateTime} from 'luxon';
 import {PagedData} from '../../../shared/models/paged-data';
 import {generatePagedData} from '../../../shared/test-helpers/test-helpers';
@@ -7,33 +7,33 @@ import {generateAddressCreateForm} from "../../addresses/test/address-test";
 import {generateEmailCreateForm} from "../../emails/test/email-test";
 import {generatePhoneCreateForm} from "../../phones/test/phone-test";
 
-export function generateMemberPageData(page: number, size: number, total: number): PagedData<MemberDetails> {
+export function generateMemberPageData(page: number, size: number, total: number): PagedData<Member> {
     const content = generateMemberList(size);
     return generatePagedData(page, size, total, content);
 }
 
-export function generateMemberList(size: number): Array<MemberDetails> {
-    let list: Array<MemberDetails> = [];
+export function generateMemberList(size: number): Member[] {
+    const list: Member[] = [];
 
     for(let ii = 0; ii < size; ii++) {
-        let member: MemberDetails = generateMemberDetails(ii);
+        const member: Member = generateMemberDetails(ii);
         list.push(member);
     }
     return list;
 }
 
-export function generateMemberDetails(prefix: number): MemberDetails {
+export function generateMemberDetails(prefix: number): Member {
     const member = generateMember(prefix);
 
     const str = JSON.stringify(member);
 
-    const details: MemberDetails = JSON.parse(str);
+    const details: Member = JSON.parse(str);
     details.id = prefix;
     details.member_number = prefix;
     return details;
 }
 
-export function generateMember(prefix: number): Member {
+export function generateMember(prefix: number): MemberBase {
     return {
         member_number: prefix,
         first_name: prefix + ' First',
@@ -60,7 +60,7 @@ export function generateMemberCreateForm(): FormGroup {
     });
 }
 
-export function generateMemberUpdate(): MemberUpdate {
+export function generateMemberUpdate(): Member {
     const member = generateMember(1);
     return {
         id: 0,

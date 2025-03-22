@@ -1,15 +1,15 @@
-<mat-form-field [appearance]="appearanceSignal()">
-    @if(labelSignal()) {
-        <mat-label>{{(labelSignal() || '') | translate}}</mat-label>
+<mat-form-field [appearance]="appearance()">
+    @if(label()) {
+        <mat-label>{{(label() || '') | translate}}</mat-label>
     }
-    @if(prefixTextSignal()) {
-        <span matTextPrefix>{{(prefixTextSignal() || '') | translate}}</span>
+    @if(prefixText()) {
+        <span matTextPrefix>{{(prefixText() || '') | translate}}</span>
     }
-    <input [type]="inputTypeSignal()"
+    <input [type]="inputType()"
            matInput
-           [formControl]="formControlSignal()"
+           [formControl]="formControl()"
            (blur)="onBlur()">
-    @if(invalidSignal()){
-        <mat-error>{{invalidMessageSignal() | translate}}</mat-error>
+    @if(invalid()){
+        <mat-error>{{invalidMessage() | translate}}</mat-error>
     }
 </mat-form-field>

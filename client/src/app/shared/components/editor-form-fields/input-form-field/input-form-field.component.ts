@@ -4,7 +4,7 @@ import {TranslatePipe} from "@ngx-translate/core";
 import {InputType} from "../models/input-type";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
-import {InputComponentBase} from "../models/input-component";
+import {BaseInputComponent} from "../base-input-component";
 
 @Component({
   selector: 'app-input-form-field',
@@ -17,12 +17,12 @@ import {InputComponentBase} from "../models/input-component";
   templateUrl: './input-form-field.component.html',
   styleUrl: './input-form-field.component.scss'
 })
-export class InputFormFieldComponent extends InputComponentBase<number | string> {
+export class InputFormFieldComponent extends BaseInputComponent<number | string> {
 
-    prefixTextSignal
-        = input<string>(undefined, {alias: 'textPrefix'});
+    prefixText
+        = input<string>();
 
-    inputTypeSignal =
-        input<InputType>(InputType.Text, {alias: 'inputType'});
+    inputType =
+        input<InputType>(InputType.Text);
 
 }

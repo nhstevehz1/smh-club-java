@@ -1,7 +1,7 @@
 import {AddressType} from "./address-type";
 import {FullName} from "../../../shared/models/full-name";
 
-export interface Address {
+export interface AddressCreate {
     address1: string;
     address2: string;
     city: string;
@@ -10,15 +10,15 @@ export interface Address {
     address_type: AddressType;
 }
 
-export interface AddressDetails extends Address {
+export interface Address extends AddressCreate {
     id: number;
     member_id: number;
 }
 
-export interface AddressMember extends AddressDetails {
+export interface AddressMember extends Address {
     full_name: FullName;
 }
 
-export interface AddressCreate extends Address {}
+//export interface AddressCreate extends Address {}
 
-export interface AddressUpdate extends AddressDetails {}
+//export interface AddressUpdate extends AddressDetails {}

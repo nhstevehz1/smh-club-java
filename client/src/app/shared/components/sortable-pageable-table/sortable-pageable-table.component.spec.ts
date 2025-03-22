@@ -20,7 +20,7 @@ export interface TestModel {
 }
 
 describe('SortablePageableTableComponent', () => {
-  let columnDefs: ColumnDef<TestModel>[] = [
+  const columnDefs: ColumnDef<TestModel>[] = [
     {columnName: 'a_string', displayName: 'A String', isSortable: true,
       cell: (element:TestModel) => `${element.a_string}`},
     {columnName: 'date_time', displayName: 'A DateTime', isSortable: true,
@@ -31,7 +31,7 @@ describe('SortablePageableTableComponent', () => {
       cell: (element:TestModel) => `${element.a_boolean}`},
   ] as ColumnDef<TestModel>[];
 
-  let data: TestModel[] = [
+  const data: TestModel[] = [
     {a_string: "Field1", date_time: DateTime.now(), a_boolean: true, a_number: 1},
     {a_string: "Field2", date_time: DateTime.now(), a_boolean: false, a_number: 2},
     {a_string: "Field3", date_time: DateTime.now(), a_boolean: true, a_number: 3},
@@ -64,33 +64,33 @@ describe('SortablePageableTableComponent', () => {
   });
 
   describe('test component inputs', () => {
-    
+
     it('should create', () => {
       expect(component).toBeTruthy();
     });
 
     it('should input columns', () => {
-      expect(component.columnsSignal()).toEqual(columnDefs);
-      
+      expect(component.column()).toEqual(columnDefs);
+
       columnDefs.forEach(columnDef => {
-        expect(component.columnsSignal().map((c => c.columnName))).toContain(columnDef.columnName);
+        expect(component.column().map((c => c.columnName))).toContain(columnDef.columnName);
       })
     });
 
     it('should return column names', () => {
-      const columnNames = component.columnsSignal().map(c => c.columnName);
-      expect(component.columnNamesSignal()).toEqual(columnNames);
+      const columnNames = component.column().map(c => c.columnName);
+      expect(component.columnNames()).toEqual(columnNames);
     });
 
     it('table should bind dataSource input', () => {
-      expect(component.dataSourceSignal()).toBeTruthy();
+      expect(component.dataSource()).toBeTruthy();
     })
 
     it('table datasource should have items', async () => {
       fixture.componentRef.setInput('dataSource', new MatTableDataSource<TestModel>(data));
       fixture.detectChanges();
       await fixture.whenStable();
-      expect(component.dataSourceSignal().data.length).toEqual(data.length);
+      expect(component.dataSource().data.length).toEqual(data.length);
     })
 
     it('should should bind paginator inputs', () =>  {
@@ -120,9 +120,9 @@ describe('SortablePageableTableComponent', () => {
       expect(component.paginator.pageIndex).toEqual(0);
     })
   });
-  
+
   describe('render table',  () => {
-    
+
     it('should render table', async () => {
       const tableHarness = await loader.getHarness(MatTableHarness);
       expect(tableHarness).toBeTruthy();

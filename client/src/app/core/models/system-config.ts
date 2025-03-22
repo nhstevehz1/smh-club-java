@@ -1,7 +1,7 @@
 import {PermissionType} from "../auth/models/permission-type";
 
 export interface SystemConfig {
-    permissions: Array<RolePermission>;
+    permissions: RolePermission[];
 }
 
 export interface RolePermission {

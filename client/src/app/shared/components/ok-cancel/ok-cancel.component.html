@@ -1,8 +1,8 @@
 <div class="container">
-    <mat-card-title class="card-title">{{titleSignal() | translate}}</mat-card-title>
+    <mat-card-title class="card-title">{{title() | translate}}</mat-card-title>
     <button mat-fab
-        [matTooltip]="buttonToolTipSignal() | translate"
+        [matTooltip]="buttonToolTip() | translate"
         (click)="onButtonClicked()">
-        <mat-icon>{{iconNameSignal()}}</mat-icon>
+        <mat-icon>{{iconName()}}</mat-icon>
     </button>
 </div>

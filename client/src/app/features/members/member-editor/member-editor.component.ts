@@ -36,37 +36,25 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 export class MemberEditorComponent extends BaseEditorComponent<MemberCreate> {
 
     memberNumberSignal
-        = computed(() => this.editorFormSignal().controls.member_number);
+        = computed(() => this.editorForm().controls.member_number);
 
-    firstNameSignal
-        = computed(() => this.editorFormSignal().controls.first_name);
-    firstNameErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'firstNameErrors'});
+    firstName= computed(() => this.editorForm().controls.first_name);
+    firstNameErrors= input<FormControlError[]>();
 
-    middleNameSignal
-        = computed(() => this.editorFormSignal().controls.middle_name);
-    middleNameErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'middleNameErrors'});
+    middleName= computed(() => this.editorForm().controls.middle_name);
+    middleNameErrors= input<FormControlError[]>();
 
-    lastNameSignal
-        = computed(() => this.editorFormSignal().controls.last_name);
-    lastNameErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'lastNameErrors'});
+    lastNameSignal= computed(() => this.editorForm().controls.last_name);
+    lastNameErrors= input<FormControlError[]>();
 
-    suffixSignal
-        = computed(() => this.editorFormSignal().controls.suffix);
-    suffixErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'suffixErrors'});
+    suffix= computed(() => this.editorForm().controls.suffix);
+    suffixErrors= input<FormControlError[]>();
 
-    birthDateSignal
-        = computed(() => this.editorFormSignal().controls.birth_date);
-    birthDateErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'birthDateErrors'});
+    birthDate= computed(() => this.editorForm().controls.birth_date);
+    birthDateErrors= input<FormControlError[]>();
 
-    joinedDateSignal
-        = computed(() => this.editorFormSignal().controls.joined_date);
-    joinedDateErrorsSignal
-        = input<Array<FormControlError>>(undefined, {alias: 'joinedDateErrors'});
+    joinedDate= computed(() => this.editorForm().controls.joined_date);
+    joinedDateErrors= input<FormControlError[]>();
 
     constructor() {
         super();

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
-import {EmailCreate, EmailMember, EmailUpdate} from "../models/email";
+import {EmailCreate, EmailMember, Email} from "../models/email";
 import {PagedData} from "../../../shared/models/paged-data";
 import {map} from "rxjs/operators";
 import {EmailType} from "../models/email-type";
@@ -37,7 +37,7 @@ export class EmailService {
       });
   }
 
-  generateUpdateForm(update: EmailUpdate): FormModelGroup<EmailUpdate> {
+  generateUpdateForm(update: Email): FormModelGroup<Email> {
       return this.fb.group({
           id: [update.id],
           member_id: [update.member_id],

@@ -50,7 +50,7 @@ describe('SelectFormFieldComponent', () => {
     fixture = TestBed.createComponent(SelectFormFieldComponent<TestStringEnum>);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    
+
     fixture.componentRef.setInput('formControl', textControl);
     fixture.componentRef.setInput('options', stringOptions);
   });
@@ -127,7 +127,7 @@ describe('SelectFormFieldComponent', () => {
       const options = await harness.getOptions();
 
       for(let ii = 0; ii < options.length; ii++) {
-        let option = options[ii];
+        const option = options[ii];
         const label = await option.getText();
         expect(label).toBe(stringOptions[ii].label);
       }

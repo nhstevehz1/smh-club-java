@@ -1,4 +1,4 @@
-import {AddressCreate, AddressMember, AddressUpdate} from "../models/address";
+import {AddressCreate, AddressMember, Address} from "../models/address";
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
 import {AddressType} from "../models/address-type";
@@ -10,11 +10,11 @@ export function generateAddressPagedData(page: number, size: number, total: numb
     return generatePagedData(page, size, total, content);
 }
 
-export function generateAddressList(size: number): Array<AddressMember> {
-    let list: Array<AddressMember> = [];
+export function generateAddressList(size: number): AddressMember[] {
+    const list: AddressMember[] = [];
 
     for (let ii = 0; ii < size; ii++) {
-        let addressMember: AddressMember = {
+        const addressMember: AddressMember = {
             id: ii,
             member_id: ii,
             address1: ii + " Street",
@@ -46,7 +46,7 @@ export function generateAddressCreateForm(): FormModelGroup<AddressCreate> {
     });
 }
 
-export function generateAddressUpdate(): AddressUpdate {
+export function generateAddressUpdate(): Address {
     return {
         id: 1,
         member_id: 3,
