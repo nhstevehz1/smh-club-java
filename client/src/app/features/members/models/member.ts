@@ -3,7 +3,7 @@ import {Address} from "../../addresses/models/address";
 import {EmailBase} from "../../emails/models/email";
 import {PhoneCreate} from "../../phones/models/phone";
 
-export interface Member {
+export interface MemberBase {
     member_number: number;
     first_name: string;
     middle_name: string;
@@ -13,14 +13,12 @@ export interface Member {
     joined_date: DateTime;
 }
 
-export interface MemberDetails extends Member {
+export interface Member extends MemberBase {
     id: number;
 }
 
-export interface MemberCreate extends Member {
+export interface MemberCreate extends MemberBase {
     addresses: Address[];
     emails: EmailBase[];
     phones: PhoneCreate[];
 }
-
-export interface MemberUpdate extends MemberDetails {}

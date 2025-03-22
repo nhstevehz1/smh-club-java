@@ -9,7 +9,7 @@ import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {generateMember, generateMemberCreateForm} from "../test/member-test";
 import {asyncData} from "../../../shared/test-helpers/test-helpers";
 import {Observable, Subject, throwError} from "rxjs";
-import {Member} from "../models/member";
+import {MemberBase} from "../models/member";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {By} from "@angular/platform-browser";
@@ -31,10 +31,10 @@ describe('AddMemberComponent', () => {
   let emailSvcMock: jasmine.SpyObj<EmailService>;
   let phoneSvcMock: jasmine.SpyObj<PhoneService>;
   let routerMock: jasmine.SpyObj<Router>;
-  const memberMock: Member = generateMember(1);
+  const memberMock: MemberBase = generateMember(1);
 
-  let createSubject$: Subject<Member>;
-  let createMember$: Observable<Member>;
+  let createSubject$: Subject<MemberBase>;
+  let createMember$: Observable<MemberBase>;
 
   beforeEach(async () => {
     memberSvcMock = jasmine.createSpyObj<MembersService>('MembersService', ['createMember', 'generateCreateForm']);
@@ -43,7 +43,7 @@ describe('AddMemberComponent', () => {
     phoneSvcMock = jasmine.createSpyObj<PhoneService>('PhoneService', ['generateCreateForm']);
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
-    createSubject$ = new Subject<Member>();
+    createSubject$ = new Subject<MemberBase>();
     createMember$ = createSubject$.asObservable();
 
     addressSvcMock.generateCreateForm.and.returnValue(generateAddressCreateForm());

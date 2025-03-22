@@ -4,7 +4,7 @@ import {MemberEditorComponent} from './member-editor.component';
 import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {MemberUpdate} from "../models/member";
+import {Member} from "../models/member";
 import {FormControl, FormGroup} from "@angular/forms";
 import {DateTime} from "luxon";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
@@ -21,7 +21,7 @@ describe('MemberEditorComponent', () => {
   let fixture: ComponentFixture<MemberEditorComponent>;
   let loader: HarnessLoader;
 
-  const formGroup: FormModelGroup<MemberUpdate> = new FormGroup({
+  const formGroup: FormModelGroup<Member> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_number: new FormControl<number>(0, {nonNullable: true}),
     first_name: new FormControl<string>('First', {nonNullable: true}),
@@ -77,7 +77,7 @@ describe('MemberEditorComponent', () => {
             await loader.getHarnessOrNull(MatFormFieldHarness.with({
               floatingLabelText: 'members.editor.firstName.label'}))
       });
-      
+
       it('should contain member field', async () => {
         expect(harness).toBeTruthy();
       });
@@ -101,7 +101,7 @@ describe('MemberEditorComponent', () => {
     });
 
     describe('middle name field tests', () => {
-      
+
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with({
@@ -129,11 +129,11 @@ describe('MemberEditorComponent', () => {
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-      
+
     });
 
     describe('last name field tests', () => {
-          
+
       beforeEach(async () => {
         harness =
             await loader.getHarnessOrNull(MatFormFieldHarness.with({

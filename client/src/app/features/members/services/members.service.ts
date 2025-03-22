@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {PageRequest} from "../../../shared/models/page-request";
 import {PagedData} from "../../../shared/models/paged-data";
-import {Member, MemberCreate, MemberDetails, MemberUpdate} from "../models/member";
+import {MemberBase, MemberCreate, Member} from "../models/member";
 import {map} from "rxjs/operators";
 import {DateTime} from "luxon";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
@@ -19,11 +19,11 @@ export class MembersService {
   constructor(private http: HttpClient,
               private fb: NonNullableFormBuilder) {}
 
-  getMembers(pageRequest: PageRequest): Observable<PagedData<MemberDetails>> {
+  getMembers(pageRequest: PageRequest): Observable<PagedData<Member>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
-    return this.http.get<PagedData<MemberDetails>>(uri).pipe(
+    return this.http.get<PagedData<Member>>(uri).pipe(
         map(pd => {
           if(pd && pd._content){
               pd._content.forEach(m => {
@@ -39,8 +39,8 @@ export class MembersService {
     );
   }
 
-  createMember(memberData: MemberCreate): Observable<Member> {
-    return this.http.post<Member>(this.BASE_API, memberData);
+  createMember(memberData: MemberCreate): Observable<MemberBase> {
+    return this.http.post<MemberBase>(this.BASE_API, memberData);
   }
 
   generateCreateForm(addressForm: FormModelGroup<Address>,
@@ -61,7 +61,7 @@ export class MembersService {
       }) as unknown as FormModelGroup<MemberCreate>;
   }
 
-  generateUpdateForm(update: MemberUpdate): FormModelGroup<MemberUpdate> {
+  generateUpdateForm(update: Member): FormModelGroup<Member> {
       return this.fb.group({
           id: [update.id, [Validators.required]],
           member_number: [update.member_number, [Validators.required, Validators.min(1)]],
