@@ -17,6 +17,8 @@ describe('readGuard', () => {
   let readIsAuthedEvent$: Observable<boolean>
 
   const route = new ActivatedRouteSnapshot();
+  // suppressing es-lint.  any is acceptable.  state is not really used.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const state: any = {};
 
   beforeEach(async () => {

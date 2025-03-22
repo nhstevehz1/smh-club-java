@@ -12,8 +12,7 @@ import {AuthService} from "./core/auth/services/auth.service";
 import {DOCUMENT} from "@angular/common";
 import {provideNgxTranslate} from "./core/i18n/providers/ngx-translate-provider";
 
-export let  appConfig: ApplicationConfig;
-appConfig = {
+export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     provideZoneChangeDetection({eventCoalescing: true}),

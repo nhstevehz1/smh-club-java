@@ -102,7 +102,7 @@ export class AddMemberComponent {
                   this.errorMessage.set(null)
                   this.submitted.set(true);
               },
-              error: (err: any) => {
+              error: (err) => {
                   let errMsg: string;
                   if (err.error instanceof Error) {
                       // A client-side or network error occurred.

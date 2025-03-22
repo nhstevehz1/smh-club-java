@@ -1,7 +1,9 @@
 import {BaseTestTableComponent} from "./base-test-table-component";
 import {FullName} from "../../models/full-name";
 
-export interface TestType {}
+export interface TestType {
+  test: string;
+}
 
 describe('TableComponentBase', () => {
     let component: BaseTestTableComponent<TestType>;
