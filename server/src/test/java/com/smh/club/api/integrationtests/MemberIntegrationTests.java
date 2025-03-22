@@ -10,7 +10,6 @@ import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.member.MemberBaseDto;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
@@ -477,9 +476,9 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberUpdateDto.class)
-            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
-            .set(field(MemberUpdateDto::getId), id)
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getJoinedDate), Instant.now())
+            .set(field(MemberDto::getId), id)
             .create();
 
         // perform put
@@ -496,7 +495,7 @@ public class MemberIntegrationTests extends IntegrationTests {
     @Test
     public void update_returns_status_badRequest() throws Exception {
         // Setup
-        var update = Instancio.create(MemberUpdateDto.class);
+        var update = Instancio.create(MemberDto.class);
 
         // perform put
         given()
@@ -518,10 +517,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberUpdateDto.class)
-            .set(field(MemberUpdateDto::getId), id)
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getId), id)
             .setBlank(nonNullableField)
-            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
+            .set(field(MemberDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -533,10 +532,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberUpdateDto.class)
-            .set(field(MemberUpdateDto::getId), id)
-            .setBlank(field(MemberUpdateDto::getBirthDate))
-            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getId), id)
+            .setBlank(field(MemberDto::getBirthDate))
+            .set(field(MemberDto::getJoinedDate), Instant.now())
             .create();
 
         // perform POST
@@ -548,10 +547,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberUpdateDto.class)
-            .set(field(MemberUpdateDto::getId), id)
-            .setBlank(field(MemberUpdateDto::getJoinedDate))
-            .generate(field(MemberUpdateDto::getBirthDate),
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getId), id)
+            .setBlank(field(MemberDto::getJoinedDate))
+            .generate(field(MemberDto::getBirthDate),
                 g -> g.temporal().instant().range(
                     ZonedDateTime.now().minusYears(100).toInstant(),
                     ZonedDateTime.now().minusYears(21).toInstant()))
@@ -567,10 +566,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberUpdateDto.class)
-            .set(field(MemberUpdateDto::getId), id)
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getId), id)
             .setBlank(nullableField)
-            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
+            .set(field(MemberDto::getJoinedDate), Instant.now())
             .create();
 
         // perform put
@@ -589,10 +588,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberUpdateDto.class)
-            .set(field(MemberUpdateDto::getId), id)
-            .set(field(MemberUpdateDto::getBirthDate), ZonedDateTime.now().minusYears(10).toInstant())
-            .set(field(MemberUpdateDto::getJoinedDate), Instant.now())
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getId), id)
+            .set(field(MemberDto::getBirthDate), ZonedDateTime.now().minusYears(10).toInstant())
+            .set(field(MemberDto::getJoinedDate), Instant.now())
             .create();
 
         // perform put
@@ -604,10 +603,10 @@ public class MemberIntegrationTests extends IntegrationTests {
         // setup
         var entity = addEntitiesToDb(5).get(2);
         var id = entity.getId();
-        var update = Instancio.of(MemberUpdateDto.class)
-            .set(field(MemberUpdateDto::getId), id)
-            .set(field(MemberUpdateDto::getBirthDate), entity.getBirthDate())
-            .set(field(MemberUpdateDto::getJoinedDate),
+        var update = Instancio.of(MemberDto.class)
+            .set(field(MemberDto::getId), id)
+            .set(field(MemberDto::getBirthDate), entity.getBirthDate())
+            .set(field(MemberDto::getJoinedDate),
                 entity.getBirthDate().atZone(ZoneId.systemDefault()).minusYears(1).toInstant())
             .create();
 
@@ -666,12 +665,7 @@ public class MemberIntegrationTests extends IntegrationTests {
         assertEquals(expected.getId(), actual.getId());
         verify((MemberBaseDto) expected, actual);
     }
-
-    private void verify(MemberUpdateDto expected, MemberEntity actual) {
-        assertEquals(expected.getId(), actual.getId());
-        verify((MemberBaseDto) expected, actual);
-    }
-
+    
     private void verify(MemberCreateDto expected, MemberEntity actual) {
         verify((MemberBaseDto) expected, actual);
 

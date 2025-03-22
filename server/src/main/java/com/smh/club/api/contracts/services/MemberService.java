@@ -3,7 +3,6 @@ package com.smh.club.api.contracts.services;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -40,10 +39,10 @@ public interface MemberService {
      * Updates a member in the database.
      *
      * @param id     The id of the member to update.
-     * @param member The {@link MemberUpdateDto} containing the updates.
+     * @param member The {@link MemberDto} containing the updates.
      * @return The updated {@link MemberDto}.
      */
-    Optional<MemberDto> updateMember(int id, MemberUpdateDto member);
+    Optional<MemberDto> updateMember(int id, MemberDto member);
 
     /**
      * Deletes a member from the database.

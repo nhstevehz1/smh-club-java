@@ -10,7 +10,6 @@ import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
 import java.util.List;
 
 import com.smh.club.api.dto.phone.PhoneDto;
@@ -57,7 +56,7 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
      * {@inheritDoc}
      */
     @Override
-    public MemberEntity updateEntity(MemberUpdateDto createMemberDto, MemberEntity memberEntity) {
+    public MemberEntity updateEntity(MemberDto createMemberDto, MemberEntity memberEntity) {
         modelMapper.map(createMemberDto, memberEntity);
         return memberEntity;
     }

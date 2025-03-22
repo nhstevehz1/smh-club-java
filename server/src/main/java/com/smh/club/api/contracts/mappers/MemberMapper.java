@@ -7,7 +7,6 @@ import java.util.List;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
 import org.springframework.data.domain.Page;
 
 /**
@@ -33,11 +32,11 @@ public interface MemberMapper {
     /**
      * Updates a member object
      *
-     * @param dto The {@link MemberUpdateDto} containing the updates.
+     * @param dto The {@link MemberDto} containing the updates.
      * @param entity The {@link MemberEntity} to be updated.
      * @return The updated {@link MemberEntity}.
      */
-    MemberEntity updateEntity(MemberUpdateDto dto, MemberEntity entity);
+    MemberEntity updateEntity(MemberDto dto, MemberEntity entity);
 
     /**
      * Maps a list of {@link MemberEntity} to a list of {@link MemberEntity}.

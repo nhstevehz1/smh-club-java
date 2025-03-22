@@ -7,7 +7,6 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +79,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public Optional<MemberDto> updateMember(int id, MemberUpdateDto member) {
+    public Optional<MemberDto> updateMember(int id, MemberDto member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)
