@@ -14,7 +14,7 @@ import {PhoneEditorComponent} from "../../phones/phone-editor/phone-editor.compo
 import {EmailEditorComponent} from "../../emails/email-editor/email-editor.component";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {MemberCreate} from "../models/member";
-import {Address, AddressCreate} from "../../addresses/models/address";
+import {Address} from "../../addresses/models/address";
 import {Email, EmailCreate} from "../../emails/models/email";
 import {Phone, PhoneCreate} from "../../phones/models/phone";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -65,7 +65,7 @@ export class AddMemberComponent {
         this.createFormSignal() as unknown as FormModelGroup<MemberCreate>);
 
     addressFormsComputed = computed(() =>
-        this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<AddressCreate>>);
+        this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<Address>>);
 
     emailFormsComputed = computed(() =>
         this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<EmailCreate>>);

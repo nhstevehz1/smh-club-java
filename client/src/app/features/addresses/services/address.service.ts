@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
 import {PagedData} from "../../../shared/models/paged-data";
-import {Address, AddressCreate, AddressDetails, AddressMember, AddressUpdate} from "../models/address";
+import {Address, AddressDetails, AddressMember} from "../models/address";
 import {map} from "rxjs/operators";
 import {AddressType} from "../models/address-type";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
@@ -29,8 +29,8 @@ export class AddressService {
     );
   }
 
-  createAddress(create: AddressCreate): Observable<AddressDetails> {
-    return this.http.post<AddressCreate>(this.BASE_API, create).pipe(
+  createAddress(create: Address): Observable<AddressDetails> {
+    return this.http.post<Address>(this.BASE_API, create).pipe(
         map(data => JSON.stringify(data)),
         map(data => JSON.parse(data) as AddressDetails),
         map(data => {
@@ -40,8 +40,8 @@ export class AddressService {
     );
   }
 
-  updateAddress(update: AddressUpdate): Observable<AddressDetails> {
-    return this.http.put<AddressCreate>(`${this.BASE_API}/`, update).pipe(
+  updateAddress(update: Address): Observable<AddressDetails> {
+    return this.http.put<AddressDetails>(`${this.BASE_API}/`, update).pipe(
         map(data => JSON.stringify(data)),
         map(data => JSON.parse(data) as AddressDetails),
         map(data => {
@@ -62,7 +62,7 @@ export class AddressService {
     });
   }
 
-  generateUpdateForm(update: AddressUpdate): FormModelGroup<AddressUpdate> {
+  generateUpdateForm(update: AddressDetails): FormModelGroup<AddressDetails> {
     return this.fb.group({
       id: [update.id, Validators.required],
       member_id: [update.member_id, [Validators.required, Validators.min(1)]],

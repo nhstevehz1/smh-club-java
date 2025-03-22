@@ -3,7 +3,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {ReactiveFormsModule} from "@angular/forms";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {AddressCreate} from "../models/address";
+import {Address} from "../models/address";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
@@ -28,7 +28,7 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './address-editor.component.html',
   styleUrl: './address-editor.component.scss'
 })
-export class AddressEditorComponent extends BaseEditorComponent<AddressCreate> {
+export class AddressEditorComponent extends BaseEditorComponent<Address> {
 
   address1 = computed(() => this.editorForm().controls.address1);
   address1Errors = input<FormControlError[]>();

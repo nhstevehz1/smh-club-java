@@ -1,4 +1,4 @@
-import {AddressCreate, AddressMember, AddressUpdate} from "../models/address";
+import {Address, AddressMember, AddressDetails} from "../models/address";
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
 import {AddressType} from "../models/address-type";
@@ -35,7 +35,7 @@ export function generateAddressList(size: number): AddressMember[] {
     return list;
 }
 
-export function generateAddressCreateForm(): FormModelGroup<AddressCreate> {
+export function generateAddressCreateForm(): FormModelGroup<Address> {
     return new FormGroup({
         address1: new FormControl('', {nonNullable: true}),
         address2: new FormControl('', {nonNullable: true}),
@@ -46,7 +46,7 @@ export function generateAddressCreateForm(): FormModelGroup<AddressCreate> {
     });
 }
 
-export function generateAddressUpdate(): AddressUpdate {
+export function generateAddressUpdate(): AddressDetails {
     return {
         id: 1,
         member_id: 3,

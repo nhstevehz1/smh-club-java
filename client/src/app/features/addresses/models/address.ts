@@ -19,6 +19,6 @@ export interface AddressMember extends AddressDetails {
     full_name: FullName;
 }
 
-export interface AddressCreate extends Address {}
+//export interface AddressCreate extends Address {}
 
-export interface AddressUpdate extends AddressDetails {}
+//export interface AddressUpdate extends AddressDetails {}

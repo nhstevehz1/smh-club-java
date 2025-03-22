@@ -8,7 +8,7 @@ import {map} from "rxjs/operators";
 import {DateTime} from "luxon";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {AddressCreate} from "../../addresses/models/address";
+import {Address} from "../../addresses/models/address";
 import {EmailCreate} from "../../emails/models/email";
 import {PhoneCreate} from "../../phones/models/phone";
 
@@ -43,7 +43,7 @@ export class MembersService {
     return this.http.post<Member>(this.BASE_API, memberData);
   }
 
-  generateCreateForm(addressForm: FormModelGroup<AddressCreate>,
+  generateCreateForm(addressForm: FormModelGroup<Address>,
                      emailForm: FormModelGroup<EmailCreate>,
                      phoneForm: FormModelGroup<PhoneCreate>): FormModelGroup<MemberCreate> {
 
@@ -55,7 +55,7 @@ export class MembersService {
           suffix: [''],
           birth_date: [DateTime.now, [Validators.required]],
           joined_date: [DateTime.now, [Validators.required]],
-          addresses: this.fb.array<FormModelGroup<AddressCreate>>([addressForm]),
+          addresses: this.fb.array<FormModelGroup<Address>>([addressForm]),
           emails: this.fb.array<FormModelGroup<EmailCreate>>([emailForm]),
           phones: this.fb.array<FormModelGroup<PhoneCreate>>([phoneForm]),
       }) as unknown as FormModelGroup<MemberCreate>;
