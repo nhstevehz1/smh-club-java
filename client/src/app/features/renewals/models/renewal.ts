@@ -1,20 +1,16 @@
 import {DateTime} from "luxon";
 import {FullName} from "../../../shared/models/full-name";
 
-export interface Renewal {
+export interface RenewalCreate {
     renewal_date: DateTime;
     renewal_year: number;
 }
 
-export interface RenewalDetails extends Renewal {
+export interface Renewal extends RenewalCreate {
     id: number;
     member_id: number;
 }
 
-export interface RenewalMember extends RenewalDetails {
+export interface RenewalMember extends Renewal {
     full_name: FullName
 }
-
-export interface RenewalCreate extends Renewal {}
-
-export interface RenewalCreate extends RenewalDetails {}
