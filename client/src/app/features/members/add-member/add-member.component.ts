@@ -14,9 +14,9 @@ import {PhoneEditorComponent} from "../../phones/phone-editor/phone-editor.compo
 import {EmailEditorComponent} from "../../emails/email-editor/email-editor.component";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {MemberCreate} from "../models/member";
-import {Address} from "../../addresses/models/address";
-import {EmailBase} from "../../emails/models/email";
-import {Phone, PhoneCreate} from "../../phones/models/phone";
+import {AddressCreate} from "../../addresses/models/address";
+import {EmailCreate} from "../../emails/models/email";
+import {PhoneCreate} from "../../phones/models/phone";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatDivider} from "@angular/material/divider";
 import {MembersService} from "../services/members.service";
@@ -65,10 +65,10 @@ export class AddMemberComponent {
         this.createFormSignal() as unknown as FormModelGroup<MemberCreate>);
 
     addressFormsComputed = computed(() =>
-        this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<Address>>);
+        this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<AddressCreate>>);
 
     emailFormsComputed = computed(() =>
-        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<EmailBase>>);
+        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<EmailCreate>>);
 
     phoneFormsComputed = computed(() =>
         this.createFormSignal().controls.phones as unknown as FormArray<FormModelGroup<PhoneCreate>>);
@@ -150,15 +150,15 @@ export class AddMemberComponent {
         this.getPhones().removeAt(idx);
     }
 
-    private getAddresses(): FormArray<FormModelGroup<Address>> {
-        return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<Address>>;
+    private getAddresses(): FormArray<FormModelGroup<AddressCreate>> {
+        return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<AddressCreate>>;
     }
 
-    private getEmails(): FormArray<FormModelGroup<EmailBase>> {
-        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<EmailBase>>;
+    private getEmails(): FormArray<FormModelGroup<EmailCreate>> {
+        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<EmailCreate>>;
     }
 
-    private getPhones(): FormArray<FormModelGroup<Phone>> {
-        return this.createFormSignal().get('phones') as FormArray<FormModelGroup<Phone>>;
+    private getPhones(): FormArray<FormModelGroup<PhoneCreate>> {
+        return this.createFormSignal().get('phones') as FormArray<FormModelGroup<PhoneCreate>>;
     }
 }

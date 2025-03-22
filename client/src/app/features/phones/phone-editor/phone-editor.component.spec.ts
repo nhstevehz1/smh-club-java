@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {PhoneEditorComponent} from './phone-editor.component';
 import {HarnessLoader} from "@angular/cdk/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {PhoneUpdate} from '../models/phone';
+import {Phone} from '../models/phone';
 import {FormControl, FormGroup} from "@angular/forms";
 import {PhoneType} from "../models/phone-type";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
@@ -20,7 +20,7 @@ describe('PhoneEditorComponent', () => {
   let fixture: ComponentFixture<PhoneEditorComponent>;
   let loader: HarnessLoader;
 
-  const formGroup: FormModelGroup<PhoneUpdate> = new FormGroup({
+  const formGroup: FormModelGroup<Phone> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
     country_code: new FormControl<string>('1', {nonNullable: true}),

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
-import {PhoneCreate, PhoneMember, PhoneUpdate} from "../models/phone";
+import {PhoneCreate, PhoneMember, Phone} from "../models/phone";
 import {PagedData} from "../../../shared/models/paged-data";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
@@ -38,7 +38,7 @@ export class PhoneService {
       });
   }
 
-    generateUpdateForm(update: PhoneUpdate): FormModelGroup<PhoneUpdate> {
+    generateUpdateForm(update: Phone): FormModelGroup<Phone> {
         return this.fb.group({
             id: [update.id],
             member_id: [update.member_id],

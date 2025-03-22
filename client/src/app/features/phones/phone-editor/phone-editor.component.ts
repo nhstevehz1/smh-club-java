@@ -3,7 +3,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {PhoneCreate, PhoneUpdate} from "../models/phone";
+import {PhoneCreate, Phone} from "../models/phone";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
@@ -28,7 +28,7 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './phone-editor.component.html',
   styleUrl: './phone-editor.component.scss'
 })
-export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | PhoneUpdate> {
+export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | Phone> {
 
   countryCode = computed(() => this.editorForm().controls.country_code);
   countryCodeErrors = input<FormControlError[]>();

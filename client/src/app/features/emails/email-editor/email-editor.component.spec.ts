@@ -7,7 +7,7 @@ import {EmailType} from "../models/email-type";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {EmailDetails} from "../models/email";
+import {Email} from "../models/email";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {MatButtonHarness} from "@angular/material/button/testing";
@@ -20,7 +20,7 @@ describe('EmailEditorComponent', () => {
   let fixture: ComponentFixture<EmailEditorComponent>;
   let loader: HarnessLoader;
 
-  const formGroup: FormModelGroup<EmailDetails> = new FormGroup({
+  const formGroup: FormModelGroup<Email> = new FormGroup({
     id: new FormControl<number>(0, {nonNullable: true}),
     member_id: new FormControl<number>(0, {nonNullable: true}),
     email: new FormControl<string>('email@email.com', {nonNullable: true}),

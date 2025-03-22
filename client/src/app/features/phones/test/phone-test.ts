@@ -1,6 +1,6 @@
 import {PagedData} from "../../../shared/models/paged-data";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {PhoneCreate, PhoneMember, PhoneUpdate} from "../models/phone";
+import {PhoneCreate, PhoneMember, Phone} from "../models/phone";
 import {PhoneType} from "../models/phone-type";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -41,7 +41,7 @@ export function generatePhoneCreateForm(): FormModelGroup<PhoneCreate> {
     });
 }
 
-export function generatePhoneUpdate(): PhoneUpdate {
+export function generatePhoneUpdate(): Phone {
     return {
         id: 0,
         member_id: 3,

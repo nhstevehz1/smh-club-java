@@ -8,8 +8,8 @@ import {map} from "rxjs/operators";
 import {DateTime} from "luxon";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Address} from "../../addresses/models/address";
-import {EmailBase} from "../../emails/models/email";
+import {AddressCreate} from "../../addresses/models/address";
+import {EmailCreate} from "../../emails/models/email";
 import {PhoneCreate} from "../../phones/models/phone";
 
 @Injectable()
@@ -43,8 +43,8 @@ export class MembersService {
     return this.http.post<MemberBase>(this.BASE_API, memberData);
   }
 
-  generateCreateForm(addressForm: FormModelGroup<Address>,
-                     emailForm: FormModelGroup<EmailBase>,
+  generateCreateForm(addressForm: FormModelGroup<AddressCreate>,
+                     emailForm: FormModelGroup<EmailCreate>,
                      phoneForm: FormModelGroup<PhoneCreate>): FormModelGroup<MemberCreate> {
 
       return this.fb.group({
@@ -55,8 +55,8 @@ export class MembersService {
           suffix: [''],
           birth_date: [DateTime.now, [Validators.required]],
           joined_date: [DateTime.now, [Validators.required]],
-          addresses: this.fb.array<FormModelGroup<Address>>([addressForm]),
-          emails: this.fb.array<FormModelGroup<EmailBase>>([emailForm]),
+          addresses: this.fb.array<FormModelGroup<AddressCreate>>([addressForm]),
+          emails: this.fb.array<FormModelGroup<EmailCreate>>([emailForm]),
           phones: this.fb.array<FormModelGroup<PhoneCreate>>([phoneForm]),
       }) as unknown as FormModelGroup<MemberCreate>;
   }
