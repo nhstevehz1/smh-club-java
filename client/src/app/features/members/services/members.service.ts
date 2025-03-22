@@ -9,7 +9,7 @@ import {DateTime} from "luxon";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {Address} from "../../addresses/models/address";
-import {EmailCreate} from "../../emails/models/email";
+import {EmailBase} from "../../emails/models/email";
 import {PhoneCreate} from "../../phones/models/phone";
 
 @Injectable()
@@ -44,7 +44,7 @@ export class MembersService {
   }
 
   generateCreateForm(addressForm: FormModelGroup<Address>,
-                     emailForm: FormModelGroup<EmailCreate>,
+                     emailForm: FormModelGroup<EmailBase>,
                      phoneForm: FormModelGroup<PhoneCreate>): FormModelGroup<MemberCreate> {
 
       return this.fb.group({
@@ -56,7 +56,7 @@ export class MembersService {
           birth_date: [DateTime.now, [Validators.required]],
           joined_date: [DateTime.now, [Validators.required]],
           addresses: this.fb.array<FormModelGroup<Address>>([addressForm]),
-          emails: this.fb.array<FormModelGroup<EmailCreate>>([emailForm]),
+          emails: this.fb.array<FormModelGroup<EmailBase>>([emailForm]),
           phones: this.fb.array<FormModelGroup<PhoneCreate>>([phoneForm]),
       }) as unknown as FormModelGroup<MemberCreate>;
   }

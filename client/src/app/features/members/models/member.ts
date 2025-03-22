@@ -1,6 +1,6 @@
 import {DateTime} from "luxon";
 import {Address} from "../../addresses/models/address";
-import {EmailCreate} from "../../emails/models/email";
+import {EmailBase} from "../../emails/models/email";
 import {PhoneCreate} from "../../phones/models/phone";
 
 export interface Member {
@@ -19,7 +19,7 @@ export interface MemberDetails extends Member {
 
 export interface MemberCreate extends Member {
     addresses: Address[];
-    emails: EmailCreate[];
+    emails: EmailBase[];
     phones: PhoneCreate[];
 }
 

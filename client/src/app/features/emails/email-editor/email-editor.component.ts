@@ -3,7 +3,7 @@ import {BaseEditorComponent} from "../../../shared/components/base-editor/base-e
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
-import {EmailCreate} from "../models/email";
+import {EmailBase} from "../models/email";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
@@ -28,7 +28,7 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './email-editor.component.html',
   styleUrl: './email-editor.component.scss'
 })
-export class EmailEditorComponent extends BaseEditorComponent<EmailCreate> {
+export class EmailEditorComponent extends BaseEditorComponent<EmailBase> {
 
   email = computed(() => this.editorForm().controls.email);
   emailErrors = input<FormControlError[]>();

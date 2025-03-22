@@ -15,7 +15,7 @@ import {EmailEditorComponent} from "../../emails/email-editor/email-editor.compo
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {MemberCreate} from "../models/member";
 import {Address} from "../../addresses/models/address";
-import {Email, EmailCreate} from "../../emails/models/email";
+import {EmailBase} from "../../emails/models/email";
 import {Phone, PhoneCreate} from "../../phones/models/phone";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatDivider} from "@angular/material/divider";
@@ -68,7 +68,7 @@ export class AddMemberComponent {
         this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<Address>>);
 
     emailFormsComputed = computed(() =>
-        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<EmailCreate>>);
+        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<EmailBase>>);
 
     phoneFormsComputed = computed(() =>
         this.createFormSignal().controls.phones as unknown as FormArray<FormModelGroup<PhoneCreate>>);
@@ -154,8 +154,8 @@ export class AddMemberComponent {
         return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<Address>>;
     }
 
-    private getEmails(): FormArray<FormModelGroup<Email>> {
-        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<Email>>;
+    private getEmails(): FormArray<FormModelGroup<EmailBase>> {
+        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<EmailBase>>;
     }
 
     private getPhones(): FormArray<FormModelGroup<Phone>> {
