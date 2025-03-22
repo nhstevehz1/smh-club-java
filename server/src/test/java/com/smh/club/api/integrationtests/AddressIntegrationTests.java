@@ -524,20 +524,20 @@ public class AddressIntegrationTests extends IntegrationTests {
     }
 
     private void verify(AddressCreateDto expected, AddressEntity actual) {
-        verify((AddressBaseDto)expected, actual);
+        verify((AddressCreateDto)expected, actual);
     }
 
     private void verify(AddressUpdateDto expected, AddressEntity actual) {
         assertEquals(expected.getId(), actual.getId());
-        verify((AddressBaseDto)expected, actual);
+        verify((AddressCreateDto)expected, actual);
     }
 
     private void verify(AddressDto expected, AddressEntity actual) {
         assertEquals(expected.getId(), actual.getId());
-        verify((AddressBaseDto)expected, actual);
+        verify((AddressCreateDto)expected, actual);
     }
 
-    private void verify(AddressBaseDto expected, AddressEntity actual) {
+    private void verify(AddressCreateDto expected, AddressEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getAddress1(), actual.getAddress1());
         assertEquals(expected.getAddress2(), actual.getAddress2());

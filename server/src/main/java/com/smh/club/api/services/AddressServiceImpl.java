@@ -78,7 +78,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public Optional<AddressDto> updateAddress(int id, AddressUpdateDto addressDto) {
+    public Optional<AddressDto> updateAddress(int id, AddressDto addressDto) {
         log.debug("Updating address id: {}, with data: {}", id, addressDto);
 
         return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())

@@ -42,7 +42,7 @@ public interface AddressService {
      * @param address The {@link AddressDto} containing the updates.
      * @return The updated {@link AddressDto}.
      */
-    Optional<AddressDto> updateAddress(int id, AddressUpdateDto address);
+    Optional<AddressDto> updateAddress(int id, AddressDto address);
 
     /**
      * Deletes an address from the database.

@@ -4,7 +4,6 @@ import com.smh.club.api.contracts.services.AddressService;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
-import com.smh.club.api.dto.address.AddressUpdateDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -102,7 +101,7 @@ public class AddressController {
     @PutMapping("{id}")
     public ResponseEntity<AddressDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody AddressUpdateDto address) {
+        @NotNull @Valid @RequestBody AddressDto address) {
 
         var ret = addressSvc.updateAddress(id, address);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
