@@ -94,7 +94,7 @@ export class ListMembersComponent extends TableComponentBase<MemberDetails> impl
     }
 
     addMemberHandler(): void {
-        this.router.navigate(['p/members/add']).then(():void => {});
+        this.router.navigate(['p/members/add']).then();
     }
 
     // assemble the column defs which will be consumed by the pageable sortable table component

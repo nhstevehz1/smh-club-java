@@ -33,7 +33,7 @@ describe('MembersService', () => {
   it('should call api with no parameters when page request is empty', () => {
     const pageRequest: PageRequest = PageRequest.of(undefined, undefined);
 
-    service.getMembers(pageRequest).subscribe((): void => {});
+    service.getMembers(pageRequest).subscribe();
 
     const req = controller.expectOne(baseUri);
     expect(req.request.method).toBe('GET');
@@ -46,7 +46,7 @@ describe('MembersService', () => {
     const pageRequest: PageRequest = PageRequest.of(0, 0);
     const uri = baseUri + pageRequest.createQuery();
 
-    service.getMembers(pageRequest).subscribe((): void => {});
+    service.getMembers(pageRequest).subscribe();
 
     const req = controller.expectOne(uri);
     expect(req.request.method).toBe('GET');

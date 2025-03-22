@@ -123,7 +123,7 @@ export class AddMemberComponent {
     }
 
     onOkOrCancel(): void {
-        this.router.navigate(['p/members']).then(() => {});
+        this.router.navigate(['p/members']).then();
     }
 
     onAddAddress(): void {

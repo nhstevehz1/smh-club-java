@@ -29,7 +29,7 @@ describe('AddressService', () => {
 
   it('should call api with no parameters when page request is empty', () => {
     const pageRequest: PageRequest = PageRequest.of(undefined, undefined);
-    service.getAddresses(pageRequest).subscribe((): void => {});
+    service.getAddresses(pageRequest).subscribe();
 
     const req = controller.expectOne(service.BASE_API);
     expect(req.request.method).toBe('GET');
@@ -42,7 +42,7 @@ describe('AddressService', () => {
     const pageRequest: PageRequest = PageRequest.of(0, 0);
     const uri = service.BASE_API + pageRequest.createQuery();
 
-    service.getAddresses(pageRequest).subscribe(() => {});
+    service.getAddresses(pageRequest).subscribe();
 
     const req = controller.expectOne(uri);
     expect(req.request.method).toBe('GET');

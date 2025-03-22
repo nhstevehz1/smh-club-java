@@ -20,7 +20,7 @@ export class ConfigService {
   public loadSystemConfig(): Observable<void> {
       return this.httpHttp.get<SystemConfig>(this.uri).pipe(
           tap((config: SystemConfig) => this.config = config),
-          map(():void => {})
+          map(():void => {return;})
       );
   }
 }
