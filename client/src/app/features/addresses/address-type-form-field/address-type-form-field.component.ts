@@ -1,11 +1,12 @@
 import {Component, input, signal} from '@angular/core';
-import {AddressType, AddressTypeOption} from "../models/address-type";
+import {AddressType} from "../models/address-type";
 import {FormControl} from "@angular/forms";
 import {
   SelectFormFieldComponent
 } from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
+import {SelectOption} from '../../../shared/components/editor-form-fields/models/select-option';
 
 @Component({
   selector: 'app-address-type-form-field',
@@ -25,7 +26,7 @@ export class AddressTypeFormFieldComponent {
 
   controlErrors = input<FormControlError[]>();
 
-  options= signal<AddressTypeOption[]>([]);
+  options= signal<SelectOption<AddressType>[]>([]);
 
   constructor() {
     this.options.set([

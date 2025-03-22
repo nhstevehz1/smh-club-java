@@ -1,11 +1,12 @@
 import {Component, input, signal} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {EmailType, EmailTypeOption} from "../models/email-type";
+import {EmailType} from "../models/email-type";
 import {
   SelectFormFieldComponent
 } from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
+import {SelectOption} from '../../../shared/components/editor-form-fields/models/select-option';
 
 @Component({
   selector: 'app-email-type-form-field',
@@ -25,7 +26,7 @@ export class EmailTypeFormFieldComponent {
 
   controlErrors= input<FormControlError[]>()
 
-  options= signal<EmailTypeOption[]> ([]);
+  options= signal<SelectOption<EmailType>[]> ([]);
 
   constructor() {
     this.options.set([
