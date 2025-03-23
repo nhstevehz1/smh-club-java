@@ -41,7 +41,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -107,7 +107,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -115,7 +115,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), PhoneFullNameDto.class, PhoneEntity.class)
+                    getSortString(o.getProperty(), PhoneFullNameDto.class, PhoneEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

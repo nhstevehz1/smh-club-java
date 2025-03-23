@@ -40,7 +40,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -107,7 +107,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -115,7 +115,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), AddressFullNameDto.class, AddressEntity.class)
+                    getSortString(o.getProperty(), AddressFullNameDto.class, AddressEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

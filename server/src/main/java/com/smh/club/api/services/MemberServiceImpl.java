@@ -39,7 +39,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -120,7 +120,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -128,7 +128,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), MemberDto.class, MemberEntity.class)
+                    getSortString(o.getProperty(), MemberDto.class, MemberEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

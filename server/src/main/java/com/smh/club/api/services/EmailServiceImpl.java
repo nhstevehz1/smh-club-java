@@ -41,7 +41,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -107,7 +107,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -115,7 +115,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), EmailFullNameDto.class, EmailEntity.class)
+                    getSortString(o.getProperty(), EmailFullNameDto.class, EmailEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

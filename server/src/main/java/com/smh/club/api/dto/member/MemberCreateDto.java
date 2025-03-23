@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)/**/
 @NoArgsConstructor
 @SuperBuilder
-@ValidMember
 public class MemberCreateDto extends MemberBaseDto {
 
   @Valid

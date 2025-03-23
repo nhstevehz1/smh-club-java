@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public abstract class EmailCreateDto {
+public class EmailCreateDto {
 
   @SortExclude
   @JsonProperty("member_id")

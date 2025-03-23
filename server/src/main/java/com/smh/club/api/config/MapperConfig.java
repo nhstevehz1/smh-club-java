@@ -72,7 +72,10 @@ public class MapperConfig {
 
        TypeMap<AddressDto, AddressEntity> updateMap
            = modelMapper.createTypeMap(AddressDto.class, AddressEntity.class);
-       updateMap.addMappings(m -> m.skip(AddressEntity::setId));
+       updateMap.addMappings(m -> {
+           m.skip(AddressEntity::setId);
+           m.skip(AddressEntity::setMember);
+       });
 
        TypeMap<AddressEntity, AddressDto> dtoMap
            = modelMapper.createTypeMap(AddressEntity.class, AddressDto.class);
@@ -109,11 +112,17 @@ public class MapperConfig {
         // Email settings
         TypeMap<EmailCreateDto, EmailEntity> createMap
                 = modelMapper.createTypeMap(EmailCreateDto.class, EmailEntity.class);
-        createMap.addMappings(m -> m.skip(EmailEntity::setId));
+        createMap.addMappings(m -> {
+            m.skip(EmailEntity::setId);
+            m.skip(EmailEntity::setMember);
+        });
 
         TypeMap<EmailDto, EmailEntity> updateMap
                 = modelMapper.createTypeMap(EmailDto.class, EmailEntity.class);
-        updateMap.addMappings(m -> m.skip(EmailEntity::setId));
+        updateMap.addMappings(m -> {
+            m.skip(EmailEntity::setId);
+            m.skip(EmailEntity::setMember);
+        });
 
         TypeMap<EmailEntity, EmailDto> dtoMap
             = modelMapper.createTypeMap(EmailEntity.class, EmailDto.class);
@@ -150,13 +159,16 @@ public class MapperConfig {
         TypeMap<PhoneCreateDto, PhoneEntity> createMap
                 = modelMapper.createTypeMap(PhoneCreateDto.class, PhoneEntity.class);
         createMap.addMappings(m -> {
-            m.skip(PhoneEntity::setMember);
             m.skip(PhoneEntity::setId);
+            m.skip(PhoneEntity::setMember);
         });
 
         TypeMap<PhoneDto, PhoneEntity> updateMap
                 = modelMapper.createTypeMap(PhoneDto.class, PhoneEntity.class);
-        updateMap.addMappings(m -> m.skip(PhoneEntity::setId));
+        updateMap.addMappings(m -> {
+            m.skip(PhoneEntity::setId);
+            m.skip(PhoneEntity::setMember);
+        });
 
         TypeMap<PhoneEntity, PhoneDto> dtoMap
             = modelMapper.createTypeMap(PhoneEntity.class, PhoneDto.class);
@@ -194,15 +206,15 @@ public class MapperConfig {
         TypeMap<RenewalCreateDto, RenewalEntity> creatMap
                 = modelMapper.createTypeMap(RenewalCreateDto.class, RenewalEntity.class);
         creatMap.addMappings(m -> {
-            m.skip(RenewalEntity::setMember);
             m.skip(RenewalEntity::setId);
+            m.skip(RenewalEntity::setMember);
         });
 
         TypeMap<RenewalDto, RenewalEntity> entTypeMap
                 = modelMapper.createTypeMap(RenewalDto.class, RenewalEntity.class);
         entTypeMap.addMappings(m -> {
-            m.skip(RenewalEntity::setMember);
             m.skip(RenewalEntity::setId);
+            m.skip(RenewalEntity::setMember);
         });
 
         TypeMap<RenewalEntity, RenewalDto> dtoMap
