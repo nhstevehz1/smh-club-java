@@ -4,7 +4,6 @@ import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
-import com.smh.club.api.dto.address.AddressUpdateDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -45,7 +44,7 @@ public interface AddressMapper {
      * @param entity The {@link AddressEntity} to be updated.
      * @return The updated {@link AddressEntity}.
      */
-    AddressEntity updateEntity(AddressUpdateDto dto, AddressEntity entity);
+    AddressEntity updateEntity(AddressDto dto, AddressEntity entity);
 
     /**
      * Maps a list of {@link AddressEntity} to a list of {@link AddressDto}.

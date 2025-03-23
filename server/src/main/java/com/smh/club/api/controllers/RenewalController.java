@@ -4,7 +4,6 @@ import com.smh.club.api.contracts.services.RenewalService;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.dto.renewal.RenewalUpdateDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -95,14 +94,14 @@ public class RenewalController {
      * Endpoint for updating a renewal.
      *
      * @param id The id of the renewal to update in the database.
-     * @param renewal The {@link RenewalUpdateDto} that contains the updated info.
+     * @param renewal The {@link RenewalDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link RenewalDto} that represents the updated renewal.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping("{id}")
     public ResponseEntity<RenewalDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody RenewalUpdateDto renewal) {
+        @NotNull @Valid @RequestBody RenewalDto renewal) {
 
         var ret = renewSvc.updateRenewal(id, renewal);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

@@ -18,7 +18,7 @@ public abstract class AbstractServiceBase {
      * @param sort The input {@link Sort}.
      * @return The mapped {@link Sort}
      */
-    protected abstract Sort getSort(Sort sort);
+    protected abstract Sort getSortString(Sort sort);
 
     /**
      * Retrieves an entity's column name based on a key.
@@ -27,7 +27,7 @@ public abstract class AbstractServiceBase {
      * @param target The entity class.
      * @return An {@link Optional} {@link String} representing the sort column name.
      */
-    protected <S, T> Optional<String> getSort(String key, Class<S> source, Class<T> target) {
+    protected <S, T> Optional<String> getSortString(String key, Class<S> source, Class<T> target) {
         var sourceField = getSortFieldData(key, source);
         return sourceField.flatMap(field ->
             field.sortAlias == null
@@ -56,15 +56,16 @@ public abstract class AbstractServiceBase {
             .findFirst();
     }
 
-    // Supports only one level of inheritance.
     private <T> List<Field> getAllFields(Class<T> clazz) {
+
         List<Field> fields =
             new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
+
         Class<?> superClass = clazz.getSuperclass();
 
+        // recurse on super classes
         if (superClass != null) {
-
-          fields.addAll(Arrays.asList(superClass.getDeclaredFields()));
+            fields.addAll(getAllFields(superClass));
         }
 
         return fields;

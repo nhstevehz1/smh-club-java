@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
-import com.smh.club.api.dto.email.EmailUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -53,7 +52,7 @@ public class EmailMapperImpl extends DomainDataMapper implements EmailMapper {
      * {@inheritDoc}
      */
     @Override
-    public EmailEntity updateEntity(EmailUpdateDto dto, EmailEntity entity) {
+    public EmailEntity updateEntity(EmailDto dto, EmailEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }

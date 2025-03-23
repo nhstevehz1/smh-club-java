@@ -18,10 +18,7 @@ import com.smh.club.api.domain.entities.EmailEntity;
 @NoArgsConstructor
 @SuperBuilder
 @SortTarget(EmailEntity.class)
-public class EmailFullNameDto extends EmailBaseDto {
-
-  @JsonProperty("id")
-  private int id;
+public class EmailFullNameDto extends EmailDto {
 
   @SortAlias("member.memberNumber")
   @JsonProperty("member_number")

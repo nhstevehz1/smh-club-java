@@ -18,10 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @SortTarget(RenewalEntity.class)
-public class RenewalFullNameDto extends RenewalBaseDto{
-
-  @JsonProperty("id")
-  private int id;
+public class RenewalFullNameDto extends RenewalDto {
 
   @SortAlias("member.memberNumber")
   @JsonProperty("member_number")

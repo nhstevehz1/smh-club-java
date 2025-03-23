@@ -10,7 +10,6 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
-import com.smh.club.api.dto.address.AddressUpdateDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -278,8 +277,8 @@ public class AddressServiceTests extends ServiceTests {
         int id = 1;
         var entity = Instancio.create(AddressEntity.class);
 
-        var update = Instancio.of(AddressUpdateDto.class)
-                .set(field(AddressUpdateDto::getMemberId), id)
+        var update = Instancio.of(AddressDto.class)
+                .set(field(AddressDto::getMemberId), id)
                 .create();
 
         var address = Instancio.create(AddressDto.class);

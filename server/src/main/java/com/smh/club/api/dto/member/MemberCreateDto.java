@@ -4,20 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
-import com.smh.club.api.validation.constraints.ValidMember;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Data
 @EqualsAndHashCode(callSuper = true)/**/
 @NoArgsConstructor
 @SuperBuilder
-@ValidMember
 public class MemberCreateDto extends MemberBaseDto {
 
   @Valid

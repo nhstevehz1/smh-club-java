@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
-import com.smh.club.api.dto.address.AddressUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -78,7 +77,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public Optional<AddressDto> updateAddress(int id, AddressUpdateDto addressDto) {
+    public Optional<AddressDto> updateAddress(int id, AddressDto addressDto) {
         log.debug("Updating address id: {}, with data: {}", id, addressDto);
 
         return addressRepo.findByIdAndMemberId(id, addressDto.getMemberId())
@@ -108,7 +107,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -116,7 +115,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), AddressFullNameDto.class, AddressEntity.class)
+                    getSortString(o.getProperty(), AddressFullNameDto.class, AddressEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

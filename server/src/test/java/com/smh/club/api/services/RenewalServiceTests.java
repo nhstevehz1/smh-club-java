@@ -10,7 +10,6 @@ import com.smh.club.api.domain.repos.RenewalsRepo;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.dto.renewal.RenewalUpdateDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -274,7 +273,7 @@ public class RenewalServiceTests extends ServiceTests {
         int id = 1;
         var entity = Instancio.create(RenewalEntity.class);
 
-        var update = Instancio.of(RenewalUpdateDto.class)
+        var update = Instancio.of(RenewalDto.class)
                 .set(field(RenewalDto::getMemberId), id)
                 .create();
 

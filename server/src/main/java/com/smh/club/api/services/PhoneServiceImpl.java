@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.PhoneRepo;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
-import com.smh.club.api.dto.phone.PhoneUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -78,7 +77,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public Optional<PhoneDto> updatePhone(int id, PhoneUpdateDto updateDto) {
+    public Optional<PhoneDto> updatePhone(int id, PhoneDto updateDto) {
         log.debug("Updating phone, id: {}, with data: {}", id, updateDto);
 
         return phoneRepo.findByIdAndMemberId(id, updateDto.getMemberId())
@@ -108,7 +107,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -116,7 +115,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), PhoneFullNameDto.class, PhoneEntity.class)
+                    getSortString(o.getProperty(), PhoneFullNameDto.class, PhoneEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

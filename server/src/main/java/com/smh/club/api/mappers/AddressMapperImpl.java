@@ -5,7 +5,6 @@ import com.smh.club.api.contracts.mappers.AddressMapper;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
-import com.smh.club.api.dto.address.AddressUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -53,7 +52,7 @@ public class AddressMapperImpl extends DomainDataMapper implements AddressMapper
      * {@inheritDoc}
      */
     @Override
-    public AddressEntity updateEntity(AddressUpdateDto dto, AddressEntity entity) {
+    public AddressEntity updateEntity(AddressDto dto, AddressEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }

@@ -62,12 +62,8 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
     var entityFields = Arrays.stream(sortEntity.value().getDeclaredFields())
         .map(Field::getName).toList();
 
-    // Get a list of fields from the dto and its base class along with other metadata
-    var fields = new ArrayList<>(Arrays.asList(constraintAnnotation.value().getDeclaredFields()));
-    var supperClass = constraintAnnotation.value().getSuperclass();
-    if(supperClass != null) {
-      fields.addAll(Arrays.asList(supperClass.getDeclaredFields()));
-    }
+    // Get a list of fields from the dto and its super classes
+    var fields = getAllFields(constraintAnnotation.value());
 
     var dtoFields = fields.stream().map(DtoSortField::of).toList();
 
@@ -119,6 +115,20 @@ public class SortValidator implements ConstraintValidator<SortConstraint, Pageab
         .map(o -> allowedSortNames.contains(o.getProperty()))
         .toList()
         .contains(false);
+  }
+
+  private List<Field> getAllFields(Class<?> clazz) {
+    List<Field> fields;
+    fields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
+
+    Class<?> superClass = clazz.getSuperclass();
+
+    // recurse on super classes
+    if (superClass != null) {
+      fields.addAll(getAllFields(superClass));
+    }
+
+    return fields;
   }
 
   @Getter

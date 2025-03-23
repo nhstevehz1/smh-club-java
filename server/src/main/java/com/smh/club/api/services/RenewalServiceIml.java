@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.RenewalsRepo;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.dto.renewal.RenewalUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -78,7 +77,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public Optional<RenewalDto> updateRenewal(int id, RenewalUpdateDto renewalDto) {
+    public Optional<RenewalDto> updateRenewal(int id, RenewalDto renewalDto) {
         log.debug("Updating renewal, id: {}, with data: {}", id, renewalDto);
 
         return renewalRepo.findByIdAndMemberId(id, renewalDto.getMemberId())
@@ -108,7 +107,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -116,7 +115,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), RenewalFullNameDto.class, RenewalEntity.class)
+                    getSortString(o.getProperty(), RenewalFullNameDto.class, RenewalEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

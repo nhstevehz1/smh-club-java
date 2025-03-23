@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder
-public class PhoneDto extends PhoneBaseDto {
+public class PhoneDto extends PhoneCreateDto {
 
     @JsonProperty("id")
     private int id;

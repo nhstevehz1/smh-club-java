@@ -4,7 +4,6 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
-import com.smh.club.api.dto.email.EmailUpdateDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -39,11 +38,11 @@ public interface EmailMapper {
     /**
      * Updates a email object.
      *
-     * @param dto The {@link EmailUpdateDto} containing the updates.
+     * @param dto The {@link EmailDto} containing the updates.
      * @param entity The {@link EmailEntity} to be updated.
      * @return The updated {@link EmailEntity}.
      */
-    EmailEntity updateEntity(EmailUpdateDto dto, EmailEntity entity);
+    EmailEntity updateEntity(EmailDto dto, EmailEntity entity);
 
     /**
      * Maps a list of {@link EmailEntity} to a list of {@link EmailFullNameDto}.

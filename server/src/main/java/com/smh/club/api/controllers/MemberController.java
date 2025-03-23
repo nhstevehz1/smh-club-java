@@ -4,7 +4,6 @@ import com.smh.club.api.contracts.services.MemberService;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -95,14 +94,14 @@ public class MemberController {
      * Endpoint for updating a member.
      *
      * @param id The id of the member to update in the database.
-     * @param member The {@link MemberUpdateDto} that contains the updated info.
+     * @param member The {@link MemberDto} that contains the updated info.
      * @return A {@link ResponseEntity} containing a {@link MemberDto} that represents the updated member.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MemberDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody MemberUpdateDto member) {
+        @NotNull @Valid @RequestBody MemberDto member) {
 
         var ret = memberSvc.updateMember(id,  member);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

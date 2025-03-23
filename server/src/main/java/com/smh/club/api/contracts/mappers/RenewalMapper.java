@@ -4,7 +4,6 @@ import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import com.smh.club.api.dto.renewal.RenewalUpdateDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -44,7 +43,7 @@ public interface RenewalMapper {
      * @param entity The {@link RenewalEntity} to be updated.
      * @return The updated {@link RenewalEntity}.
      */
-    RenewalEntity updateEntity(RenewalUpdateDto dto, RenewalEntity entity);
+    RenewalEntity updateEntity(RenewalDto dto, RenewalEntity entity);
 
     /**
      * Maps a list of {@link RenewalEntity} to a list of {@link RenewalDto}.

@@ -4,7 +4,6 @@ import com.smh.club.api.contracts.services.EmailService;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
-import com.smh.club.api.dto.email.EmailUpdateDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -100,7 +99,7 @@ public class EmailController {
     @PutMapping("{id}")
     public ResponseEntity<EmailDto> update(
         @PathVariable int id,
-        @NotNull @Valid @RequestBody EmailUpdateDto email) {
+        @NotNull @Valid @RequestBody EmailDto email) {
 
         var ret = emailSvc.updateEmail(id, email);
         return ret.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());

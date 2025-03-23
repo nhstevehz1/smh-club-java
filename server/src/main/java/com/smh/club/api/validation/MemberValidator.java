@@ -1,15 +1,20 @@
 package com.smh.club.api.validation;
 
-import static java.time.temporal.ChronoUnit.YEARS;
-
 import com.smh.club.api.dto.member.MemberBaseDto;
 import com.smh.club.api.validation.constraints.BirthDate;
 import com.smh.club.api.validation.constraints.ValidMember;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.extern.slf4j.Slf4j;
+
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.time.ZoneId;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.time.temporal.ChronoUnit.YEARS;
 
 @Slf4j
 public class MemberValidator implements ConstraintValidator<ValidMember, MemberBaseDto> {
@@ -25,7 +30,12 @@ public class MemberValidator implements ConstraintValidator<ValidMember, MemberB
   public boolean isValid(MemberBaseDto memberDto, ConstraintValidatorContext constraintValidatorContext) {
 
     try {
-      var field = memberDto.getClass().getSuperclass().getDeclaredField("birthDate");
+      var fields = getAllFields(memberDto.getClass());
+      var field = fields.stream()
+          .filter(f -> f.getName().equals("birthDate"))
+          .findFirst()
+          .orElseThrow();
+
       var anno = field.getAnnotationsByType(BirthDate.class);
       var minAge = anno[0].minAge();
       log.debug("Min age value set in BirthDate constraint is: {}", minAge );
@@ -41,5 +51,17 @@ public class MemberValidator implements ConstraintValidator<ValidMember, MemberB
       log.error("Cannot perform the validation.  Returning false.", ex);
       return false;
     }
+  }
+
+  private List<Field> getAllFields(Class<?> clazz) {
+    List<Field> fields;
+    fields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
+
+    var superClass = clazz.getSuperclass();
+    if(superClass != null) {
+      fields.addAll(getAllFields(superClass));
+    }
+
+    return fields;
   }
 }

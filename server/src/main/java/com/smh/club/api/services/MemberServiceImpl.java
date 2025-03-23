@@ -7,7 +7,6 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -80,7 +79,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public Optional<MemberDto> updateMember(int id, MemberUpdateDto member) {
+    public Optional<MemberDto> updateMember(int id, MemberDto member) {
         log.debug("Updating member id: {}, with data: {}", id, member);
 
         return membersRepo.findById(id)
@@ -121,7 +120,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -129,7 +128,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), MemberDto.class, MemberEntity.class)
+                    getSortString(o.getProperty(), MemberDto.class, MemberEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

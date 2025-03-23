@@ -3,8 +3,7 @@ package com.smh.club.api.mappers;
 import com.smh.club.api.config.MapperConfig;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.member.MemberCreateDto;
-import com.smh.club.api.dto.member.MemberUpdateDto;
-import com.smh.club.api.mappers.MemberMapperImpl;
+import com.smh.club.api.dto.member.MemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -107,7 +106,7 @@ public class MemberMapperTests {
     @Test
     public void update_entity_from_updateDto() {
         // setup
-        var update = Instancio.create(MemberUpdateDto.class);
+        var update = Instancio.create(MemberDto.class);
         var entity = Instancio.create(MemberEntity.class);
 
 

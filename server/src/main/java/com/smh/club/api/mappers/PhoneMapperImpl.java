@@ -5,7 +5,6 @@ import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
-import com.smh.club.api.dto.phone.PhoneUpdateDto;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -53,7 +52,7 @@ public class PhoneMapperImpl extends DomainDataMapper implements PhoneMapper {
      * {@inheritDoc}
      */
     @Override
-    public PhoneEntity updateEntity(PhoneUpdateDto dto, PhoneEntity entity) {
+    public PhoneEntity updateEntity(PhoneDto dto, PhoneEntity entity) {
         modelMapper.map(dto, entity);
         return entity;
     }

@@ -4,7 +4,6 @@ import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
-import com.smh.club.api.dto.phone.PhoneUpdateDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -40,12 +39,12 @@ public interface PhoneMapper {
     /**
      * Updates a phone object
      *
-     * @param dto The {@link PhoneUpdateDto} containing the updates.
+     * @param dto The {@link PhoneDto} containing the updates.
      *
      * @param entity The {@link PhoneEntity} to be updated.
      * @return The updated {@link PhoneEntity}.
      */
-    PhoneEntity updateEntity(PhoneUpdateDto dto, PhoneEntity entity);
+    PhoneEntity updateEntity(PhoneDto dto, PhoneEntity entity);
 
     /**
      * Maps a list of {@link PhoneEntity} to a list of {@link PhoneDto}.

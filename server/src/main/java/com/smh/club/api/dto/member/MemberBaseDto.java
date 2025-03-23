@@ -3,6 +3,7 @@ package com.smh.club.api.dto.member;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smh.club.api.annotations.SortExclude;
 import com.smh.club.api.validation.constraints.BirthDate;
+import com.smh.club.api.validation.constraints.ValidMember;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +19,8 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public abstract class MemberBaseDto {
+@ValidMember
+public class MemberBaseDto {
 
     @JsonProperty("member_number")
     @Min(0)

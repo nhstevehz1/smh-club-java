@@ -8,7 +8,6 @@ import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
-import com.smh.club.api.dto.email.EmailUpdateDto;
 import com.smh.club.api.response.PagedDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            getSort(pageable.getSort()));
+            getSortString(pageable.getSort()));
 
         log.debug("Created pageable: {}", pageRequest);
 
@@ -78,7 +77,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public Optional<EmailDto> updateEmail(int id, EmailUpdateDto updateDto) {
+    public Optional<EmailDto> updateEmail(int id, EmailDto updateDto) {
         log.debug("Updating email, id: {}, with data: {}", id, updateDto);
 
         return emailRepo.findByIdAndMemberId(id, updateDto.getMemberId())
@@ -108,7 +107,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    protected Sort getSort(Sort sort) {
+    protected Sort getSortString(Sort sort) {
         if (sort.isUnsorted()) {
             return sort;
         }
@@ -116,7 +115,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSort(o.getProperty(), EmailFullNameDto.class, EmailEntity.class)
+                    getSortString(o.getProperty(), EmailFullNameDto.class, EmailEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);
