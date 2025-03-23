@@ -10,7 +10,8 @@ Member information managed includes:
 * Phone numbers (Work, Mobile, Other)
 * Yearly renewal information (Renewal date, renewal year)
 
-The data is stored in a relation database and is served through a REST API.  A microservices architecture is used where authentication services are separate from the REST services.
+The data is stored in a relation database and is served through a REST API.
+Authorization/authentication is provided via any external OAUTH2 server.  For development purposes, a dockerized Keycloke server is included.
 The project is multi-module Gradle with centralized version management.
 
 i18n support in the Angular app is provided by ngx-translate.  This was chosen over the native Angular framework due to the requirement tha the language be switchable at runtime.
@@ -32,26 +33,13 @@ i18n support in the Angular app is provided by ngx-translate.  This was chosen o
 * ngx-translate i18n support.
 
 ### Project Modules
-#### club-api
+#### server
 A microservice that exposes REST CRUD endpoints.  
 It supports OAuth2 token verification through an external OAuth2 server. 
 
-### club-api-hateoas
-A microservice that exposes the same endpoints as **club-api** but adds resource links to the data.
-It supports OAuth2 token verification through an external OAuth2 server.
-
-### club-frontend-angular
-A single page application UI that represents the data served by the club-api.
+### client
+A Angular single page application UI that represents the data served by the club-api.
 Login is achieved through OIDC "code flow with PKCE".
-
-### club-gateway
-Entry point for the application.  Routes incoming calls to the appropriate microservice. <br>
-_Not started._
-
-### club-oauth2
-Authentication microservice.<br>
-An JPA implementation of the Spring Authentication Server.  This service isn't very useful without a UI.  
-It is recommended that an off the shelf solution be used instead.
 
 ### build-logic
 Provides centralized version management for Spring Boot, Spring Framework, and other the libraries used int he project.  
@@ -64,9 +52,8 @@ The compose script is locating in the .keycloak folder.
 The compose script loads "realm-export.json" configuration file that creates the *smh-club* realm.
 
 Realm Information:
-- *smh-club-api* - An OpenID Connect client used by the *club-api* module.
-- *smh-club-hateoas* - An OpenID Connect client used by the *club-api-hateoas* module. 
-- *smh-club-angular* - An OpenId connect client used by the *club-frontend-angular* module.
+- *smh-club-api* - An OpenID Connect client used by the *server* module.
+- *smh-club-angular* - An OpenId connect client used by the *client* module.
 - *user@user.com* - A user configured with the *read* role.
 - *admin@admin.com* - A user configured with the *read* and *write* roles;
 - Both users are configured with the same password of *user*
@@ -76,13 +63,9 @@ The master realm admin credentials are *admin/admin*.
 ## Next steps
 - Add update, and delete functionality in the Angular front end app.
 - Add e2e testing to the Angular Front end app.
-- Prepare Angular front end for *zoneless* operation.
 - Create custom themes for the Angular front end app.
-- Complete gateway module.
-- Create frontend for the *smh-club-hateoas* module.
 
 ## Reference Documentation
-
 * [Official Gradle documentation](https://docs.gradle.org)
 * [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/3.4.0/gradle-plugin)
 * [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.4.0/reference/htmlsingle/index.html#using.devtools)
@@ -106,12 +89,11 @@ The master realm admin credentials are *admin/admin*.
 ## Running the development environment
 To run the software 
 * Start the Keycloak docker container using *./.keycloak/compose.yaml*.
-* Start the *rest-api* module specifying the the *dev* profile.  This will preload the in-memory database.
-* Start the *club-frontend-angular* app.  Use the default port of 4200.
+* Start the *server* module specifying the the *dev* profile.  This will preload the in-memory database.
+* Start the Angular *client* app.  Use the default port of 4200.
 
 ## Guides
 The following guides illustrate how to use some features concretely:
-
 * [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
 * [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
 * [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
