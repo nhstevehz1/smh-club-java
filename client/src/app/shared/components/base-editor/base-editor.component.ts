@@ -14,9 +14,9 @@ export abstract class BaseEditorComponent<T> {
 
   showRemoveButton = input(false);
 
-  remove = output<void>();
+  removeClick = output<void>();
 
   onRemove(): void {
-    this.remove.emit();
+    this.removeClick.emit();
   }
 }

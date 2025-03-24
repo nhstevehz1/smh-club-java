@@ -1,10 +1,15 @@
-import {AfterViewInit, Component, computed, input, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, input, output, ViewChild} from '@angular/core';
 import {ColumnDef} from "./models/column-def";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
 import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {CustomMatPaginatorIntlService} from "./services/custom-mat-paginator-intl.service";
 import {TranslatePipe} from "@ngx-translate/core";
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {AuthService} from '../../../core/auth/services/auth.service';
+import {PermissionType} from '../../../core/auth/models/permission-type';
+import {EditEvent} from '../../models/edit-event';
 
 @Component({
   selector: 'app-sortable-pageable-table',
@@ -12,7 +17,9 @@ import {TranslatePipe} from "@ngx-translate/core";
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    TranslatePipe
+    TranslatePipe,
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [
     {
@@ -24,7 +31,7 @@ import {TranslatePipe} from "@ngx-translate/core";
   styleUrl: './sortable-pageable-table.component.scss'
 })
 export class SortablePageableTableComponent<T> implements AfterViewInit {
-  column
+  columns
       = input.required<ColumnDef<T>[]>();
 
   dataSource
@@ -39,8 +46,17 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   resultsLength
       = input<number>(0);
 
-  columnNames= computed<string[]>(() =>
-      this.column().map(c => c.columnName));
+  columnNames= computed<string[]>(() => {
+    const names = this.columns().map(c => c.columnName);
+    if (this.auth.hasPermission(PermissionType.write)) {
+      names.push('action');
+    }
+    return names;
+  });
+
+  hasWriteRole = input(false);
+
+  editClicked = output<EditEvent<T>>();
 
   @ViewChild(MatSort, {static: true})
   sort!: MatSort;
@@ -48,12 +64,15 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   @ViewChild(MatPaginator, {static: true})
   paginator!: MatPaginator;
 
+  constructor(private auth: AuthService) {}
+
   ngAfterViewInit() {
     // revert back to page 0 if it had been changed.
     this.sort!.sortChange.subscribe(() => this.paginator!.pageIndex = 0);
   }
 
-  shouldTranslate(column: ColumnDef<T>): boolean {
-    return column.translateDisplayName || true;
+  onEditClick(element: T, index: number) {
+    console.debug('onEditClick element', element);
+    this.editClicked.emit({idx: index, data: element});
   }
 }

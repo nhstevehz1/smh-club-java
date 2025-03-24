@@ -1,15 +1,20 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, computed, signal, ViewChild, ViewEncapsulation, WritableSignal} from '@angular/core';
 import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {AddressService} from "../services/address.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {AddressMember} from "../models/address";
+import {Address, AddressMember} from "../models/address";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {AddressType} from "../models/address-type";
+import {AuthService} from '../../../core/auth/services/auth.service';
+import {PermissionType} from '../../../core/auth/models/permission-type';
+import {MatDialog} from '@angular/material/dialog';
+import {EditAddressDialogComponent} from '../update-address-dialog/edit-address-dialog.component';
+import {EditAction, EditDialogData, EditEvent} from '../../../shared/models/edit-event';
 
 @Component({
   selector: 'app-list-addresses',
@@ -19,13 +24,15 @@ import {AddressType} from "../models/address-type";
   styleUrl: './list-addresses.component.scss',
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class ListAddressesComponent extends BaseTableComponent<AddressMember> implements OnInit, AfterViewInit {
+export class ListAddressesComponent extends BaseTableComponent<AddressMember> implements AfterViewInit {
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<ColumnDef<AddressMember>>;
 
-  resultsLength = 0;
-  datasource = new MatTableDataSource<AddressMember>();
-  columns: ColumnDef<AddressMember>[] = [];
+  resultsLength = signal(0);
+  datasource = signal(new MatTableDataSource<AddressMember>());
+  columns: WritableSignal<ColumnDef<AddressMember>[]>;
+
+  readonly canEdit = computed(() => this.auth.hasPermission(PermissionType.write));
 
   private readonly addressTypeMap: Map<AddressType, string> = new Map<AddressType, string>([
       [AddressType.Home, 'addresses.type.home'],
@@ -33,12 +40,11 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
       [AddressType.Other, 'addresses.type.other']
   ]);
 
-  constructor(private svc: AddressService) {
+  constructor(private svc: AddressService,
+              private auth: AuthService,
+              private dialog: MatDialog) {
     super();
-  }
-
-  ngOnInit(): void {
-    this.columns = this.getColumns();
+    this.columns = signal(this.getColumns());
   }
 
   ngAfterViewInit(): void {
@@ -65,20 +71,19 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
               }
 
               // set the results length in case it has changed.
-              this.resultsLength = data.page.totalElements;
+              this.resultsLength.set(data.page.totalElements);
 
               // map the content array only
               return data._content;
             })
         ).subscribe({
           // set the data source with the new page
-          next: data => this.datasource.data = data!
+          next: data => this.datasource().data = data!
         });
   }
 
   protected getColumns(): ColumnDef<AddressMember>[] {
     return [
-
       {
         columnName: 'address1',
         displayName: 'addresses.list.columns.address',
@@ -118,11 +123,45 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
     ];
   }
 
+  onEditClick(event: EditEvent<AddressMember>): void {
+    this.openDialog(event, EditAction.Edit);
+  }
+
+  private openDialog(event: EditEvent<AddressMember>, action: EditAction) {
+    const dialogData: EditDialogData<Address> = {
+      data: event.data as Address,
+      action: action
+    }
+
+    const dialogRef
+      = this.dialog.open<EditAddressDialogComponent, EditDialogData<Address>>(
+        EditAddressDialogComponent, {data: dialogData});
+
+    dialogRef.afterClosed().subscribe({
+      next: (result: EditDialogData<Address>) => {
+        if(result.action == EditAction.Edit) {
+          const address = result.data as AddressMember;
+          address.full_name = event.data.full_name;
+          this.updateRowData(address, event.idx);
+        } else if (result.action == EditAction.Delete) {
+          this.deleteRowData(event.idx);
+        }
+      }
+    });
+  }
+
+  private updateRowData(address: AddressMember, idx: number): void {
+    this.datasource().data[idx] = address;
+  }
+
+  private deleteRowData(idx: number) {
+    this.datasource().data.splice(idx, 1);
+  }
+
   private getStreet(address: AddressMember): string {
     const street1 = address.address1;
     const street2 = address.address2 || ''
     return street2.length > 0 ? `${street1}, ${street2}` : street1;
   }
-
 
 }

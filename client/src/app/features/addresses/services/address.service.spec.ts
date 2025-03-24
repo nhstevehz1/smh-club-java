@@ -4,7 +4,6 @@ import {AddressService} from './address.service';
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {PageRequest} from "../../../shared/models/page-request";
 import {provideHttpClient} from "@angular/common/http";
-import {generateAddressUpdate} from "../test/address-test";
 
 describe('AddressService', () => {
   let service: AddressService;
@@ -52,20 +51,13 @@ describe('AddressService', () => {
   });
 
   it('should return address create form', () => {
-    const form = service.generateCreateForm();
+    const form = service.generateAddressForm();
     expect(form).toBeTruthy();
   });
 
   it('should return address update form when model is not null', () => {
-    const form = service.generateUpdateForm(generateAddressUpdate());
+    const form = service.generateAddressForm();
 
     expect(form).toBeTruthy();
-  });
-
-  it('should return correct address update form', () => {
-    const model = generateAddressUpdate();
-    const val = service.generateUpdateForm(model).value;
-
-    expect(val).toEqual(model);
   });
 });

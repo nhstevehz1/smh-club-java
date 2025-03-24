@@ -75,7 +75,7 @@ describe('ListAddressesComponent', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component.datasource.data).toBe(data._content);
+        expect(component.datasource().data).toBe(data._content);
     });
 
     it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
@@ -84,7 +84,7 @@ describe('ListAddressesComponent', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component.datasource.data).toEqual([]);
+        expect(component.datasource().data).toEqual([]);
     });
   });
 });

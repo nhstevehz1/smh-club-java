@@ -40,8 +40,8 @@ export class AddressService {
     );
   }
 
-  updateAddress(update: AddressCreate): Observable<Address> {
-    return this.http.put<Address>(`${this.BASE_API}/`, update).pipe(
+  updateAddress(update: Address): Observable<Address> {
+    return this.http.put<Address>(`${this.BASE_API}/${update.id}`, update).pipe(
         map(data => JSON.stringify(data)),
         map(data => JSON.parse(data) as Address),
         map(data => {
@@ -51,7 +51,11 @@ export class AddressService {
     );
   }
 
-  generateCreateForm(): FormModelGroup<AddressCreate> {
+  deleteAddress(id: number): Observable<object> {
+    return this.http.delete(`${this.BASE_API}/${id}`);
+  }
+
+  generateAddressForm(): FormModelGroup<AddressCreate> {
     return this.fb.group({
       address1: ['', [Validators.required]],
       address2: [''],
@@ -59,19 +63,6 @@ export class AddressService {
       state: ['', [Validators.required, Validators.minLength(2)]],
       postal_code: ['', [Validators.required, Validators.minLength(5)]],
       address_type: [AddressType.Home, [Validators.required]]
-    });
-  }
-
-  generateUpdateForm(update: Address): FormModelGroup<Address> {
-    return this.fb.group({
-      id: [update.id, Validators.required],
-      member_id: [update.member_id, [Validators.required, Validators.min(1)]],
-      address1: [update.address1, [Validators.required]],
-      address2: [update.address2],
-      city: [update.city, [Validators.required]],
-      state: [update.state, [Validators.required, Validators.minLength(2)]],
-      postal_code: [update.postal_code, [Validators.required, Validators.minLength(5)]],
-      address_type: [update.address_type, [Validators.required]]
     });
   }
 

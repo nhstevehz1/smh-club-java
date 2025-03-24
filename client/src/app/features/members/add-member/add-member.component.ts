@@ -88,7 +88,7 @@ export class AddMemberComponent {
                 private router: Router) {
 
 
-        const addressForm = this.addressSvc.generateCreateForm();
+        const addressForm = this.addressSvc.generateAddressForm();
         const emailForm = this.emailSvc.generateCreateForm();
         const phoneForm = this.phoneSvc.generateCreateForm();
         const createForm = this.memberSvc.generateCreateForm(addressForm, emailForm, phoneForm);
@@ -127,7 +127,7 @@ export class AddMemberComponent {
     }
 
     onAddAddress(): void {
-        this.getAddresses().push(this.addressSvc.generateCreateForm());
+        this.getAddresses().push(this.addressSvc.generateAddressForm());
     }
 
     onDeleteAddress(idx: number): void {

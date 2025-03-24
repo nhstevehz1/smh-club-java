@@ -38,7 +38,7 @@ describe('AddMemberComponent', () => {
 
   beforeEach(async () => {
     memberSvcMock = jasmine.createSpyObj<MembersService>('MembersService', ['createMember', 'generateCreateForm']);
-    addressSvcMock = jasmine.createSpyObj<AddressService>('AddressService', ['generateCreateForm']);
+    addressSvcMock = jasmine.createSpyObj<AddressService>('AddressService', ['generateAddressForm']);
     emailSvcMock = jasmine.createSpyObj<EmailService>('EmailService', ['generateCreateForm']);
     phoneSvcMock = jasmine.createSpyObj<PhoneService>('PhoneService', ['generateCreateForm']);
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
@@ -46,7 +46,7 @@ describe('AddMemberComponent', () => {
     createSubject$ = new Subject<MemberBase>();
     createMember$ = createSubject$.asObservable();
 
-    addressSvcMock.generateCreateForm.and.returnValue(generateAddressCreateForm());
+    addressSvcMock.generateAddressForm.and.returnValue(generateAddressCreateForm());
     emailSvcMock.generateCreateForm.and.returnValue(generateEmailCreateForm());
     phoneSvcMock.generateCreateForm.and.returnValue(generatePhoneCreateForm());
     memberSvcMock.generateCreateForm.and.returnValue(generateMemberCreateForm())

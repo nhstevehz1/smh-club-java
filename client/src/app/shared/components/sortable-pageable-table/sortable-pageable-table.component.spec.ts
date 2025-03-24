@@ -70,15 +70,15 @@ describe('SortablePageableTableComponent', () => {
     });
 
     it('should input columns', () => {
-      expect(component.column()).toEqual(columnDefs);
+      expect(component.columns()).toEqual(columnDefs);
 
       columnDefs.forEach(columnDef => {
-        expect(component.column().map((c => c.columnName))).toContain(columnDef.columnName);
+        expect(component.columns().map((c => c.columnName))).toContain(columnDef.columnName);
       })
     });
 
     it('should return column names', () => {
-      const columnNames = component.column().map(c => c.columnName);
+      const columnNames = component.columns().map(c => c.columnName);
       expect(component.columnNames()).toEqual(columnNames);
     });
 

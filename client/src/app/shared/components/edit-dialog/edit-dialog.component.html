@@ -1,0 +1,43 @@
+@if(isDeleteAction()) {
+  <h2 mat-dialog-title>
+    <span>this is the title place holder</span>
+  </h2>
+  <mat-dialog-actions align="end">
+    <button class="cancel"
+            mat-button
+            type="button"
+            (click)="onCancel()"
+            matTooltip="cancel tooltip">
+      <mat-icon>cancel</mat-icon>
+    </button>
+    <button class="delete"
+            mat-button
+            type="button"
+            (click)="onDelete()"
+            matTooltip="delete tooltip">
+      <mat-icon>ok</mat-icon>
+    </button>
+  </mat-dialog-actions>
+} @else {
+  <form [formGroup]="editForm()!" (ngSubmit)="onSave()">
+    <mat-dialog-content>
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button class="cancel"
+              mat-button
+              type="button"
+              (click)="onCancel()"
+              matTooltip="cancel tooltip">
+        <mat-icon>cancel</mat-icon>
+      </button>
+      <button class="submit"
+              mat-button
+              type="submit"
+              [disabled]="editForm()!.invalid || editForm()!.untouched"
+              matTooltip="save tooltip">
+        <mat-icon>save</mat-icon>
+      </button>
+    </mat-dialog-actions>
+  </form>
+}
