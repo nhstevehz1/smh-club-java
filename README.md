@@ -1,6 +1,7 @@
 
 # Welcome to the SMH Club Project
 The purpose of the application is to manage the membership information for a social club. <br>
+This application has been created using an open-source stack.  For a DotNet implementation of this app, please refer to the [SMH Club DotNet](https://github.com/nhstevehz1/smh-club-dotnet) repo.
 
 Member information managed includes:
 
