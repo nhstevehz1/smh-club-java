@@ -1,4 +1,4 @@
-import {Component, Directive, input, output} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormModelGroup} from "./form-model-group";
 

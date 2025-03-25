@@ -15,8 +15,6 @@ import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/
 import {EmailEditorComponent} from '../email-editor/email-editor.component';
 import {AuthService} from '../../../core/auth/services/auth.service';
 import {PermissionType} from '../../../core/auth/models/permission-type';
-import {EditDialogFactoryService} from '../../../shared/components/edit-dialog/services/edit-dialog-factory.service';
-import {EditDialogService} from '../../../shared/components/edit-dialog/services/edit-dialog.service';
 import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
 
 

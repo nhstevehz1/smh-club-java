@@ -1,7 +1,7 @@
 import {Component, computed, Inject, Optional, signal, WritableSignal} from '@angular/core';
 import {AddressService} from '../services/address.service';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {Address, AddressCreate} from '../models/address';
+import {Address} from '../models/address';
 import {FormModelGroup} from '../../../shared/components/base-editor/form-model-group';
 import {AddressEditorComponent} from '../address-editor/address-editor.component';
 import {MatButtonModule} from '@angular/material/button';
