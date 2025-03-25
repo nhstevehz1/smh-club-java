@@ -1,13 +1,13 @@
 <div class="container">
     @if(!submitted()) {
-        <form [formGroup]="createFormSignal()" (ngSubmit)="onSave()">
+        <!--<form [formGroup]="createFormSignal()" (ngSubmit)="onSave()">
             <mat-card data-testid="card">
                 <div class="title-container">
                     <mat-card-title>{{'members.add.title' | translate}}</mat-card-title>
                     <mat-error>* = {{ 'members.add.required' | translate }}</mat-error>
                 </div>
                 <mat-card-content class="content">
-                    <!-- member section -->
+
                     <div class="section-container" >
                         <div class="flex-row start">
                             <mat-card-subtitle>{{'members.add.card.member.subTitle' | translate}}</mat-card-subtitle>
@@ -19,7 +19,7 @@
                         ></app-member-editor>
                     </div>
 
-                    <!-- address section -->
+
                     <div class="section-container">
                         <div class="title-container">
                             <mat-card-subtitle>
@@ -50,7 +50,7 @@
                         }
                     </div>
 
-                    <!-- phone section -->
+
                     <div class="section-container">
                         <div class="title-container">
                             <mat-card-subtitle>
@@ -81,7 +81,7 @@
                         }
                     </div>
 
-                    <!-- email section -->
+
                     <div class="section-container">
                         <div class="title-container">
                             <mat-card-subtitle>
@@ -133,7 +133,7 @@
                     </button>
                 </mat-card-actions>
             </mat-card>
-        </form>
+        </form> -->
     } @else {
         <div class="flex-row center">
             <app-ok-cancel

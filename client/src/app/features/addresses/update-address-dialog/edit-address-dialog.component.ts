@@ -8,8 +8,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
 import {ReactiveFormsModule} from '@angular/forms';
-import {EditAction, EditDialogData} from '../../../shared/models/edit-event';
-import {HttpErrorResponse} from '@angular/common/http';
+import {EditAction, EditDialogData} from '../../../shared/components/edit-dialog/models/edit-event';
+
 
 @Component({
   selector: 'app-update-address-dialog',
@@ -28,25 +28,22 @@ import {HttpErrorResponse} from '@angular/common/http';
   styleUrl: './edit-address-dialog.component.scss'
 })
 export class EditAddressDialogComponent {
-  editForm: WritableSignal<FormModelGroup<AddressCreate>>;
+  editForm: WritableSignal<FormModelGroup<Address>>;
   addressForm = computed(() => this.editForm());
   isDeleteAction: WritableSignal<boolean>;
 
   private readonly eventData: EditDialogData<Address>;
 
   constructor(public dialogRef: MatDialogRef<EditAddressDialogComponent, EditDialogData<Address>>,
-              @Optional() @Inject(MAT_DIALOG_DATA) public data: EditDialogData<Address>,
-              private svc: AddressService) {
-
-    const form: FormModelGroup<AddressCreate> = this.svc.generateAddressForm();
+              @Optional() @Inject(MAT_DIALOG_DATA) public data: EditDialogData<Address>) {
 
     this.eventData = {...data};
 
     if(this.eventData.action == EditAction.Edit) {
-      form.patchValue(this.eventData.data!);
+      data.form.patchValue(this.eventData.context!);
     }
 
-    this.editForm = signal(form);
+    this.editForm = signal(data.form);
     this.isDeleteAction = signal(this.eventData.action == EditAction.Delete);
   }
 
@@ -56,43 +53,11 @@ export class EditAddressDialogComponent {
   }
 
   onSave(): void {
-    if(this.eventData.action == EditAction.Edit) {
-      this.updateAddress();
-    } else {
-      this.createAddress();
-    }
+    this.eventData.context = this.editForm().value as Address;
+    this.dialogRef.close(this.eventData);
   }
 
   onDelete(): void {
-    this.deleteAddress();
-  }
-
-  private updateAddress(): void {
-    const val = this.editForm().value;
-    this.eventData.data!.address1 = val.address1!;
-    this.eventData.data!.address2 = val.address2!
-    this.eventData.data!.city = val.city!;
-    this.eventData.data!.state = val.state!
-    this.eventData.data!.postal_code = val.postal_code!
-    this.eventData.data!.address_type = val.address_type!
-
-    this.svc.updateAddress(this.eventData.data!).subscribe({
-      next: value => this.dialogRef.close({data: value, action: EditAction.Edit}),
-      error: (err: HttpErrorResponse) => console.debug(err)
-    });
-  }
-
-  private createAddress(): void {
-    this.svc.createAddress(this.editForm().value as AddressCreate).subscribe({
-      next: value => this.dialogRef.close({data: value, action: EditAction.Create}),
-      error: (err: HttpErrorResponse) => console.debug(err)
-    });
-  }
-
-  private deleteAddress(): void {
-    this.svc.deleteAddress(this.eventData.data.id).subscribe({
-      next: () => this.dialogRef.close({data: this.eventData.data, action: EditAction.Delete}),
-      error: (err: HttpErrorResponse) => console.debug(err)
-    });
+    this.dialogRef.close()
   }
 }

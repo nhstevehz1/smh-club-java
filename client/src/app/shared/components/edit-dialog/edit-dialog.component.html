@@ -1,7 +1,7 @@
+<h2 mat-dialog-title>
+  <span>{{ title() | translate }}</span>
+</h2>
 @if(isDeleteAction()) {
-  <h2 mat-dialog-title>
-    <span>this is the title place holder</span>
-  </h2>
   <mat-dialog-actions align="end">
     <button class="cancel"
             mat-button
@@ -21,7 +21,7 @@
 } @else {
   <form [formGroup]="editForm()!" (ngSubmit)="onSave()">
     <mat-dialog-content>
-
+      <ng-container *ngComponentOutlet="component(); inputs: inputs()"></ng-container>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button class="cancel"
@@ -41,3 +41,5 @@
     </mat-dialog-actions>
   </form>
 }
+<!--
+[disabled]="editForm()!.invalid || editForm()!.untouched"-->

@@ -51,12 +51,14 @@ export class AddressService {
     );
   }
 
-  deleteAddress(id: number): Observable<object> {
-    return this.http.delete(`${this.BASE_API}/${id}`);
+  deleteAddress(id: number): Observable<number> {
+    return this.http.delete<number>(`${this.BASE_API}/${id}`);
   }
 
-  generateAddressForm(): FormModelGroup<AddressCreate> {
+  generateAddressForm(): FormModelGroup<Address> {
     return this.fb.group({
+      id: [0],
+      member_id: [0],
       address1: ['', [Validators.required]],
       address2: [''],
       city: ['', [Validators.required]],

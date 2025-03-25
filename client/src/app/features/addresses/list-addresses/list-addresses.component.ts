@@ -5,7 +5,7 @@ import {
 import {AddressService} from "../services/address.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {Address, AddressMember} from "../models/address";
+import {Address, AddressCreate, AddressMember} from "../models/address";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
@@ -13,8 +13,9 @@ import {AddressType} from "../models/address-type";
 import {AuthService} from '../../../core/auth/services/auth.service';
 import {PermissionType} from '../../../core/auth/models/permission-type';
 import {MatDialog} from '@angular/material/dialog';
+import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 import {EditAddressDialogComponent} from '../update-address-dialog/edit-address-dialog.component';
-import {EditAction, EditDialogData, EditEvent} from '../../../shared/models/edit-event';
+import {AddressEditorComponent} from '../address-editor/address-editor.component';
 
 @Component({
   selector: 'app-list-addresses',
@@ -128,8 +129,11 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
   }
 
   private openDialog(event: EditEvent<AddressMember>, action: EditAction) {
-    const dialogData: EditDialogData<Address> = {
-      data: event.data as Address,
+   const dialogData: EditDialogData<Address> = {
+     title: 'Address Title',
+     component: AddressEditorComponent,
+     form: this.svc.generateAddressForm(),
+      context: event.data as Address,
       action: action
     }
 
@@ -140,7 +144,7 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
     dialogRef.afterClosed().subscribe({
       next: (result: EditDialogData<Address>) => {
         if(result.action == EditAction.Edit) {
-          const address = result.data as AddressMember;
+          const address = result.context as AddressMember;
           address.full_name = event.data.full_name;
           this.updateRowData(address, event.idx);
         } else if (result.action == EditAction.Delete) {

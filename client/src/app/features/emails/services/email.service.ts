@@ -30,6 +30,15 @@ export class EmailService {
     );
   }
 
+  generateEmailForm(): FormModelGroup<Email> {
+    return this.fb.group({
+      id: [0],
+      member_id: [0],
+      email: ['', [Validators.required, Validators.email]],
+      email_type: [EmailType.Home, [Validators.required]]
+    });
+  }
+
   generateCreateForm(): FormModelGroup<EmailCreate> {
       return this.fb.group({
           email: ['', [Validators.required, Validators.email]],

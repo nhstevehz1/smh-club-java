@@ -35,25 +35,24 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
 })
 export class MemberEditorComponent extends BaseEditorComponent<MemberCreate> {
 
-    memberNumberSignal
-        = computed(() => this.editorForm().controls.member_number);
+    memberNumberSignal= computed(() => this.editorForm()!.controls.member_number);
 
-    firstName= computed(() => this.editorForm().controls.first_name);
+    firstName= computed(() => this.editorForm()!.controls.first_name);
     firstNameErrors= input<FormControlError[]>();
 
-    middleName= computed(() => this.editorForm().controls.middle_name);
+    middleName= computed(() => this.editorForm()!.controls.middle_name);
     middleNameErrors= input<FormControlError[]>();
 
-    lastNameSignal= computed(() => this.editorForm().controls.last_name);
+    lastNameSignal= computed(() => this.editorForm()!.controls.last_name);
     lastNameErrors= input<FormControlError[]>();
 
-    suffix= computed(() => this.editorForm().controls.suffix);
+    suffix= computed(() => this.editorForm()!.controls.suffix);
     suffixErrors= input<FormControlError[]>();
 
-    birthDate= computed(() => this.editorForm().controls.birth_date);
+    birthDate= computed(() => this.editorForm()!.controls.birth_date);
     birthDateErrors= input<FormControlError[]>();
 
-    joinedDate= computed(() => this.editorForm().controls.joined_date);
+    joinedDate= computed(() => this.editorForm()!.controls.joined_date);
     joinedDateErrors= input<FormControlError[]>();
 
     constructor() {

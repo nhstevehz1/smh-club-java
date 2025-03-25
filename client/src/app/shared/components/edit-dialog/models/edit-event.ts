@@ -1,4 +1,4 @@
-import {FormModelGroup} from '../components/base-editor/form-model-group';
+import {FormModelGroup} from '../../base-editor/form-model-group';
 
 export interface EditEvent<T> {
   idx: number,
@@ -6,8 +6,10 @@ export interface EditEvent<T> {
 }
 
 export interface EditDialogData<T> {
-  data: T,
-  form?: FormModelGroup<T>
+  title: string,
+  context: T,
+  form: FormModelGroup<T>,
+  component: any,
   action: EditAction
 }
 

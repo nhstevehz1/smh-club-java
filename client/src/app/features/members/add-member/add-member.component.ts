@@ -15,7 +15,7 @@ import {EmailEditorComponent} from "../../emails/email-editor/email-editor.compo
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {MemberCreate} from "../models/member";
 import {AddressCreate} from "../../addresses/models/address";
-import {EmailCreate} from "../../emails/models/email";
+import {Email, EmailCreate} from "../../emails/models/email";
 import {PhoneCreate} from "../../phones/models/phone";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatDivider} from "@angular/material/divider";
@@ -58,6 +58,7 @@ import {PhoneService} from "../../phones/services/phone.service";
   styleUrl: './add-member.component.scss'
 })
 export class AddMemberComponent {
+/*
 
     createFormSignal: WritableSignal<FormModelGroup<MemberCreate>>;
 
@@ -67,9 +68,10 @@ export class AddMemberComponent {
     addressFormsComputed = computed(() =>
         this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<AddressCreate>>);
 
-    emailFormsComputed = computed(() =>
-        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<EmailCreate>>);
-
+    /!*
+   emailFormsComputed = computed(() =>
+        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<Email>>);
+    *!/
     phoneFormsComputed = computed(() =>
         this.createFormSignal().controls.phones as unknown as FormArray<FormModelGroup<PhoneCreate>>);
 
@@ -77,6 +79,7 @@ export class AddMemberComponent {
         = signal<MatFormFieldAppearance>('outline');
 
     errorMessage = signal<string | null>(null);
+*/
 
     submitted = signal(false);
 
@@ -91,12 +94,12 @@ export class AddMemberComponent {
         const addressForm = this.addressSvc.generateAddressForm();
         const emailForm = this.emailSvc.generateCreateForm();
         const phoneForm = this.phoneSvc.generateCreateForm();
-        const createForm = this.memberSvc.generateCreateForm(addressForm, emailForm, phoneForm);
-        this.createFormSignal = signal(createForm);
+        //const createForm = this.memberSvc.generateCreateForm(addressForm, emailForm, phoneForm);
+        //this.createFormSignal = signal(createForm);
     }
 
     onSave(): void {
-        if (this.createFormSignal().valid) {
+       /* if (this.createFormSignal().valid) {
             this.memberSvc.createMember(this.createFormSignal().value as MemberCreate).subscribe({
               next: () =>  {
                   this.errorMessage.set(null)
@@ -119,7 +122,7 @@ export class AddMemberComponent {
         } else {
             this.errorMessage.set('Invalid data');
             return;
-        }
+        }*/
     }
 
     onOkOrCancel(): void {
@@ -127,10 +130,10 @@ export class AddMemberComponent {
     }
 
     onAddAddress(): void {
-        this.getAddresses().push(this.addressSvc.generateAddressForm());
+        //this.getAddresses().push(this.addressSvc.generateAddressForm());
     }
 
-    onDeleteAddress(idx: number): void {
+    /*onDeleteAddress(idx: number): void {
         this.getAddresses().removeAt(idx);
     }
 
@@ -148,9 +151,9 @@ export class AddMemberComponent {
 
     onDeletePhone(idx: number): void {
         this.getPhones().removeAt(idx);
-    }
+    }*/
 
-    private getAddresses(): FormArray<FormModelGroup<AddressCreate>> {
+    /*private getAddresses(): FormArray<FormModelGroup<AddressCreate>> {
         return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<AddressCreate>>;
     }
 
@@ -160,5 +163,5 @@ export class AddMemberComponent {
 
     private getPhones(): FormArray<FormModelGroup<PhoneCreate>> {
         return this.createFormSignal().get('phones') as FormArray<FormModelGroup<PhoneCreate>>;
-    }
+    }*/
 }

@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, OnInit, signal, Signal, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {EmailMember} from "../models/email";
+import {Email, EmailMember} from "../models/email";
 import {
-    SortablePageableTableComponent
+  SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {EmailService} from "../services/email.service";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
@@ -10,6 +10,15 @@ import {ColumnDef} from "../../../shared/components/sortable-pageable-table/mode
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {EmailType} from "../models/email-type";
+import {MatDialog} from '@angular/material/dialog';
+import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
+import {EmailEditorComponent} from '../email-editor/email-editor.component';
+import {AuthService} from '../../../core/auth/services/auth.service';
+import {PermissionType} from '../../../core/auth/models/permission-type';
+import {EditDialogFactoryService} from '../../../shared/components/edit-dialog/services/edit-dialog-factory.service';
+import {EditDialogService} from '../../../shared/components/edit-dialog/services/edit-dialog.service';
+import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
+
 
 @Component({
     selector: 'app-list-emails',
@@ -24,9 +33,11 @@ export class ListEmailsComponent
     @ViewChild(SortablePageableTableComponent, {static: true})
     private _table!: SortablePageableTableComponent<EmailMember>;
 
-    resultsLength = 0;
-    datasource = new MatTableDataSource<EmailMember>();
-    columns: ColumnDef<EmailMember>[] = [];
+    resultsLength = signal(0);
+    datasource = signal(new MatTableDataSource<EmailMember>());
+    columns = signal<ColumnDef<EmailMember>[]>([]);
+
+    hasWriteRole: Signal<boolean>
 
     private emailTypeMap = new Map<EmailType, string>([
        [EmailType.Work, 'emails.type.work'],
@@ -34,12 +45,15 @@ export class ListEmailsComponent
        [EmailType.Other, 'emails.type.other']
     ]);
 
-    constructor(private svc: EmailService) {
+    constructor(private svc: EmailService,
+                private auth: AuthService,
+                private dialog: MatDialog) {
         super();
+        this.hasWriteRole = computed(() => this.auth.hasPermission(PermissionType.write));
     }
 
     ngOnInit(): void {
-        this.columns = this.getColumns();
+        this.columns.update(() => this.getColumns());
     }
 
     ngAfterViewInit(): void {
@@ -64,17 +78,59 @@ export class ListEmailsComponent
                     if (data === null) {
                         return [];
                     }
-
                     // set the results length in case it has changed.
-                    this.resultsLength = data.page.totalElements;
-
+                    this.resultsLength.update(() => data.page.totalElements);
                     // map the content array only
                     return data._content;
                 })
             ).subscribe({
                 // set the data source with the new page
-                next: data => this.datasource.data = data!
+                next: data => this.datasource().data = data
             });
+    }
+
+    onEditClick(event: EditEvent<EmailMember>): void {
+      this.openDialog(event, EditAction.Edit);
+    }
+
+    onDeleteClick(event: EditEvent<EmailMember>): void {
+      this.openDialog(event, EditAction.Delete);
+    }
+
+    private openDialog(event: EditEvent<EmailMember>, action: EditAction): void {
+      const dialogData: EditDialogData<Email> = {
+        form: this.svc.generateEmailForm(),
+        context: {
+          id: event.data.id,
+          member_id: event.data.member_id,
+          email: event.data.email,
+          email_type: event.data.email_type
+        },
+        title: 'my title',
+        component: EmailEditorComponent,
+        action: action
+      };
+
+      const dialogRef =
+        this.dialog.open<EditDialogComponent<Email>, EditDialogData<Email> >(
+          EditDialogComponent<Email>, {data: dialogData}
+        );
+
+      dialogRef.afterClosed().subscribe({
+        next: (result: EditDialogData<Email>) =>  {
+          if(result.action == EditAction.Edit) {
+            const emailMember = result.context as EmailMember;
+            emailMember.full_name = event.data.full_name;
+
+            const data = this.datasource().data;
+            data[event.idx] = emailMember;
+            this.datasource().data = data;
+            console.debug('data at idx', event.idx, this.datasource().data[event.idx])
+          } else if(result.action == EditAction.Delete) {
+            this.datasource().data.slice(event.idx, 1);
+          }
+        }
+      });
     }
 
     protected getColumns(): ColumnDef<EmailMember>[] {
