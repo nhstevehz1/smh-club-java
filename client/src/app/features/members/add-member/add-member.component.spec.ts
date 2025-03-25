@@ -7,8 +7,7 @@ import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {generateMember, generateMemberCreateForm} from "../test/member-test";
-import {asyncData} from "../../../shared/test-helpers/test-helpers";
-import {Observable, Subject, throwError} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {MemberBase} from "../models/member";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatButtonHarness} from "@angular/material/button/testing";
@@ -17,10 +16,8 @@ import {TranslateModule} from "@ngx-translate/core";
 import {AddressService} from "../../addresses/services/address.service";
 import {EmailService} from "../../emails/services/email.service";
 import {PhoneService} from "../../phones/services/phone.service";
-import {generateAddressCreateForm} from "../../addresses/test/address-test";
 import {generateEmailCreateForm} from "../../emails/test/email-test";
 import {generatePhoneCreateForm} from "../../phones/test/phone-test";
-import {Validators} from "@angular/forms";
 
 describe('AddMemberComponent', () => {
   let component: AddMemberComponent;

@@ -1,24 +1,13 @@
-import {Component, computed, signal, WritableSignal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
-import {FormArray, ReactiveFormsModule} from "@angular/forms";
-import {MatFormFieldAppearance, MatFormFieldModule} from "@angular/material/form-field";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {AddressEditorComponent} from "../../addresses/address-editor/address-editor.component";
-import {MemberEditorComponent} from "../member-editor/member-editor.component";
-import {PhoneEditorComponent} from "../../phones/phone-editor/phone-editor.component";
-import {EmailEditorComponent} from "../../emails/email-editor/email-editor.component";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {MemberCreate} from "../models/member";
-import {AddressCreate} from "../../addresses/models/address";
-import {Email, EmailCreate} from "../../emails/models/email";
-import {PhoneCreate} from "../../phones/models/phone";
-import {MatTooltip} from "@angular/material/tooltip";
-import {MatDivider} from "@angular/material/divider";
 import {MembersService} from "../services/members.service";
 import {Router} from "@angular/router";
 import {OkCancelComponent} from "../../../shared/components/ok-cancel/ok-cancel.component";
@@ -29,24 +18,18 @@ import {PhoneService} from "../../phones/services/phone.service";
 
 @Component({
   selector: 'app-create-member',
-    imports: [
-        MatFormFieldModule,
-        MatCardModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatSelectModule,
-        MatIconModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        AddressEditorComponent,
-        MemberEditorComponent,
-        PhoneEditorComponent,
-        EmailEditorComponent,
-        MatTooltip,
-        MatDivider,
-        OkCancelComponent,
-        TranslatePipe
-    ],
+  imports: [
+    MatFormFieldModule,
+    MatCardModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatIconModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    OkCancelComponent,
+    TranslatePipe
+  ],
   providers: [
       provideLuxonDateAdapter(),
       MembersService,
