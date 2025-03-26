@@ -3,30 +3,28 @@ import {MatInputModule} from "@angular/material/input";
 import {ControlContainer, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseEditorComponent} from "../../../shared/components/base-editor/base-editor.component";
-import {Member, MemberCreate} from "../models/member";
+import {Member} from "../models/member";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
 import {
-    InputFormFieldComponent
+  InputFormFieldComponent
 } from "../../../shared/components/editor-form-fields/input-form-field/input-form-field.component";
 import {
-    DateFormFieldComponent
+  DateFormFieldComponent
 } from "../../../shared/components/editor-form-fields/date-form-field/date-form-field.component";
 import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
 
 @Component({
   selector: 'app-member-editor',
-    imports: [
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        EditorHeaderComponent,
-        InputFormFieldComponent,
-        DateFormFieldComponent
-    ],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    InputFormFieldComponent,
+    DateFormFieldComponent
+  ],
     viewProviders: [
         {provide: ControlContainer, useFactory: (): ControlContainer => inject(ControlContainer, {skipSelf: true})}
     ],
