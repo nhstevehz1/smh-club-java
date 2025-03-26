@@ -1,95 +1,107 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {RenewalService} from "../services/renewal.service";
-import {MatTableDataSource} from "@angular/material/table";
-import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {first, merge, Observable} from "rxjs";
+import {startWith, switchMap} from "rxjs/operators";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {RenewalMember} from "../models/renewal";
+import {Renewal, RenewalMember} from "../models/renewal";
+import {AuthService} from '../../../core/auth/services/auth.service';
+import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
+import {PagedData} from '../../../shared/models/paged-data';
+import {HttpErrorResponse} from '@angular/common/http';
+import {RenewalEditorComponent} from '../renewal-editor/renewal-editor.component';
+import {MatDialog} from '@angular/material/dialog';
+import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-list-renewals',
   imports: [SortablePageableTableComponent],
-  providers: [RenewalService],
+  providers: [RenewalService, AuthService],
   templateUrl: './list-renewals.component.html',
   styleUrl: './list-renewals.component.scss'
 })
-export class ListRenewalsComponent
-    extends BaseTableComponent<RenewalMember> implements OnInit, AfterViewInit {
+export class ListRenewalsComponent extends BaseTableComponent<RenewalMember> implements AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<RenewalMember>;
 
-  resultsLength = 0;
-  datasource = new MatTableDataSource<RenewalMember>();
-  columns: ColumnDef<RenewalMember>[] = [];
-
-  constructor(private svc: RenewalService) {
-    super();
-  }
-
-  ngOnInit(): void {
-    this.columns = this.getColumns();
+  constructor(private svc: RenewalService,
+              auth: AuthService,
+              private dialog: MatDialog) {
+    super(auth);
+    this.columns.set(this.svc.getColumnDefs())
   }
 
   ngAfterViewInit(): void {
-    merge(this._table.sort.sortChange, this._table.paginator.page)
-        .pipe(
+    merge(this._table.sort.sortChange, this._table.paginator.page).pipe(
             startWith({}),
-            switchMap(() => {
-              // assemble the dynamic page request
-              const pr = this.getPageRequest(
-                  this._table.paginator.pageIndex, this._table.paginator.pageSize,
-                  this._table.sort.active, this._table.sort.direction);
-
-              // pipe any errors to an Observable of null
-              return this.svc.getRenewals(pr)
-                  .pipe(catchError(err => {
-                    console.log(err);
-                    return observableOf(null);
-                  }));
-            }),
-            map(data => {
-              // if the data returned s null due to an error.  Map the null data to an empty array
-              if (data === null) {
-                return [];
-              }
-
-              // set the results length in case it has changed.
-              this.resultsLength = data.page.totalElements;
-
-              // map the content array only
-              return data._content;
-            })
+            switchMap(() => this.getCurrentPage()),
         ).subscribe({
           // set the data source with the new page
-          next: data => this.datasource.data = data!
+          next: data => this.processPageData(data),
+          error: (err: HttpErrorResponse) => this.processRequestError(err)
         });
   }
 
-  protected getColumns(): ColumnDef<RenewalMember>[] {
-    return [
-      {
-        columnName: 'renewal_date',
-        displayName: 'renewals.list.columns.renewalDate',
-        isSortable: true,
-        cell: (element: RenewalMember) => `${element.renewal_date}`,
-      },
-      {
-        columnName: 'renewal_year',
-        displayName: 'renewals.list.columns.renewalYear',
-        isSortable: true,
-        cell: (element: RenewalMember) => `${element.renewal_year}`
-      },
-      {
-        columnName: 'full_name',
-        displayName: 'renewals.list.columns.fullName',
-        isSortable: true,
-        cell: (element: RenewalMember) => this.getFullName(element.full_name)
+  onEditClick(event: EditEvent<RenewalMember>): void {
+    this.openDialog(event, EditAction.Edit);
+  }
+
+  onDeleteClick(event: EditEvent<RenewalMember>): void {
+    this.openDialog(event, EditAction.Delete);
+  }
+
+  private getCurrentPage(): Observable<PagedData<RenewalMember>> {
+    // assemble the dynamic page request
+    const pr = this.getPageRequest(
+      this._table.paginator.pageIndex, this._table.paginator.pageSize,
+      this._table.sort.active, this._table.sort.direction);
+    return this.svc.getRenewals(pr).pipe(first());
+  }
+
+  private openDialog(event: EditEvent<RenewalMember>, action: EditAction): void {
+    const dialogData: EditDialogData<Renewal> = {
+      title: 'Renewal Title',
+      component: RenewalEditorComponent,
+      form: this.svc.generateRenewalForm(),
+      context: event.data as Renewal,
+      action: action
+    }
+
+    const dialogRef =
+      this.dialog.open<EditDialogComponent<Renewal>, EditDialogData<Renewal>>(
+        EditDialogComponent<Renewal>, {data: dialogData});
+
+    dialogRef.afterClosed().subscribe({
+      next: (result: EditDialogData<Renewal>) => {
+        if(result.action == EditAction.Edit) {
+          this.updateRenewal(result.context);
+        } else if (result.action == EditAction.Delete) {
+          this.deleteRenewal(event.data.id);
+        }
       }
-    ];
+    });
+  }
+
+  private updateRenewal(renewal: Renewal): void {
+    this.svc.updateRenewal(renewal).subscribe({
+      next: () => this.getCurrentPage().subscribe({
+        next: data => this.processPageData(data),
+        error: (err: HttpErrorResponse) => this.processRequestError(err)
+      }),
+      error: (err: HttpErrorResponse)=> this.processRequestError(err)
+    });
+  }
+
+  private deleteRenewal(id: number) {
+    this.svc.deleteRenewal(id).subscribe({
+      next: () => this.getCurrentPage().subscribe({
+        next: data => this.processPageData(data),
+        error: (err: HttpErrorResponse)=> this.processRequestError(err)
+      }),
+      error: (err: HttpErrorResponse) => this.processRequestError(err)
+    });
   }
 }

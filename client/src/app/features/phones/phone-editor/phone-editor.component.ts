@@ -28,7 +28,7 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
   templateUrl: './phone-editor.component.html',
   styleUrl: './phone-editor.component.scss'
 })
-export class PhoneEditorComponent extends BaseEditorComponent<PhoneCreate | Phone> {
+export class PhoneEditorComponent extends BaseEditorComponent<Phone> {
 
   countryCode = computed(() => this.editorForm()!.controls.country_code);
   countryCodeErrors = input<FormControlError[]>();

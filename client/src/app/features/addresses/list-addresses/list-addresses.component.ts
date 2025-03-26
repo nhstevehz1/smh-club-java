@@ -32,7 +32,7 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
               auth: AuthService,
               private dialog: MatDialog) {
     super(auth);
-    this.columns.update(() => this.svc.getColumnDefs());
+    this.columns.set(this.svc.getColumnDefs());
   }
 
   ngAfterViewInit(): void {

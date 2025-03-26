@@ -77,9 +77,9 @@ export class MembersService {
       middle_name: [''],
       last_name: ['', [Validators.required]],
       suffix: [''],
-      birth_date: [DateTime.now, [Validators.required]],
-      joined_date: [DateTime.now, [Validators.required]],
-    }) as unknown as FormModelGroup<Member>; //TODO: figure out why this is needed
+      birth_date: [DateTime.now(), [Validators.required]],
+      joined_date: [DateTime.now(), [Validators.required]],
+    });
   }
 
   getColumnDefs(): ColumnDef<Member>[] {
