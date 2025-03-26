@@ -13,7 +13,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {Member} from "../models/member";
 import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
 import {AuthService} from "../../../core/auth/services/auth.service";
-import {TranslateService} from "@ngx-translate/core";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {HttpErrorResponse} from '@angular/common/http';
 import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 import {PagedData} from '../../../shared/models/paged-data';
@@ -23,16 +23,17 @@ import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-d
 
 @Component({
   selector: 'app-list-members',
-    imports: [
-        SortablePageableTableComponent,
-        MatIconModule,
-        MatButtonModule,
-        MatTooltip,
-    ],
+  imports: [
+    SortablePageableTableComponent,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltip,
+    TranslatePipe,
+  ],
     providers: [
-        MembersService,
-        TranslateService,
-        DateTimeToFormatPipe
+      MembersService,
+      TranslateService,
+      DateTimeToFormatPipe
     ],
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'

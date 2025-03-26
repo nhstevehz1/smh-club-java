@@ -1,7 +1,7 @@
 import {DateTime} from "luxon";
-import {Address, AddressCreate} from "../../addresses/models/address";
-import {Email, EmailCreate} from "../../emails/models/email";
-import {Phone, PhoneCreate} from "../../phones/models/phone";
+import {Address} from "../../addresses/models/address";
+import {Email} from "../../emails/models/email";
+import {Phone} from "../../phones/models/phone";
 import {Renewal} from '../../renewals/models/renewal';
 
 export interface MemberCreate {

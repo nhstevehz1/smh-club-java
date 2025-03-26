@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {Email, EmailMember} from "../models/email";
 import {
   SortablePageableTableComponent
@@ -11,7 +11,6 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 import {EmailEditorComponent} from '../email-editor/email-editor.component';
 import {AuthService} from '../../../core/auth/services/auth.service';
-import {PermissionType} from '../../../core/auth/models/permission-type';
 import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
 import {HttpErrorResponse} from '@angular/common/http';
 import {PagedData} from '../../../shared/models/paged-data';
