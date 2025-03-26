@@ -36,16 +36,25 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   pageSizes = input<number[]>([5,10,25,100]);
   pageSize = input<number>(5);
   resultsLength = input<number>(0);
+  hasWriteRole = input(false);
+  showEditButton = input(false);
+  showDeleteButton = input(false);
+  showViewButton = input(false);
+  shouldShowActions = computed(() =>
+    this.showViewButton() || (this.hasWriteRole() && (this.showEditButton() || this.showDeleteButton()))
+  );
+
   columnNames= computed<string[]>(() => {
     const names = this.columns().map(c => c.columnName);
-    if (this.auth.hasPermission(PermissionType.write)) {
+    if (this.shouldShowActions()) {
       names.push('action');
     }
     return names;
   });
-  hasWriteRole = input(false);
 
   editClicked = output<EditEvent<T>>();
+  deleteClicked = output<EditEvent<T>>();
+  viewClicked = output<EditEvent<T>>();
 
   @ViewChild(MatSort, {static: true})
   sort!: MatSort;
@@ -53,14 +62,20 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   @ViewChild(MatPaginator, {static: true})
   paginator!: MatPaginator;
 
-  constructor(private auth: AuthService) {}
-
   ngAfterViewInit() {
     // revert back to page 0 if it had been changed.
     this.sort!.sortChange.subscribe(() => this.paginator!.pageIndex = 0);
   }
 
-  onEditClick(element: T, index: number) {
+  onViewClick(element: T, index: number): void {
+    this.viewClicked.emit({idx: index, data: element});
+  }
+
+  onEditClick(element: T, index: number): void {
     this.editClicked.emit({idx: index, data: element});
+  }
+
+  onDeleteClick(element: T, index: number) {
+    this.deleteClicked.emit({idx: index, data: element});
   }
 }

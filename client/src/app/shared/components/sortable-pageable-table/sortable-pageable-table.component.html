@@ -16,11 +16,19 @@
         </ng-container>
     }
 
-    @if(hasWriteRole()) {
+    @if(shouldShowActions()) {
       <ng-container matColumnDef="action">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let row; let i = index">
-          <button mat-button (click)="onEditClick(row, i)">Edit</button>
+          @if(showViewButton()) {
+            <button mat-button (click)="onViewClick(row, i)">View</button>
+          }
+          @if(showEditButton()){
+            <button mat-button (click)="onEditClick(row, i)">Edit</button>
+          }
+          @if(showDeleteButton()){
+            <button mat-button (click)="onDeleteClick(row, i)">Delete</button>
+          }
         </mat-cell>
       </ng-container>
     }

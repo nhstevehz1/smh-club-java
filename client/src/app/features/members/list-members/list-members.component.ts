@@ -45,7 +45,6 @@ export class ListMembersComponent extends BaseTableComponent<Member> implements 
 
   constructor(private svc: MembersService,
               auth: AuthService,
-              private dialog: MatDialog,
               private router: Router) {
 
     super(auth);
@@ -54,25 +53,21 @@ export class ListMembersComponent extends BaseTableComponent<Member> implements 
 
   ngAfterViewInit(): void {
     merge(this._table.sort.sortChange, this._table.paginator.page).pipe(
-          startWith({}),
-          switchMap(() => this.getCurrentPage())
-        ).subscribe({
-          // set the data source to the new page
-          next: data => this.processPageData(data),
-          error: (err: HttpErrorResponse) => this.processRequestError(err)
-        });
+        startWith({}),
+        switchMap(() => this.getCurrentPage())
+      ).subscribe({
+        // set the data source to the new page
+        next: data => this.processPageData(data),
+        error: (err: HttpErrorResponse) => this.processRequestError(err)
+      });
   }
 
   addMemberHandler(): void {
-      this.router.navigate(['p/members/add']).then();
+    this.router.navigate(['p/members/add']).then();
   }
 
-  onEditClick(event: EditEvent<Member>): void {
-    this.openDialog(event, EditAction.Edit);
-  }
-
-  onDeleteClick(event: EditEvent<Member>): void {
-    this.openDialog(event, EditAction.Delete)
+  onViewClick(event: EditEvent<Member>): void {
+    this.router.navigate(['p/member/view', event.data.id]).then();
   }
 
   private getCurrentPage(): Observable<PagedData<Member>> {
@@ -81,49 +76,5 @@ export class ListMembersComponent extends BaseTableComponent<Member> implements 
       this._table.paginator.pageIndex, this._table.paginator.pageSize,
       this._table.sort.active, this._table.sort.direction);
     return this.svc.getMembers(pr).pipe(first());
-  }
-
-  private openDialog(event: EditEvent<Member>, action: EditAction): void {
-    const dialogData: EditDialogData<Member> = {
-      title: 'Member title',
-      component: MemberEditorComponent,
-      form: this.svc.generateMemberForm(),
-      context: event.data,
-      action: action
-    }
-
-    const dialogRef =
-      this.dialog.open<EditDialogComponent<Member>, EditDialogData<Member>>(
-        EditDialogComponent<Member>, {data: dialogData});
-
-    dialogRef.afterClosed().subscribe({
-      next: (result: EditDialogData<Member>) => {
-        if(result.action == EditAction.Edit) {
-          this.updateMember(result.context);
-        } else if(result.action == EditAction.Delete) {
-          this.deleteMember(event.data.id);
-        }
-      }
-    })
-  }
-
-  private updateMember(member: Member): void {
-    this.svc.updateMember(member).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse) => this.processRequestError(err)
-      }),
-      error: (err: HttpErrorResponse)=> this.processRequestError(err)
-    })
-  }
-
-  private deleteMember(id: number): void {
-    this.svc.deleteMember(id).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse)=> this.processRequestError(err)
-      }),
-      error: (err: HttpErrorResponse) => this.processRequestError(err)
-    })
   }
 }
