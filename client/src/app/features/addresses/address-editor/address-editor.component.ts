@@ -6,7 +6,6 @@ import {BaseEditorComponent} from "../../../shared/components/base-editor/base-e
 import {Address} from "../models/address";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {EditorHeaderComponent} from "../../../shared/components/editor-header/editor-header.component";
 import {
   InputFormFieldComponent
 } from "../../../shared/components/editor-form-fields/input-form-field/input-form-field.component";
@@ -21,7 +20,6 @@ import {FormControlError} from "../../../shared/components/editor-form-fields/mo
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    EditorHeaderComponent,
     InputFormFieldComponent,
     AddressTypeFormFieldComponent
   ],

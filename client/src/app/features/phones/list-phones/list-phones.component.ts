@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
+import {AfterViewInit, Component, computed, signal, ViewChild, WritableSignal} from '@angular/core';
 import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
@@ -7,8 +7,8 @@ import {BaseTableComponent} from "../../../shared/components/base-table-componen
 import {Phone, PhoneMember} from "../models/phone";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MatTableDataSource} from "@angular/material/table";
-import {first, merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {first, merge} from "rxjs";
+import {startWith, switchMap} from "rxjs/operators";
 import {PhoneType} from "../models/phone-type";
 import {HttpErrorResponse} from '@angular/common/http';
 import {PermissionType} from '../../../core/auth/models/permission-type';
