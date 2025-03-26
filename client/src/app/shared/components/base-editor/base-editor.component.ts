@@ -3,7 +3,7 @@ import {MatFormFieldAppearance} from "@angular/material/form-field";
 import {FormModelGroup} from "./form-model-group";
 
 @Component({
-  selector: 'base-editor',
+  selector: 'app-base-editor',
   template: ``,
   styles: ``
 })

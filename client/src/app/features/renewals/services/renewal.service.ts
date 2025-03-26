@@ -27,7 +27,7 @@ export class RenewalService extends BaseApiService{
       map(pd => {
         if (pd && pd._content) {
           pd._content.forEach(r => {
-            let date = r.renewal_date as unknown as string;
+            const date = r.renewal_date as unknown as string;
             r.renewal_date = DateTime.fromISO(date);
           })
         }
@@ -39,7 +39,7 @@ export class RenewalService extends BaseApiService{
   createRenewal(create: RenewalCreate): Observable<Renewal> {
     return this.http.post<Renewal>(this.BASE_API, create).pipe(
       map(data => {
-        let date = data.renewal_date as unknown as string;
+        const date = data.renewal_date as unknown as string;
         data.renewal_date = DateTime.fromISO(date);
         return data;
       })
@@ -49,7 +49,7 @@ export class RenewalService extends BaseApiService{
   updateRenewal(update: Renewal): Observable<Renewal> {
     return this.http.post<Renewal>(`${this.BASE_API}/${update.id}`, update).pipe(
       map(data => {
-        let date = data.renewal_date as unknown as string;
+        const date = data.renewal_date as unknown as string;
         data.renewal_date = DateTime.fromISO(date);
         return data;
       })
