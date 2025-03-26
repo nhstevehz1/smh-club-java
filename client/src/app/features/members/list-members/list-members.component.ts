@@ -15,11 +15,8 @@ import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-for
 import {AuthService} from "../../../core/auth/services/auth.service";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {HttpErrorResponse} from '@angular/common/http';
-import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
+import {EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 import {PagedData} from '../../../shared/models/paged-data';
-import {MemberEditorComponent} from '../member-editor/member-editor.component';
-import {MatDialog} from '@angular/material/dialog';
-import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-list-members',

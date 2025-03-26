@@ -7,8 +7,6 @@ import {CustomMatPaginatorIntlService} from "./services/custom-mat-paginator-int
 import {TranslatePipe} from "@ngx-translate/core";
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {AuthService} from '../../../core/auth/services/auth.service';
-import {PermissionType} from '../../../core/auth/models/permission-type';
 import {EditEvent} from '../edit-dialog/models/edit-event';
 
 @Component({
