@@ -2,21 +2,25 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {PageRequest} from "../../../shared/models/page-request";
 import {Observable} from "rxjs";
-import {EmailCreate, EmailMember, Email} from "../models/email";
+import {Email, EmailCreate, EmailMember} from "../models/email";
 import {PagedData} from "../../../shared/models/paged-data";
 import {map} from "rxjs/operators";
 import {EmailType} from "../models/email-type";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
+import {BaseApiService} from '../../../shared/services/base-api-service';
+import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models/column-def';
 
 @Injectable()
-export class EmailService {
+export class EmailService extends BaseApiService {
   private  BASE_API = '/api/v1/emails';
 
   constructor(private http: HttpClient,
-              private fb: NonNullableFormBuilder) {}
+              private fb: NonNullableFormBuilder) {
+    super();
+  }
 
-  public getEmails(pageRequest: PageRequest): Observable<PagedData<EmailMember>> {
+  getEmails(pageRequest: PageRequest): Observable<PagedData<EmailMember>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
@@ -28,6 +32,28 @@ export class EmailService {
         return pd;
       })
     );
+  }
+
+  createEmail(create: EmailCreate): Observable<Email> {
+    return this.http.post<Email>(this.BASE_API, create).pipe(
+      map(data => {
+        data.email_type = data.email_type as unknown as EmailType;
+        return data;
+      })
+    )
+  }
+
+  updateEmail(update: Email): Observable<Email> {
+    return this.http.put<Email>(`${this.BASE_API}/${update.id}`, update).pipe(
+      map(data => {
+        data.email_type = data.email_type as unknown as EmailType;
+        return data;
+      })
+    )
+  }
+
+  deleteEmail(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_API}/${id}`);
   }
 
   generateEmailForm(): FormModelGroup<Email> {
@@ -54,4 +80,33 @@ export class EmailService {
           email_type: [update.email_type, [Validators.required]]
       });
   }
+
+  getColumnDefs(): ColumnDef<EmailMember>[] {
+    return [
+      {
+        columnName: 'email',
+        displayName: 'emails.list.columns.email',
+        isSortable: true,
+        cell:(element: EmailMember) => `${element.email}`
+      },
+      {
+        columnName: 'email_type',
+        displayName: 'emails.list.columns.emailType',
+        isSortable: false,
+        cell:(element: EmailMember) => this.emailTypeMap.get(element.email_type)
+      },
+      {
+        columnName: 'full_name',
+        displayName: 'emails.list.columns.fullName',
+        isSortable: true,
+        cell:(element: EmailMember) => this.getFullName(element.full_name)
+      }
+    ];
+  }
+
+  private emailTypeMap = new Map<EmailType, string>([
+    [EmailType.Work, 'emails.type.work'],
+    [EmailType.Home, 'emails.type.home'],
+    [EmailType.Other, 'emails.type.other']
+  ]);
 }
