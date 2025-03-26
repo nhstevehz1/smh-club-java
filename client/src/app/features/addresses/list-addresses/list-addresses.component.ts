@@ -14,9 +14,9 @@ import {AuthService} from '../../../core/auth/services/auth.service';
 import {PermissionType} from '../../../core/auth/models/permission-type';
 import {MatDialog} from '@angular/material/dialog';
 import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
-import {EditAddressDialogComponent} from '../update-address-dialog/edit-address-dialog.component';
 import {AddressEditorComponent} from '../address-editor/address-editor.component';
 import {HttpErrorResponse} from '@angular/common/http';
+import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-list-addresses',
@@ -130,8 +130,8 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
     }
 
     const dialogRef
-      = this.dialog.open<EditAddressDialogComponent, EditDialogData<Address>>(
-        EditAddressDialogComponent, {data: dialogData});
+      = this.dialog.open<EditDialogComponent<Address>, EditDialogData<Address>>(
+        EditDialogComponent<Address>, {data: dialogData});
 
     dialogRef.afterClosed().subscribe({
       next: (result: EditDialogData<Address>) => {
