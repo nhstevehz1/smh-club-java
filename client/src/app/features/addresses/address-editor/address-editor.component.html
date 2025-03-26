@@ -1,59 +1,54 @@
 <div [formGroup]="editorForm()!" class="flex-column space-evenly">
-    <app-editor-header
-        [title]="title()"
-        [showRemoveButton]="showRemoveButton()"
-        (removeClick)="onRemove()">
-    </app-editor-header>
-    <div class="flex-row flex-start gap">
-        <app-input-form-field
-                ngDefaultControl
-                [appearance]="fieldAppearance()"
-                [formControl]="address1()"
-                [controlErrors]="address1Errors()"
-                label="addresses.editor.address1.label">
-        </app-input-form-field>
-
-        <app-input-form-field
-                ngDefaultControl
-                [appearance]="fieldAppearance()"
-                [formControl]="address2()"
-                [controlErrors]="address2Errors()"
-                label="addresses.editor.address2.label">
-        </app-input-form-field>
-    </div>
-
-    <div class="flex-row flex-start gap">
-        <app-input-form-field
+  <div class="flex-row flex-start gap">
+    <app-input-form-field
             ngDefaultControl
             [appearance]="fieldAppearance()"
-            [formControl]="city()"
-            [controlErrors]="cityErrors()"
-            label="addresses.editor.city.label">
-        </app-input-form-field>
+            [formControl]="address1()"
+            [controlErrors]="address1Errors()"
+            label="addresses.editor.address1.label">
+    </app-input-form-field>
 
-        <app-input-form-field
+    <app-input-form-field
             ngDefaultControl
             [appearance]="fieldAppearance()"
-            [formControl]="state()"
-            [controlErrors]="stateErrors()"
-            label="addresses.editor.state.label">
-        </app-input-form-field>
-    </div>
-    <div class="flex-row flex-start gap">
-        <app-input-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]="postalCode()"
-            [controlErrors]="postalCodeErrors()"
-            label="addresses.editor.postalCode.label">
-        </app-input-form-field>
+            [formControl]="address2()"
+            [controlErrors]="address2Errors()"
+            label="addresses.editor.address2.label">
+    </app-input-form-field>
+  </div>
 
-        <app-address-type-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]="addressType()"
-            [controlErrors]="addressTypeErrors()"
-            label="addresses.editor.addressType.label">
-        </app-address-type-form-field>
-    </div>
+  <div class="flex-row flex-start gap">
+    <app-input-form-field
+        ngDefaultControl
+        [appearance]="fieldAppearance()"
+        [formControl]="city()"
+        [controlErrors]="cityErrors()"
+        label="addresses.editor.city.label">
+    </app-input-form-field>
+
+    <app-input-form-field
+        ngDefaultControl
+        [appearance]="fieldAppearance()"
+        [formControl]="state()"
+        [controlErrors]="stateErrors()"
+        label="addresses.editor.state.label">
+    </app-input-form-field>
+  </div>
+  <div class="flex-row flex-start gap">
+    <app-input-form-field
+        ngDefaultControl
+        [appearance]="fieldAppearance()"
+        [formControl]="postalCode()"
+        [controlErrors]="postalCodeErrors()"
+        label="addresses.editor.postalCode.label">
+    </app-input-form-field>
+
+    <app-address-type-form-field
+        ngDefaultControl
+        [appearance]="fieldAppearance()"
+        [formControl]="addressType()"
+        [controlErrors]="addressTypeErrors()"
+        label="addresses.editor.addressType.label">
+    </app-address-type-form-field>
+  </div>
 </div>

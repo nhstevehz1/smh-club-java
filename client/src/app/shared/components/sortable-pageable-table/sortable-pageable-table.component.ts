@@ -31,21 +31,11 @@ import {EditEvent} from '../edit-dialog/models/edit-event';
   styleUrl: './sortable-pageable-table.component.scss'
 })
 export class SortablePageableTableComponent<T> implements AfterViewInit {
-  columns
-      = input.required<ColumnDef<T>[]>();
-
-  dataSource
-      = input.required<MatTableDataSource<T>>();
-
-  pageSizes
-      = input<number[]>([5,10,25,100]);
-
-  pageSize
-      = input<number>(5);
-
-  resultsLength
-      = input<number>(0);
-
+  columns = input.required<ColumnDef<T>[]>();
+  dataSource = input.required<MatTableDataSource<T>>();
+  pageSizes = input<number[]>([5,10,25,100]);
+  pageSize = input<number>(5);
+  resultsLength = input<number>(0);
   columnNames= computed<string[]>(() => {
     const names = this.columns().map(c => c.columnName);
     if (this.auth.hasPermission(PermissionType.write)) {
@@ -53,7 +43,6 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
     }
     return names;
   });
-
   hasWriteRole = input(false);
 
   editClicked = output<EditEvent<T>>();
@@ -72,7 +61,6 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   }
 
   onEditClick(element: T, index: number) {
-    console.debug('onEditClick element', element);
     this.editClicked.emit({idx: index, data: element});
   }
 }

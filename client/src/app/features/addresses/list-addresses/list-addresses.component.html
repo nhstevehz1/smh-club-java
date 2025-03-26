@@ -3,7 +3,7 @@
             [dataSource]="datasource()"
             [columns]="columns()"
             [resultsLength]="resultsLength()"
-            [hasWriteRole]="canEdit()"
+            [hasWriteRole]="hasWriteRole()"
             (editClicked)="onEditClick($event)">
     </app-sortable-pageable-table>
 </div>

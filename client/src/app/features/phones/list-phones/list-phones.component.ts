@@ -1,31 +1,40 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
 import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {PhoneService} from "../services/phone.service";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {PhoneMember} from "../models/phone";
+import {Phone, PhoneMember} from "../models/phone";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MatTableDataSource} from "@angular/material/table";
-import {merge, of as observableOf} from "rxjs";
+import {first, merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {PhoneType} from "../models/phone-type";
+import {HttpErrorResponse} from '@angular/common/http';
+import {PermissionType} from '../../../core/auth/models/permission-type';
+import {AuthService} from '../../../core/auth/services/auth.service';
+import {EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 
 @Component({
   selector: 'app-list-phones',
   imports: [SortablePageableTableComponent],
-  providers: [PhoneService],
+  providers: [
+    PhoneService,
+    AuthService
+  ],
   templateUrl: './list-phones.component.html',
   styleUrl: './list-phones.component.scss'
 })
-export class ListPhonesComponent extends BaseTableComponent<PhoneMember> implements OnInit, AfterViewInit {
+export class ListPhonesComponent extends BaseTableComponent<PhoneMember> implements AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<PhoneMember>;
 
-  resultsLength = 0;
-  datasource = new MatTableDataSource<PhoneMember>();
-  columns: ColumnDef<PhoneMember>[] = [];
+  resultsLength = signal(0);
+  datasource = signal(new MatTableDataSource<PhoneMember>());
+  columns: WritableSignal<ColumnDef<PhoneMember>[]>;
+
+  hasWriteRole = computed(() => this.auth.hasPermission(PermissionType.write));
 
   private phoneTypeMap = new Map<PhoneType, string>([
      [PhoneType.Work, 'phones.type.work'],
@@ -33,13 +42,12 @@ export class ListPhonesComponent extends BaseTableComponent<PhoneMember> impleme
      [PhoneType.Mobile, 'phones.type.mobile']
   ]);
 
-  constructor(private svc: PhoneService) {
+  constructor(private svc: PhoneService,
+              private auth: AuthService) {
     super();
+    this.columns = signal(this.getColumns());
   }
 
-  ngOnInit(): void {
-    this.columns = this.getColumns();
-  }
 
   ngAfterViewInit(): void {
     merge(this._table.sort.sortChange, this._table.paginator.page)
@@ -52,27 +60,18 @@ export class ListPhonesComponent extends BaseTableComponent<PhoneMember> impleme
                   this._table.sort.active, this._table.sort.direction);
 
               // pipe any errors to an Observable of null
-              return this.svc.getPhones(pr)
-                  .pipe(catchError(err => {
-                    console.log(err);
-                    return observableOf(null);
-                  }));
-            }),
-            map(data => {
-              // if the data returned s null due to an error.  Map the null data to an empty array
-              if (data === null) {
-                return [];
-              }
-
-              // set the results length in case it has changed.
-              this.resultsLength = data.page.totalElements;
-
-              // map the content array only
-              return data._content;
+              return this.svc.getPhones(pr).pipe(first());
             })
         ).subscribe({
           // set the data source with the new page
-          next: data => this.datasource.data = data!
+          next: data => {
+            this.datasource().data = data._content;
+            this.resultsLength.update(() => data.page.totalElements);
+          },
+          error: (err: HttpErrorResponse) => {
+            console.debug(err);
+            this.datasource().data = [];
+          }
         });
   }
 
@@ -108,5 +107,9 @@ export class ListPhonesComponent extends BaseTableComponent<PhoneMember> impleme
     const formated = number.replace(regex, '($1) $2-$3');
 
     return `+${code} ${formated}`;
+  }
+
+  onEditClick(event: EditEvent<Phone>) {
+
   }
 }

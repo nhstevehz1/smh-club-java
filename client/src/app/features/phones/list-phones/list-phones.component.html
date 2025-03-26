@@ -1,7 +1,9 @@
 <div class="container">
     <app-sortable-pageable-table
-            [dataSource]="datasource"
-            [columns]="columns"
-            [resultsLength]="resultsLength">
+            [dataSource]="datasource()"
+            [columns]="columns()"
+            [resultsLength]="resultsLength()"
+            [hasWriteRole]="hasWriteRole()"
+            (editClicked)="onEditClick($event)">
     </app-sortable-pageable-table>
 </div>

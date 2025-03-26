@@ -7,8 +7,8 @@ import {
 import {EmailService} from "../services/email.service";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {first, merge} from "rxjs";
+import {startWith, switchMap} from "rxjs/operators";
 import {EmailType} from "../models/email-type";
 import {MatDialog} from '@angular/material/dialog';
 import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
@@ -16,6 +16,7 @@ import {EmailEditorComponent} from '../email-editor/email-editor.component';
 import {AuthService} from '../../../core/auth/services/auth.service';
 import {PermissionType} from '../../../core/auth/models/permission-type';
 import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
+import {HttpErrorResponse} from '@angular/common/http';
 
 
 @Component({
@@ -64,26 +65,18 @@ export class ListEmailsComponent
                         this._table.paginator.pageIndex, this._table.paginator.pageSize,
                         this._table.sort.active, this._table.sort.direction);
 
-                    // pipe any errors to an Observable of null
-                    return this.svc.getEmails(pr)
-                        .pipe(catchError(err => {
-                            console.log(err);
-                            return observableOf(null);
-                        }));
-                }),
-                map(data => {
-                    // if the data returned s null due to an error.  Map the null data to an empty array
-                    if (data === null) {
-                        return [];
-                    }
-                    // set the results length in case it has changed.
-                    this.resultsLength.update(() => data.page.totalElements);
-                    // map the content array only
-                    return data._content;
+                    return this.svc.getEmails(pr).pipe(first());
                 })
             ).subscribe({
                 // set the data source with the new page
-                next: data => this.datasource().data = data
+                next: data => {
+                  this.resultsLength.update(() => data.page.totalElements);
+                  this.datasource().data = data._content;
+                },
+                error: (err: HttpErrorResponse) => {
+                  console.debug(err);
+                  this.datasource().data = [];
+                }
             });
     }
 

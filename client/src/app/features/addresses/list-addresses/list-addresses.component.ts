@@ -7,8 +7,8 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {Address, AddressMember} from "../models/address";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {first, merge} from "rxjs";
+import {startWith, switchMap} from "rxjs/operators";
 import {AddressType} from "../models/address-type";
 import {AuthService} from '../../../core/auth/services/auth.service';
 import {PermissionType} from '../../../core/auth/models/permission-type';
@@ -16,6 +16,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 import {EditAddressDialogComponent} from '../update-address-dialog/edit-address-dialog.component';
 import {AddressEditorComponent} from '../address-editor/address-editor.component';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-list-addresses',
@@ -33,7 +34,7 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
   datasource = signal(new MatTableDataSource<AddressMember>());
   columns: WritableSignal<ColumnDef<AddressMember>[]>;
 
-  readonly canEdit = computed(() => this.auth.hasPermission(PermissionType.write));
+  hasWriteRole = computed(() => this.auth.hasPermission(PermissionType.write));
 
   private readonly addressTypeMap: Map<AddressType, string> = new Map<AddressType, string>([
       [AddressType.Home, 'addresses.type.home'],
@@ -59,27 +60,18 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
                   this._table.sort.active, this._table.sort.direction);
 
               // pipe any errors to an Observable of null
-              return this.svc.getAddresses(pr)
-                  .pipe(catchError(err => {
-                    console.log(err);
-                    return observableOf(null);
-                  }));
-            }),
-            map(data => {
-              // if the data returned s null due to an error.  Map the null data to an empty array
-              if (data === null) {
-                return [];
-              }
-
-              // set the results length in case it has changed.
-              this.resultsLength.set(data.page.totalElements);
-
-              // map the content array only
-              return data._content;
+              return this.svc.getAddresses(pr).pipe(first());
             })
         ).subscribe({
           // set the data source with the new page
-          next: data => this.datasource().data = data!
+          next: data => {
+            this.datasource().data = data._content;
+            this.resultsLength.update(() =>data.page.totalElements);
+          },
+          error: (err: HttpErrorResponse) => {
+            console.debug(err);
+            this.datasource().data = [];
+          }
         });
   }
 

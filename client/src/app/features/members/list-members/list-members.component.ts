@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, computed, OnInit, Signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, signal, Signal, ViewChild, WritableSignal} from '@angular/core';
 import {
-    SortablePageableTableComponent
+  SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {MatTableDataSource} from "@angular/material/table";
 import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
 import {MembersService} from "../services/members.service";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {first, merge} from "rxjs";
+import {startWith, switchMap} from "rxjs/operators";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
@@ -18,6 +18,8 @@ import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-for
 import {AuthService} from "../../../core/auth/services/auth.service";
 import {PermissionType} from "../../../core/auth/models/permission-type";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import {HttpErrorResponse} from '@angular/common/http';
+import {EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 
 @Component({
   selector: 'app-list-members',
@@ -36,26 +38,25 @@ import {TranslatePipe, TranslateService} from "@ngx-translate/core";
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent extends BaseTableComponent<Member> implements OnInit, AfterViewInit{
+export class ListMembersComponent extends BaseTableComponent<Member> implements AfterViewInit{
     @ViewChild(SortablePageableTableComponent, {static: true})
     private _table!: SortablePageableTableComponent<Member>;
 
-    resultsLength = 0;
-    datasource = new MatTableDataSource<Member>();
-    columns: ColumnDef<Member>[] = [];
+    resultsLength = signal(0);
+    datasource = signal(new MatTableDataSource<Member>());
+    columns: WritableSignal<ColumnDef<Member>[]>;
 
-    readonly canAddMember: Signal<boolean> = computed(() => this.authSvc.hasPermission(PermissionType.write));
+    canAddMember: Signal<boolean> = computed(() => this.authSvc.hasPermission(PermissionType.write));
+    hasWriteRole: Signal<boolean> = computed(() => this.authSvc.hasPermission(PermissionType.write));
 
     constructor(private svc: MembersService,
                 protected authSvc: AuthService,
                 private router: Router,
                 private translate: TranslateService,
                 private dtFormat: DateTimeToFormatPipe) {
-        super();
-    }
 
-    ngOnInit(): void {
-       this.columns = this.getColumns();// create column defs
+      super();
+      this.columns = signal(this.getColumns());
     }
 
     ngAfterViewInit(): void {
@@ -68,28 +69,18 @@ export class ListMembersComponent extends BaseTableComponent<Member> implements 
                         this._table.paginator.pageIndex, this._table.paginator.pageSize,
                         this._table.sort.active, this._table.sort.direction);
 
-                    // pipe any errors to an Observable of null
-                    return this.svc.getMembers(pr)
-                        .pipe(catchError(err => {
-                            console.debug(err);
-                            return observableOf(null);
-                        }));
-                }),
-                map(data => {
-                    // if the data returned s null due to an error.  Map the null data to an empty array
-                    if (data === null) {
-                        return [];
-                    }
-
-                    // set the results length in case it has changed.
-                    this.resultsLength = data.page.totalElements;
-
-                    // map the content array only
-                    return data._content;
+                    return this.svc.getMembers(pr).pipe(first());
                 })
             ).subscribe({
                 // set the data source to the new page
-                next: data => this.datasource.data = data!
+                next: data => {
+                  this.datasource().data = data._content;
+                  this.resultsLength.update(() => data.page.totalElements);
+                },
+                error: (err: HttpErrorResponse) => {
+                  console.debug(err);
+                  this.datasource().data = [];
+                }
             });
     }
 
@@ -139,4 +130,7 @@ export class ListMembersComponent extends BaseTableComponent<Member> implements 
         ];
     }
 
+    onEditClick(event: EditEvent<Member>): void {
+
+    }
 }
