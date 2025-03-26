@@ -35,19 +35,19 @@ export class AddressService extends BaseApiService {
 
   createAddress(create: AddressCreate): Observable<Address> {
     return this.http.post<Address>(this.BASE_API, create).pipe(
-        map(data => {
-          data.address_type = data.address_type as unknown as AddressType;
-          return data;
-        })
+      map(data => {
+        data.address_type = data.address_type as unknown as AddressType;
+        return data;
+      })
     );
   }
 
   updateAddress(update: Address): Observable<Address> {
     return this.http.put<Address>(`${this.BASE_API}/${update.id}`, update).pipe(
-        map(data => {
-          data.address_type = data.address_type as unknown as AddressType;
-          return data;
-        })
+      map(data => {
+        data.address_type = data.address_type as unknown as AddressType;
+        return data;
+      })
     );
   }
 

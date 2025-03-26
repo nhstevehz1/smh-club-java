@@ -43,7 +43,7 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
           // set the data source with the new page
           next: data => this.processPageData(data),
           error: (err: HttpErrorResponse) => this.processRequestError(err)
-          });
+        });
   }
 
   onEditClick(event: EditEvent<AddressMember>): void {
@@ -82,7 +82,7 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
         } else if (result.action == EditAction.Delete) {
           this.deleteEmail(event.data.id);
         }
-      },
+      }
     });
   }
 
@@ -103,6 +103,6 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
         error: (err: HttpErrorResponse)=> this.processRequestError(err)
       }),
       error: (err: HttpErrorResponse) => this.processRequestError(err)
-    })
+    });
   }
 }
