@@ -65,22 +65,6 @@ export class EmailService extends BaseApiService {
     });
   }
 
-  generateCreateForm(): FormModelGroup<EmailCreate> {
-      return this.fb.group({
-          email: ['', [Validators.required, Validators.email]],
-          email_type: [EmailType.Home, [Validators.required]]
-      });
-  }
-
-  generateUpdateForm(update: Email): FormModelGroup<Email> {
-      return this.fb.group({
-          id: [update.id],
-          member_id: [update.member_id],
-          email: [update.email, [Validators.required, Validators.email]],
-          email_type: [update.email_type, [Validators.required]]
-      });
-  }
-
   getColumnDefs(): ColumnDef<EmailMember>[] {
     return [
       {

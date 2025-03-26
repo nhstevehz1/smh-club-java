@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, ViewChild} from '@angular/core';
 import {Email, EmailMember} from "../models/email";
 import {
   SortablePageableTableComponent
@@ -18,94 +18,92 @@ import {PagedData} from '../../../shared/models/paged-data';
 
 
 @Component({
-    selector: 'app-list-emails',
-    imports: [SortablePageableTableComponent],
-    providers: [EmailService],
-    templateUrl: './list-emails.component.html',
-    styleUrl: './list-emails.component.scss'
+  selector: 'app-list-emails',
+  imports: [SortablePageableTableComponent],
+  providers: [EmailService, AuthService],
+  templateUrl: './list-emails.component.html',
+  styleUrl: './list-emails.component.scss'
 })
 export class ListEmailsComponent extends BaseTableComponent<EmailMember> implements AfterViewInit {
 
-    @ViewChild(SortablePageableTableComponent, {static: true})
-    private _table!: SortablePageableTableComponent<EmailMember>;
+  @ViewChild(SortablePageableTableComponent, {static: true})
+  private _table!: SortablePageableTableComponent<EmailMember>;
 
-    constructor(private svc: EmailService,
-                private auth: AuthService,
-                private dialog: MatDialog) {
-        super();
-        this.columns.update(() => this.svc.getColumnDefs());
-        this.hasWriteRole.update(() => this.auth.hasPermission(PermissionType.write));
-    }
+  constructor(private svc: EmailService,
+              auth: AuthService,
+              private dialog: MatDialog) {
+      super(auth);
+      this.columns.update(() => this.svc.getColumnDefs());
+  }
 
-    ngAfterViewInit(): void {
-        merge(this._table.sort.sortChange, this._table.paginator.page)
-            .pipe(
-                startWith({}),
-                switchMap(() => this.getCurrentPage())
-            ).subscribe({
-              // set the data source with the new page
-              next: data => this.processPageData(data),
-              error: (err: HttpErrorResponse) => this.processRequestError(err)
-            });
-    }
-
-    onEditClick(event: EditEvent<EmailMember>): void {
-      this.openDialog(event, EditAction.Edit);
-    }
-
-    onDeleteClick(event: EditEvent<EmailMember>): void {
-      this.openDialog(event, EditAction.Delete);
-    }
-
-    private getCurrentPage(): Observable<PagedData<EmailMember>> {
-      const pr = this.getPageRequest(
-        this._table.paginator.pageIndex, this._table.paginator.pageSize,
-        this._table.sort.active, this._table.sort.direction);
-      return this.svc.getEmails(pr).pipe(first());
-    }
-
-    private openDialog(event: EditEvent<EmailMember>, action: EditAction): void {
-      const dialogData: EditDialogData<Email> = {
-        title: 'my title',
-        component: EmailEditorComponent,
-        form: this.svc.generateEmailForm(),
-        context: event.data as Email,
-        action: action
-      };
-
-      const dialogRef =
-        this.dialog.open<EditDialogComponent<Email>, EditDialogData<Email> >(
-          EditDialogComponent<Email>, {data: dialogData}
-        );
-
-      dialogRef.afterClosed().subscribe({
-        next: (result: EditDialogData<Email>) =>  {
-          if(result.action == EditAction.Edit) {
-            this.updateEmail(result.context);
-          } else if(result.action == EditAction.Delete) {
-            this.deleteEmail(event.data.id);
-          }
-        }
-      });
-    }
-
-    private updateEmail(email: Email): void {
-      this.svc.updateEmail(email).subscribe({
-        next: () => this.getCurrentPage().subscribe({
+  ngAfterViewInit(): void {
+    merge(this._table.sort.sortChange, this._table.paginator.page).pipe(
+            startWith({}),
+            switchMap(() => this.getCurrentPage())
+        ).subscribe({
+          // set the data source with the new page
           next: data => this.processPageData(data),
           error: (err: HttpErrorResponse) => this.processRequestError(err)
-        }),
-        error: (err: HttpErrorResponse) => this.processRequestError(err)
-      })
-    }
+        });
+  }
 
-    private deleteEmail(idx: number): void {
-      this.svc.deleteEmail(idx).subscribe({
-        next: () => this.getCurrentPage().subscribe({
-          next: data => this.processPageData(data),
-          error: (err: HttpErrorResponse)=> this.processRequestError(err)
-        }),
+  onEditClick(event: EditEvent<EmailMember>): void {
+    this.openDialog(event, EditAction.Edit);
+  }
+
+  onDeleteClick(event: EditEvent<EmailMember>): void {
+    this.openDialog(event, EditAction.Delete);
+  }
+
+  private getCurrentPage(): Observable<PagedData<EmailMember>> {
+    const pr = this.getPageRequest(
+      this._table.paginator.pageIndex, this._table.paginator.pageSize,
+      this._table.sort.active, this._table.sort.direction);
+    return this.svc.getEmails(pr).pipe(first());
+  }
+
+  private openDialog(event: EditEvent<EmailMember>, action: EditAction): void {
+    const dialogData: EditDialogData<Email> = {
+      title: 'my title',
+      component: EmailEditorComponent,
+      form: this.svc.generateEmailForm(),
+      context: event.data as Email,
+      action: action
+    };
+
+    const dialogRef =
+      this.dialog.open<EditDialogComponent<Email>, EditDialogData<Email> >(
+        EditDialogComponent<Email>, {data: dialogData}
+      );
+
+    dialogRef.afterClosed().subscribe({
+      next: (result: EditDialogData<Email>) =>  {
+        if(result.action == EditAction.Edit) {
+          this.updateEmail(result.context);
+        } else if(result.action == EditAction.Delete) {
+          this.deleteEmail(event.data.id);
+        }
+      }
+    });
+  }
+
+  private updateEmail(email: Email): void {
+    this.svc.updateEmail(email).subscribe({
+      next: () => this.getCurrentPage().subscribe({
+        next: data => this.processPageData(data),
+        error: (err: HttpErrorResponse) => this.processRequestError(err)
+      }),
+      error: (err: HttpErrorResponse) => this.processRequestError(err)
+    })
+  }
+
+  private deleteEmail(id: number): void {
+    this.svc.deleteEmail(id).subscribe({
+      next: () => this.getCurrentPage().subscribe({
+        next: data => this.processPageData(data),
         error: (err: HttpErrorResponse)=> this.processRequestError(err)
-      })
-    }
+      }),
+      error: (err: HttpErrorResponse)=> this.processRequestError(err)
+    })
+  }
 }

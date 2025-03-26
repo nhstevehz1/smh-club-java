@@ -9,7 +9,6 @@ import {BaseTableComponent} from "../../../shared/components/base-table-componen
 import {first, merge, Observable} from "rxjs";
 import {startWith, switchMap} from "rxjs/operators";
 import {AuthService} from '../../../core/auth/services/auth.service';
-import {PermissionType} from '../../../core/auth/models/permission-type';
 import {MatDialog} from '@angular/material/dialog';
 import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
 import {AddressEditorComponent} from '../address-editor/address-editor.component';
@@ -20,7 +19,7 @@ import {PagedData} from '../../../shared/models/paged-data';
 @Component({
   selector: 'app-list-addresses',
   imports: [SortablePageableTableComponent],
-  providers: [AddressService],
+  providers: [AddressService, AddressService],
   templateUrl: './list-addresses.component.html',
   styleUrl: './list-addresses.component.scss',
   encapsulation: ViewEncapsulation.ShadowDom
@@ -30,17 +29,14 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
   private _table!: SortablePageableTableComponent<ColumnDef<AddressMember>>;
 
   constructor(private svc: AddressService,
-              private auth: AuthService,
+              auth: AuthService,
               private dialog: MatDialog) {
-    super();
-
+    super(auth);
     this.columns.update(() => this.svc.getColumnDefs());
-    this.hasWriteRole.update(() => this.auth.hasPermission(PermissionType.write));
   }
 
   ngAfterViewInit(): void {
-    merge(this._table.sort.sortChange, this._table.paginator.page)
-        .pipe(
+    merge(this._table.sort.sortChange, this._table.paginator.page).pipe(
             startWith({}),
             switchMap(() => this.getCurrentPage())
         ).subscribe({
@@ -66,7 +62,7 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
     return this.svc.getAddresses(pr).pipe(first());
   }
 
-  private openDialog(event: EditEvent<AddressMember>, action: EditAction) {
+  private openDialog(event: EditEvent<AddressMember>, action: EditAction): void {
    const dialogData: EditDialogData<Address> = {
      title: 'Address Title',
      component: AddressEditorComponent,
@@ -75,8 +71,8 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
      action: action
     }
 
-    const dialogRef
-      = this.dialog.open<EditDialogComponent<Address>, EditDialogData<Address>>(
+    const dialogRef =
+      this.dialog.open<EditDialogComponent<Address>, EditDialogData<Address>>(
         EditDialogComponent<Address>, {data: dialogData});
 
     dialogRef.afterClosed().subscribe({
@@ -100,8 +96,8 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
     });
   }
 
-  private deleteEmail(idx: number) {
-    this.svc.deleteAddress(idx).subscribe({
+  private deleteEmail(id: number) {
+    this.svc.deleteAddress(id).subscribe({
       next: () => this.getCurrentPage().subscribe({
         next: data => this.processPageData(data),
         error: (err: HttpErrorResponse)=> this.processRequestError(err)
