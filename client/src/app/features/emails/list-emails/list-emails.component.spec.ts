@@ -364,7 +364,7 @@ describe('ListEmailsComponent', () => {
         dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
         emailSvcMock.updateEmail.and.returnValue(of(dialogResult.context));
         const expected = component.datasource().data;
-        const spy = emailSvcMock.getPagedData.and.returnValue(throwError(() => error));
+        emailSvcMock.getPagedData.and.returnValue(throwError(() => error));
 
         component.onEditClick(editEvent);
         tick();

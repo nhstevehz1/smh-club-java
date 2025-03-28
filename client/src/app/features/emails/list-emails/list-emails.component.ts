@@ -1,19 +1,16 @@
-import {AfterViewInit, Component, computed, OnInit, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Email, EmailMember} from "../models/email";
 import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
 import {EmailService} from "../services/email.service";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {first, flatMap, merge, mergeMap, Observable} from "rxjs";
+import {first, merge, mergeMap, Observable} from "rxjs";
 import {startWith, switchMap} from "rxjs/operators";
-import {MatDialog} from '@angular/material/dialog';
-import {EmailEditorComponent} from '../email-editor/email-editor.component';
 import {AuthService} from '../../../core/auth/services/auth.service';
-import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
 import {HttpErrorResponse} from '@angular/common/http';
 import {PagedData} from '../../../shared/models/paged-data';
-import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '../../../shared/components/edit-dialog/models';
+import {EditAction, EditDialogResult, EditEvent} from '../../../shared/components/edit-dialog/models';
 import {EmailEditDialogService} from '../services/email-edit-dialog.service';
 
 @Component({

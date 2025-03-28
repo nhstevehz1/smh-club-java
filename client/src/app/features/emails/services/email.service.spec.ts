@@ -3,8 +3,7 @@ import {EmailService} from "./email.service";
 import {provideHttpClient} from "@angular/common/http";
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {PageRequest} from "../../../shared/models/page-request";
-import {EmailCreate} from '../models/email';
-import {generateEmail, generateEmailCreate, generateEmailMember} from '../test/email-test';
+import {generateEmail, generateEmailCreate} from '../test/email-test';
 
 describe('EmailServiceService', () => {
   let service: EmailService;
