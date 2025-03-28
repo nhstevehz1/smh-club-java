@@ -5,7 +5,7 @@ import {HttpTestingController, provideHttpClientTesting} from "@angular/common/h
 import {PageRequest} from "../../../shared/models/page-request";
 import {generateEmail, generateEmailCreate} from '../test/email-test';
 
-describe('EmailServiceService', () => {
+describe('EmailService', () => {
   let service: EmailService;
   let controller: HttpTestingController;
   const baseUri = '/api/v1/emails';
