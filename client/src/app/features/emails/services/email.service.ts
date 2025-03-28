@@ -8,11 +8,13 @@ import {map} from "rxjs/operators";
 import {EmailType} from "../models/email-type";
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {BaseApiService} from '../../../shared/services/base-api-service';
 import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models/column-def';
+import {BaseApiService} from '../../../shared/services/base-api-service';
+import {EditAction, EditDialogInput, EditEvent} from '../../../shared/components/edit-dialog/models';
+import {EmailEditorComponent} from '../email-editor/email-editor.component';
 
 @Injectable()
-export class EmailService extends BaseApiService {
+export class EmailService extends BaseApiService<Email> {
   private  BASE_API = '/api/v1/emails';
 
   constructor(private http: HttpClient,
@@ -20,7 +22,7 @@ export class EmailService extends BaseApiService {
     super();
   }
 
-  getEmails(pageRequest: PageRequest): Observable<PagedData<EmailMember>> {
+  getPagedData(pageRequest: PageRequest): Observable<PagedData<EmailMember>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? this.BASE_API : this.BASE_API + query;
 
@@ -65,21 +67,28 @@ export class EmailService extends BaseApiService {
     });
   }
 
+  generateEmailDialogInput(title: string, event: EditEvent<Email>, action: EditAction): EditDialogInput<Email> {
+    return {
+      title: title,
+      component: EmailEditorComponent,
+      form: this.generateEmailForm(),
+      context: event.data as Email,
+      action: action
+    }
+  }
+
   getColumnDefs(): ColumnDef<EmailMember>[] {
-    return [
-      {
+    return [{
         columnName: 'email',
         displayName: 'emails.list.columns.email',
         isSortable: true,
         cell:(element: EmailMember) => `${element.email}`
-      },
-      {
+      }, {
         columnName: 'email_type',
         displayName: 'emails.list.columns.emailType',
         isSortable: false,
         cell:(element: EmailMember) => this.emailTypeMap.get(element.email_type)
-      },
-      {
+      }, {
         columnName: 'full_name',
         displayName: 'emails.list.columns.fullName',
         isSortable: true,

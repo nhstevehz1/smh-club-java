@@ -3,7 +3,8 @@ import {EmailService} from "./email.service";
 import {provideHttpClient} from "@angular/common/http";
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {PageRequest} from "../../../shared/models/page-request";
-import {generateEmailUpdate} from "../test/email-test";
+import {EmailCreate} from '../models/email';
+import {generateEmail, generateEmailCreate, generateEmailMember} from '../test/email-test';
 
 describe('EmailServiceService', () => {
   let service: EmailService;
@@ -28,10 +29,10 @@ describe('EmailServiceService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call api with no parameters when page request is empty', () => {
+  it('should call GET api with no parameters when page request is empty', () => {
     const pageRequest: PageRequest = PageRequest.of(undefined, undefined);
 
-    service.getEmails(pageRequest).subscribe();
+    service.getPagedData(pageRequest).subscribe();
 
     const req = controller.expectOne(baseUri);
     expect(req.request.method).toBe('GET');
@@ -40,11 +41,11 @@ describe('EmailServiceService', () => {
     controller.verify();
   });
 
-  it('should call api with parameters when page request is populated', () => {
+  it('should call GET api with parameters when page request is populated', () => {
     const pageRequest: PageRequest = PageRequest.of(0, 0);
     const uri = baseUri + pageRequest.createQuery();
 
-    service.getEmails(pageRequest).subscribe();
+    service.getPagedData(pageRequest).subscribe();
 
     const req = controller.expectOne(uri);
     expect(req.request.method).toBe('GET');
@@ -53,19 +54,50 @@ describe('EmailServiceService', () => {
     controller.verify();
   });
 
-  it('should return email create form', () => {
-    const form = service.generateCreateForm();
+  it('should call POST api', () =>{
+    const emailCreate = generateEmailCreate();
+
+    service.createEmail(emailCreate).subscribe();
+
+    const req = controller.expectOne(baseUri);
+    expect(req.request.method).toBe('POST');
+
+    req.flush([false, true, false]);
+    controller.verify();
+  });
+
+  it('should call PUT api', () =>{
+    const email = generateEmail();
+    const uri = `${baseUri}/${email.id}`;
+
+    service.updateEmail(email).subscribe();
+
+    const req = controller.expectOne(uri);
+    expect(req.request.method).toBe('PUT');
+
+    req.flush([false, true, false]);
+    controller.verify();
+  });
+
+  it('should call DELETE api', () =>{
+    const uri = `${baseUri}/0`;
+
+    service.deleteEmail(0).subscribe();
+
+    const req = controller.expectOne(uri);
+    expect(req.request.method).toBe('DELETE');
+
+    req.flush([false, true, false]);
+    controller.verify();
+  });
+
+  it('should return email form', () => {
+    const form = service.generateEmailForm();
     expect(form).toBeTruthy();
   });
 
-  it('should return email update form', () => {
-    const form = service.generateUpdateForm(generateEmailUpdate());
-    expect(form).toBeTruthy();
-  });
-
-  it('should return correct email update form', () => {
-    const model = generateEmailUpdate();
-    const val = service.generateUpdateForm(model).value;
-    expect(val).toEqual(model);
+  it('should return columnDefs', () => {
+    const columnDefs = service.getColumnDefs();
+    expect(columnDefs).toBeTruthy();
   });
 });

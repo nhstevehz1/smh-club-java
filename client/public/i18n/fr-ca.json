@@ -92,6 +92,11 @@
         "email": "Courriel",
         "emailType": "Type",
         "fullName": "Membre"
+      },
+      "dialog": {
+        "create": "Créer un courriel",
+        "delete": "Supprimer le courrier électronique ?",
+        "update": "Mise à jour du courrier électronique"
       }
     },
     "type": {

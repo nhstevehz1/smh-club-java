@@ -92,6 +92,11 @@
         "email": "Email",
         "emailType": "Type",
         "fullName": "Member"
+      },
+      "dialog": {
+        "create": "Create email",
+        "delete": "Delete email?",
+        "update": "Update email"
       }
     },
     "type": {

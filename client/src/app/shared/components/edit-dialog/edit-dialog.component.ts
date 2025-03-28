@@ -1,6 +1,6 @@
 import {Component, computed, Inject, Optional, Signal, signal, WritableSignal} from '@angular/core';
 import {FormModelGroup} from '../base-editor/form-model-group';
-import {EditAction, EditDialogData} from './models/edit-event';
+import {EditAction, EditDialogInput} from './models';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -40,10 +40,10 @@ export class EditDialogComponent<T> {
   context: WritableSignal<T>;
   isDeleteAction: WritableSignal<boolean>;
 
-  private readonly dialogData: EditDialogData<T>;
+  private readonly dialogData: EditDialogInput<T>;
 
-  constructor(public dialogRef: MatDialogRef<EditDialogComponent<T>, EditDialogData<T>>,
-              @Optional() @Inject(MAT_DIALOG_DATA) public data: EditDialogData<T>){
+  constructor(public dialogRef: MatDialogRef<EditDialogComponent<T>, EditDialogInput<T>>,
+              @Optional() @Inject(MAT_DIALOG_DATA) public data: EditDialogInput<T>){
 
     this.dialogData = {...data};
 
@@ -71,7 +71,6 @@ export class EditDialogComponent<T> {
 
   onSave(): void {
     this.dialogData.context = this.editForm().value as T;
-    console.debug('onSave', this.dialogData.context);
     this.closeDialog(this.dialogData);
   }
 
@@ -79,7 +78,7 @@ export class EditDialogComponent<T> {
     this.closeDialog(this.dialogData);
   }
 
-  private closeDialog(result: EditDialogData<T>): void {
+  private closeDialog(result: EditDialogInput<T>): void {
     this.dialogRef.close(result);
   }
 
