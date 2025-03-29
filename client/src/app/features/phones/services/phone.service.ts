@@ -8,7 +8,6 @@ import {BaseApiService} from '../../../shared/services';
 
 @Injectable()
 export class PhoneService extends BaseApiService<PhoneMember, PhoneCreate, Phone> {
-  private  BASE_API = '/api/v1/phones';
 
   constructor(http: HttpClient) {
     super('/api/v1/phones', http);
