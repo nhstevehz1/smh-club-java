@@ -1,7 +1,7 @@
 import {ColumnDef} from "../sortable-pageable-table/models";
 import {SortDirection} from "@angular/material/sort";
 import {PageRequest, SortDef, PagedData, FullName} from "../../models";
-import {computed, Directive, Signal, signal} from '@angular/core';
+import {computed, Directive, signal} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from '../../../core/auth/services/auth.service';

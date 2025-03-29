@@ -1,4 +1,4 @@
-import {Component, Directive} from '@angular/core';
+import {Component} from '@angular/core';
 import {SortDirection} from "@angular/material/sort";
 import {BaseTableComponent} from '../base-table-component';
 import {AuthService} from '../../../../core/auth/services/auth.service';
