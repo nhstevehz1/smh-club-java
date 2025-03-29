@@ -1,20 +1,29 @@
-import {BaseTestTableComponent} from "./base-test-table-component";
-import {FullName} from "../../models/full-name";
+import {FullName} from "../../models";
 import {AuthService} from '../../../core/auth/services/auth.service';
 import SpyObj = jasmine.SpyObj;
-import {PermissionType} from '../../../core/auth/models/permission-type';
-
-export interface TestType {
-  test: string;
-}
+import {MockTableComponent} from './test-support/mock-table-component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 describe('BaseTableComponent', () => {
-  let component: BaseTestTableComponent<TestType>;
-  let authServiceMock: SpyObj<AuthService>;
+  let fixture: ComponentFixture<MockTableComponent>;
+  let component: MockTableComponent;
+  let authSvcMock: SpyObj<AuthService>;
 
-  beforeEach(() => {
-    authServiceMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
-    //component = new BaseTestTableComponent<TestType>(authServiceMock);
+  beforeEach(async () => {
+    authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
+
+    await TestBed.configureTestingModule({
+      imports: [MockTableComponent],
+      providers: [
+        {provide: AuthService, useValue: {}}
+      ]
+    }).overrideProvider(AuthService, {useValue: authSvcMock})
+      .compileComponents();
+
+    authSvcMock.hasPermission.and.returnValue(true);
+
+    fixture = TestBed.createComponent(MockTableComponent);
+    component = fixture.componentInstance;
   });
 
   it('when getPageRequest, should return PageRequest', () => {
@@ -23,7 +32,7 @@ describe('BaseTableComponent', () => {
      const sort = 'field';
      const direction = 'asc';
 
-     const pr = component.getPageRequestExternal(pageIndex, pageSize, sort, direction);
+     const pr = component.processPageRequestExternal(pageIndex, pageSize, sort, direction);
      expect(pr).toBeDefined();
      expect(pr.page).toBe(pageIndex);
      expect(pr.size).toBe(pageSize);
@@ -47,9 +56,7 @@ describe('BaseTableComponent', () => {
     expect(result).toBe('Last Jr., First Middle');
   });
 
-  it('should call AuthService.hasPermission', () => {
-    const spy = authServiceMock.hasPermission.and.stub();
-
-    expect(spy).toHaveBeenCalledOnceWith(PermissionType.write);
+  it('hasWriteRole should be true', () => {
+    expect(component.hasWriteRole()).toBeTrue();
   });
 });

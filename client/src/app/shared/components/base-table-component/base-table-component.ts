@@ -1,26 +1,25 @@
-import {ColumnDef} from "../sortable-pageable-table/models/column-def";
+import {ColumnDef} from "../sortable-pageable-table/models";
 import {SortDirection} from "@angular/material/sort";
-import {PageRequest, SortDef} from "../../models/page-request";
-import {FullName} from "../../models/full-name";
+import {PageRequest, SortDef, PagedData, FullName} from "../../models";
 import {computed, Directive, Signal, signal} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {PagedData} from '../../models/paged-data';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from '../../../core/auth/services/auth.service';
 import {PermissionType} from '../../../core/auth/models/permission-type';
+
 
 @Directive()
 export abstract class BaseTableComponent<T> {
   resultsLength = signal(0);
   datasource = signal(new MatTableDataSource<T>());
-  columns = signal<ColumnDef<T>[]>([]);
-  hasWriteRole: Signal<boolean> = signal(false);
+  hasWriteRole = computed(() => this.auth.hasPermission(PermissionType.write));
+  columns= signal<ColumnDef<T>[]>([]);
 
-  constructor(auth: AuthService) {
-    this.hasWriteRole = computed(() => auth.hasPermission(PermissionType.write));
-  }
+  protected constructor(protected auth: AuthService) {}
+
   protected getPageRequest(pageIndex?: number, pageSize?: number,
                            sort?: string, direction?: SortDirection ): PageRequest {
+
     const pr = PageRequest.of(
         pageIndex,
         pageSize,
