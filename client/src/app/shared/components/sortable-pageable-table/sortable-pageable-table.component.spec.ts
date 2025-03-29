@@ -65,11 +65,11 @@ describe('SortablePageableTableComponent', () => {
 
   describe('test component inputs', () => {
 
-    fit('should create', () => {
+    it('should create', () => {
       expect(component).toBeTruthy();
     });
 
-    fit('should input columns', () => {
+    it('should input columns', () => {
       expect(component.columns()).toEqual(columnDefs);
 
       columnDefs.forEach(columnDef => {
@@ -77,32 +77,32 @@ describe('SortablePageableTableComponent', () => {
       })
     });
 
-    fit('should return column names', () => {
+    it('should return column names', () => {
       const columnNames = component.columns().map(c => c.columnName);
       expect(component.columnNames()).toEqual(columnNames);
     });
 
-    fit('table should bind dataSource input', () => {
+    it('table should bind dataSource input', () => {
       expect(component.dataSource()).toBeTruthy();
     })
 
-    fit('table datasource should have items', async () => {
+    it('table datasource should have items', async () => {
       fixture.componentRef.setInput('dataSource', new MatTableDataSource<TestModel>(data));
       fixture.detectChanges();
       await fixture.whenStable();
       expect(component.dataSource().data.length).toEqual(data.length);
     })
 
-    fit('should should bind paginator inputs', () =>  {
+    it('should should bind paginator inputs', () =>  {
       expect(component.paginator).toBeTruthy();
     });
 
-    fit('paginator should contain default size options', () => {
+    it('paginator should contain default size options', () => {
       const defaultSizes = [5,10,25,100];
       expect(component.paginator.pageSizeOptions).toEqual(defaultSizes);
     });
 
-    fit('paginator should contain custom size options', async () => {
+    it('paginator should contain custom size options', async () => {
       const customSizes = [6,11,26,51];
       fixture.componentRef.setInput('pageSizes', customSizes);
       fixture.detectChanges();
@@ -110,12 +110,12 @@ describe('SortablePageableTableComponent', () => {
       expect(component.paginator.pageSizeOptions).toEqual(customSizes);
     })
 
-    fit('paginator should contain default size', () => {
+    it('paginator should contain default size', () => {
       fixture.detectChanges();
       expect(component.paginator.pageSize).toEqual(5);
     });
 
-    fit('paginator should contain default page index', () => {
+    it('paginator should contain default page index', () => {
       fixture.detectChanges();
       expect(component.paginator.pageIndex).toEqual(0);
     })
@@ -123,18 +123,18 @@ describe('SortablePageableTableComponent', () => {
 
   describe('render table',  () => {
 
-    fit('should render table', async () => {
+    it('should render table', async () => {
       const tableHarness = await loader.getHarness(MatTableHarness);
       expect(tableHarness).toBeTruthy();
     });
 
-    fit('should render table with no columns', async () => {
+    it('should render table with no columns', async () => {
       const tableHarness = await loader.getHarness(MatTableHarness);
       const cellTexts = await tableHarness.getCellTextByIndex();
       expect(cellTexts).toEqual([]);
     })
 
-    fit('should render table with correct column names and text', async () => {
+    it('should render table with correct column names and text', async () => {
       const columnHarnesses = await loader.getAllHarnesses(MatHeaderCellHarness);
       expect(columnHarnesses.length).toEqual(columnHarnesses.length);
 
@@ -146,7 +146,7 @@ describe('SortablePageableTableComponent', () => {
       }
     });
 
-    fit('should render table with correct header row', async () => {
+    it('should render table with correct header row', async () => {
       const headerRowHarness = await loader.getHarness(MatHeaderRowHarness);
       expect(headerRowHarness).toBeTruthy();
 
@@ -159,13 +159,13 @@ describe('SortablePageableTableComponent', () => {
       }
     });
 
-    fit('should render table with sortable columns', async () => {
+    it('should render table with sortable columns', async () => {
       const sortHeaderHarness = await loader.getAllHarnesses(MatSortHeaderHarness);
       const sortableColumns = columnDefs.filter((columnDef) =>  columnDef.isSortable).length;
       expect(sortHeaderHarness.length).toEqual(sortableColumns);
     });
 
-    fit('should set active sort', async () => {
+    it('should set active sort', async () => {
       fixture.detectChanges();
 
       // no initial active sort
