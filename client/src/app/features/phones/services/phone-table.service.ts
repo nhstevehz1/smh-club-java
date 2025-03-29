@@ -1,0 +1,54 @@
+import { Injectable } from '@angular/core';
+import {BaseTableService} from '../../../shared/components/sortable-pageable-table/services';
+import {PhoneMember, PhoneType} from '../models';
+import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PhoneTableService extends BaseTableService<PhoneMember> {
+
+  constructor() {
+    super();
+  }
+
+  getColumnDefs(): ColumnDef<PhoneMember>[] {
+    return [
+      {
+        columnName: 'phone_number',
+        displayName: 'phones.list.columns.phoneNumber',
+        isSortable: true,
+        cell: (element: PhoneMember) => this.getPhoneNumber(element)
+      },
+      {
+        columnName: 'phone_type',
+        displayName: 'phones.list.columns.phoneType',
+        isSortable: false,
+        cell: (element: PhoneMember) => this.phoneTypeMap.get(element.phone_type)
+      },
+      {
+        columnName: 'full_name',
+        displayName: 'phones.list.columns.fullName',
+        isSortable: true,
+        cell: (element: PhoneMember) => this.getFullName(element.full_name)
+      },
+    ];
+  }
+
+  private getPhoneNumber(phoneMember: PhoneMember): string {
+    const code = phoneMember.country_code;
+    const number = phoneMember.phone_number;
+
+    // format phone number exp: (555) 555-5555
+    const regex = /^(\d{3})(\d{3})(\d{4})$/;
+    const formated = number.replace(regex, '($1) $2-$3');
+
+    return `+${code} ${formated}`;
+  }
+
+  private phoneTypeMap = new Map<PhoneType, string>([
+    [PhoneType.Work, 'phones.type.work'],
+    [PhoneType.Home, 'phones.type.home'],
+    [PhoneType.Mobile, 'phones.type.mobile']
+  ]);
+}
