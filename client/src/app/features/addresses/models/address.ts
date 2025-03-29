@@ -1,5 +1,5 @@
-import {AddressType} from "./address-type";
-import {FullName} from "../../../shared/models/full-name";
+import {AddressType} from './address-type';
+import {FullName} from '../../../shared/models';
 
 export interface AddressCreate {
     address1: string;
@@ -18,7 +18,3 @@ export interface Address extends AddressCreate {
 export interface AddressMember extends Address {
     full_name: FullName;
 }
-
-//export interface AddressCreate extends Address {}
-
-//export interface AddressUpdate extends AddressDetails {}

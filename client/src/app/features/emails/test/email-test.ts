@@ -1,10 +1,10 @@
-import {PagedData} from "../../../shared/models/paged-data";
+import {FormControl, FormGroup} from "@angular/forms";
+import {PagedData} from "../../../shared/models";
 import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
 import {Email, EmailCreate, EmailMember} from "../models/email";
 import {EmailType} from "../models/email-type";
-import {FormControl, FormGroup} from "@angular/forms";
 import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models/column-def';
+import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models/';
 import {EditAction, EditDialogInput} from '../../../shared/components/edit-dialog/models';
 import {EmailEditorComponent} from '../email-editor/email-editor.component';
 

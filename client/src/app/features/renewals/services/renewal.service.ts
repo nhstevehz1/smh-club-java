@@ -1,29 +1,22 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {PageRequest} from "../../../shared/models/page-request";
+import {PagedData, PageRequest} from "../../../shared/models";
 import {Observable} from "rxjs";
-import {PagedData} from "../../../shared/models/paged-data";
-import {Renewal, RenewalCreate, RenewalMember} from "../models/renewal";
+import {Renewal, RenewalCreate, RenewalMember} from "../models";
 import {map} from 'rxjs/operators';
 import {DateTime} from 'luxon';
-import {FormModelGroup} from '../../../shared/components/base-editor/form-model-group';
-import {NonNullableFormBuilder, Validators} from '@angular/forms';
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models/column-def';
-import {BaseApiService} from '../../../shared/services/base-api-service';
+import {BaseApiService} from '../../../shared/services';
+
 
 @Injectable()
-export class RenewalService extends BaseApiService{
-  private  BASE_API = '/api/v1/renewals';
+export class RenewalService extends BaseApiService<RenewalMember, RenewalCreate, Renewal>{
 
-  constructor(private http: HttpClient, private fb: NonNullableFormBuilder) {
-    super();
+  constructor(http: HttpClient) {
+    super('/api/v1/renewals', http);
   }
 
-  public getRenewals(pageRequest: PageRequest): Observable<PagedData<RenewalMember>> {
-    const query = pageRequest.createQuery();
-    const uri = query == null ? this.BASE_API : this.BASE_API + query;
-
-    return this.http.get<PagedData<RenewalMember>>(uri).pipe(
+  override getPagedData(pageRequest: PageRequest): Observable<PagedData<RenewalMember>> {
+    return super.getPagedData(pageRequest).pipe(
       map(pd => {
         if (pd && pd._content) {
           pd._content.forEach(r => {
@@ -36,8 +29,8 @@ export class RenewalService extends BaseApiService{
     );
   }
 
-  createRenewal(create: RenewalCreate): Observable<Renewal> {
-    return this.http.post<Renewal>(this.BASE_API, create).pipe(
+  override create(create: RenewalCreate): Observable<Renewal> {
+    return super.create(create).pipe(
       map(data => {
         const date = data.renewal_date as unknown as string;
         data.renewal_date = DateTime.fromISO(date);
@@ -46,8 +39,8 @@ export class RenewalService extends BaseApiService{
     );
   }
 
-  updateRenewal(update: Renewal): Observable<Renewal> {
-    return this.http.post<Renewal>(`${this.BASE_API}/${update.id}`, update).pipe(
+  override update(id: number, update: Renewal): Observable<Renewal> {
+    return super.update(id, update).pipe(
       map(data => {
         const date = data.renewal_date as unknown as string;
         data.renewal_date = DateTime.fromISO(date);
@@ -56,39 +49,7 @@ export class RenewalService extends BaseApiService{
     );
   }
 
-  deleteRenewal(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.BASE_API}/${id}`);
-  }
-
-  generateRenewalForm(): FormModelGroup<Renewal> {
-    return this.fb.group({
-      id: [0],
-      member_id: [0],
-      renewal_date: [DateTime.now(), [Validators.required]],
-      renewal_year: [DateTime.now().year, [Validators.required]]
-    });
-  }
-
-  getColumnDefs(): ColumnDef<RenewalMember>[] {
-    return [
-      {
-        columnName: 'renewal_date',
-        displayName: 'renewals.list.columns.renewalDate',
-        isSortable: true,
-        cell: (element: RenewalMember) => `${element.renewal_date}`,
-      },
-      {
-        columnName: 'renewal_year',
-        displayName: 'renewals.list.columns.renewalYear',
-        isSortable: true,
-        cell: (element: RenewalMember) => `${element.renewal_year}`
-      },
-      {
-        columnName: 'full_name',
-        displayName: 'renewals.list.columns.fullName',
-        isSortable: true,
-        cell: (element: RenewalMember) => this.getFullName(element.full_name)
-      }
-    ];
+  override delete(id: number): Observable<void> {
+    return super.delete(id);
   }
 }
