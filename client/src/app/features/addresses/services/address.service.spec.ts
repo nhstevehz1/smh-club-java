@@ -18,11 +18,11 @@ describe('AddressService', () => {
     service = TestBed.inject(AddressService);
   });
 
-  fit('should be created', () => {
+  it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  fit('should set baseUri to /api/v1/addresses', () => {
+  it('should set baseUri to /api/v1/addresses', () => {
     const baseUri = '/api/v1/addresses';
     expect(service.baseUri).toBe(baseUri);
   })
