@@ -1,5 +1,5 @@
 import {SortablePageableTableComponent} from './sortable-pageable-table.component';
-import {ColumnDef} from "./models/column-def";
+import {ColumnDef} from "./models";
 import {DateTime} from "luxon";
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
@@ -65,11 +65,11 @@ describe('SortablePageableTableComponent', () => {
 
   describe('test component inputs', () => {
 
-    it('should create', () => {
+    fit('should create', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should input columns', () => {
+    fit('should input columns', () => {
       expect(component.columns()).toEqual(columnDefs);
 
       columnDefs.forEach(columnDef => {
@@ -77,32 +77,32 @@ describe('SortablePageableTableComponent', () => {
       })
     });
 
-    it('should return column names', () => {
+    fit('should return column names', () => {
       const columnNames = component.columns().map(c => c.columnName);
       expect(component.columnNames()).toEqual(columnNames);
     });
 
-    it('table should bind dataSource input', () => {
+    fit('table should bind dataSource input', () => {
       expect(component.dataSource()).toBeTruthy();
     })
 
-    it('table datasource should have items', async () => {
+    fit('table datasource should have items', async () => {
       fixture.componentRef.setInput('dataSource', new MatTableDataSource<TestModel>(data));
       fixture.detectChanges();
       await fixture.whenStable();
       expect(component.dataSource().data.length).toEqual(data.length);
     })
 
-    it('should should bind paginator inputs', () =>  {
+    fit('should should bind paginator inputs', () =>  {
       expect(component.paginator).toBeTruthy();
     });
 
-    it('paginator should contain default size options', () => {
+    fit('paginator should contain default size options', () => {
       const defaultSizes = [5,10,25,100];
       expect(component.paginator.pageSizeOptions).toEqual(defaultSizes);
     });
 
-    it('paginator should contain custom size options', async () => {
+    fit('paginator should contain custom size options', async () => {
       const customSizes = [6,11,26,51];
       fixture.componentRef.setInput('pageSizes', customSizes);
       fixture.detectChanges();
@@ -110,12 +110,12 @@ describe('SortablePageableTableComponent', () => {
       expect(component.paginator.pageSizeOptions).toEqual(customSizes);
     })
 
-    it('paginator should contain default size', () => {
+    fit('paginator should contain default size', () => {
       fixture.detectChanges();
       expect(component.paginator.pageSize).toEqual(5);
     });
 
-    it('paginator should contain default page index', () => {
+    fit('paginator should contain default page index', () => {
       fixture.detectChanges();
       expect(component.paginator.pageIndex).toEqual(0);
     })
@@ -123,18 +123,18 @@ describe('SortablePageableTableComponent', () => {
 
   describe('render table',  () => {
 
-    it('should render table', async () => {
+    fit('should render table', async () => {
       const tableHarness = await loader.getHarness(MatTableHarness);
       expect(tableHarness).toBeTruthy();
     });
 
-    it('should render table with no columns', async () => {
+    fit('should render table with no columns', async () => {
       const tableHarness = await loader.getHarness(MatTableHarness);
       const cellTexts = await tableHarness.getCellTextByIndex();
       expect(cellTexts).toEqual([]);
     })
 
-    it('should render table with correct column names and text', async () => {
+    fit('should render table with correct column names and text', async () => {
       const columnHarnesses = await loader.getAllHarnesses(MatHeaderCellHarness);
       expect(columnHarnesses.length).toEqual(columnHarnesses.length);
 
@@ -146,7 +146,7 @@ describe('SortablePageableTableComponent', () => {
       }
     });
 
-    it('should render table with correct header row', async () => {
+    fit('should render table with correct header row', async () => {
       const headerRowHarness = await loader.getHarness(MatHeaderRowHarness);
       expect(headerRowHarness).toBeTruthy();
 
@@ -159,13 +159,13 @@ describe('SortablePageableTableComponent', () => {
       }
     });
 
-    it('should render table with sortable columns', async () => {
+    fit('should render table with sortable columns', async () => {
       const sortHeaderHarness = await loader.getAllHarnesses(MatSortHeaderHarness);
       const sortableColumns = columnDefs.filter((columnDef) =>  columnDef.isSortable).length;
       expect(sortHeaderHarness.length).toEqual(sortableColumns);
     });
 
-    it('should set active sort', async () => {
+    fit('should set active sort', async () => {
       fixture.detectChanges();
 
       // no initial active sort

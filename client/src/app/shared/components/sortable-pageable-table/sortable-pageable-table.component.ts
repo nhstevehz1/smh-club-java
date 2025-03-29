@@ -1,13 +1,13 @@
-import {AfterViewInit, Component, computed, input, output, ViewChild} from '@angular/core';
-import {ColumnDef} from "./models/column-def";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {MatSort, MatSortModule} from "@angular/material/sort";
-import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
-import {CustomMatPaginatorIntlService} from "./services/custom-mat-paginator-intl.service";
-import {TranslatePipe} from "@ngx-translate/core";
+import {AfterViewInit, Component, computed, input, output, Signal, ViewChild} from '@angular/core';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {EditEvent} from '../edit-dialog/models/edit-event';
+import {ColumnDef} from './models';
+import {TranslatePipe} from '@ngx-translate/core';
+import {CustomMatPaginatorIntlService} from './services';
+import {EditEvent} from '../edit-dialog/models';
 
 @Component({
   selector: 'app-sortable-pageable-table',
@@ -19,8 +19,7 @@ import {EditEvent} from '../edit-dialog/models/edit-event';
     MatIconModule,
     MatButtonModule
   ],
-  providers: [
-    {
+  providers: [{
       provide: MatPaginatorIntl,
       useClass: CustomMatPaginatorIntlService
     }
@@ -42,13 +41,18 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
     this.showViewButton() || (this.hasWriteRole() && (this.showEditButton() || this.showDeleteButton()))
   );
 
-  columnNames= computed<string[]>(() => {
-    const names = this.columns().map(c => c.columnName);
-    if (this.shouldShowActions()) {
-      names.push('action');
-    }
-    return names;
-  });
+  columnNames: Signal<string[]>;
+
+  constructor() {
+    this.columnNames =  computed<string[]>(() => {
+      const names = this.columns().map(c => c.columnName);
+      if (this.shouldShowActions()) {
+        names.push('action');
+      }
+      return names;
+    });
+  }
+
 
   editClicked = output<EditEvent<T>>();
   deleteClicked = output<EditEvent<T>>();
