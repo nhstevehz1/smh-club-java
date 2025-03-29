@@ -47,6 +47,11 @@
         "fullName": "Member",
         "postalCode": "Postal code",
         "state": "State"
+      },
+      "dialog": {
+        "create": "Create address",
+        "delete": "Delete address?",
+        "update": "Update address"
       }
     },
     "type": {
@@ -262,6 +267,11 @@
         "fullName": "Member",
         "phoneNumber": "Phone",
         "phoneType": "Type"
+      },
+      "dialog": {
+        "create": "Create phone",
+        "delete": "Delete phone?",
+        "update": "Update phone"
       }
     },
     "type": {
@@ -276,6 +286,11 @@
         "fullName": "Member",
         "renewalDate": "Renewal date",
         "renewalYear": "For year"
+      },
+      "dialog": {
+        "create": "Create renewal",
+        "delete": "Delete renewal?",
+        "update": "Update renewal"
       }
     }
   },
