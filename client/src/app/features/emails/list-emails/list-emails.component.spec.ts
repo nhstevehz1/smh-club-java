@@ -5,7 +5,7 @@ import {HttpErrorResponse, provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {
-  generateColumnDefs,
+  generateEmailColumnDefs,
   generateEmail,
   generateEmailDialogInput,
   generateEmailMember,
@@ -30,7 +30,7 @@ describe('ListEmailsComponent', () => {
   let authSvcMock: jasmine.SpyObj<AuthService>;
   let dialogSvcMock: jasmine.SpyObj<EmailEditDialogService>;
 
-  const columnDefs = generateColumnDefs()
+  const columnDefs = generateEmailColumnDefs()
 
   beforeEach(async () => {
     emailSvcMock = jasmine.createSpyObj('EmailService',
@@ -83,6 +83,15 @@ describe('ListEmailsComponent', () => {
         await fixture.whenStable();
 
         expect(spy).toHaveBeenCalled();
+      });
+
+      it('should create correct column list', async () => {
+        emailSvcMock.getColumnDefs.and.returnValue(columnDefs);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.columns()).toEqual(columnDefs);
       });
     });
 

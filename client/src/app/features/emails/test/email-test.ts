@@ -72,7 +72,7 @@ export function generateEmailDialogInput(context: Email, action: EditAction): Ed
   }
 }
 
-export function generateColumnDefs(): ColumnDef<EmailMember>[] {
+export function generateEmailColumnDefs(): ColumnDef<EmailMember>[] {
   return [{
     columnName: 'email',
     displayName: 'emails.list.columns.email',
