@@ -1,9 +1,11 @@
 import {defer} from "rxjs";
-import {PagedData} from "../models/paged-data";
+
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {MatInputHarness} from "@angular/material/input/testing";
 import {MatSelectHarness} from "@angular/material/select/testing";
 import {MatDatepickerInputHarness} from "@angular/material/datepicker/testing";
+
+import {PagedData} from '@app/shared/services/api-service';
 
 export function asyncData<T>(data: T) {
     return defer(() => Promise.resolve(data));
