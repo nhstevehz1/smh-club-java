@@ -1,8 +1,10 @@
 import {Component, input, output} from '@angular/core';
+
 import {MatCardTitle} from "@angular/material/card";
 import {MatFabButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
+
 import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
