@@ -1,6 +1,7 @@
 import {Component, computed, Inject, Optional, Signal, signal, WritableSignal} from '@angular/core';
-import {FormModelGroup} from '../base-editor/form-model-group';
-import {EditAction, EditDialogInput} from './models';
+import {ReactiveFormsModule} from '@angular/forms';
+import {NgComponentOutlet} from '@angular/common';
+
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -11,10 +12,11 @@ import {
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
-import {ReactiveFormsModule} from '@angular/forms';
-import {NgComponentOutlet} from '@angular/common';
-import {TranslatePipe} from '@ngx-translate/core';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
+import {TranslatePipe} from '@ngx-translate/core';
+
+import {FormModelGroup} from '@app/shared/components/base-editor';
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -81,6 +83,4 @@ export class EditDialogComponent<T> {
   private closeDialog(result: EditDialogInput<T>): void {
     this.dialogRef.close(result);
   }
-
-  protected readonly EditAction = EditAction;
 }
