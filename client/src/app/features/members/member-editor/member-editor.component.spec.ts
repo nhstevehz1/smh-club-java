@@ -1,20 +1,23 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {MemberEditorComponent} from './member-editor.component';
-import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Member} from "../models/member";
 import {FormControl, FormGroup} from "@angular/forms";
-import {DateTime} from "luxon";
+import {provideNoopAnimations} from "@angular/platform-browser/animations";
+
+import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
+import {MatFormFieldAppearance} from "@angular/material/form-field";
+
+import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
-import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {TranslateModule} from "@ngx-translate/core";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
+
+import {DateTime} from "luxon";
+import {TranslateModule} from "@ngx-translate/core";
+
+import {FormModelGroup} from "@app/shared/components/base-editor";
+import {getFormFieldValue} from "@app/shared/testing";
+import {EditorHeaderHarness} from "@app/shared/components/editor-header/testing";
+
+import {MemberEditorComponent, Member} from '@app/features/members';
 
 describe('MemberEditorComponent', () => {
   let component: MemberEditorComponent;
