@@ -1,13 +1,16 @@
 import {AfterViewInit, Component, computed, input, output, Signal, ViewChild} from '@angular/core';
+
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {ColumnDef} from './models';
+
 import {TranslatePipe} from '@ngx-translate/core';
-import {CustomMatPaginatorIntlService} from './services';
-import {EditEvent} from '../edit-dialog/models';
+
+import {EditEvent} from '@app/shared/components/edit-dialog';
+
+import {CustomMatPaginatorIntlService, ColumnDef} from '@app/shared/components/sortable-pageable-table';
 
 @Component({
   selector: 'app-sortable-pageable-table',
@@ -28,7 +31,7 @@ import {EditEvent} from '../edit-dialog/models';
   styleUrl: './sortable-pageable-table.component.scss'
 })
 export class SortablePageableTableComponent<T> implements AfterViewInit {
-  columns = input.required<ColumnDef<T>[]>();
+  columns = input<ColumnDef<T>[]>([]);
   dataSource = input.required<MatTableDataSource<T>>();
   pageSizes = input<number[]>([5,10,25,100]);
   pageSize = input<number>(5);
@@ -41,9 +44,16 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
     this.showViewButton() || (this.hasWriteRole() && (this.showEditButton() || this.showDeleteButton()))
   );
 
-  columnNames: Signal<string[]>;
+  columnNames = computed<string[]>(() => {
+    console.debug('columns', this.columns());
+    const names = this.columns().map(c => c.columnName);
+    if (this.shouldShowActions()) {
+      names.push('action');
+    }
+    return names;
+  });
 
-  constructor() {
+  /*constructor() {
     this.columnNames =  computed<string[]>(() => {
       const names = this.columns().map(c => c.columnName);
       if (this.shouldShowActions()) {
@@ -51,7 +61,7 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
       }
       return names;
     });
-  }
+  }*/
 
 
   editClicked = output<EditEvent<T>>();

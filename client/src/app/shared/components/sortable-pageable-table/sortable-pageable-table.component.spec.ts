@@ -1,16 +1,19 @@
-import {SortablePageableTableComponent} from './sortable-pageable-table.component';
-import {ColumnDef} from "./models";
-import {DateTime} from "luxon";
+import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {provideNoopAnimations} from "@angular/platform-browser/animations";
+
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {HarnessLoader} from "@angular/cdk/testing";
+
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {HarnessLoader} from "@angular/cdk/testing";
 import {MatHeaderCellHarness, MatHeaderRowHarness, MatTableHarness} from "@angular/material/table/testing";
 import {MatSortHarness, MatSortHeaderHarness} from "@angular/material/sort/testing";
+
+import {DateTime} from "luxon";
 import {TranslateModule} from "@ngx-translate/core";
+
+import {ColumnDef, SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
 
 export interface TestModel {
   a_string: string;
