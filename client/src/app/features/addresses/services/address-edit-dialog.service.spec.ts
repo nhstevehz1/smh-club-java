@@ -1,5 +1,6 @@
 import {TestBed} from '@angular/core/testing';
-import {AddressEditDialogService} from './address-edit-dialog.service';
+
+import {AddressEditDialogService} from '@app/features/addresses';
 
 describe('AddressEditDialogService', () => {
   let service: AddressEditDialogService;
