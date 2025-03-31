@@ -1,11 +1,12 @@
 import {FormControl, FormGroup} from "@angular/forms";
-import {PagedData} from "../../../shared/models";
-import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {Email, EmailCreate, EmailMember, EmailType} from "../models";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models/';
-import {EditAction, EditDialogInput} from '../../../shared/components/edit-dialog/models';
-import {EmailEditorComponent} from '../email-editor/email-editor.component';
+
+import {generatePagedData} from "app/shared/testing";
+import {FormModelGroup} from "@app/shared/components/base-editor";
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
+import {PagedData} from '@app/shared/services/api-service';
+
+import {EmailEditorComponent, Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails';
 
 export function generateEmailPagedData(page: number, size: number, total: number): PagedData<EmailMember> {
     const content = generateEmailList(size);
