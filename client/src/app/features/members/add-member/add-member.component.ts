@@ -1,20 +1,25 @@
-import {Component, signal} from '@angular/core';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {ReactiveFormsModule} from "@angular/forms";
+import {Router} from "@angular/router";
+import {HttpErrorResponse} from '@angular/common/http';
+
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
-import {ReactiveFormsModule} from "@angular/forms";
-import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatFormFieldAppearance, MatFormFieldModule} from "@angular/material/form-field";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {MembersService} from "../services/members.service";
-import {Router} from "@angular/router";
-import {OkCancelComponent} from "../../../shared/components/ok-cancel/ok-cancel.component";
+
 import {TranslatePipe} from "@ngx-translate/core";
-import {AddressService} from "../../addresses/services/address.service";
-import {EmailService} from "../../emails/services/email.service";
-import {PhoneService} from "../../phones/services/phone.service";
+
+import {OkCancelComponent} from "@app/shared/components/ok-cancel";
+import {FormModelGroup} from '@app/shared/components/base-editor';
+
+import {
+  MemberEditDialogService, MemberService, MemberTableService, Member, MemberCreate
+} from '@app/features/members';
 
 @Component({
   selector: 'app-create-member',
@@ -31,120 +36,62 @@ import {PhoneService} from "../../phones/services/phone.service";
     TranslatePipe
   ],
   providers: [
-      provideLuxonDateAdapter(),
-      MembersService,
-      AddressService,
-      EmailService,
-      PhoneService
+    provideLuxonDateAdapter(),
+    MemberService,
+    MemberTableService
   ],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss'
 })
 export class AddMemberComponent {
-/*
 
-    createFormSignal: WritableSignal<FormModelGroup<MemberCreate>>;
+  createForm: WritableSignal<FormModelGroup<Member>>;
 
-    memberFormComputed = computed(() =>
-        this.createFormSignal() as unknown as FormModelGroup<MemberCreate>);
+  fieldAppearance
+      = signal<MatFormFieldAppearance>('outline');
 
-    addressFormsComputed = computed(() =>
-        this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<AddressCreate>>);
+  errorMessage = signal<string | null>(null);
 
-    /!*
-   emailFormsComputed = computed(() =>
-        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<Email>>);
-    *!/
-    phoneFormsComputed = computed(() =>
-        this.createFormSignal().controls.phones as unknown as FormArray<FormModelGroup<PhoneCreate>>);
+  submitted = signal(false);
 
-    fieldAppearance
-        = signal<MatFormFieldAppearance>('outline');
+  constructor(private svc: MemberService,
+              private dialogSvc: MemberEditDialogService,
+              private router: Router) {
 
-    errorMessage = signal<string | null>(null);
-*/
+    this.createForm = signal(this.dialogSvc.generateForm());
+  }
 
-    submitted = signal(false);
+  onSave(): void {
+   if (this.createForm().valid) {
+     const val = this.createForm().value as Member;
+     const create: MemberCreate = {
+       member_number: val.member_number,
+       first_name: val.first_name,
+       middle_name: val.middle_name,
+       last_name: val.last_name,
+       suffix: val.suffix,
+       birth_date: val.birth_date,
+       joined_date: val.joined_date,
+     }
 
-
-    constructor(private memberSvc: MembersService,
-                private addressSvc: AddressService,
-                private emailSvc: EmailService,
-                private phoneSvc: PhoneService,
-                private router: Router) {
-
-
-        const addressForm = this.addressSvc.generateAddressForm();
-        const emailForm = this.emailSvc.generateCreateForm();
-        const phoneForm = this.phoneSvc.generateCreateForm();
-        //const createForm = this.memberSvc.generateCreateForm(addressForm, emailForm, phoneForm);
-        //this.createFormSignal = signal(createForm);
+     this.svc.create(create).subscribe({
+       next: data => {
+         this.errorMessage.update(() => null)
+         this.submitted.update(() => true);
+         this.router.navigate(['p/members/view', data.id]).then();
+       },
+       error: (err: HttpErrorResponse | any) => {
+         console.debug(err);
+         this.errorMessage.set('An error occurred saving member data.');
+       }
+     });
+   } else {
+     this.errorMessage.set('Cannot save member.  Invalid data'); //TODO: translate
+     return;
     }
+  }
 
-    onSave(): void {
-       /* if (this.createFormSignal().valid) {
-            this.memberSvc.createMember(this.createFormSignal().value as MemberCreate).subscribe({
-              next: () =>  {
-                  this.errorMessage.set(null)
-                  this.submitted.set(true);
-              },
-              error: (err) => {
-                  let errMsg: string;
-                  if (err.error instanceof Error) {
-                      // A client-side or network error occurred.
-                      console.debug(`Client of network error: ${err}`);
-                      errMsg = 'An error has occurred.  Contact your administrator.';
-                  } else {
-                      // The backend returned an unsuccessful response code.
-                      console.debug(`Server error, ${err}`);
-                      errMsg = `Error code: ${err.status}, server error.  Contact your administrator.`;
-                  }
-                  this.errorMessage.set(errMsg);
-              }
-            });
-        } else {
-            this.errorMessage.set('Invalid data');
-            return;
-        }*/
-    }
-
-    onOkOrCancel(): void {
-        this.router.navigate(['p/members']).then();
-    }
-
-    onAddAddress(): void {
-        //this.getAddresses().push(this.addressSvc.generateAddressForm());
-    }
-
-    /*onDeleteAddress(idx: number): void {
-        this.getAddresses().removeAt(idx);
-    }
-
-    onAddEmail(): void {
-        this.getEmails().push(this.emailSvc.generateCreateForm());
-    }
-
-    onDeleteEmail(idx: number): void {
-        this.getEmails().removeAt(idx);
-    }
-
-    onAddPhone(): void {
-        this.getPhones().push(this.phoneSvc.generateCreateForm());
-    }
-
-    onDeletePhone(idx: number): void {
-        this.getPhones().removeAt(idx);
-    }*/
-
-    /*private getAddresses(): FormArray<FormModelGroup<AddressCreate>> {
-        return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<AddressCreate>>;
-    }
-
-    private getEmails(): FormArray<FormModelGroup<EmailCreate>> {
-        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<EmailCreate>>;
-    }
-
-    private getPhones(): FormArray<FormModelGroup<PhoneCreate>> {
-        return this.createFormSignal().get('phones') as FormArray<FormModelGroup<PhoneCreate>>;
-    }*/
+  onCancel(): void {
+    this.router.navigate(['p/members']).then();
+  }
 }
