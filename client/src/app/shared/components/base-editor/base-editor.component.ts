@@ -1,6 +1,7 @@
 import {Component, input, output} from '@angular/core';
 import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {FormModelGroup} from "./form-model-group";
+
+import {FormModelGroup} from '@app/shared/components/base-editor';
 
 @Component({
   selector: 'app-base-editor',
