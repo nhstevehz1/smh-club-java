@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
 
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
 
-import {Email, EmailCreate, EmailMember, EmailType} from "@app/features/emails";
+import {Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails';
 
 @Injectable()
 export class EmailService extends BaseApiService<EmailMember, EmailCreate, Email> {

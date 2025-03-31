@@ -1,8 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
 
 import {AuthService} from '@app/core/auth';
-import {SortablePageableTableComponent} from "@app/shared/components/sortable-pageable-table";
-import {BaseTableComponent} from "@app/shared/components/base-table-component";
+import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
+import {BaseTableComponent} from '@app/shared/components/base-table-component';
 import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 
 import {

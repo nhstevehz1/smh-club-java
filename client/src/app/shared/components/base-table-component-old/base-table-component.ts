@@ -1,7 +1,7 @@
 import {computed, Directive, signal} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 
-import {SortDirection} from "@angular/material/sort";
+import {SortDirection} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 import {AuthService, PermissionType} from '@app/core/auth';

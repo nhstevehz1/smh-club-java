@@ -1,16 +1,16 @@
 import {Component, computed, input} from '@angular/core';
-import {ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule} from '@angular/forms';
 
-import {MatInputModule} from "@angular/material/input";
-import {MatSelectModule} from "@angular/material/select";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
-import {FormControlError} from "@app/shared/components/editor-form-fields/models/form-control-error";
+import {FormControlError} from '@app/shared/components/editor-form-fields/models/form-control-error';
 import {BaseEditorComponent} from '@app/shared/components/base-editor';
 
-import {Address, AddressTypeFormFieldComponent} from "@app/features/addresses";
+import {Address, AddressTypeFormFieldComponent} from '@app/features/addresses';
 
 @Component({
   selector: 'app-address-editor',

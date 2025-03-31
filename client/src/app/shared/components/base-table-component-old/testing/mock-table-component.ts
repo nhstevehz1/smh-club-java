@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SortDirection} from "@angular/material/sort";
+import {SortDirection} from '@angular/material/sort';
 
 import {AuthService} from '@app/core/auth';
 

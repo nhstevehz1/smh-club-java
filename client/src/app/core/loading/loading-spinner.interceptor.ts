@@ -1,8 +1,8 @@
 import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
-import {inject} from "@angular/core";
-import {LoadingSpinnerService} from "./loading-spinner.service";
-import {catchError} from "rxjs/operators";
-import {tap} from "rxjs";
+import {inject} from '@angular/core';
+import {LoadingSpinnerService} from './loading-spinner.service';
+import {catchError} from 'rxjs/operators';
+import {tap} from 'rxjs';
 
 export const loadingSpinnerInterceptor: HttpInterceptorFn = (req, next) => {
   const loadingSvc = inject(LoadingSpinnerService);

@@ -1,5 +1,5 @@
-import {EmailType} from "./email-type";
-import {FullName} from "../../../shared/models/full-name";
+import {EmailType} from './email-type';
+import {FullName} from '../../../shared/models/full-name';
 
 export interface EmailCreate {
     email: string;

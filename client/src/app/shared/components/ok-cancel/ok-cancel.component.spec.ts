@@ -1,12 +1,12 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {By} from "@angular/platform-browser";
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {By} from '@angular/platform-browser';
 
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatButtonHarness} from "@angular/material/button/testing";
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {MatButtonHarness} from '@angular/material/button/testing';
 
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
 import {OkCancelComponent} from '@app/shared/components/ok-cancel';
 
@@ -53,7 +53,7 @@ describe('OkCancelComponent', () => {
   });
 
   it('should call onButtonClicked', async () => {
-    const spy = spyOn(component, "onButtonClicked").and.stub();
+    const spy = spyOn(component, 'onButtonClicked').and.stub();
     await harness?.click();
     expect(spy).toHaveBeenCalled();
   })

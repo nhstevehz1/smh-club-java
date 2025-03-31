@@ -1,8 +1,8 @@
 import {HttpInterceptorFn} from '@angular/common/http';
-import {inject} from "@angular/core";
-import {OAuthModuleConfig, OAuthResourceServerErrorHandler, OAuthService, OAuthStorage} from "angular-oauth2-oidc";
-import {catchError, map, mergeMap, take, timeout} from "rxjs/operators";
-import {filter, merge, of} from "rxjs";
+import {inject} from '@angular/core';
+import {OAuthModuleConfig, OAuthResourceServerErrorHandler, OAuthService, OAuthStorage} from 'angular-oauth2-oidc';
+import {catchError, map, mergeMap, take, timeout} from 'rxjs/operators';
+import {filter, merge, of} from 'rxjs';
 
 export const customOauthInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(OAuthService);

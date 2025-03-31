@@ -1,9 +1,9 @@
-import {defer} from "rxjs";
+import {defer} from 'rxjs';
 
-import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {MatInputHarness} from "@angular/material/input/testing";
-import {MatSelectHarness} from "@angular/material/select/testing";
-import {MatDatepickerInputHarness} from "@angular/material/datepicker/testing";
+import {MatFormFieldHarness} from '@angular/material/form-field/testing';
+import {MatInputHarness} from '@angular/material/input/testing';
+import {MatSelectHarness} from '@angular/material/select/testing';
+import {MatDatepickerInputHarness} from '@angular/material/datepicker/testing';
 
 import {PagedData} from '@app/shared/services/api-service';
 

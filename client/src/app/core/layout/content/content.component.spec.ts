@@ -1,25 +1,25 @@
 import {ContentComponent} from './content.component';
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {AuthService} from "../../auth/services/auth.service";
-import {provideRouter, Router} from "@angular/router";
-import {PermissionType} from "../../auth/models/permission-type";
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {MatListModule} from "@angular/material/list";
-import {MatIconModule} from "@angular/material/icon";
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {AuthService} from '../../auth/services/auth.service';
+import {provideRouter, Router} from '@angular/router';
+import {PermissionType} from '../../auth/models/permission-type';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
 import {
   MatSidenavContainerHarness,
   MatSidenavContentHarness,
   MatSidenavHarness
-} from "@angular/material/sidenav/testing";
-import {MatNavListHarness} from "@angular/material/list/testing";
-import {NavItem} from "./models/nav-item";
-import {MatIconHarness} from "@angular/material/icon/testing";
+} from '@angular/material/sidenav/testing';
+import {MatNavListHarness} from '@angular/material/list/testing';
+import {NavItem} from './models/nav-item';
+import {MatIconHarness} from '@angular/material/icon/testing';
 import SpyObj = jasmine.SpyObj;
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ContentComponent', () => {
   let fixture: ComponentFixture<ContentComponent>;
@@ -102,7 +102,7 @@ describe('ContentComponent', () => {
     const spy =
         spyOn(router, 'navigate').and.callFake(() => Promise.resolve(true));
 
-    component.onMenuClicked("test");
+    component.onMenuClicked('test');
 
     expect(spy).toHaveBeenCalledWith(['test']);
   });

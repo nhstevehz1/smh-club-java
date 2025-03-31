@@ -1,5 +1,5 @@
-import {PhoneType} from "./phone-type";
-import {FullName} from "@app/shared/models";
+import {PhoneType} from './phone-type';
+import {FullName} from '@app/shared/models';
 
 export interface PhoneCreate {
     country_code: string;

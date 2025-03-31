@@ -1,18 +1,18 @@
 import {Component, computed, inject, input} from '@angular/core';
-import {ControlContainer, ReactiveFormsModule} from "@angular/forms";
+import {ControlContainer, ReactiveFormsModule} from '@angular/forms';
 
-import {MatInputModule} from "@angular/material/input";
-import {MatSelectModule} from "@angular/material/select";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
-import {BaseEditorComponent} from "@app/shared/components/base-editor";
+import {BaseEditorComponent} from '@app/shared/components/base-editor';
 
 import {
   InputFormFieldComponent, DateFormFieldComponent, FormControlError
-} from "@app/shared/components/editor-form-fields";
+} from '@app/shared/components/editor-form-fields';
 
-import {Member} from "@app/features/members";
+import {Member} from '@app/features/members';
 
 @Component({
   selector: 'app-member-editor',

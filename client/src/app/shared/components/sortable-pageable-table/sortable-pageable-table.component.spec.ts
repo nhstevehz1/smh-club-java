@@ -1,17 +1,17 @@
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {MatSortModule} from "@angular/material/sort";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {MatSortModule} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {MatHeaderCellHarness, MatHeaderRowHarness, MatTableHarness} from "@angular/material/table/testing";
-import {MatSortHarness, MatSortHeaderHarness} from "@angular/material/sort/testing";
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {MatHeaderCellHarness, MatHeaderRowHarness, MatTableHarness} from '@angular/material/table/testing';
+import {MatSortHarness, MatSortHeaderHarness} from '@angular/material/sort/testing';
 
-import {DateTime} from "luxon";
-import {TranslateModule} from "@ngx-translate/core";
+import {DateTime} from 'luxon';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {ColumnDef, SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
 
@@ -35,9 +35,9 @@ describe('SortablePageableTableComponent', () => {
   ] as ColumnDef<TestModel>[];
 
   const data: TestModel[] = [
-    {a_string: "Field1", date_time: DateTime.now(), a_boolean: true, a_number: 1},
-    {a_string: "Field2", date_time: DateTime.now(), a_boolean: false, a_number: 2},
-    {a_string: "Field3", date_time: DateTime.now(), a_boolean: true, a_number: 3},
+    {a_string: 'Field1', date_time: DateTime.now(), a_boolean: true, a_number: 1},
+    {a_string: 'Field2', date_time: DateTime.now(), a_boolean: false, a_number: 2},
+    {a_string: 'Field3', date_time: DateTime.now(), a_boolean: true, a_number: 3},
   ];
 
   let fixture: ComponentFixture<SortablePageableTableComponent<TestModel>>;

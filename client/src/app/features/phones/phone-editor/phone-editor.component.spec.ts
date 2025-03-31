@@ -1,19 +1,19 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormControl, FormGroup} from "@angular/forms";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {FormControl, FormGroup} from '@angular/forms';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {MatButtonHarness} from "@angular/material/button/testing";
+import {MatFormFieldAppearance} from '@angular/material/form-field';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {MatFormFieldHarness} from '@angular/material/form-field/testing';
+import {MatButtonHarness} from '@angular/material/button/testing';
 
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
-import {FormModelGroup} from "@app/shared/components/base-editor";
-import {EditorHeaderHarness} from "@app/shared/components/editor-header/testing";
+import {FormModelGroup} from '@app/shared/components/base-editor';
+import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
 
-import {getFormFieldValue} from "@app/shared/testing";
+import {getFormFieldValue} from '@app/shared/testing';
 
 import {PhoneEditorComponent, Phone, PhoneType} from '@app/features/phones';
 

@@ -1,15 +1,15 @@
 
-import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
-import {HttpErrorResponse, provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {of, throwError} from "rxjs";
-import {TranslateModule} from "@ngx-translate/core";
+import {of, throwError} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth';
 
-import {asyncData} from "@app/shared/testing";
+import {asyncData} from '@app/shared/testing';
 import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
 import {PagedData, PageRequest} from '@app/shared/services/api-service';
 
@@ -19,12 +19,12 @@ import {
   generatePhoneDialogInput,
   generatePhoneMember,
   generatePhonePageData
-} from "@app/features/phones/testing";
+} from '@app/features/phones/testing';
 
 import {
   ListPhonesComponent, Phone, PhoneMember,
   PhoneService, PhoneTableService, PhoneEditDialogService
-} from "@app/features/phones";
+} from '@app/features/phones';
 
 describe('ListPhonesComponent', () => {
   let fixture: ComponentFixture<ListPhonesComponent>;

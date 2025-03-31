@@ -1,17 +1,17 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormControl, Validators} from "@angular/forms";
-import {By} from "@angular/platform-browser";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {FormControl, Validators} from '@angular/forms';
+import {By} from '@angular/platform-browser';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {MatFormFieldAppearance, MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
+import {MatFormFieldAppearance, MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {MatInputHarness} from "@angular/material/input/testing";
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {MatFormFieldHarness} from '@angular/material/form-field/testing';
+import {MatInputHarness} from '@angular/material/input/testing';
 
-import {TranslateModule, TranslatePipe} from "@ngx-translate/core";
+import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
 
 import {FormControlError, InputFormFieldComponent, InputType} from '@app/shared/components/editor-form-fields';
 

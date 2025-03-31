@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormControl} from "@angular/forms";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {TranslateModule} from "@ngx-translate/core";
+import {FormControl} from '@angular/forms';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {PhoneTypeFormFieldComponent, PhoneType} from '@app/features/phones';
 

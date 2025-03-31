@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {forwardRef} from "@angular/core";
-import {FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {forwardRef} from '@angular/core';
+import {FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule} from '@angular/forms';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {MatButtonHarness} from "@angular/material/button/testing";
-import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {MatFormFieldHarness} from '@angular/material/form-field/testing';
+import {MatButtonHarness} from '@angular/material/button/testing';
+import {MatFormFieldAppearance} from '@angular/material/form-field';
 
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
-import {FormModelGroup} from "@app/shared/components/base-editor";
-import {getFormFieldValue} from "app/shared/testing";
-import {InputFormFieldComponent} from "@app/shared/components/editor-form-fields";
-import {EditorHeaderHarness} from "@app/shared/components/editor-header/testing";
+import {FormModelGroup} from '@app/shared/components/base-editor';
+import {getFormFieldValue} from 'app/shared/testing';
+import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
+import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
 
 import {AddressEditorComponent, Address, AddressType} from '@app/features/addresses';
 

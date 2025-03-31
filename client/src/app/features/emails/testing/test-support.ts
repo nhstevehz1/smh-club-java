@@ -1,7 +1,7 @@
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup} from '@angular/forms';
 
-import {generatePagedData} from "app/shared/testing";
-import {FormModelGroup} from "@app/shared/components/base-editor";
+import {generatePagedData} from 'app/shared/testing';
+import {FormModelGroup} from '@app/shared/components/base-editor';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {PagedData} from '@app/shared/services/api-service';
@@ -29,10 +29,10 @@ export function generateEmailMember(prefix: number): EmailMember {
     email: `${prefix}email@${prefix}domain.com`,
     email_type: EmailType.Home,
     full_name: {
-      first_name: prefix + " First",
-      middle_name: prefix +  " Middle",
-      last_name: prefix + " Last",
-      suffix: prefix + " Suffix"
+      first_name: prefix + ' First',
+      middle_name: prefix +  ' Middle',
+      last_name: prefix + ' Last',
+      suffix: prefix + ' Suffix'
     }
   }
 }

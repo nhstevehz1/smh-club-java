@@ -1,16 +1,16 @@
-import {AppComponent} from "./app.component";
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {provideRouter} from "@angular/router";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {AuthService} from "./core/auth/services/auth.service";
-import {BehaviorSubject, Observable} from "rxjs";
-import {MainLayoutComponent} from "./core/layout/main-layout/main-layout.component";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatProgressSpinnerHarness} from "@angular/material/progress-spinner/testing";
-import {TranslateModule} from "@ngx-translate/core";
+import {AppComponent} from './app.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideRouter} from '@angular/router';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {AuthService} from './core/auth/services/auth.service';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {MainLayoutComponent} from './core/layout/main-layout/main-layout.component';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {MatProgressSpinnerHarness} from '@angular/material/progress-spinner/testing';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('AppComponent', () => {
    let fixture: ComponentFixture<AppComponent>;

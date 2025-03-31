@@ -1,4 +1,4 @@
-import {DateTime} from "luxon";
+import {DateTime} from 'luxon';
 import {Address} from '@app/features/addresses';
 import {Email} from '@app/features/emails';
 import {Phone} from '@app/features/phones';

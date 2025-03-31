@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormControl, Validators} from "@angular/forms";
-import {By} from "@angular/platform-browser";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {FormControl, Validators} from '@angular/forms';
+import {By} from '@angular/platform-browser';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {MatInputModule} from "@angular/material/input";
-import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {MatDatepickerInputHarness, MatDatepickerToggleHarness} from "@angular/material/datepicker/testing";
+import {MatInputModule} from '@angular/material/input';
+import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {MatFormFieldHarness} from '@angular/material/form-field/testing';
+import {MatDatepickerInputHarness, MatDatepickerToggleHarness} from '@angular/material/datepicker/testing';
 
-import {TranslateModule, TranslatePipe} from "@ngx-translate/core";
-import {DateTime} from "luxon";
+import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
+import {DateTime} from 'luxon';
 
 import {DateFormFieldComponent, FormControlError} from '@app/shared/components/editor-form-fields';
 

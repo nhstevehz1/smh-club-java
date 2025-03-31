@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthUser} from "../../models/auth-user";
-import {AuthService} from "../../services/auth.service";
-import {MatListModule} from "@angular/material/list";
-import {MatCardModule} from "@angular/material/card";
-import {TranslatePipe} from "@ngx-translate/core";
+import {AuthUser} from '../../models/auth-user';
+import {AuthService} from '../../services/auth.service';
+import {MatListModule} from '@angular/material/list';
+import {MatCardModule} from '@angular/material/card';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',

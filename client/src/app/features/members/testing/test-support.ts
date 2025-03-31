@@ -1,4 +1,4 @@
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup} from '@angular/forms';
 import {Member} from '../models';
 import {DateTime} from 'luxon';
 import {PagedData} from '../../../shared/models';

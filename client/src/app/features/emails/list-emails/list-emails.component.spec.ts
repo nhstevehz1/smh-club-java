@@ -1,17 +1,17 @@
 
 
-import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
-import {HttpErrorResponse, provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {of, throwError} from "rxjs";
-import {TranslateModule} from "@ngx-translate/core";
+import {of, throwError} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth';
 import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
 import {PagedData, PageRequest} from '@app/shared/services/api-service';
-import {asyncData} from "@app/shared/testing/test-helpers";
+import {asyncData} from '@app/shared/testing/test-helpers';
 
 import {
   generateEmail,
@@ -19,7 +19,7 @@ import {
   generateEmailDialogInput,
   generateEmailMember,
   generateEmailPagedData
-} from "@app/features/emails/testing";
+} from '@app/features/emails/testing';
 
 import {
   ListEmailsComponent, EmailTableService, EmailService, EmailEditDialogService, EmailMember, Email

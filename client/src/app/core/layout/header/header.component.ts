@@ -1,14 +1,14 @@
 import {Component, computed, inject, input, output} from '@angular/core';
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatMenuModule} from "@angular/material/menu";
-import {MatIconModule} from "@angular/material/icon";
-import {DOCUMENT} from "@angular/common";
-import {MatDividerModule} from "@angular/material/divider";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {MatIconButton} from "@angular/material/button";
-import {LanguageSwitcherComponent} from "../../i18n/language-switcher/language-switcher.component";
-import {TranslatePipe} from "@ngx-translate/core";
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import {DOCUMENT} from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSlideToggleChange, MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatIconButton} from '@angular/material/button';
+import {LanguageSwitcherComponent} from '../../i18n/language-switcher/language-switcher.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',

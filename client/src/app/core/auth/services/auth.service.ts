@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, filter} from "rxjs";
-import {OAuthService} from "angular-oauth2-oidc";
-import {authCodeFlowConfig} from "../../../auth.config";
-import {jwtDecode} from "jwt-decode";
-import {RealmAccess} from "../models/realm-access";
-import {PermissionType} from "../models/permission-type";
-import {Roles} from "../models/roles";
-import {Router} from "@angular/router";
-import {AuthUser} from "../models/auth-user";
+import {BehaviorSubject, filter} from 'rxjs';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {authCodeFlowConfig} from '../../../auth.config';
+import {jwtDecode} from 'jwt-decode';
+import {RealmAccess} from '../models/realm-access';
+import {PermissionType} from '../models/permission-type';
+import {Roles} from '../models/roles';
+import {Router} from '@angular/router';
+import {AuthUser} from '../models/auth-user';
 
 
 @Injectable({

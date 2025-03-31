@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {DateTime} from "luxon";
-import {TranslatePipe} from "@ngx-translate/core";
+import {DateTime} from 'luxon';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-footer',
@@ -13,7 +13,7 @@ import {TranslatePipe} from "@ngx-translate/core";
 export class FooterComponent {
 
   getYear(): string {
-    return DateTime.local().toFormat("yyyy");
+    return DateTime.local().toFormat('yyyy');
   }
 
 }

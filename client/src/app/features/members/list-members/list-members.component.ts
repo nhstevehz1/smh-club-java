@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {MatTooltip} from "@angular/material/tooltip";
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
 
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 

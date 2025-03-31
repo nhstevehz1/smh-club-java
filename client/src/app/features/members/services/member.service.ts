@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
 
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {DateTime} from "luxon";
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {DateTime} from 'luxon';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services';
 import {Member, MemberCreate} from '@app/features/members';

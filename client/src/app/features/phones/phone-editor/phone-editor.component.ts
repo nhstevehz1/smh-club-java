@@ -1,16 +1,16 @@
 import {Component, computed, input} from '@angular/core';
-import {ReactiveFormsModule} from "@angular/forms";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
-import {MatInputModule} from "@angular/material/input";
-import {MatSelectModule} from "@angular/material/select";
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
-import {BaseEditorComponent} from "@app/shared/components/base-editor";
-import {FormControlError} from "@app/shared/components/editor-form-fields";
-import {InputFormFieldComponent} from "@app/shared/components/editor-form-fields";
+import {BaseEditorComponent} from '@app/shared/components/base-editor';
+import {FormControlError} from '@app/shared/components/editor-form-fields';
+import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
 
-import {PhoneTypeFormFieldComponent, Phone} from "@app/features/phones";
+import {PhoneTypeFormFieldComponent, Phone} from '@app/features/phones';
 
 @Component({
   selector: 'app-phone-editor',

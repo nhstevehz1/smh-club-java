@@ -1,16 +1,16 @@
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {throwError} from "rxjs";
-import {TranslateModule} from "@ngx-translate/core";
+import {throwError} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {PageRequest} from '@app/shared/services';
-import {asyncData} from "@app/shared/testing/test-helpers";
+import {asyncData} from '@app/shared/testing/test-helpers';
 import {generateRenewalPageData} from '@app/features/renewals/testing/test-support';
 
-import {ListRenewalsComponent, RenewalService} from "@app/features/renewals";
+import {ListRenewalsComponent, RenewalService} from '@app/features/renewals';
 
 describe('ListRenewalsComponent', () => {
   let fixture: ComponentFixture<ListRenewalsComponent>;

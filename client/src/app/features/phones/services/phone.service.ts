@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
 
-import {Phone, PhoneCreate, PhoneMember, PhoneType} from "@app/features/phones";
+import {Phone, PhoneCreate, PhoneMember, PhoneType} from '@app/features/phones';
 
 @Injectable()
 export class PhoneService extends BaseApiService<PhoneMember, PhoneCreate, Phone> {

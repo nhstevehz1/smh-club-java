@@ -1,5 +1,5 @@
-import {ContentContainerComponentHarness} from "@angular/cdk/testing";
-import {MatButtonHarness} from "@angular/material/button/testing";
+import {ContentContainerComponentHarness} from '@angular/cdk/testing';
+import {MatButtonHarness} from '@angular/material/button/testing';
 
 export class EditorHeaderHarness extends ContentContainerComponentHarness {
     static hostSelector = 'app-editor-header';

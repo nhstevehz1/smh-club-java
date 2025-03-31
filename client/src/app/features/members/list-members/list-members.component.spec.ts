@@ -1,20 +1,20 @@
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {provideHttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
 
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatButtonHarness} from "@angular/material/button/testing";
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {MatButtonHarness} from '@angular/material/button/testing';
 
-import {throwError} from "rxjs";
-import {TranslateModule} from "@ngx-translate/core";
+import {throwError} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
 
-import {AuthService, PermissionType} from "@app/core/auth";
+import {AuthService, PermissionType} from '@app/core/auth';
 
-import {asyncData} from "@app/shared/testing/test-helpers";
-import {DateTimeToFormatPipe} from "@app/shared/pipes";
+import {asyncData} from '@app/shared/testing/test-helpers';
+import {DateTimeToFormatPipe} from '@app/shared/pipes';
 import {PageRequest} from '@app/shared/services';
 
 import {generateMemberPageData} from '@app/features/members/testing';

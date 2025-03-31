@@ -1,16 +1,16 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {MainLayoutComponent} from './main-layout.component';
-import {HeaderComponent} from "../header/header.component";
-import {FooterComponent} from "../footer/footer.component";
-import {ContentComponent} from "../content/content.component";
-import {AuthService} from "../../auth/services/auth.service";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {provideRouter, Router} from "@angular/router";
-import {MatDividerModule} from "@angular/material/divider";
-import {TranslateModule} from "@ngx-translate/core";
+import {HeaderComponent} from '../header/header.component';
+import {FooterComponent} from '../footer/footer.component';
+import {ContentComponent} from '../content/content.component';
+import {AuthService} from '../../auth/services/auth.service';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideRouter, Router} from '@angular/router';
+import {MatDividerModule} from '@angular/material/divider';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('MainLayoutComponent', () => {
   let fixture: ComponentFixture<MainLayoutComponent>;
@@ -74,7 +74,7 @@ describe('MainLayoutComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(result).toBe(false);
   });
-  
+
   it('should call content.toggleSlideNav', () => {
     const spy = spyOn(component.content, 'toggleSideNav');
     component.sideNavHandler();
