@@ -1,10 +1,12 @@
 import {Component, input} from '@angular/core';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {TranslatePipe} from "@ngx-translate/core";
-import {InputType} from "../models/input-type";
 import {ReactiveFormsModule} from "@angular/forms";
+
+import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {BaseInputComponent} from "../base-input-component";
+
+import {TranslatePipe} from "@ngx-translate/core";
+
+import {BaseInputComponent, InputType} from '@app/shared/components/editor-form-fields';
 
 @Component({
   selector: 'app-input-form-field',
