@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, input, output, Signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, input, output, ViewChild} from '@angular/core';
 
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatSort, MatSortModule} from '@angular/material/sort';
@@ -10,7 +10,7 @@ import {TranslatePipe} from '@ngx-translate/core';
 
 import {EditEvent} from '@app/shared/components/edit-dialog';
 
-import {CustomMatPaginatorIntlService, ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {ColumnDef, CustomMatPaginatorIntlService} from '@app/shared/components/sortable-pageable-table';
 
 @Component({
   selector: 'app-sortable-pageable-table',
