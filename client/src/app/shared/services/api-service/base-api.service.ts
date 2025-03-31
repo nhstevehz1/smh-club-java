@@ -1,7 +1,7 @@
-import {CrudService} from './crud-service';
-import {Observable} from 'rxjs';
-import {PagedData, PageRequest} from '../../models';
 import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+
+import {CrudService, PagedData, PageRequest} from '@app/shared/services';
 
 export abstract class BaseApiService<L, C, T> implements CrudService<L, C, T> {
 
@@ -17,6 +17,10 @@ export abstract class BaseApiService<L, C, T> implements CrudService<L, C, T> {
     const uri = query == null ? this.baseUri: this.baseUri + query;
 
     return this.http.get<PagedData<L>>(uri);
+  }
+
+  get(id: number) : Observable<T> {
+    return this.http.get<T>(`${this.baseUri}/${id}`);
   }
 
   create(create: C): Observable<T> {

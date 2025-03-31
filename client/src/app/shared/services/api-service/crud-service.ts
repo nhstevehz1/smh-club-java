@@ -1,5 +1,6 @@
 import {Observable} from 'rxjs';
-import {PagedData, PageRequest} from '../../models';
+
+import {PagedData, PageRequest} from '@app-shared/services/api-service';
 
 export interface CrudService<L, C, T>  {
   readonly baseUri: string;
