@@ -1,22 +1,26 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {
-  SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {MembersService} from "../services/members.service";
+import { OnInit, AfterViewInit, Component, ViewChild} from '@angular/core';
+import {Router} from "@angular/router";
+import {HttpErrorResponse} from '@angular/common/http';
+
 import {first, merge, Observable} from "rxjs";
 import {startWith, switchMap} from "rxjs/operators";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
+
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {Router} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
-import {Member} from "../models/member";
-import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
-import {AuthService} from "../../../core/auth/services/auth.service";
-import {TranslatePipe, TranslateService} from "@ngx-translate/core";
-import {HttpErrorResponse} from '@angular/common/http';
-import {EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
-import {PagedData} from '../../../shared/models/paged-data';
+
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+
+import {AuthService} from '@app/core/auth';
+
+import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table-component';
+import {DateTimeToFormatPipe} from '@app/shared/pipes';
+import {EditEvent} from '@app/shared/components/edit-dialog';
+import {PagedData} from '@app/shared/services';
+
+import {Member, MemberService, MemberTableService} from '@app/features/members';
+
 
 @Component({
   selector: 'app-list-members',
@@ -28,24 +32,29 @@ import {PagedData} from '../../../shared/models/paged-data';
     TranslatePipe,
   ],
     providers: [
-      MembersService,
+      MemberService,
+      MemberTableService,
       TranslateService,
       DateTimeToFormatPipe
     ],
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent extends BaseTableComponent<Member> implements AfterViewInit{
+export class ListMembersComponent extends BaseTableComponent<Member> implements OnInit, AfterViewInit{
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<Member>;
 
-  constructor(private svc: MembersService,
-              auth: AuthService,
+  constructor(auth: AuthService,
+              private svc: MemberService,
+              private tableSvc: MemberTableService,
               private router: Router) {
 
     super(auth);
-    this.columns.set(this.svc.getColumnDefs());
+  }
+
+  ngOnInit() {
+    this.columns.set(this.tableSvc.getColumnDefs());
   }
 
   ngAfterViewInit(): void {
@@ -72,6 +81,6 @@ export class ListMembersComponent extends BaseTableComponent<Member> implements 
     const pr = this.getPageRequest(
       this._table.paginator.pageIndex, this._table.paginator.pageSize,
       this._table.sort.active, this._table.sort.direction);
-    return this.svc.getMembers(pr).pipe(first());
+    return this.svc.getPagedData(pr).pipe(first());
   }
 }

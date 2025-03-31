@@ -1,58 +1,61 @@
-import {ListMembersComponent} from './list-members.component';
 import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {MembersService} from "../services/members.service";
 import {provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
+import {Router} from "@angular/router";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {generateMemberPageData} from "../test/member-test";
-import {asyncData} from "../../../shared/test-helpers/test-helpers";
-import {PageRequest} from "../../../shared/models/page-request";
-import {throwError} from "rxjs";
-import {AuthService} from "../../../core/auth/services/auth.service";
-import {DateTimeToFormatPipe} from "../../../shared/pipes/luxon/date-time-to-format.pipe";
-import {PermissionType} from "../../../core/auth/models/permission-type";
+import {provideHttpClientTesting} from "@angular/common/http/testing";
+
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatButtonHarness} from "@angular/material/button/testing";
-import {Router} from "@angular/router";
+
+import {throwError} from "rxjs";
 import {TranslateModule} from "@ngx-translate/core";
+
+import {AuthService, PermissionType} from "@app/core/auth";
+
+import {asyncData} from "@app/shared/testing/test-helpers";
+import {DateTimeToFormatPipe} from "@app/shared/pipes";
+import {PageRequest} from '@app/shared/services';
+
+import {generateMemberPageData} from '@app/features/members/testing';
+import {
+  ListMembersComponent, MemberService, MemberTableService
+} from '@app/features/members';
 
 describe('ListMembersComponent', () => {
   let fixture: ComponentFixture<ListMembersComponent>;
   let component: ListMembersComponent;
 
-  let memberSvcMock: jasmine.SpyObj<MembersService>;
+  let memberSvcMock: jasmine.SpyObj<MemberService>;
   let authSvcMock: jasmine.SpyObj<AuthService>;
-  let dtFormatMock: jasmine.SpyObj<DateTimeToFormatPipe>
+  let tableSvcMock: jasmine.SpyObj<MemberTableService>;
   let routerMock: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    memberSvcMock = jasmine.createSpyObj('MembersService', ['getMembers']);
+    memberSvcMock = jasmine.createSpyObj('MembersService', ['getPagedData']);
+    tableSvcMock = jasmine.createSpyObj('MemberTableService', ['getColumnDefs']);
     authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission', 'rolesLoaded$']);
-    dtFormatMock = jasmine.createSpyObj('DateTimeToFormatPipe', ['transform'])
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [
-          ListMembersComponent,
-          TranslateModule.forRoot({}),
+        ListMembersComponent,
+        TranslateModule.forRoot({}),
       ],
       providers: [
-          provideHttpClient(),
-          provideHttpClientTesting(),
-          provideNoopAnimations(),
-          DateTimeToFormatPipe,
-          {provide: Router, useValue: routerMock},
-          {provide: DateTimeToFormatPipe, useValue: dtFormatMock},
-          {provide: MembersService, useValue: {}},
-          {provide: AuthService, useValue: {}}
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideNoopAnimations(),
+        DateTimeToFormatPipe,
+        {provide: Router, useValue: routerMock},
+        {provide: MemberService, useValue: {}},
+        {provide: MemberTableService, useValue: {}},
+        {provide: AuthService, useValue: {}}
       ],
-    }).overrideComponent(ListMembersComponent,
-        { set: {providers: [
-            {provide: MembersService, useValue: memberSvcMock},
-            {provide: AuthService, useValue: authSvcMock}
-        ]}}
-    ).compileComponents();
+    }).overrideProvider(MemberService, {useValue: memberSvcMock})
+      .overrideProvider(MemberTableService, {useValue: tableSvcMock})
+      .overrideProvider(AuthService, {useValue: authSvcMock})
+      .compileComponents();
 
     fixture = TestBed.createComponent(ListMembersComponent);
     component = fixture.componentInstance;
@@ -65,7 +68,7 @@ describe('ListMembersComponent', () => {
 
       it('should create column list', () => {
          fixture.detectChanges();
-         expect(component.columns.length).toEqual(5);
+         expect(component.columns().length).toEqual(5);
       });
   });
 
@@ -79,19 +82,19 @@ describe('ListMembersComponent', () => {
       it('should call MemberService.getMembers() on init', async () => {
          const data = generateMemberPageData(0, 5, 100);
 
-         memberSvcMock.getMembers.and.returnValue(asyncData(data));
+         memberSvcMock.getPagedData.and.returnValue(asyncData(data));
 
          fixture.detectChanges();
          await fixture.whenStable();
 
          const request = PageRequest.of(0, 5);
-         expect(memberSvcMock.getMembers).toHaveBeenCalledWith(request);
+         expect(memberSvcMock.getPagedData).toHaveBeenCalledWith(request);
      });
 
     it('length should be set on init', async () => {
        const data = generateMemberPageData(0, 5, 100);
 
-       memberSvcMock.getMembers.and.returnValue(asyncData(data));
+       memberSvcMock.getPagedData.and.returnValue(asyncData(data));
 
        fixture.detectChanges();
        await fixture.whenStable();
@@ -102,83 +105,83 @@ describe('ListMembersComponent', () => {
     it('datasource.data should be set on init', async () => {
         const data = generateMemberPageData(0, 5, 2);
 
-        memberSvcMock.getMembers.and.returnValue(asyncData(data));
+        memberSvcMock.getPagedData.and.returnValue(asyncData(data));
 
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component.datasource.data).toBe(data._content);
+        expect(component.datasource().data).toBe(data._content);
     });
 
     it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
-      memberSvcMock.getMembers.and.returnValue(throwError(() => 'error'));
+      memberSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
 
       fixture.detectChanges();
       await fixture.whenStable();
 
-      expect(component.datasource.data).toEqual([]);
+      expect(component.datasource().data).toEqual([]);
     });
 
     it('should call canAddMember', async () => {
-        const data = generateMemberPageData(0, 5, 2);
+      const data = generateMemberPageData(0, 5, 2);
 
-        const spy = spyOn(component, 'canAddMember').and.stub();
-        memberSvcMock.getMembers.and.returnValue(asyncData(data));
+      const spy = spyOn(component, 'hasWriteRole').and.stub();
+      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
 
-        fixture.detectChanges();
-        await fixture.whenStable();
+      fixture.detectChanges();
+      await fixture.whenStable();
 
       expect(spy).toHaveBeenCalled();
     });
 
-      it('should call authService.hasPermissions', async () => {
-          const data = generateMemberPageData(0, 5, 2);
+    it('should call authService.hasPermissions', async () => {
+      const data = generateMemberPageData(0, 5, 2);
 
-          const spy = authSvcMock.hasPermission.and.stub();
-          memberSvcMock.getMembers.and.returnValue(asyncData(data));
-          spyOn(component, 'canAddMember').and.callThrough();
+      const spy = authSvcMock.hasPermission.and.stub();
+      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
+      spyOn(component, 'hasWriteRole').and.callThrough();
 
-          fixture.detectChanges();
-          await fixture.whenStable();
+      fixture.detectChanges();
+      await fixture.whenStable();
 
-          expect(spy).toHaveBeenCalledWith(PermissionType.write);
-      });
+      expect(spy).toHaveBeenCalledWith(PermissionType.write);
+    });
 
-      it('should display add member button', async () => {
-          const data = generateMemberPageData(0, 5, 2);
+    it('should display add member button', async () => {
+      const data = generateMemberPageData(0, 5, 2);
 
-          memberSvcMock.getMembers.and.returnValue(asyncData(data));
-          spyOn(component, 'canAddMember').and.returnValue(true);
+      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
+      spyOn(component, 'hasWriteRole').and.returnValue(true);
 
-          const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
+      const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
 
-          expect(harnesses.length).toBe(1);
-      });
+      expect(harnesses.length).toBe(1);
+    });
 
-      it('add member button should call addMemberHandler() when clicked', async () => {
-          const data = generateMemberPageData(0, 5, 2);
+    it('add member button should call addMemberHandler() when clicked', async () => {
+      const data = generateMemberPageData(0, 5, 2);
 
-          const spy = spyOn(component, 'addMemberHandler').and.stub();
-          memberSvcMock.getMembers.and.returnValue(asyncData(data));
-          spyOn(component, 'canAddMember').and.returnValue(true);
+      const spy = spyOn(component, 'addMemberHandler').and.stub();
+      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
+      spyOn(component, 'hasWriteRole').and.returnValue(true);
 
-          const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
-          await harnesses[0].click();
+      const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
+      await harnesses[0].click();
 
-          expect(spy).toHaveBeenCalled();
-      });
+      expect(spy).toHaveBeenCalled();
+    });
 
-      it('router.navigate should be called when add member button is clicked', async () => {
-          const data = generateMemberPageData(0, 5, 2);
+    it('router.navigate should be called when add member button is clicked', async () => {
+      const data = generateMemberPageData(0, 5, 2);
 
-          const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
-          memberSvcMock.getMembers.and.returnValue(asyncData(data));
-          spyOn(component, 'canAddMember').and.returnValue(true);
+      const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
+      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
+      spyOn(component, 'hasWriteRole').and.returnValue(true);
 
-          const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
-          await harnesses[0].click();
+      const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
+      await harnesses[0].click();
 
-          expect(spy).toHaveBeenCalledWith(['p/members/add']);
-      });
+      expect(spy).toHaveBeenCalledWith(['p/members/add']);
+    });
   });
 });
