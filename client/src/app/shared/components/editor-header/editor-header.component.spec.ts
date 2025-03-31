@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {EditorHeaderComponent} from './editor-header.component';
+import {EditorHeaderComponent} from '@app/shared/components/editor-header';
 
 describe('EditorHeaderComponent', () => {
   let component: EditorHeaderComponent;
