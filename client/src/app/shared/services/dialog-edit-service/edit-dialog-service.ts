@@ -1,6 +1,7 @@
-import {FormModelGroup} from '../../base-editor/form-model-group';
-import {EditAction, EditDialogInput, EditDialogResult} from '../models';
 import {Observable} from 'rxjs';
+
+import {EditAction, EditDialogInput, EditDialogResult} from '@app/shared/components/edit-dialog';
+import {FormModelGroup} from '@app/shared/components/base-editor';
 
 export interface EditDialogService<T> {
   openDialog(dialogData: EditDialogInput<T>): Observable<EditDialogResult<T>>;

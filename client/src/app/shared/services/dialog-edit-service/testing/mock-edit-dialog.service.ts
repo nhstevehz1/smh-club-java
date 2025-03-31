@@ -1,10 +1,13 @@
 import {Injectable} from "@angular/core";
-import {BaseEditDialogService} from "../base-edit-dialog.service";
-import {MockEditorComponent, MockModel} from './mock-dilog-data';
-import {EditAction, EditDialogInput} from '../../models';
-import {FormModelGroup} from '../../../base-editor/form-model-group';
-import {MatDialog} from '@angular/material/dialog';
 import {NonNullableFormBuilder} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+
+import {BaseEditDialogService} from '@app/shared/services';
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
+import {MockModel} from '@app/shared/services/api-service/testing';
+import {MockEditorComponent} from '@app/shared/services/dialog-edit-service/testing/mock-dialog-data';
+import {FormModelGroup} from '@app/shared/components/base-editor';
+
 
 @Injectable()
 export class MockEditDialogService extends BaseEditDialogService<MockModel> {
