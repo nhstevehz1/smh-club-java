@@ -1,11 +1,14 @@
-import {PagedData} from "../../../shared/models";
-import {generatePagedData} from "@app/shared/testing/test-helpers";
-import {PhoneCreate, PhoneMember, Phone, PhoneType} from "../models";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
 import {FormControl, FormGroup} from "@angular/forms";
-import {EditAction, EditDialogInput} from '../../../shared/components/edit-dialog/models';
-import {PhoneEditorComponent} from '../phone-editor/phone-editor.component';
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models';
+
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
+import {generatePagedData} from "@app/shared/testing/test-helpers";
+import {FormModelGroup} from "@app/shared/components/base-editor";
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {PagedData} from '@app/shared/services/api-service';
+
+import {
+  PhoneEditorComponent, PhoneCreate, PhoneMember, Phone, PhoneType
+} from '@app/features/phones';
 
 export function generatePhonePageData(page: number, size: number, total: number): PagedData<PhoneMember> {
     const content = generatePhoneList(size);
