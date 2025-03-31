@@ -1,14 +1,12 @@
 import {Component, computed, input} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {BaseEditorComponent} from '../../../shared/components/base-editor/base-editor.component';
-import {Renewal} from '../models/renewal';
-import {FormControlError} from '../../../shared/components/editor-form-fields/models/form-control-error';
-import {
-  InputFormFieldComponent
-} from '../../../shared/components/editor-form-fields/input-form-field/input-form-field.component';
-import {
-  DateFormFieldComponent
-} from '../../../shared/components/editor-form-fields/date-form-field/date-form-field.component';
+
+import {BaseEditorComponent} from '@app/shared/components/base-editor';
+import {FormControlError} from '@app/shared/components/editor-form-fields';
+import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
+import {DateFormFieldComponent} from '@app/shared/components/editor-form-fields';
+
+import {Renewal} from '@app/features/renewals';
 
 @Component({
   selector: 'app-renewal-editor',

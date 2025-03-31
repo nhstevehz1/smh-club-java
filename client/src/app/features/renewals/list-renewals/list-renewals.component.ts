@@ -1,19 +1,22 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {
-  SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {RenewalService} from "../services/renewal.service";
-import {first, merge, Observable} from "rxjs";
-import {startWith, switchMap} from "rxjs/operators";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {Renewal, RenewalMember} from "../models/renewal";
-import {AuthService} from '../../../core/auth/services/auth.service';
-import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
-import {PagedData} from '../../../shared/models/paged-data';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
-import {RenewalEditorComponent} from '../renewal-editor/renewal-editor.component';
-import {MatDialog} from '@angular/material/dialog';
-import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
+import {first, merge, mergeMap, Observable} from "rxjs";
+import {startWith, switchMap} from "rxjs/operators";
+
+import {AuthService} from '@app/core/auth';
+import {SortablePageableTableComponent} from "@app/shared/components/sortable-pageable-table";
+import {BaseTableComponent} from "@app/shared/components/base-table-component/base-table-component";
+
+import {EditAction, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
+
+import {
+  Renewal,
+  RenewalEditDialogService,
+  RenewalMember,
+  RenewalService,
+  RenewalTableService
+} from '@app/features/renewals';
+import {PagedData} from '@app/shared/services';
 
 @Component({
   selector: 'app-list-renewals',
@@ -22,16 +25,20 @@ import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-d
   templateUrl: './list-renewals.component.html',
   styleUrl: './list-renewals.component.scss'
 })
-export class ListRenewalsComponent extends BaseTableComponent<RenewalMember> implements AfterViewInit {
+export class ListRenewalsComponent extends BaseTableComponent<RenewalMember> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<RenewalMember>;
 
-  constructor(private svc: RenewalService,
-              auth: AuthService,
-              private dialog: MatDialog) {
+  constructor(auth: AuthService,
+              private svc: RenewalService,
+              private tableSvc: RenewalTableService,
+              private dialogSvc: RenewalEditDialogService) {
     super(auth);
-    this.columns.set(this.svc.getColumnDefs())
+  }
+
+  ngOnInit() {
+    this.columns.set(this.tableSvc.getColumnDefs());
   }
 
   ngAfterViewInit(): void {
@@ -46,11 +53,11 @@ export class ListRenewalsComponent extends BaseTableComponent<RenewalMember> imp
   }
 
   onEditClick(event: EditEvent<RenewalMember>): void {
-    this.openDialog(event, EditAction.Edit);
+    this.openDialog('renewals.list.dialog.update',event, EditAction.Edit);
   }
 
   onDeleteClick(event: EditEvent<RenewalMember>): void {
-    this.openDialog(event, EditAction.Delete);
+    this.openDialog('renewals.list.dialog.delete',event, EditAction.Delete);
   }
 
   private getCurrentPage(): Observable<PagedData<RenewalMember>> {
@@ -58,24 +65,14 @@ export class ListRenewalsComponent extends BaseTableComponent<RenewalMember> imp
     const pr = this.getPageRequest(
       this._table.paginator.pageIndex, this._table.paginator.pageSize,
       this._table.sort.active, this._table.sort.direction);
-    return this.svc.getRenewals(pr).pipe(first());
+    return this.svc.getPagedData(pr).pipe(first());
   }
 
-  private openDialog(event: EditEvent<RenewalMember>, action: EditAction): void {
-    const dialogData: EditDialogData<Renewal> = {
-      title: 'Renewal Title',
-      component: RenewalEditorComponent,
-      form: this.svc.generateRenewalForm(),
-      context: event.data as Renewal,
-      action: action
-    }
+  private openDialog(title: string, event: EditEvent<RenewalMember>, action: EditAction): void {
+    const dialogInput = this.dialogSvc.generateDialogInput(title, event.data as Renewal, action);
 
-    const dialogRef =
-      this.dialog.open<EditDialogComponent<Renewal>, EditDialogData<Renewal>>(
-        EditDialogComponent<Renewal>, {data: dialogData});
-
-    dialogRef.afterClosed().subscribe({
-      next: (result: EditDialogData<Renewal>) => {
+    this.dialogSvc.openDialog(dialogInput).subscribe({
+      next: (result: EditDialogResult<Renewal>) => {
         if(result.action == EditAction.Edit) {
           this.updateRenewal(result.context);
         } else if (result.action == EditAction.Delete) {
@@ -86,22 +83,20 @@ export class ListRenewalsComponent extends BaseTableComponent<RenewalMember> imp
   }
 
   private updateRenewal(renewal: Renewal): void {
-    this.svc.updateRenewal(renewal).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse) => this.processRequestError(err)
-      }),
-      error: (err: HttpErrorResponse)=> this.processRequestError(err)
-    });
+    this.svc.update(renewal.id, renewal).pipe(
+      mergeMap(() => this.getCurrentPage())
+    ).subscribe({
+      next: data => this.processPageData(data),
+      error: (err: HttpErrorResponse) => this.processRequestError(err)
+    })
   }
 
   private deleteRenewal(id: number) {
-    this.svc.deleteRenewal(id).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse)=> this.processRequestError(err)
-      }),
+    this.svc.delete(id).pipe(
+      mergeMap(() => this.getCurrentPage())
+    ).subscribe({
+      next: data => this.processPageData(data),
       error: (err: HttpErrorResponse) => this.processRequestError(err)
-    });
+    })
   }
 }

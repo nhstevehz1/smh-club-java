@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {PagedData, PageRequest} from "../../../shared/models";
+
 import {Observable} from "rxjs";
-import {Renewal, RenewalCreate, RenewalMember} from "../models";
 import {map} from 'rxjs/operators';
 import {DateTime} from 'luxon';
-import {BaseApiService} from '../../../shared/services';
 
+import {BaseApiService, PagedData, PageRequest} from '@app/shared/services';
+
+import {Renewal, RenewalCreate, RenewalMember} from '@app/features/renewals';
 
 @Injectable()
 export class RenewalService extends BaseApiService<RenewalMember, RenewalCreate, Renewal>{

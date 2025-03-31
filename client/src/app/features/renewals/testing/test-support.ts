@@ -1,7 +1,8 @@
-import {PagedData} from "../../../shared/models/paged-data";
-import {generatePagedData} from "../../../shared/test-helpers/test-helpers";
-import {RenewalMember} from "../models/renewal";
 import {DateTime} from "luxon";
+
+import {PagedData} from '@app/shared/services';
+import {generatePagedData} from "@app/shared/testing/test-helpers";
+import {RenewalMember} from '@app/features/renewals';
 
 export function generateRenewalPageData(page: number, size: number, total: number): PagedData<RenewalMember> {
     const content = generateRenewalList(size);

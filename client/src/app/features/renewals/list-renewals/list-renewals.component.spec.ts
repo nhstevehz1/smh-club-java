@@ -1,22 +1,24 @@
-import {ListRenewalsComponent} from './list-renewals.component';
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {provideHttpClient} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {RenewalService} from "../services/renewal.service";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {generateRenewalPageData} from "../test/renewal-test";
-import {asyncData} from "../../../shared/test-helpers/test-helpers";
-import {PageRequest} from "../../../shared/models/page-request";
+
 import {throwError} from "rxjs";
 import {TranslateModule} from "@ngx-translate/core";
+
+import {PageRequest} from '@app/shared/services';
+import {asyncData} from "@app/shared/testing/test-helpers";
+import {generateRenewalPageData} from '@app/features/renewals/testing/test-support';
+
+import {ListRenewalsComponent, RenewalService} from "@app/features/renewals";
 
 describe('ListRenewalsComponent', () => {
   let fixture: ComponentFixture<ListRenewalsComponent>;
   let component: ListRenewalsComponent;
-  let renewalServiceMock: jasmine.SpyObj<RenewalService>;
+  let renewalSvcMock: jasmine.SpyObj<RenewalService>;
 
   beforeEach(async () => {
-    renewalServiceMock = jasmine.createSpyObj('RenewalService', ['getRenewals']);
+    renewalSvcMock = jasmine.createSpyObj('RenewalService', ['getPagedData']);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -29,9 +31,8 @@ describe('ListRenewalsComponent', () => {
           provideHttpClientTesting(),
           provideNoopAnimations()
       ],
-    }).overrideComponent(ListRenewalsComponent,
-        {set: {providers: [{provide: RenewalService, useValue: renewalServiceMock}]}}
-    ).compileComponents();
+    }).overrideProvider(RenewalService, {useValue: renewalSvcMock})
+      .compileComponents();
     fixture = TestBed.createComponent(ListRenewalsComponent);
     component = fixture.componentInstance;
   });
@@ -50,18 +51,18 @@ describe('ListRenewalsComponent', () => {
   describe('test service interactions on init', async () => {
     it('should call RenewalService.getRenewals() on init', async () => {
        const data = generateRenewalPageData(0, 5, 100);
-       renewalServiceMock.getRenewals.and.returnValue(asyncData(data));
+       renewalSvcMock.getPagedData.and.returnValue(asyncData(data));
 
        fixture.detectChanges();
        await fixture.whenStable();
 
        const request = PageRequest.of(0, 5)
-       expect(renewalServiceMock.getRenewals).toHaveBeenCalledWith(request);
+       expect(renewalSvcMock.getPagedData).toHaveBeenCalledWith(request);
     });
 
     it('length should be set on init', async () => {
       const data = generateRenewalPageData(0, 5, 100);
-      renewalServiceMock.getRenewals.and.returnValue(asyncData(data));
+      renewalSvcMock.getPagedData.and.returnValue(asyncData(data));
 
       fixture.detectChanges();
       await fixture.whenStable();
@@ -71,21 +72,21 @@ describe('ListRenewalsComponent', () => {
 
     it('datasource.data should be set on init', async () => {
       const data = generateRenewalPageData(0, 5, 2);
-      renewalServiceMock.getRenewals.and.returnValue(asyncData(data));
+      renewalSvcMock.getPagedData.and.returnValue(asyncData(data));
 
       fixture.detectChanges();
       await fixture.whenStable();
 
-      expect(component.datasource.data).toBe(data._content);
+      expect(component.datasource().data).toBe(data._content);
     });
 
     it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
-      renewalServiceMock.getRenewals.and.returnValue(throwError(() => 'error'));
+      renewalSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
 
       fixture.detectChanges();
       await fixture.whenStable();
 
-      expect(component.datasource.data).toEqual([]);
+      expect(component.datasource().data).toEqual([]);
     });
   });
 });
