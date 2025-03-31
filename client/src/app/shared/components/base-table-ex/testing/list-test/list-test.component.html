@@ -1,0 +1,10 @@
+<div class="container">
+  <app-sortable-pageable-table
+    [dataSource]="datasource()"
+    [columns]="columns()"
+    [resultsLength]="resultsLength()"
+    [hasWriteRole]="hasWriteRole()"
+    (editClicked)="onEditClick($event)"
+    (deleteClicked)="onDeleteClick($event)">
+  </app-sortable-pageable-table>
+</div>
