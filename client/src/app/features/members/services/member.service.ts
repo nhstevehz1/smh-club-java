@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {DateTime} from "luxon";
-import {PagedData, PageRequest} from "../../../shared/models";
-import {BaseApiService} from '../../../shared/services';
-import {Member, MemberCreate} from '../models';
+
+import {BaseApiService, PagedData, PageRequest} from '@app/shared/services';
+import {Member, MemberCreate} from '@app/features/members';
 
 @Injectable()
 export class MemberService extends BaseApiService<Member, MemberCreate, Member> {

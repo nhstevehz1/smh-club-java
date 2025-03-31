@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
-import {BaseTableService} from '../../../shared/components/sortable-pageable-table/services';
-import {Member} from '../models';
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models';
 import {DateTime} from 'luxon';
 import {TranslateService} from '@ngx-translate/core';
-import {DateTimeToFormatPipe} from '../../../shared/pipes/luxon/date-time-to-format.pipe';
+
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {DateTimeToFormatPipe} from '@app/shared/pipes';
+import {BaseTableService} from '@app/shared/services';
+
+import {Member} from '@app/features/members';
 
 @Injectable()
 export class MemberTableService extends BaseTableService<Member>{

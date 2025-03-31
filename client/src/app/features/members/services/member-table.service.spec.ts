@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MemberTableService } from './member-table.service';
 import {TranslateModule} from '@ngx-translate/core';
-import {DateTimeToFormatPipe} from '../../../shared/pipes/luxon/date-time-to-format.pipe';
+import {DateTimeToFormatPipe} from '@app/shared/pipes';
+
+import { MemberTableService } from '@app/features/members';
 
 describe('MemberTableService', () => {
   let service: MemberTableService;
