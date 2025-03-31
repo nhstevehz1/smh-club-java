@@ -1,19 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {EmailEditorComponent} from './email-editor.component';
-import {HarnessLoader} from "@angular/cdk/testing";
+import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {FormControl, FormGroup} from "@angular/forms";
-import {EmailType} from "../models/email-type";
+
+import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Email} from "../models/email";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {MatButtonHarness} from "@angular/material/button/testing";
+
 import {TranslateModule} from "@ngx-translate/core";
-import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
+
+import {FormModelGroup} from "@app/shared/components/base-editor";
+import {getFormFieldValue} from "@app/shared/testing";
+import {EditorHeaderHarness} from "@app/shared/components/editor-header/testing";
+
+import {EmailEditorComponent, Email, EmailType} from '@app/features/emails';
 
 describe('EmailEditorComponent', () => {
   let component: EmailEditorComponent;

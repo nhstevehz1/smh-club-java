@@ -1,10 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {EmailTypeFormFieldComponent} from './email-type-form-field.component';
-import {FormControl} from "@angular/forms";
-import {EmailType} from "../models/email-type";
-import {TranslateModule} from "@ngx-translate/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {FormControl} from "@angular/forms";
+
+import {TranslateModule} from "@ngx-translate/core";
+
+import {EmailTypeFormFieldComponent, EmailType} from '@app/features/emails';
 
 describe('EmailTypeFormFieldComponent', () => {
   let component: EmailTypeFormFieldComponent;

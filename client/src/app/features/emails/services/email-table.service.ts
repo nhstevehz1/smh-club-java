@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {BaseTableService} from '../../../shared/components/sortable-pageable-table/services';
-import {EmailMember, EmailType} from '../models';
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models';
+
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {BaseTableService} from '@app/shared/services/table-service';
+
+import {EmailMember, EmailType} from '@app/features/emails';
 
 @Injectable()
 export class EmailTableService extends BaseTableService<EmailMember> {

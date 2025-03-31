@@ -1,17 +1,22 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {Email, EmailMember} from "../models/email";
-import {
-  SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {EmailService} from "../services/email.service";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
+import {HttpErrorResponse} from '@angular/common/http';
+
 import {first, merge, mergeMap, Observable} from "rxjs";
 import {startWith, switchMap} from "rxjs/operators";
-import {AuthService} from '../../../core/auth/services/auth.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {PagedData} from '../../../shared/models/paged-data';
-import {EditAction, EditDialogResult, EditEvent} from '../../../shared/components/edit-dialog/models';
-import {EmailEditDialogService} from '../services/email-edit-dialog.service';
+
+import {AuthService} from '@app/core/auth';
+
+import {
+  SortablePageableTableComponent
+} from "@app/shared/components/sortable-pageable-table";
+import {BaseTableComponent} from "@app/shared/components/base-table-component/base-table-component";
+import {EditAction, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
+import {PagedData} from '@app/shared/services/api-service';
+
+import {
+  EmailEditDialogService, EmailService, EmailTableService,
+  Email, EmailMember
+} from '@app/features/emails';
 
 @Component({
   selector: 'app-list-emails',
@@ -26,13 +31,15 @@ export class ListEmailsComponent
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<EmailMember>;
 
-  constructor(private svc: EmailService, auth: AuthService,
+  constructor(auth: AuthService,
+              private svc: EmailService,
+              private tableSvc: EmailTableService,
               private dialogSvc: EmailEditDialogService) {
       super(auth);
   }
 
   ngOnInit() {
-    this.columns.set(this.svc.getColumnDefs());
+    this.columns.set(this.tableSvc.getColumnDefs());
   }
 
   ngAfterViewInit(): void {
@@ -62,7 +69,7 @@ export class ListEmailsComponent
   }
 
   private openDialog(title: string, event: EditEvent<EmailMember>, action: EditAction): void {
-    const dialogInput = this.svc.generateEmailDialogInput(title, event, action);
+    const dialogInput = this.dialogSvc.generateDialogInput(title, event.data as Email, action);
 
     this.dialogSvc.openDialog(dialogInput).subscribe({
       next: (result: EditDialogResult<Email>) =>  {
@@ -76,7 +83,7 @@ export class ListEmailsComponent
   }
 
   private updateEmail(email: Email): void {
-    this.svc.updateEmail(email).pipe(
+    this.svc.update(email.id, email).pipe(
       mergeMap(() => this.getCurrentPage())
     ).subscribe({
       next: data => this.processPageData(data),
@@ -85,7 +92,7 @@ export class ListEmailsComponent
   }
 
   private deleteEmail(id: number): void {
-    this.svc.deleteEmail(id).pipe(
+    this.svc.delete(id).pipe(
       mergeMap(() => this.getCurrentPage())
     ).subscribe({
       next: data => this.processPageData(data),
