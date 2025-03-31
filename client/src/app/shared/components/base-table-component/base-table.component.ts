@@ -23,7 +23,7 @@ import {EditAction, EditDialogInput, EditDialogResult} from '@app/shared/compone
   template: ``,
   styles: ``
 })
-export abstract class BaseTableExComponent<C, T extends Updatable, L> implements OnInit, AfterViewInit {
+export abstract class BaseTableComponent<C, T extends Updatable, L> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   table!: SortablePageableTableComponent<L>;

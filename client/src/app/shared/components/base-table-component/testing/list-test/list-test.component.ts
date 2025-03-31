@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 
 import {AuthService} from '@app/core/auth';
-import {BaseTableExComponent} from '@app/shared/components/base-table-ex';
+import {BaseTableComponent} from '@app/shared/components/base-table-component';
 
 import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
 import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
@@ -10,10 +10,7 @@ import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 import {
   TestEditDialogService, TestService, TestTableService,
   TestCreate, TestModel
-} from '@app/shared/components/base-table-ex/testing';
-
-
-
+} from '@app/shared/components/base-table-component/testing';
 
 @Component({
   selector: 'app-list-test',
@@ -24,7 +21,7 @@ import {
   styleUrl: './list-test.component.scss'
 })
 export class ListTestComponent
-  extends BaseTableExComponent<TestCreate, TestModel, TestModel> {
+  extends BaseTableComponent<TestCreate, TestModel, TestModel> {
 
   constructor(auth: AuthService,
               testSvc: TestService,
