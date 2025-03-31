@@ -1,7 +1,8 @@
 import {TestBed} from '@angular/core/testing';
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {provideHttpClient} from "@angular/common/http";
-import {PhoneService} from './phone.service';
+
+import {PhoneService} from '@app/features/phones';
 
 describe('PhoneService', () => {
   let service: PhoneService;

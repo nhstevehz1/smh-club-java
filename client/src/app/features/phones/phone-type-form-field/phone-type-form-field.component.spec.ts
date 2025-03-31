@@ -1,10 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {PhoneTypeFormFieldComponent} from './phone-type-form-field.component';
 import {FormControl} from "@angular/forms";
-import {PhoneType} from "../models/phone-type";
-import {TranslateModule} from "@ngx-translate/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
+import {TranslateModule} from "@ngx-translate/core";
+
+import {PhoneTypeFormFieldComponent, PhoneType} from '@app/features/phones';
 
 describe('PhoneTypeFormFieldComponent', () => {
   let component: PhoneTypeFormFieldComponent;

@@ -1,19 +1,21 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {PhoneEditorComponent} from './phone-editor.component';
-import {HarnessLoader} from "@angular/cdk/testing";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Phone} from '../models/phone';
 import {FormControl, FormGroup} from "@angular/forms";
-import {PhoneType} from "../models/phone-type";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
+
+import {MatFormFieldAppearance} from "@angular/material/form-field";
+import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
 import {MatButtonHarness} from "@angular/material/button/testing";
+
 import {TranslateModule} from "@ngx-translate/core";
-import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
+
+import {FormModelGroup} from "@app/shared/components/base-editor";
+import {EditorHeaderHarness} from "@app/shared/components/editor-header/testing";
+
+import {getFormFieldValue} from "@app/shared/testing";
+
+import {PhoneEditorComponent, Phone, PhoneType} from '@app/features/phones';
 
 describe('PhoneEditorComponent', () => {
   let component: PhoneEditorComponent;

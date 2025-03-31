@@ -1,12 +1,12 @@
 import {Component, input, signal} from '@angular/core';
-import {
-    SelectFormFieldComponent
-} from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
 import {FormControl} from "@angular/forms";
-import {PhoneType} from "../models/phone-type";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
-import {SelectOption} from '../../../shared/components/editor-form-fields/models/select-option';
+
+import {SelectFormFieldComponent} from "@app/shared/components/editor-form-fields";
+import {FormControlError} from "@app/shared/components/editor-form-fields";
+import {SelectOption} from '@app/shared/components/editor-form-fields';
+
+import {PhoneType} from "@app/features/phones";
 
 @Component({
   selector: 'app-phone-type-form-field',

@@ -1,40 +1,43 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {HttpErrorResponse} from '@angular/common/http';
+import {first, merge, mergeMap, Observable} from "rxjs";
+import {startWith, switchMap} from "rxjs/operators";
 import {
   SortablePageableTableComponent
 } from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {PhoneService} from "../services/phone.service";
 import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {Phone, PhoneMember} from "../models/phone";
-import {first, merge, Observable} from "rxjs";
-import {startWith, switchMap} from "rxjs/operators";
-import {HttpErrorResponse} from '@angular/common/http';
+import {Phone, PhoneMember} from "../models";
 import {AuthService} from '../../../core/auth/services/auth.service';
-import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
-import {PagedData} from '../../../shared/models/paged-data';
-import {PhoneEditorComponent} from '../phone-editor/phone-editor.component';
-import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
-import {MatDialog} from '@angular/material/dialog';
+import {EditAction, EditDialogResult, EditEvent} from '../../../shared/components/edit-dialog/models';
+import {PhoneEditDialogService, PhoneService, PhoneTableService} from '../services';
+import {PagedData} from '../../../shared/models';
 
 @Component({
   selector: 'app-list-phones',
   imports: [SortablePageableTableComponent],
   providers: [
     PhoneService,
-    AuthService
+    AuthService,
+    PhoneTableService,
+    PhoneEditDialogService
   ],
   templateUrl: './list-phones.component.html',
   styleUrl: './list-phones.component.scss'
 })
-export class ListPhonesComponent extends BaseTableComponent<PhoneMember> implements AfterViewInit {
+export class ListPhonesComponent extends BaseTableComponent<PhoneMember> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<PhoneMember>;
 
-  constructor(private svc: PhoneService,
-              auth: AuthService,
-              private dialog: MatDialog) {
+  constructor(auth: AuthService,
+              private svc: PhoneService,
+              private tableSvc: PhoneTableService,
+              private dialogSvc: PhoneEditDialogService) {
     super(auth);
-    this.columns.set(this.svc.getColumnDefs());
+  }
+
+  ngOnInit() {
+    this.columns.set(this.tableSvc.getColumnDefs());
   }
 
   ngAfterViewInit(): void {
@@ -50,11 +53,11 @@ export class ListPhonesComponent extends BaseTableComponent<PhoneMember> impleme
   }
 
   onEditClick(event: EditEvent<PhoneMember>) {
-    this.openDialog(event, EditAction.Edit);
+    this.openDialog('phones.list.dialog.update', event, EditAction.Edit);
   }
 
   onDeleteClick(event: EditEvent<PhoneMember>) {
-    this.openDialog(event, EditAction.Delete);
+    this.openDialog('phones.list.dialog.delete', event, EditAction.Delete);
   }
 
   private getCurrentPage(): Observable<PagedData<PhoneMember>> {
@@ -62,24 +65,14 @@ export class ListPhonesComponent extends BaseTableComponent<PhoneMember> impleme
       this._table.paginator.pageIndex, this._table.paginator.pageSize,
       this._table.sort.active, this._table.sort.direction);
 
-    return this.svc.getPhones(pr).pipe(first());
+    return this.svc.getPagedData(pr).pipe(first());
   }
 
-  private openDialog(event: EditEvent<PhoneMember>, action: EditAction): void {
-    const dialogData: EditDialogData<Phone> = {
-      title: 'Phone Title',
-      component: PhoneEditorComponent,
-      form: this.svc.generatePhoneForm(),
-      context: event.data as Phone,
-      action: action
-    }
+  private openDialog(title: string, event: EditEvent<PhoneMember>, action: EditAction): void {
+    const dialogInput = this.dialogSvc.generateDialogInput(title, event.data as Phone, action);
 
-    const dialogRef =
-      this.dialog.open<EditDialogComponent<Phone>, EditDialogData<Phone>>(
-        EditDialogComponent<Phone>, {data: dialogData});
-
-    dialogRef.afterClosed().subscribe({
-      next: (result: EditDialogData<Phone>) => {
+    this.dialogSvc.openDialog(dialogInput).subscribe({
+      next: (result: EditDialogResult<Phone>) => {
         if(result.action == EditAction.Edit) {
           this.updatePhone(result.context);
         } else if(result.action == EditAction.Delete) {
@@ -90,22 +83,20 @@ export class ListPhonesComponent extends BaseTableComponent<PhoneMember> impleme
   }
 
   private updatePhone(phone: Phone): void {
-    this.svc.updatePhone(phone).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse) => this.processRequestError(err)
-      }),
-      error: (err: HttpErrorResponse)=> this.processRequestError(err)
+    this.svc.update(phone.id, phone).pipe(
+      mergeMap(() => this.getCurrentPage())
+    ).subscribe({
+      next: data => this.processPageData(data),
+      error: (err: HttpErrorResponse) => this.processRequestError(err)
     })
   }
 
   private deletePhone(id: number): void{
-    this.svc.deletePhone(id).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse)=> this.processRequestError(err)
-      }),
+    this.svc.delete(id).pipe(
+      mergeMap(() => this.getCurrentPage())
+    ).subscribe({
+      next: data => this.processPageData(data),
       error: (err: HttpErrorResponse) => this.processRequestError(err)
-    });
+    })
   }
 }

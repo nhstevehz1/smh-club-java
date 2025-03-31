@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import {BaseTableService} from '../../../shared/components/sortable-pageable-table/services';
-import {PhoneMember, PhoneType} from '../models';
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models';
+
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {BaseTableService} from '@app/shared/services/table-service';
+
+import {PhoneMember, PhoneType} from '@app/features/phones';
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +15,17 @@ export class PhoneTableService extends BaseTableService<PhoneMember> {
   }
 
   getColumnDefs(): ColumnDef<PhoneMember>[] {
-    return [
-      {
+    return [{
         columnName: 'phone_number',
         displayName: 'phones.list.columns.phoneNumber',
         isSortable: true,
         cell: (element: PhoneMember) => this.getPhoneNumber(element)
-      },
-      {
+      }, {
         columnName: 'phone_type',
         displayName: 'phones.list.columns.phoneType',
         isSortable: false,
         cell: (element: PhoneMember) => this.phoneTypeMap.get(element.phone_type)
-      },
-      {
+      }, {
         columnName: 'full_name',
         displayName: 'phones.list.columns.fullName',
         isSortable: true,
