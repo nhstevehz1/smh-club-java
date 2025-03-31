@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditEmailDialogComponent } from './edit-email-dialog.component';
+import { EditEmailDialogComponent } from '@app/features/emails';
 
 describe('EditEmailDialogComponent', () => {
   let component: EditEmailDialogComponent;
