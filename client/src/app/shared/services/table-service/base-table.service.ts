@@ -1,6 +1,6 @@
-import {TableService} from './table-service';
-import {FullName} from '../../../models';
-import {ColumnDef} from '../models';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {FullName} from '@app/shared/models';
+import {TableService} from '@app/shared/services';
 
 export abstract class BaseTableService<T> implements TableService<T> {
   abstract getColumnDefs(): ColumnDef<T>[];
