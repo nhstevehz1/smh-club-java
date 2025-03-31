@@ -1,15 +1,16 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {AddressTypeFormFieldComponent} from './address-type-form-field.component';
-import {TranslateModule} from "@ngx-translate/core";
 import {provideNoopAnimations} from "@angular/platform-browser/animations";
 import {FormControl} from "@angular/forms";
-import {AddressType} from "../models/address-type";
+
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatSelectHarness} from "@angular/material/select/testing";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
+
+import {TranslateModule} from "@ngx-translate/core";
+
+import {AddressTypeFormFieldComponent, AddressType} from '@app/features/addresses';
 
 describe('AddressTypeFormFieldComponent', () => {
   let component: AddressTypeFormFieldComponent;

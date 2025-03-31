@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Address, AddressCreate, AddressMember} from '../models';
-import {BaseApiService} from '../../../shared/services';
-import {PagedData, PageRequest} from '../../../shared/models';
-import {AddressType} from '../models/address-type';
+
+import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
+
+import {Address, AddressCreate, AddressMember, AddressType} from '@app/features/addresses';
 
 @Injectable()
 export class AddressService extends BaseApiService<AddressMember, AddressCreate, Address>{

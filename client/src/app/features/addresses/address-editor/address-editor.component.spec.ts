@@ -1,23 +1,22 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {AddressEditorComponent} from './address-editor.component';
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
-import {AddressType} from "../models/address-type";
-import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {MatButtonHarness} from "@angular/material/button/testing";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {Address} from "../models/address";
-import {getFormFieldValue} from "../../../shared/test-helpers/test-helpers";
-import {
-  InputFormFieldComponent
-} from "../../../shared/components/editor-form-fields/input-form-field/input-form-field.component";
 import {forwardRef} from "@angular/core";
-import {TranslateModule} from "@ngx-translate/core";
+import {FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
+import {provideNoopAnimations} from "@angular/platform-browser/animations";
+
+import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
+import {HarnessLoader} from "@angular/cdk/testing";
+import {MatFormFieldHarness} from "@angular/material/form-field/testing";
+import {MatButtonHarness} from "@angular/material/button/testing";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {EditorHeaderHarness} from "../../../shared/components/editor-header/test-support/editor-header-harness";
+
+import {TranslateModule} from "@ngx-translate/core";
+
+import {FormModelGroup} from "@app/shared/components/base-editor";
+import {getFormFieldValue} from "app/shared/testing";
+import {InputFormFieldComponent} from "@app/shared/components/editor-form-fields";
+import {EditorHeaderHarness} from "@app/shared/components/editor-header/testing";
+
+import {AddressEditorComponent, Address, AddressType} from '@app/features/addresses';
 
 describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;

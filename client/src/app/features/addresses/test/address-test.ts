@@ -1,12 +1,12 @@
 import {FormControl, FormGroup} from '@angular/forms';
-import {AddressCreate, AddressMember, Address} from '../models';
-import {PagedData} from '../../../shared/models';
-import {generatePagedData} from '../../../shared/test-helpers/test-helpers';
-import {AddressType} from '../models/address-type';
-import {FormModelGroup} from '../../../shared/components/base-editor/form-model-group';
-import {EditAction, EditDialogInput} from '../../../shared/components/edit-dialog/models';
-import {AddressEditorComponent} from '../address-editor/address-editor.component';
-import {ColumnDef} from '../../../shared/components/sortable-pageable-table/models';
+
+import {generatePagedData} from 'app/shared/testing';
+import {FormModelGroup} from '@app/shared/components/base-editor';
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {PagedData} from '@app/shared/services/api-service';
+
+import {AddressEditorComponent, AddressCreate, AddressMember, Address, AddressType} from '@app/features/addresses';
 
 export function generateAddressPagedData(page: number, size: number, total: number): PagedData<AddressMember> {
     const content = generateAddressList(size);
