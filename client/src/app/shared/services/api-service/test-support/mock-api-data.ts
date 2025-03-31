@@ -1,7 +1,8 @@
-import {FullName} from '../../../models';
-import {ColumnDef} from '../../../components/sortable-pageable-table/models';
-import {FormModelGroup} from '../../../components/base-editor/form-model-group';
 import {FormControl, FormGroup} from '@angular/forms';
+
+import {FullName} from '@app/shared/models';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {FormModelGroup} from '@app/shared/components/base-editor';
 
 export interface MockCreateModel {
   test: string;
