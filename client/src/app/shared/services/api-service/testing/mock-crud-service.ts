@@ -8,7 +8,7 @@ import {
   MockCreateModel,
   MockFullNameModel,
   MockModel
-} from '@app/shared/services/api-service/test-support/mock-api-data';
+} from '@app/shared/services/api-service/testing/mock-api-data';
 
 @Injectable()
 export class MockCrudService extends BaseApiService<MockFullNameModel, MockCreateModel, MockModel> {
