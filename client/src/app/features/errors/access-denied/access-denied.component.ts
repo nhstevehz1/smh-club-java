@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {TitlePageComponent} from "../../../shared/components/title-page/title-page.component";
+
+import {TitlePageComponent} from "@app/shared/components/title-page";
 
 @Component({
   selector: 'app-access-denied',

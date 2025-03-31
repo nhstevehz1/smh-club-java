@@ -1,7 +1,8 @@
-import {PageNotFoundComponent} from './page-not-found.component';
 import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {TranslateModule} from "@ngx-translate/core";
 import {By} from "@angular/platform-browser";
+import {TranslateModule} from "@ngx-translate/core";
+
+import {PageNotFoundComponent} from '@app/features/errors';
 
 describe('PageNotFoundComponent', () => {
   let fixture: ComponentFixture<PageNotFoundComponent>;
