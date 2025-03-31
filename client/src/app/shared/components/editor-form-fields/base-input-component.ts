@@ -1,7 +1,8 @@
+import {computed, Directive, input, signal} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {computed, Directive, input, signal} from "@angular/core";
-import {FormControlError} from './models/form-control-error';
+
+import {FormControlError} from '@app/shared/components/editor-form-fields';
 
 @Directive()
 export abstract class BaseInputComponent<T> {

@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SelectFormFieldComponent} from './select-form-field.component';
-import {TestStringEnum} from "./test-support/test-support";
+import {TestStringEnum} from "@app/shared/components/editor-form-fields/select-form-field/testing/test-support";
 import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {SelectOption} from "../models/select-option";
 import {HarnessLoader} from "@angular/cdk/testing";
