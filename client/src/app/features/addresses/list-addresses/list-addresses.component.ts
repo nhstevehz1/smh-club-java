@@ -1,38 +1,45 @@
-import {AfterViewInit, Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import {
-  SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {AddressService} from "../services/address.service";
-import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {Address, AddressMember} from "../models/address";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {first, merge, Observable} from "rxjs";
-import {startWith, switchMap} from "rxjs/operators";
-import {AuthService} from '../../../core/auth/services/auth.service';
-import {MatDialog} from '@angular/material/dialog';
-import {EditAction, EditDialogData, EditEvent} from '../../../shared/components/edit-dialog/models/edit-event';
-import {AddressEditorComponent} from '../address-editor/address-editor.component';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
-import {EditDialogComponent} from '../../../shared/components/edit-dialog/edit-dialog.component';
-import {PagedData} from '../../../shared/models/paged-data';
+import {first, merge, mergeMap, Observable} from 'rxjs';
+import {startWith, switchMap} from 'rxjs/operators';
+
+import {AuthService} from '@app/core/auth';
+
+import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table-component';
+import {PagedData} from '@app/shared/services/api-service';
+import {EditAction, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
+
+import {
+  AddressEditDialogService, AddressService, AddressTableService,
+  Address, AddressMember
+} from '@app/features/addresses';
+
+
 
 @Component({
   selector: 'app-list-addresses',
   imports: [SortablePageableTableComponent],
-  providers: [AddressService, AddressService],
+  providers: [AddressService, AddressTableService, AddressEditDialogService],
   templateUrl: './list-addresses.component.html',
   styleUrl: './list-addresses.component.scss',
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class ListAddressesComponent extends BaseTableComponent<AddressMember> implements AfterViewInit {
+export class ListAddressesComponent extends BaseTableComponent<AddressMember> implements OnInit, AfterViewInit {
+
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<ColumnDef<AddressMember>>;
 
-  constructor(private svc: AddressService,
-              auth: AuthService,
-              private dialog: MatDialog) {
+  constructor(auth: AuthService,
+              private svc: AddressService,
+              private dialogSvc: AddressEditDialogService,
+              private tableSvc: AddressTableService) {
     super(auth);
-    this.columns.set(this.svc.getColumnDefs());
+  }
+
+  ngOnInit() {
+    this.columns.set(this.tableSvc.getColumnDefs());
   }
 
   ngAfterViewInit(): void {
@@ -47,11 +54,11 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
   }
 
   onEditClick(event: EditEvent<AddressMember>): void {
-    this.openDialog(event, EditAction.Edit);
+    this.openDialog('addresses.list.dialog.update', event, EditAction.Edit);
   }
 
   onDeleteClick(event: EditEvent<AddressMember>): void {
-    this.openDialog(event, EditAction.Delete);
+    this.openDialog('addresses.list.dialog.update', event, EditAction.Delete);
   }
 
   private getCurrentPage(): Observable<PagedData<AddressMember>> {
@@ -59,49 +66,37 @@ export class ListAddressesComponent extends BaseTableComponent<AddressMember> im
     const pr = this.getPageRequest(
       this._table.paginator.pageIndex, this._table.paginator.pageSize,
       this._table.sort.active, this._table.sort.direction);
-    return this.svc.getAddresses(pr).pipe(first());
+    return this.svc.getPagedData(pr).pipe(first());
   }
 
-  private openDialog(event: EditEvent<AddressMember>, action: EditAction): void {
-   const dialogData: EditDialogData<Address> = {
-     title: 'Address Title',
-     component: AddressEditorComponent,
-     form: this.svc.generateAddressForm(),
-     context: event.data as Address,
-     action: action
-    }
+  private openDialog(title: string, event: EditEvent<AddressMember>, action: EditAction): void {
+   const dialogInput = this.dialogSvc.generateDialogInput(title, event.data as Address, action);
 
-    const dialogRef =
-      this.dialog.open<EditDialogComponent<Address>, EditDialogData<Address>>(
-        EditDialogComponent<Address>, {data: dialogData});
-
-    dialogRef.afterClosed().subscribe({
-      next: (result: EditDialogData<Address>) => {
+    this.dialogSvc.openDialog(dialogInput).subscribe({
+      next: (result: EditDialogResult<Address>) =>  {
         if(result.action == EditAction.Edit) {
           this.updateAddress(result.context);
-        } else if (result.action == EditAction.Delete) {
-          this.deleteEmail(event.data.id);
+        } else if(result.action == EditAction.Delete) {
+          this.deleteAddress(event.data.id);
         }
       }
     });
   }
 
   private updateAddress(address: Address): void {
-    this.svc.updateAddress(address).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse) => this.processRequestError(err)
-      }),
-      error: (err: HttpErrorResponse)=> this.processRequestError(err)
-    });
+    this.svc.update(address.id, address).pipe(
+      mergeMap(() => this.getCurrentPage())
+    ).subscribe({
+      next: data => this.processPageData(data),
+      error: (err: HttpErrorResponse) => this.processRequestError(err)
+    })
   }
 
-  private deleteEmail(id: number) {
-    this.svc.deleteAddress(id).subscribe({
-      next: () => this.getCurrentPage().subscribe({
-        next: data => this.processPageData(data),
-        error: (err: HttpErrorResponse)=> this.processRequestError(err)
-      }),
+  private deleteAddress(id: number) {
+    this.svc.delete(id).pipe(
+      mergeMap(() => this.getCurrentPage())
+    ).subscribe({
+      next: data => this.processPageData(data),
       error: (err: HttpErrorResponse) => this.processRequestError(err)
     });
   }
