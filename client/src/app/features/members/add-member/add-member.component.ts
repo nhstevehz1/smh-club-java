@@ -1,4 +1,4 @@
-import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, signal, WritableSignal} from '@angular/core';
 import {ReactiveFormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
 import {HttpErrorResponse} from '@angular/common/http';
@@ -17,9 +17,7 @@ import {TranslatePipe} from "@ngx-translate/core";
 import {OkCancelComponent} from "@app/shared/components/ok-cancel";
 import {FormModelGroup} from '@app/shared/components/base-editor';
 
-import {
-  MemberEditDialogService, MemberService, MemberTableService, Member, MemberCreate
-} from '@app/features/members';
+import {Member, MemberCreate, MemberEditDialogService, MemberService, MemberTableService} from '@app/features/members';
 
 @Component({
   selector: 'app-create-member',

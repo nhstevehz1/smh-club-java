@@ -1,19 +1,18 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
-
-import {first, merge, mergeMap, Observable} from "rxjs";
-import {startWith, switchMap} from "rxjs/operators";
+import {Component} from '@angular/core';
 
 import {AuthService} from '@app/core/auth';
 
 import {SortablePageableTableComponent} from "@app/shared/components/sortable-pageable-table";
 import {BaseTableComponent} from "@app/shared/components/base-table-component";
-import {EditAction, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
-import {PagedData} from '@app/shared/services/api-service';
+import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 
 import {
-  EmailEditDialogService, EmailService, EmailTableService,
-  Email, EmailMember, EmailCreate
+  Email,
+  EmailCreate,
+  EmailEditDialogService,
+  EmailMember,
+  EmailService,
+  EmailTableService
 } from '@app/features/emails';
 
 @Component({
