@@ -1,12 +1,14 @@
-import {ColumnDef} from "../sortable-pageable-table/models";
-import {SortDirection} from "@angular/material/sort";
-import {PageRequest, SortDef, PagedData, FullName} from "../../models";
 import {computed, Directive, signal} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
 import {HttpErrorResponse} from '@angular/common/http';
-import {AuthService} from '../../../core/auth/services/auth.service';
-import {PermissionType} from '../../../core/auth/models/permission-type';
 
+import {SortDirection} from "@angular/material/sort";
+import {MatTableDataSource} from '@angular/material/table';
+
+import {AuthService, PermissionType} from '@app/core/auth';
+
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {PagedData, PageRequest, SortDef} from '@app/shared/services/api-service';
+import {FullName} from '@app/shared/models';
 
 @Directive()
 export abstract class BaseTableComponent<T> {

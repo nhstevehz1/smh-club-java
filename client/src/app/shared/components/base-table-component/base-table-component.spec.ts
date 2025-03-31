@@ -1,13 +1,15 @@
-import {FullName} from "../../models";
-import {AuthService} from '../../../core/auth/services/auth.service';
-import SpyObj = jasmine.SpyObj;
-import {MockTableComponent} from './test-support/mock-table-component';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+
+import {AuthService} from '@app/core/auth';
+
+import {MockTableComponent} from 'app/shared/components/base-table-component/testing';
+import {FullName} from '@app/shared/models';
+
 
 describe('BaseTableComponent', () => {
   let fixture: ComponentFixture<MockTableComponent>;
   let component: MockTableComponent;
-  let authSvcMock: SpyObj<AuthService>;
+  let authSvcMock: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
     authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);

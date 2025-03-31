@@ -1,9 +1,13 @@
 import {Component} from '@angular/core';
 import {SortDirection} from "@angular/material/sort";
-import {BaseTableComponent} from '../base-table-component';
-import {AuthService} from '../../../../core/auth/services/auth.service';
-import {FullName, PageRequest} from '../../../models';
-import {TestType} from './mock-table-data';
+
+import {AuthService} from '@app/core/auth';
+
+import {TestType} from '@app/shared/components/base-table-component/testing/mock-table-data';
+import {PageRequest} from '@app/shared/services/api-service';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table-component';
+import {FullName} from '@app/shared/models';
+
 
 @Component({
   selector: 'app- mock-table-component',
