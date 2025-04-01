@@ -11,8 +11,8 @@ import {MatProgressSpinnerHarness} from '@angular/material/progress-spinner/test
 import {TranslateModule} from '@ngx-translate/core';
 
 import {AppComponent} from '@app/app.component';
-import {AuthService} from '@app/core/auth';
-import {MainLayoutComponent} from '@app/core/layout';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {MainLayoutComponent} from '@app/core/layout/main-layout/main-layout.component';
 
 describe('AppComponent', () => {
    let fixture: ComponentFixture<AppComponent>;

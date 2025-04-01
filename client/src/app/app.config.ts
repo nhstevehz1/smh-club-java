@@ -5,11 +5,12 @@ import {DOCUMENT} from '@angular/common';
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {provideOAuthClient} from 'angular-oauth2-oidc';
 
-
-import {customOauthInterceptor, authAppInitFactory, AuthService} from '@app/core/auth';
-import {provideNgxTranslate} from '@app/core/i18n';
 import {routes} from '@app/app.routes';
-import {loadingSpinnerInterceptor} from '@app/core/loading';
+import {customOauthInterceptor} from '@app/core/auth/interceptors/custom-oauth.interceptor';
+import {authAppInitFactory} from '@app/core/auth/factories/auth-app-init-factory';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {provideNgxTranslate} from '@app/core/i18n/providers/ngx-translate-provider';
+import {loadingSpinnerInterceptor} from '@app/core/loading/loading-spinner.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [

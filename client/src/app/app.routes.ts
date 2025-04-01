@@ -1,5 +1,5 @@
 import {Routes} from '@angular/router';
-import {readGuard} from '@app/core/auth';
+import {readGuard} from '@app/core/auth/guards/read.guard';
 
 export const routes: Routes = [{
     path: '',
