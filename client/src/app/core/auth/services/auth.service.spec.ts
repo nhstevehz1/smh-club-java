@@ -5,7 +5,7 @@ import {OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {Observable, Subject} from 'rxjs';
 
 import {authCodeFlowConfig} from '@app/auth.config';
-import {AuthService} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;

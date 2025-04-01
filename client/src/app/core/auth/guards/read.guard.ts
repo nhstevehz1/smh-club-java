@@ -3,7 +3,8 @@ import {inject, isDevMode} from '@angular/core';
 import {take} from 'rxjs/operators';
 import {tap} from 'rxjs';
 
-import {AuthService, PermissionType} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
 
 export const readGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);

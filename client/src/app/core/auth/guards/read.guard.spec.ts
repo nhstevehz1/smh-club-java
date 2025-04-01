@@ -3,7 +3,9 @@ import {ActivatedRouteSnapshot, CanActivateFn, provideRouter, Router} from '@ang
 
 import {Observable, Subject} from 'rxjs';
 
-import {PermissionType, readGuard, AuthService} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
+import {readGuard} from './read.guard';
 
 describe('readGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>

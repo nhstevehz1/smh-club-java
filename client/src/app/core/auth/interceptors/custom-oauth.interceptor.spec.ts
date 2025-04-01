@@ -11,7 +11,7 @@ import {
   OAuthStorage
 } from 'angular-oauth2-oidc';
 
-import {customOauthInterceptor} from '@app/core/auth';
+import {customOauthInterceptor} from './custom-oauth.interceptor';
 
 describe('defaultOauthInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) =>

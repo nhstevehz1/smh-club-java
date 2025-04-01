@@ -5,7 +5,9 @@ import {MatListHarness} from '@angular/material/list/testing';
 
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AuthService, ProfileComponent, AuthUser} from '@app/core/auth';
+import {ProfileComponent} from '@app/core/auth/pages/profile/profile.component';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {AuthUser} from '@app/core/auth/models/auth-user';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;

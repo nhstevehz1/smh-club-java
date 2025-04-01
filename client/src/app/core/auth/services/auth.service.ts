@@ -5,7 +5,10 @@ import {OAuthService} from 'angular-oauth2-oidc';
 import {jwtDecode} from 'jwt-decode';
 
 import {authCodeFlowConfig} from '@app/auth.config';
-import {AuthUser, RealmAccess, PermissionType, Roles} from '@app/core/auth';
+import {AuthUser} from '@app/core/auth/models/auth-user';
+import {PermissionType} from '@app/core/auth/models/permission-type';
+import {RealmAccess} from '@app/core/auth/models/realm-access';
+import {Roles} from '@app/core/auth/models/roles';
 
 
 @Injectable({

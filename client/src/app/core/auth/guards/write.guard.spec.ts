@@ -2,7 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import {ActivatedRouteSnapshot, CanActivateFn, provideRouter, Router} from '@angular/router';
 import {Observable, Subject} from 'rxjs';
 
-import {PermissionType, AuthService, writeGuard} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
+import {writeGuard} from './write.guard';
 
 describe('writeGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
