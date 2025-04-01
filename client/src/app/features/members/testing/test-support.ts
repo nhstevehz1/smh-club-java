@@ -2,9 +2,8 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {DateTime} from 'luxon';
 
 import {generatePagedData} from '@app/shared/testing/test-helpers';
-import {PagedData} from '@app/shared/services';
-
 import {Member} from '@app/features/members/models/member';
+import {PagedData} from '@app/shared/services/api-service/models';
 
 export function generateMemberPageData(page: number, size: number, total: number): PagedData<Member> {
   const content = generateMemberList(size);

@@ -6,7 +6,8 @@ import {map} from 'rxjs/operators';
 import {DateTime} from 'luxon';
 
 import {Member, MemberCreate} from '@app/features/members/models/member';
-import {BaseApiService, PageRequest, PagedData} from '@app/shared/services/api-service';
+import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
+import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 @Injectable()
 export class MemberService extends BaseApiService<Member, MemberCreate, Member> {

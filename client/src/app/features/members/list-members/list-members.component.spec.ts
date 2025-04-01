@@ -21,7 +21,7 @@ import {MemberService} from '@app/features/members/services/member.service';
 import {MemberTableService} from '@app/features/members/services/member-table.service';
 import {AuthService} from '@app/core/auth/services/auth.service';
 import {PermissionType} from '@app/core/auth/models/permission-type';
-import {PageRequest} from '@app/shared/services/api-service';
+import {PageRequest} from '@app/shared/services/api-service/models';
 
 describe('ListMembersComponent', () => {
   let fixture: ComponentFixture<ListMembersComponent>;
