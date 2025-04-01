@@ -13,7 +13,8 @@ import {MatInputHarness} from '@angular/material/input/testing';
 
 import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
 
-import {FormControlError, InputFormFieldComponent, InputType} from '@app/shared/components/editor-form-fields';
+import {InputType, FormControlError} from '@app/shared/components/editor-form-fields/models';
+import {InputFormFieldComponent} from './input-form-field.component';
 
 describe('InputFormFieldComponent', () => {
   let component: InputFormFieldComponent;

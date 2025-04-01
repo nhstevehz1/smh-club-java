@@ -6,7 +6,8 @@ import {MatInputModule} from '@angular/material/input';
 
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {BaseInputComponent, InputType} from '@app/shared/components/editor-form-fields';
+import {InputType} from '@app/shared/components/editor-form-fields/models';
+import {BaseInputComponent} from '@app/shared/components/editor-form-fields/base-input-component';
 
 @Component({
   selector: 'app-input-form-field',

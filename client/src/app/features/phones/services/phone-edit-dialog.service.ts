@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import {NonNullableFormBuilder, Validators} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 
-import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
-import {FormModelGroup} from '@app/shared/components/base-editor';
-import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service';
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service/base-edit-dialog.service';
 
 import {Phone, PhoneType} from '@app/features/phones/models/phone';
 import {PhoneEditorComponent} from '@app/features/phones/phone-editor/phone-editor.component';

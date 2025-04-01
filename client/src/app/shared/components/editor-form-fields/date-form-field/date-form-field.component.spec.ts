@@ -14,7 +14,9 @@ import {MatDatepickerInputHarness, MatDatepickerToggleHarness} from '@angular/ma
 import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
 import {DateTime} from 'luxon';
 
-import {DateFormFieldComponent, FormControlError} from '@app/shared/components/editor-form-fields';
+import {DateFormFieldComponent} from './date-form-field.component';
+import {FormControlError} from '@app/shared/components/editor-form-fields/models';
+
 
 describe('DateFormFieldComponent', () => {
   let component: DateFormFieldComponent;

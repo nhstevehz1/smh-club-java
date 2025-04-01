@@ -8,7 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 import {TranslatePipe} from '@ngx-translate/core';
 import {DateTime} from 'luxon';
 
-import {BaseInputComponent} from '@app/shared/components/editor-form-fields';
+import {BaseInputComponent} from '@app/shared/components/editor-form-fields/base-input-component';
 
 @Component({
   selector: 'app-date-form-field',

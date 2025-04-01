@@ -2,13 +2,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {BaseApiService, PagedData, PageRequest} from '@app/shared/services';
+
 
 import {
   MockCreateModel,
   MockFullNameModel,
   MockModel
 } from '@app/shared/services/api-service/testing/mock-api-data';
+import {BaseApiService, PageRequest, PagedData} from '@app/shared/services/api-service';
 
 @Injectable()
 export class MockCrudService extends BaseApiService<MockFullNameModel, MockCreateModel, MockModel> {

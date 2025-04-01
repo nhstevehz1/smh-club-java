@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import {provideHttpClient} from '@angular/common/http';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 
-import {PageRequest} from '@app/shared/services/api-service/models';
-
 import {MockCrudService} from '@app/shared/services/api-service/testing/mock-crud-service';
+import {PageRequest} from '@app/shared/services/api-service/models';
 import {generateMockCreate} from '@app/shared/services/api-service/testing/mock-api-data';
+import {generateMockModel} from '@app/shared/services/dialog-edit-service/testing';
 
 describe('BaseApiService', () => {
   let service: MockCrudService;

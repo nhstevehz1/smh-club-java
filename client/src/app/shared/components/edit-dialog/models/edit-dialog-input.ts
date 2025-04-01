@@ -1,5 +1,5 @@
 import {EditAction} from '@app/shared/components/edit-dialog/models/edit-action';
-import {FormModelGroup} from '@app/shared/components/base-editor/form-model-group';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
 
 export interface EditDialogInput<T> {
   title: string,

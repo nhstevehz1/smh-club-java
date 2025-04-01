@@ -15,7 +15,7 @@ import {MatTooltip} from '@angular/material/tooltip';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {FormModelGroup} from '@app/shared/components/base-editor/form-model-group';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {EditDialogInput} from '@app/shared/components/edit-dialog/models/edit-dialog-input';
 import {EditAction} from '@app/shared/components/edit-dialog/models/edit-action';
 
