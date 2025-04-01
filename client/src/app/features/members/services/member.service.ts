@@ -7,7 +7,7 @@ import {DateTime} from 'luxon';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services';
 
-import {Member, MemberCreate} from '@app/features/members/models';
+import {Member, MemberCreate} from '@app/features/members/models/member';
 
 @Injectable()
 export class MemberService extends BaseApiService<Member, MemberCreate, Member> {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import {AuthService} from '@app/core/auth';
 
-import {MemberService} from '@app/features/members/services';
+import {MemberService} from '@app/features/members/services/member.service';
 
 @Component({
   selector: 'app-view-member',

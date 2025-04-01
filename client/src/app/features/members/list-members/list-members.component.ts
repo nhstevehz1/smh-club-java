@@ -14,8 +14,10 @@ import {BaseTableComponent} from '@app/shared/components/base-table-component';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
 import {EditEvent} from '@app/shared/components/edit-dialog';
 
-import {MemberService, MemberTableService, MemberEditDialogService} from '@app/features/members/services';
-import {MemberCreate, Member} from '@app/features/members/models';
+import {MemberCreate, Member} from '@app/features/members/models/member';
+import {MemberService} from '@app/features/members/services/member.service';
+import {MemberTableService} from '@app/features/members/services/member-table.service';
+import {MemberEditDialogService} from '@app/features/members/services/member-edit-dialog.service';
 
 @Component({
   selector: 'app-list-members',

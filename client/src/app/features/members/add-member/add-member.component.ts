@@ -17,8 +17,10 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {OkCancelComponent} from '@app/shared/components/ok-cancel';
 import {FormModelGroup} from '@app/shared/components/base-editor';
 
-import {MemberService, MemberTableService, MemberEditDialogService} from '@app/features/members/services';
-import {Member, MemberCreate} from '@app/features/members/models';
+import {Member, MemberCreate} from '@app/features/members/models/member';
+import {MemberService} from '@app/features/members/services/member.service';
+import {MemberTableService} from '@app/features/members/services/member-table.service';
+import {MemberEditDialogService} from '@app/features/members/services/member-edit-dialog.service';
 
 
 @Component({

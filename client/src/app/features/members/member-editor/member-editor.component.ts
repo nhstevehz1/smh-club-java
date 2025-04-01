@@ -12,7 +12,7 @@ import {
   InputFormFieldComponent, DateFormFieldComponent, FormControlError
 } from '@app/shared/components/editor-form-fields';
 
-import {Member} from '@app/features/members/models';
+import {Member} from '@app/features/members/models/member';
 
 @Component({
   selector: 'app-member-editor',

@@ -6,7 +6,7 @@ import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
 import {BaseTableService} from '@app/shared/services';
 
-import {Member} from '@app/features/members/models';
+import {Member} from '@app/features/members/models/member';
 
 @Injectable()
 export class MemberTableService extends BaseTableService<Member>{

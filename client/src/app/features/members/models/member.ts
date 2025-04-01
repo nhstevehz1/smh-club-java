@@ -1,6 +1,6 @@
 import {DateTime} from 'luxon';
-import {Address} from '@app/features/addresses/models';
-import {Email} from '@app/features/emails/models';
+import {Address} from '@app/features/addresses/models/address';
+import {Email} from '@app/features/emails/models/email';
 import {Phone} from '@app/features/phones';
 import {Renewal} from '@app/features/renewals';
 

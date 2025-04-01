@@ -8,8 +8,8 @@ import {FormModelGroup} from '@app/shared/components/base-editor';
 import {BaseEditDialogService} from '@app/shared/services';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 
-import {Member} from '@app/features/members/models';
-import {MemberEditorComponent} from '@app/features/members/member-editor';
+import {Member} from '@app/features/members/models/member';
+import {MemberEditorComponent} from '@app/features/members/member-editor/member-editor.component';
 
 @Injectable()
 export class MemberEditDialogService extends BaseEditDialogService<Member> {

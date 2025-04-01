@@ -17,9 +17,11 @@ import {asyncData} from '@app/shared/testing/test-helpers';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
 import {PageRequest} from '@app/shared/services';
 
-import {generateMemberPageData} from '@app/features/members/testing';
-import {MemberService, MemberTableService} from '@app/features/members/services';
-import {ListMembersComponent} from '@app/features/members/list-members/list-members.component';
+import {generateMemberPageData} from '@app/features/members/testing/test-support';
+
+import {ListMembersComponent} from './list-members.component';
+import {MemberService} from '@app/features/members/services/member.service';
+import {MemberTableService} from '@app/features/members/services/member-table.service';
 
 describe('ListMembersComponent', () => {
   let fixture: ComponentFixture<ListMembersComponent>;

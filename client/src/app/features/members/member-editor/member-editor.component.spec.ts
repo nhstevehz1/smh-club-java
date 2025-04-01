@@ -17,8 +17,8 @@ import {FormModelGroup} from '@app/shared/components/base-editor';
 import {getFormFieldValue} from '@app/shared/testing';
 import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
 
-import {Member} from '@app/features/members/models';
 import {MemberEditorComponent} from './member-editor.component';
+import {Member} from '@app/features/members/models/member';
 
 describe('MemberEditorComponent', () => {
   let component: MemberEditorComponent;
