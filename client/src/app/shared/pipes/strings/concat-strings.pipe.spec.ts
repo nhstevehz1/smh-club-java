@@ -1,4 +1,4 @@
-import {ConcatStringsPipe} from './concat-strings.pipe';
+import {ConcatStringsPipe} from '@app/shared/pipes';
 
 describe('ConcatStringsPipe', () => {
   const pipe = new ConcatStringsPipe();

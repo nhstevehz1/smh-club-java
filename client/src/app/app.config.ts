@@ -1,16 +1,15 @@
 import {ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
-
-import {routes} from './app.routes';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
-import {loadingSpinnerInterceptor} from './core/loading/loading-spinner.interceptor';
+import {DOCUMENT} from '@angular/common';
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {provideOAuthClient} from 'angular-oauth2-oidc';
-import {customOauthInterceptor} from './core/auth/interceptors/custom-oauth.interceptor';
-import {authAppInitFactory} from './core/auth/factories/auth-app-init-factory';
-import {AuthService} from './core/auth/services/auth.service';
-import {DOCUMENT} from '@angular/common';
-import {provideNgxTranslate} from './core/i18n/providers/ngx-translate-provider';
+
+
+import {customOauthInterceptor, authAppInitFactory, AuthService} from '@app/core/auth';
+import {provideNgxTranslate} from '@app/core/i18n';
+import {routes} from '@app/app.routes';
+import {loadingSpinnerInterceptor} from '@app/core/loading';
 
 export const appConfig: ApplicationConfig = {
   providers: [

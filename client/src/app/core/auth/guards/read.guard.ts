@@ -20,7 +20,7 @@ export const readGuard: CanActivateFn = (route, state) => {
           if(!isAuthed) {
               router.navigate(['p/login']).then();
           } else if(!authService.hasPermission(PermissionType.read)){
-              router.navigate(['p/access-denied']);
+              router.navigate(['p/access-denied']).then();
           }
       })
   );

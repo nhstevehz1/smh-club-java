@@ -1,12 +1,14 @@
 import {Component, ViewChild} from '@angular/core';
+import {Router, RouterOutlet} from '@angular/router';
+
 import {MatListModule} from '@angular/material/list';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
-import {Router, RouterOutlet} from '@angular/router';
-import {NavItem} from './models/nav-item';
-import {AuthService} from '../../auth/services/auth.service';
-import {PermissionType} from '../../auth/models/permission-type';
 import {MatIconModule} from '@angular/material/icon';
+
 import {TranslatePipe} from '@ngx-translate/core';
+
+import {NavItem} from '@app/core/layout';
+import {AuthService, PermissionType} from '@app/core/auth';
 
 @Component({
   selector: 'app-content',

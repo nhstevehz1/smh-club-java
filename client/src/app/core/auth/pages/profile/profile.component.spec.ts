@@ -1,10 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ProfileComponent} from './profile.component';
+
 import {AuthService} from '../../services/auth.service';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatListHarness} from '@angular/material/list/testing';
-import {AuthUser} from '../../models/auth-user';
+
 import {TranslateModule} from '@ngx-translate/core';
 
 describe('ProfileComponent', () => {

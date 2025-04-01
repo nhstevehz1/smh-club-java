@@ -1,6 +1,8 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClient, HttpInterceptorFn, provideHttpClient, withInterceptors} from '@angular/common/http';
-import {customOauthInterceptor} from './custom-oauth.interceptor';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {Subject} from 'rxjs';
+
 import {
   OAuthEvent,
   OAuthModuleConfig,
@@ -8,8 +10,8 @@ import {
   OAuthService,
   OAuthStorage
 } from 'angular-oauth2-oidc';
-import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {Subject} from 'rxjs';
+
+import {customOauthInterceptor} from '@app/core/auth';
 
 describe('defaultOauthInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) =>
