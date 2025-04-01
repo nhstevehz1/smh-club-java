@@ -18,9 +18,8 @@ import {DateTimeToFormatPipe} from '@app/shared/pipes';
 import {PageRequest} from '@app/shared/services';
 
 import {generateMemberPageData} from '@app/features/members/testing';
-import {
-  ListMembersComponent, MemberService, MemberTableService
-} from '@app/features/members';
+import {MemberService, MemberTableService} from '@app/features/members/services';
+import {ListMembersComponent} from '@app/features/members/list-members/list-members.component';
 
 describe('ListMembersComponent', () => {
   let fixture: ComponentFixture<ListMembersComponent>;

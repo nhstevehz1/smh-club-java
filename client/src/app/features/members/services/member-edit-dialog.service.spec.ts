@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MemberEditDialogService } from '@app/features/members';
+import { MemberEditDialogService } from './member-edit-dialog.service';
 
 describe('MemberEditDialogService', () => {
   let service: MemberEditDialogService;

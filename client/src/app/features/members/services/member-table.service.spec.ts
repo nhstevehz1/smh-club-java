@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import {TranslateModule} from '@ngx-translate/core';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
 
-import { MemberTableService } from '@app/features/members';
+import { MemberTableService } from './member-table.service';
 
 describe('MemberTableService', () => {
   let service: MemberTableService;

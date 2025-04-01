@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 
-import {MemberService} from '@app/features/members';
+import {MemberService} from '@app/features/members/services';
 
 describe('MembersService', () => {
   let service: MemberService;

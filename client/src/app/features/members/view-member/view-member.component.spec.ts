@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewMemberComponent } from '@app/features/members';
+import { ViewMemberComponent } from './view-member.component';
 
 describe('ViewMemberComponent', () => {
   let component: ViewMemberComponent;

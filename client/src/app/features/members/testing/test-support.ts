@@ -4,7 +4,7 @@ import {DateTime} from 'luxon';
 import {generatePagedData} from '@app/shared/testing/test-helpers';
 import {PagedData} from '@app/shared/services';
 
-import {Member} from '@app/features/members';
+import {Member} from '@app/features/members/models';
 
 export function generateMemberPageData(page: number, size: number, total: number): PagedData<Member> {
   const content = generateMemberList(size);

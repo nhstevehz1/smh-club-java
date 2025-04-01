@@ -8,15 +8,15 @@ import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
 
-
 import {Observable, Subject} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {generateMember} from '@app/features/members/testing';
 
-import {
-  AddMemberComponent, MemberService, Member
-} from '@app/features/members';
+import {Member} from '@app/features/members/models';
+import {MemberService} from '@app/features/members/services';
+import {AddMemberComponent} from './add-member.component';
+
 
 describe('AddMemberComponent', () => {
   let component: AddMemberComponent;

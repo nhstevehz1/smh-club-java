@@ -17,7 +17,9 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {OkCancelComponent} from '@app/shared/components/ok-cancel';
 import {FormModelGroup} from '@app/shared/components/base-editor';
 
-import {Member, MemberCreate, MemberEditDialogService, MemberService, MemberTableService} from '@app/features/members';
+import {MemberService, MemberTableService, MemberEditDialogService} from '@app/features/members/services';
+import {Member, MemberCreate} from '@app/features/members/models';
+
 
 @Component({
   selector: 'app-create-member',
