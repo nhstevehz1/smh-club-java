@@ -7,17 +7,19 @@ import {MatTooltip} from '@angular/material/tooltip';
 
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
-import {AuthService} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
 
-import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
-import {BaseTableComponent} from '@app/shared/components/base-table-component';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
-import {EditEvent} from '@app/shared/components/edit-dialog';
 
 import {MemberCreate, Member} from '@app/features/members/models/member';
 import {MemberService} from '@app/features/members/services/member.service';
 import {MemberTableService} from '@app/features/members/services/member-table.service';
 import {MemberEditDialogService} from '@app/features/members/services/member-edit-dialog.service';
+import {
+  SortablePageableTableComponent
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
+import {EditEvent} from '@app/shared/components/edit-dialog/models';
 
 @Component({
   selector: 'app-list-members',

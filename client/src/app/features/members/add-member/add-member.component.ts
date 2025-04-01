@@ -14,8 +14,8 @@ import {MatButtonModule} from '@angular/material/button';
 
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {OkCancelComponent} from '@app/shared/components/ok-cancel';
-import {FormModelGroup} from '@app/shared/components/base-editor';
+import {OkCancelComponent} from '@app/shared/components/ok-cancel/ok-cancel.component';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
 
 import {Member, MemberCreate} from '@app/features/members/models/member';
 import {MemberService} from '@app/features/members/services/member.service';

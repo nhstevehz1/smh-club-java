@@ -4,9 +4,9 @@ import {MatDialog} from '@angular/material/dialog';
 
 import {DateTime} from 'luxon';
 
-import {FormModelGroup} from '@app/shared/components/base-editor';
-import {BaseEditDialogService} from '@app/shared/services';
-import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service/base-edit-dialog.service';
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
 
 import {Member} from '@app/features/members/models/member';
 import {MemberEditorComponent} from '@app/features/members/member-editor/member-editor.component';

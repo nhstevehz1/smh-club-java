@@ -13,9 +13,9 @@ import {MatButtonHarness} from '@angular/material/button/testing';
 import {DateTime} from 'luxon';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {FormModelGroup} from '@app/shared/components/base-editor';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {getFormFieldValue} from '@app/shared/testing';
-import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
+import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing/editor-header-harness';
 
 import {MemberEditorComponent} from './member-editor.component';
 import {Member} from '@app/features/members/models/member';

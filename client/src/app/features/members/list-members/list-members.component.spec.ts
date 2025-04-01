@@ -11,17 +11,17 @@ import {MatButtonHarness} from '@angular/material/button/testing';
 import {throwError} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AuthService, PermissionType} from '@app/core/auth';
-
 import {asyncData} from '@app/shared/testing/test-helpers';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
-import {PageRequest} from '@app/shared/services';
 
 import {generateMemberPageData} from '@app/features/members/testing/test-support';
 
 import {ListMembersComponent} from './list-members.component';
 import {MemberService} from '@app/features/members/services/member.service';
 import {MemberTableService} from '@app/features/members/services/member-table.service';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
+import {PageRequest} from '@app/shared/services/api-service';
 
 describe('ListMembersComponent', () => {
   let fixture: ComponentFixture<ListMembersComponent>;

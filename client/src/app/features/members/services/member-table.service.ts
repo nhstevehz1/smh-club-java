@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {TranslateService} from '@ngx-translate/core';
 
-import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
-import {BaseTableService} from '@app/shared/services';
+import {BaseTableService} from '@app/shared/services/table-service/base-table.service';
 
 import {Member} from '@app/features/members/models/member';
 

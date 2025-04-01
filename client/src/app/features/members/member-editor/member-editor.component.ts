@@ -6,13 +6,15 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 
-import {BaseEditorComponent} from '@app/shared/components/base-editor';
-
-import {
-  InputFormFieldComponent, DateFormFieldComponent, FormControlError
-} from '@app/shared/components/editor-form-fields';
-
+import {BaseEditorComponent} from '@app/shared/components/base-editor/base-editor.component';
 import {Member} from '@app/features/members/models/member';
+import {
+  InputFormFieldComponent
+} from '@app/shared/components/editor-form-fields/input-form-field/input-form-field.component';
+import {
+  DateFormFieldComponent
+} from '@app/shared/components/editor-form-fields/date-form-field/date-form-field.component';
+import {FormControlError} from '@app/shared/components/editor-form-fields/models';
 
 @Component({
   selector: 'app-member-editor',

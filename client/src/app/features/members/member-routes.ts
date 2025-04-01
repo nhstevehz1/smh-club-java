@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
-import {readGuard, writeGuard} from '@app/core/auth';
+import {readGuard} from '@app/core/auth/guards/read.guard';
+import {writeGuard} from '@app/core/auth/guards/write.guard';
 
 export const memberRoutes: Routes = [{
     path: '',
