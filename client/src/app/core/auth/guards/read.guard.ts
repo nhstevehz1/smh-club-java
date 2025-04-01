@@ -1,9 +1,9 @@
 import {CanActivateFn, Router} from '@angular/router';
 import {inject, isDevMode} from '@angular/core';
-import {AuthService} from '../services/auth.service';
 import {take} from 'rxjs/operators';
 import {tap} from 'rxjs';
-import {PermissionType} from '../models/permission-type';
+
+import {AuthService, PermissionType} from '@app/core/auth';
 
 export const readGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
