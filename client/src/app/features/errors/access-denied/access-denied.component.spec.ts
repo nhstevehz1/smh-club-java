@@ -3,7 +3,7 @@ import {By} from '@angular/platform-browser';
 
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AccessDeniedComponent} from '@app/features/errors';
+import {AccessDeniedComponent} from './access-denied.component';
 
 describe('AccessDeniedComponent', () => {
   let component: AccessDeniedComponent;

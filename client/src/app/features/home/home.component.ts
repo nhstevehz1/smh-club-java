@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 
-import {TitlePageComponent} from '@app/shared/components/title-page';
+import {TitlePageComponent} from '@app/shared/components/title-page/title-page.component';
 
 @Component({
   selector: 'app-home',
