@@ -10,7 +10,6 @@ import {AuthService} from '@app/core/auth/services/auth.service';
 
 import {asyncData} from '@app/shared/testing';
 import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog/models';
-import {PagedData, PageRequest} from '@app/shared/services/api-service';
 
 import {
   generatePhoneColumnDefs,
@@ -23,6 +22,7 @@ import {PhoneService} from '@app/features/phones/services/phone.service';
 import {PhoneEditDialogService} from '@app/features/phones/services/phone-edit-dialog.service';
 import {PhoneTableService} from '@app/features/phones/services/phone-table.service';
 import {PhoneMember, Phone} from '@app/features/phones/models/phone';
+import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 describe('ListPhonesComponent', () => {
   let fixture: ComponentFixture<ListPhonesComponent>;
