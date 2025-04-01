@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DateTime} from 'luxon';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {FooterComponent} from '@app/core/layout';
+import {FooterComponent} from './footer.component';
 
 describe('FooterComponent', () => {
   let fixture: ComponentFixture<FooterComponent>;

@@ -2,11 +2,10 @@ import {Component, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDividerModule} from '@angular/material/divider';
 
-import {AuthService} from '@app/core/auth';
-import {FooterComponent} from '@app/core/layout';
-import {ContentComponent} from '@app/core/layout';
-
-import {HeaderComponent} from '@app/core/layout';
+import {HeaderComponent} from '@app/core/layout/header/header.component';
+import {FooterComponent} from '@app/core/layout/footer/footer.component';
+import {ContentComponent} from '@app/core/layout/content/content.component';
+import {AuthService} from '@app/core/auth/services/auth.service';
 
 @Component({
   selector: 'app-main-layout',

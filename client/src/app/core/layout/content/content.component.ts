@@ -7,8 +7,9 @@ import {MatIconModule} from '@angular/material/icon';
 
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {NavItem} from '@app/core/layout';
-import {AuthService, PermissionType} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
+import {NavItem} from '@app/core/layout/content/models/nav-item';
 
 @Component({
   selector: 'app-content',

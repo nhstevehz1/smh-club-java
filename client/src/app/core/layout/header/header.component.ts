@@ -10,7 +10,7 @@ import {MatSlideToggleChange, MatSlideToggleModule} from '@angular/material/slid
 import {MatIconButton} from '@angular/material/button';
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {LanguageSwitcherComponent} from '@app/core/i18n';
+import {LanguageSwitcherComponent} from '@app/core/i18n/language-switcher/language-switcher.component';
 
 @Component({
   selector: 'app-header',

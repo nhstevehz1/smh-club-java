@@ -7,8 +7,11 @@ import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {MatDividerModule} from '@angular/material/divider';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {MainLayoutComponent, HeaderComponent, FooterComponent, ContentComponent} from '@app/core/layout';
-import {AuthService} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {HeaderComponent} from '@app/core/layout/header/header.component';
+import {FooterComponent} from '@app/core/layout/footer/footer.component';
+import {ContentComponent} from '@app/core/layout/content/content.component';
+import {MainLayoutComponent} from './main-layout.component';
 
 describe('MainLayoutComponent', () => {
   let fixture: ComponentFixture<MainLayoutComponent>;

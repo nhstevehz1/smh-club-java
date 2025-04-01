@@ -1,10 +1,9 @@
-import {ContentComponent, NavItem} from '@app/core/layout';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {AuthService, PermissionType} from '@app/core/auth';
+
 import {provideRouter, Router} from '@angular/router';
 
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -19,6 +18,11 @@ import {MatNavListHarness} from '@angular/material/list/testing';
 import {MatIconHarness} from '@angular/material/icon/testing';
 
 import {TranslateModule} from '@ngx-translate/core';
+
+import {NavItem} from '@app/core/layout/content/models/nav-item';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
+import {ContentComponent} from './content.component';
 
 describe('ContentComponent', () => {
   let fixture: ComponentFixture<ContentComponent>;
