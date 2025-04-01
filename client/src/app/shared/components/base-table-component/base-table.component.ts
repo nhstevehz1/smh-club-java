@@ -11,9 +11,9 @@ import {AuthService, PermissionType} from '@app/core/auth';
 
 import {ColumnDef, SortablePageableTableComponent} from '@app-shared/components/sortable-pageable-table';
 import {Updatable} from '@app-shared/models/updatable';
-import {TableService, BaseTableService} from '@app-shared/services/table-service';
-import {CrudService, PagedData, PageRequest, SortDef, BaseApiService} from '@app-shared/services/api-service';
-import {EditDialogService, BaseEditDialogService} from '@app-shared/services/dialog-edit-service';
+import {BaseTableService} from '@app-shared/services/table-service';
+import {PagedData, PageRequest, SortDef, BaseApiService} from '@app-shared/services/api-service';
+import {BaseEditDialogService} from '@app-shared/services/dialog-edit-service';
 import {EditAction, EditDialogInput, EditDialogResult} from '@app/shared/components/edit-dialog';
 
 
