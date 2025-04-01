@@ -7,8 +7,8 @@ import {FormModelGroup} from '@app/shared/components/base-editor';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service';
 
-import {Email, EmailType} from '@app/features/emails/models';
-import {EmailEditorComponent} from '@app/features/emails/email-editor';
+import {Email, EmailType} from '@app/features/emails/models/email';
+import {EmailEditorComponent} from '@app/features/emails/email-editor/email-editor.component';
 
 @Injectable()
 export class EmailEditDialogService extends BaseEditDialogService<Email> {

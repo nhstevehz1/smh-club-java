@@ -19,11 +19,13 @@ import {
   generateEmailDialogInput,
   generateEmailMember,
   generateEmailPagedData
-} from '@app/features/emails/testing';
+} from '@app/features/emails/testing/test-support';
 
 import {ListEmailsComponent} from './list-emails.component';
-import {EmailTableService, EmailEditDialogService, EmailService} from '@app/features/emails/services';
-import {EmailMember, Email} from '@app/features/emails/models';
+import {EmailMember, Email} from '@app/features/emails/models/email';
+import {EmailTableService} from '@app/features/emails/services/email-table.service';
+import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
+import {EmailService} from '@app/features/emails/services/email.service';
 
 describe('ListEmailsComponent', () => {
   let fixture: ComponentFixture<ListEmailsComponent>;

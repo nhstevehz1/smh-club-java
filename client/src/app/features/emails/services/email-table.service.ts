@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {BaseTableService} from '@app/shared/services/table-service';
 
-import {EmailMember, EmailType} from '@app/features/emails/models';
+import {EmailMember, EmailType} from '@app/features/emails/models/email';
 
 @Injectable()
 export class EmailTableService extends BaseTableService<EmailMember> {

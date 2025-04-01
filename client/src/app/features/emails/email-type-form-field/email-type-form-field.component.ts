@@ -7,7 +7,7 @@ import {
   SelectFormFieldComponent, SelectOption, FormControlError
 } from '@app/shared/components/editor-form-fields';
 
-import {EmailType} from '@app/features/emails/models';
+import {EmailType} from '@app/features/emails/models/email';
 
 @Component({
   selector: 'app-email-type-form-field',

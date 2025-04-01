@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EmailTableService } from '@app/features/emails/services';
+import { EmailTableService } from './email-table.service';
 
 describe('EmailTableService', () => {
   let service: EmailTableService;
