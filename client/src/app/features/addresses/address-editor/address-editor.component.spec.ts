@@ -16,8 +16,8 @@ import {getFormFieldValue} from '@app/shared/testing';
 import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
 import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
 
-import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
 import {Address, AddressType} from '@app/features/addresses/models';
+import {AddressEditorComponent} from './address-editor.component';
 
 describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;

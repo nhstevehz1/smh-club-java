@@ -19,7 +19,7 @@ import {
   generateAddressPagedData
 } from '@app/features/addresses/testing';
 
-import {ListAddressesComponent} from '@app/features/addresses/list-addresses/list-addresses.component';
+import {ListAddressesComponent} from './list-addresses.component';
 import {AddressService, AddressEditDialogService, AddressTableService} from '@app/features/addresses/services';
 import {AddressMember, Address} from '@app/features/addresses/models';
 

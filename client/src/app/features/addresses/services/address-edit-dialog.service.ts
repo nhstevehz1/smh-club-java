@@ -7,8 +7,8 @@ import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {FormModelGroup} from '@app/shared/components/base-editor';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service';
 
-import {AddressEditorComponent, Address, AddressType} from '@app/features/addresses';
-
+import {Address, AddressType} from '@app/features/addresses/models';
+import {AddressEditorComponent} from '@app/features/addresses/address-editor';
 
 @Injectable()
 export class AddressEditDialogService extends BaseEditDialogService<Address> {

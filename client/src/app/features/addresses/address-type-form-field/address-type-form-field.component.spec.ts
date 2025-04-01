@@ -10,8 +10,8 @@ import {MatFormFieldAppearance} from '@angular/material/form-field';
 
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AddressTypeFormFieldComponent} from '@app/features/addresses/address-type-form-field';
 import {AddressType} from '@app/features/addresses/models';
+import {AddressTypeFormFieldComponent} from './address-type-form-field.component';
 
 describe('AddressTypeFormFieldComponent', () => {
   let component: AddressTypeFormFieldComponent;
