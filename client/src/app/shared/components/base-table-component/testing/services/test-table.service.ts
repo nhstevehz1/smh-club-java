@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import {BaseTableService} from '@app/shared/services/table-service';
-import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {BaseTableService} from '@app/shared/services/table-service/base-table.service';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 
 import {TestModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 

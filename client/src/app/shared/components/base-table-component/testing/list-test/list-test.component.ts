@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 
 
-import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
-import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
+import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {EditAction, EditEvent} from '@app/shared/components/edit-dialog/models';
 
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
 import {AuthService} from '@app/core/auth/services/auth.service';

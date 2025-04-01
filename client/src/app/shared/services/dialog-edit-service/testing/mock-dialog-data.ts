@@ -1,7 +1,7 @@
 import {FormControl, FormGroup} from '@angular/forms';
 
-import {FormModelGroup} from '@app/shared/components/base-editor';
-import {EditDialogInput, EditAction} from '@app/shared/components/edit-dialog';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {EditDialogInput, EditAction} from '@app/shared/components/edit-dialog/models';
 
 export interface MockModel {
   id: number,

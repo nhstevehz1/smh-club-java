@@ -5,7 +5,7 @@ import {HttpTestingController, provideHttpClientTesting} from '@angular/common/h
 import {MockCrudService} from '@app/shared/services/api-service/testing/mock-crud-service';
 import {PageRequest} from '@app/shared/services/api-service/models';
 import {generateMockCreate} from '@app/shared/services/api-service/testing/mock-api-data';
-import {generateMockModel} from '@app/shared/services/dialog-edit-service/testing';
+import {generateMockModel} from '@app/shared/services/dialog-edit-service/testing/mock-dialog-data';
 
 describe('BaseApiService', () => {
   let service: MockCrudService;
