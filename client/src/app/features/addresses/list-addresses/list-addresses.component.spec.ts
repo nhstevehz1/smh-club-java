@@ -6,8 +6,6 @@ import {of, throwError} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
-
-import {PageRequest} from '@app/shared/services/api-service';
 import {asyncData} from '@app/shared/testing';
 
 import {
@@ -24,6 +22,7 @@ import {AddressEditDialogService} from '@app/features/addresses/services/address
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {ListAddressesComponent} from './list-addresses.component';
 import {EditEvent, EditDialogInput, EditDialogResult, EditAction} from '@app/shared/components/edit-dialog/models';
+import {PageRequest} from '@app/shared/services/api-service/models';
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;

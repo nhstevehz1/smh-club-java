@@ -4,10 +4,9 @@ import {generatePagedData} from '@app/shared/testing';
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
-import {PagedData} from '@app/shared/services/api-service';
-
 import {AddressMember, AddressType, AddressCreate, Address} from '@app/features/addresses/models/address';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
+import {PagedData} from '@app/shared/services/api-service/models';
 
 export function generateAddressPagedData(page: number, size: number, total: number): PagedData<AddressMember> {
     const content = generateAddressList(size);

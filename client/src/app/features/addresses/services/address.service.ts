@@ -4,9 +4,9 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
-
 import {Address, AddressCreate, AddressMember, AddressType} from '@app/features/addresses/models/address';
+import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
+import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 @Injectable()
 export class AddressService extends BaseApiService<AddressMember, AddressCreate, Address>{
