@@ -5,7 +5,7 @@ import {MatInputHarness} from '@angular/material/input/testing';
 import {MatSelectHarness} from '@angular/material/select/testing';
 import {MatDatepickerInputHarness} from '@angular/material/datepicker/testing';
 
-import {PagedData} from '@app/shared/services/api-service';
+import {PagedData} from '@app/shared/services/api-service/models';
 
 export function asyncData<T>(data: T) {
     return defer(() => Promise.resolve(data));

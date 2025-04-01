@@ -5,9 +5,10 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DateTime} from 'luxon';
 
-import {BaseApiService, PagedData, PageRequest} from '@app/shared/services';
-
 import {Renewal, RenewalCreate, RenewalMember} from '@app/features/renewals/models/renewal';
+import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
+import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
+
 
 @Injectable()
 export class RenewalService extends BaseApiService<RenewalMember, RenewalCreate, Renewal>{
