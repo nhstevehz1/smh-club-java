@@ -1,8 +1,8 @@
 import {DateTime} from 'luxon';
 import {Address} from '@app/features/addresses/models/address';
 import {Email} from '@app/features/emails/models/email';
-import {Phone} from '@app/features/phones';
-import {Renewal} from '@app/features/renewals';
+import {Phone} from '@app/features/phones/models/phone';
+import {Renewal} from '@app/features/renewals/models/renewal';
 
 export interface MemberCreate {
     member_number: number;
