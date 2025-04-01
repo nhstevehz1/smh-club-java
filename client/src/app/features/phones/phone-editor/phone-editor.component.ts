@@ -6,12 +6,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 
-import {BaseEditorComponent} from '@app/shared/components/base-editor';
-import {FormControlError} from '@app/shared/components/editor-form-fields';
-import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
-
+import {BaseEditorComponent} from '@app/shared/components/base-editor/base-editor.component';
+import {FormControlError} from '@app/shared/components/editor-form-fields/models';
 import {Phone} from '@app/features/phones/models/phone';
 import {PhoneTypeFormFieldComponent} from '@app/features/phones/phone-type-form-field/phone-type-form-field.component';
+import {
+  InputFormFieldComponent
+} from '@app/shared/components/editor-form-fields/input-form-field/input-form-field.component';
 
 @Component({
   selector: 'app-phone-editor',

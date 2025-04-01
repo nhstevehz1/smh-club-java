@@ -6,10 +6,10 @@ import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {of, throwError} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AuthService} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
 
 import {asyncData} from '@app/shared/testing';
-import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
+import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog/models';
 import {PagedData, PageRequest} from '@app/shared/services/api-service';
 
 import {

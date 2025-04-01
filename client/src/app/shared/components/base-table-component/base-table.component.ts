@@ -10,12 +10,15 @@ import {startWith, switchMap} from 'rxjs/operators';
 import {AuthService} from '@app/core/auth/services/auth.service';
 import {PermissionType} from '@app/core/auth/models/permission-type';
 
-import {ColumnDef, SortablePageableTableComponent} from '@app-shared/components/sortable-pageable-table';
+import {ColumnDef} from '@app-shared/components/sortable-pageable-table/models';
 import {Updatable} from '@app-shared/models/updatable';
-import {BaseTableService} from '@app-shared/services/table-service';
+import {BaseTableService} from '@app-shared/services/table-service/base-table.service';
 import {PagedData, PageRequest, SortDef, BaseApiService} from '@app-shared/services/api-service';
-import {BaseEditDialogService} from '@app-shared/services/dialog-edit-service';
+import {BaseEditDialogService} from '@app-shared/services/dialog-edit-service/base-edit-dialog.service';
 import {EditDialogInput, EditAction, EditDialogResult} from '@app/shared/components/edit-dialog/models';
+import {
+  SortablePageableTableComponent
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
 
 
 @Component({

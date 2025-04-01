@@ -10,8 +10,8 @@ import {MatButtonHarness} from '@angular/material/button/testing';
 
 import {TranslateModule} from '@ngx-translate/core';
 
-import {FormModelGroup} from '@app/shared/components/base-editor';
-import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing/editor-header-harness';
 
 import {getFormFieldValue} from '@app/shared/testing';
 
