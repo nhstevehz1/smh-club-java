@@ -1,4 +1,4 @@
-import {PermissionType} from '@app/core/auth';
+import {PermissionType} from '@app/core/auth/models/permission-type';
 
 export interface SystemConfig {
     permissions: RolePermission[];

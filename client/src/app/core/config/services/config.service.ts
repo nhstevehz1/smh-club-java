@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {SystemConfig} from '@app/core/config';
+import {SystemConfig} from '@app/core/config/models/system-config';
 
 @Injectable({
   providedIn: 'root'
