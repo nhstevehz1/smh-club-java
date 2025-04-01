@@ -4,9 +4,9 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
-
+import {PagedData, PageRequest} from '@app/shared/services/api-service/models';
 import {Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails/models/email';
+import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 
 @Injectable()
 export class EmailService extends BaseApiService<EmailMember, EmailCreate, Email> {

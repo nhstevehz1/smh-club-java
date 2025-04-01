@@ -8,7 +8,6 @@ import {of, throwError} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
-import {PagedData, PageRequest} from '@app/shared/services/api-service';
 import {asyncData} from '@app/shared/testing/test-helpers';
 
 import {
@@ -25,6 +24,7 @@ import {EmailTableService} from '@app/features/emails/services/email-table.servi
 import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
 import {EmailService} from '@app/features/emails/services/email.service';
 import {EditAction, EditEvent, EditDialogInput, EditDialogResult} from '@app/shared/components/edit-dialog/models';
+import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 describe('ListEmailsComponent', () => {
   let fixture: ComponentFixture<ListEmailsComponent>;
