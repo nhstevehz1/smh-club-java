@@ -1,5 +1,5 @@
 import {FullName} from '@app/shared/models';
-import {EmailType} from '@app/features/emails/models/email-type';
+import {EmailType} from './email-type';
 
 export interface EmailCreate {
     email: string;
