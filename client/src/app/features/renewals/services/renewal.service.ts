@@ -7,7 +7,7 @@ import {DateTime} from 'luxon';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services';
 
-import {Renewal, RenewalCreate, RenewalMember} from '@app/features/renewals';
+import {Renewal, RenewalCreate, RenewalMember} from '@app/features/renewals/models/renewal';
 
 @Injectable()
 export class RenewalService extends BaseApiService<RenewalMember, RenewalCreate, Renewal>{

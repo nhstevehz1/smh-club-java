@@ -2,7 +2,7 @@ import {DateTime} from 'luxon';
 
 import {PagedData} from '@app/shared/services';
 import {generatePagedData} from '@app/shared/testing/test-helpers';
-import {RenewalMember} from '@app/features/renewals';
+import {RenewalMember} from '@app/features/renewals/models/renewal';
 
 export function generateRenewalPageData(page: number, size: number, total: number): PagedData<RenewalMember> {
     const content = generateRenewalList(size);

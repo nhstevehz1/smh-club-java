@@ -5,14 +5,10 @@ import {SortablePageableTableComponent} from '@app/shared/components/sortable-pa
 import {BaseTableComponent} from '@app/shared/components/base-table-component';
 import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 
-import {
-  Renewal,
-  RenewalCreate,
-  RenewalEditDialogService,
-  RenewalMember,
-  RenewalService,
-  RenewalTableService
-} from '@app/features/renewals';
+import {RenewalCreate, RenewalMember, Renewal} from '@app/features/renewals/models/renewal';
+import {RenewalService} from '@app/features/renewals/services/renewal.service';
+import {RenewalTableService} from '@app/features/renewals/services/renewal-table.service';
+import {RenewalEditDialogService} from '@app/features/renewals/services/renewal-edit-dialog.service';
 
 @Component({
   selector: 'app-list-renewals',

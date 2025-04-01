@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RenewalEditDialogService } from '@app/features/renewals';
+import { RenewalEditDialogService } from './renewal-edit-dialog.service';
 
 describe('RenewalEditDialogService', () => {
   let service: RenewalEditDialogService;

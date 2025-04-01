@@ -6,7 +6,7 @@ import {FormControlError} from '@app/shared/components/editor-form-fields';
 import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
 import {DateFormFieldComponent} from '@app/shared/components/editor-form-fields';
 
-import {Renewal} from '@app/features/renewals';
+import {Renewal} from '@app/features/renewals/models/renewal';
 
 @Component({
   selector: 'app-renewal-editor',

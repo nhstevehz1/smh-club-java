@@ -10,7 +10,8 @@ import {PageRequest} from '@app/shared/services';
 import {asyncData} from '@app/shared/testing/test-helpers';
 import {generateRenewalPageData} from '@app/features/renewals/testing/test-support';
 
-import {ListRenewalsComponent, RenewalService} from '@app/features/renewals';
+import {RenewalService} from '@app/features/renewals/services/renewal.service';
+import {ListRenewalsComponent} from './/list-renewals.component';
 
 describe('ListRenewalsComponent', () => {
   let fixture: ComponentFixture<ListRenewalsComponent>;

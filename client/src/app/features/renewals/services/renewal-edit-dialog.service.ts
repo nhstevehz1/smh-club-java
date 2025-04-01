@@ -7,7 +7,8 @@ import {FormModelGroup} from '@app/shared/components/base-editor';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {BaseEditDialogService} from '@app/shared/services';
 
-import {RenewalEditorComponent, Renewal} from '@app/features/renewals';
+import {Renewal} from '@app/features/renewals/models/renewal';
+import {RenewalEditorComponent} from '@app/features/renewals/renewal-editor/renewal-editor.component';
 
 @Injectable()
 export class RenewalEditDialogService extends BaseEditDialogService<Renewal>{

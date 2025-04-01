@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RenewalTableService } from '@app/features/renewals';
+import { RenewalTableService } from './renewal-table.service';
 
 describe('RenewalTableService', () => {
   let service: RenewalTableService;

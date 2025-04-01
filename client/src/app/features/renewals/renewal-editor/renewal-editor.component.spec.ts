@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RenewalEditorComponent } from '@app/features/renewals';
+import { RenewalEditorComponent } from './renewal-editor.component';
 
 describe('RenewalEditorComponent', () => {
   let component: RenewalEditorComponent;
