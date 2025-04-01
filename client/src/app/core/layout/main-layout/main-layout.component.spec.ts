@@ -1,16 +1,14 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-
-import {MainLayoutComponent} from './main-layout.component';
-import {HeaderComponent} from '../header/header.component';
-import {FooterComponent} from '../footer/footer.component';
-import {ContentComponent} from '../content/content.component';
-import {AuthService} from '../../auth/services/auth.service';
+import {provideRouter, Router} from '@angular/router';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
-import {provideRouter, Router} from '@angular/router';
+
 import {MatDividerModule} from '@angular/material/divider';
 import {TranslateModule} from '@ngx-translate/core';
+
+import {MainLayoutComponent, HeaderComponent, FooterComponent, ContentComponent} from '@app/core/layout';
+import {AuthService} from '@app/core/auth';
 
 describe('MainLayoutComponent', () => {
   let fixture: ComponentFixture<MainLayoutComponent>;
