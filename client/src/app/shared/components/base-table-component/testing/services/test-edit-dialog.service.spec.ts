@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TestEditDialogService } from './test-edit-dialog.service';
+import {TestEditDialogService} from '@app/shared/components/base-table-component/testing';
 
 describe('TestEditDialogService', () => {
   let service: TestEditDialogService;

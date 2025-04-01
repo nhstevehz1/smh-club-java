@@ -8,7 +8,6 @@ import {MockModel} from '@app/shared/services/api-service/testing';
 import {MockEditorComponent} from '@app/shared/services/dialog-edit-service/testing/mock-dialog-data';
 import {FormModelGroup} from '@app/shared/components/base-editor';
 
-
 @Injectable()
 export class MockEditDialogService extends BaseEditDialogService<MockModel> {
   constructor(dialog: MatDialog, private fb: NonNullableFormBuilder) {

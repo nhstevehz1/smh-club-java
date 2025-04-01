@@ -4,15 +4,19 @@ import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth';
 
-import {generateTestModelColumnDefs, generateTestModelPagedData} from '../test-support';
+
 import {asyncData} from '@app/shared/testing/test-helpers';
 import {PagedData} from '@app/shared/services/api-service';
-import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {
-  ListTestComponent, TestEditDialogService,
-  TestModel, TestService, TestTableService
-} from '@app/shared/components/base-table-ex/testing';
+  ListTestComponent,
+  TestService,
+  TestTableService,
+  TestEditDialogService, TestModel,
+  generateTestModelPagedData, generateTestModelColumnDefs
+} from '@app/shared/components/base-table-component/testing';
+
 
 describe('ListTestComponent', () => {
   let component: ListTestComponent;

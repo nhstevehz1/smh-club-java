@@ -6,7 +6,7 @@ import {FormModelGroup} from '@app/shared/components/base-editor';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 
-import {TestEditorComponent, TestModel} from '@app/shared/components/base-table-ex/testing';
+import {TestEditorComponent, TestModel} from '@app/shared/components/base-table-component/testing';
 
 @Injectable()
 export class TestEditDialogService extends BaseEditDialogService<TestModel>{
