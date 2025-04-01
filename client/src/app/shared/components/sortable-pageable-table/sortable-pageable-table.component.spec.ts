@@ -13,7 +13,12 @@ import {MatSortHarness, MatSortHeaderHarness} from '@angular/material/sort/testi
 import {DateTime} from 'luxon';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {ColumnDef, SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
+import {
+  SortablePageableTableComponent
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+
+
 
 export interface TestModel {
   a_string: string;

@@ -2,7 +2,7 @@ import {computed, Directive, input, signal} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
 
-import {FormControlError} from '@app/shared/components/editor-form-fields';
+import {FormControlError} from '@app/shared/components/editor-form-fields/models';
 
 @Directive()
 export abstract class BaseInputComponent<T> {

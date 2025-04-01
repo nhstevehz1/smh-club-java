@@ -6,7 +6,8 @@ import {MatSelectModule} from '@angular/material/select';
 
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {BaseInputComponent, SelectOption} from '@app/shared/components/editor-form-fields';
+import {BaseInputComponent} from '@app/shared/components/editor-form-fields/base-input-component';
+import {SelectOption} from '@app/shared/components/editor-form-fields/models';
 
 @Component({
   selector: 'app-select-form-field',

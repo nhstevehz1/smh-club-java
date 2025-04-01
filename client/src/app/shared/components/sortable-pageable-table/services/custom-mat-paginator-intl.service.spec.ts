@@ -1,8 +1,8 @@
 import {TestBed} from '@angular/core/testing';
-
-import {CustomMatPaginatorIntlService} from './custom-mat-paginator-intl.service';
 import {MatPaginatorIntl} from '@angular/material/paginator';
 import {TranslateModule} from '@ngx-translate/core';
+
+import {CustomMatPaginatorIntlService} from './custom-mat-paginator-intl.service';
 
 describe('CustomMatPaginatorIntlService', () => {
   let service: CustomMatPaginatorIntlService;

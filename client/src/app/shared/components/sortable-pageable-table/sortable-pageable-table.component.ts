@@ -8,9 +8,11 @@ import {MatIconModule} from '@angular/material/icon';
 
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {EditEvent} from '@app/shared/components/edit-dialog';
-
-import {ColumnDef, CustomMatPaginatorIntlService} from '@app/shared/components/sortable-pageable-table';
+import {EditEvent} from '@app/shared/components/edit-dialog/models';
+import {
+  CustomMatPaginatorIntlService
+} from '@app/shared/components/sortable-pageable-table/services/custom-mat-paginator-intl.service';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 
 @Component({
   selector: 'app-sortable-pageable-table',

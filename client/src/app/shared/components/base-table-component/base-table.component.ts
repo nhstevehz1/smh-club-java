@@ -15,10 +15,11 @@ import {Updatable} from '@app-shared/models/updatable';
 import {BaseTableService} from '@app-shared/services/table-service';
 import {PagedData, PageRequest, SortDef, BaseApiService} from '@app-shared/services/api-service';
 import {BaseEditDialogService} from '@app-shared/services/dialog-edit-service';
-import {EditAction, EditDialogInput, EditDialogResult} from '@app/shared/components/edit-dialog';
+import {EditDialogInput, EditAction, EditDialogResult} from '@app/shared/components/edit-dialog/models';
+
 
 @Component({
-  selector: 'app-base-table-ex',
+  selector: 'app-base-table',
   imports: [],
   template: ``,
   styles: ``

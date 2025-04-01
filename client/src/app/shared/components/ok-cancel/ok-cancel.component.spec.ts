@@ -8,7 +8,7 @@ import {MatButtonHarness} from '@angular/material/button/testing';
 
 import {TranslateModule} from '@ngx-translate/core';
 
-import {OkCancelComponent} from '@app/shared/components/ok-cancel';
+import {OkCancelComponent} from './ok-cancel.component';
 
 describe('OkCancelComponent', () => {
   let component: OkCancelComponent;
