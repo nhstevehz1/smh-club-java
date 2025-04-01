@@ -6,7 +6,7 @@ import {SortablePageableTableComponent} from '@app/shared/components/sortable-pa
 import {BaseTableComponent} from '@app/shared/components/base-table-component';
 import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 
-import {AddressCreate, AddressMember, Address} from '@app/features/addresses/models/address-models';
+import {AddressCreate, AddressMember, Address} from '@app/features/addresses/models/address';
 import {AddressService} from '@app/features/addresses/services/address.service';
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';

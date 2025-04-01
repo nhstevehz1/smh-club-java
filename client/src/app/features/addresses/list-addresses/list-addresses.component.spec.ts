@@ -19,7 +19,7 @@ import {
   generateAddressPagedData
 } from '@app/features/addresses/testing/test-support';
 
-import {AddressMember, Address} from '@app/features/addresses/models/address-models';
+import {AddressMember, Address} from '@app/features/addresses/models/address';
 import {AddressService} from '@app/features/addresses/services/address.service';
 import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';

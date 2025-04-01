@@ -13,7 +13,7 @@ import {BaseEditorComponent} from '@app/shared/components/base-editor';
 import {
   AddressTypeFormFieldComponent
 } from '@app/features/addresses/address-type-form-field/address-type-form-field.component';
-import {Address} from '@app/features/addresses/models/address-models';
+import {Address} from '@app/features/addresses/models/address';
 
 @Component({
   selector: 'app-address-editor',

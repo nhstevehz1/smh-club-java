@@ -7,7 +7,7 @@ import {SelectFormFieldComponent} from '@app/shared/components/editor-form-field
 import {FormControlError} from '@app/shared/components/editor-form-fields';
 import {SelectOption} from '@app/shared/components/editor-form-fields';
 
-import {AddressType} from '@app/features/addresses/models/address-models';
+import {AddressType} from '@app/features/addresses/models/address';
 
 @Component({
   selector: 'app-address-type-form-field',

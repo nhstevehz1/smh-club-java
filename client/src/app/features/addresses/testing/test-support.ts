@@ -6,7 +6,7 @@ import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {PagedData} from '@app/shared/services/api-service';
 
-import {AddressMember, AddressType, AddressCreate, AddressModels} from '@app/features/addresses/models/address-models';
+import {AddressMember, AddressType, AddressCreate, AddressModels} from '@app/features/addresses/models/address';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
 
 export function generateAddressPagedData(page: number, size: number, total: number): PagedData<AddressMember> {
