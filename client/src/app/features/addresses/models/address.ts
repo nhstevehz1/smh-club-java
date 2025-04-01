@@ -1,5 +1,6 @@
 import {FullName} from '@app/shared/models';
-import {AddressType} from '@app/features/addresses';
+import {AddressType} from '@app/features/addresses/models/address-type';
+
 
 export interface AddressCreate {
     address1: string;

@@ -12,11 +12,12 @@ import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {FormModelGroup} from '@app/shared/components/base-editor';
-import {getFormFieldValue} from 'app/shared/testing';
+import {getFormFieldValue} from '@app/shared/testing';
 import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
 import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
 
-import {AddressEditorComponent, Address, AddressType} from '@app/features/addresses';
+import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
+import {Address, AddressType} from '@app/features/addresses/models';
 
 describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;

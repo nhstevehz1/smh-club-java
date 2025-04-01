@@ -12,17 +12,16 @@ import {PageRequest} from '@app/shared/services/api-service';
 import {asyncData} from '@app/shared/testing';
 
 import {
-  ListAddressesComponent, AddressEditDialogService, AddressService, AddressTableService,
-  Address, AddressMember
-} from '@app/features/addresses';
-
-import {
   generateAddress,
   generateAddressColumnDefs,
   generateAddressDialogInput,
   generateAddressMember,
   generateAddressPagedData
 } from '@app/features/addresses/testing';
+
+import {ListAddressesComponent} from '@app/features/addresses/list-addresses/list-addresses.component';
+import {AddressService, AddressEditDialogService, AddressTableService} from '@app/features/addresses/services';
+import {AddressMember, Address} from '@app/features/addresses/models';
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;
