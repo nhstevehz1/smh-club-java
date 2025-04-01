@@ -14,7 +14,8 @@ import {FormModelGroup} from '@app/shared/components/base-editor';
 import {getFormFieldValue} from '@app/shared/testing';
 import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
 
-import {EmailEditorComponent, Email, EmailType} from '@app/features/emails';
+import {Email, EmailType} from '@app/features/emails/models';
+import {EmailEditorComponent} from './email-editor.component';
 
 describe('EmailEditorComponent', () => {
   let component: EmailEditorComponent;

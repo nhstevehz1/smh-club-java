@@ -4,7 +4,8 @@ import {FormControl} from '@angular/forms';
 
 import {TranslateModule} from '@ngx-translate/core';
 
-import {EmailTypeFormFieldComponent, EmailType} from '@app/features/emails';
+import {EmailType} from '@app/features/emails/models';
+import {EmailTypeFormFieldComponent} from './email-type-form-field.component';
 
 describe('EmailTypeFormFieldComponent', () => {
   let component: EmailTypeFormFieldComponent;

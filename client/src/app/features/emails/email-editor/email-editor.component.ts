@@ -9,10 +9,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {BaseEditorComponent} from '@app/shared/components/base-editor';
 import {FormControlError, InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
 
-import {
-  EmailTypeFormFieldComponent, Email, EmailService
-} from '@app/features/emails';
-
+import {Email} from '@app/features/emails/models';
+import {EmailTypeFormFieldComponent} from '@app/features/emails/email-type-form-field';
+import {EmailService} from '@app/features/emails/services';
 
 @Component({
   selector: 'app-email-editor',

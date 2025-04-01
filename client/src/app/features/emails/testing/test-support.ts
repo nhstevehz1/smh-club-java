@@ -6,7 +6,8 @@ import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {PagedData} from '@app/shared/services/api-service';
 
-import {EmailEditorComponent, Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails';
+import {EmailMember, EmailType, EmailCreate, Email} from '@app/features/emails/models';
+import {EmailEditorComponent} from '@app/features/emails/email-editor';
 
 export function generateEmailPagedData(page: number, size: number, total: number): PagedData<EmailMember> {
     const content = generateEmailList(size);

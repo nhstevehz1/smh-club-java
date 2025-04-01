@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 
-import {EmailEditDialogService} from '@app/features/emails';
+import {EmailEditDialogService} from './email-edit-dialog.service';
 
 describe('EmailEditDialogService', () => {
   let service: EmailEditDialogService;

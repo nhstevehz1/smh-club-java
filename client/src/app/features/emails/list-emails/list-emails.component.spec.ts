@@ -21,10 +21,9 @@ import {
   generateEmailPagedData
 } from '@app/features/emails/testing';
 
-import {
-  ListEmailsComponent, EmailTableService, EmailService, EmailEditDialogService, EmailMember, Email
-} from '@app/features/emails';
-
+import {ListEmailsComponent} from './list-emails.component';
+import {EmailTableService, EmailEditDialogService, EmailService} from '@app/features/emails/services';
+import {EmailMember, Email} from '@app/features/emails/models';
 
 describe('ListEmailsComponent', () => {
   let fixture: ComponentFixture<ListEmailsComponent>;

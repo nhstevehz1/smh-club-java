@@ -6,7 +6,7 @@ import {map} from 'rxjs/operators';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
 
-import {Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails';
+import {Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails/models';
 
 @Injectable()
 export class EmailService extends BaseApiService<EmailMember, EmailCreate, Email> {

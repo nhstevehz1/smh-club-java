@@ -6,14 +6,8 @@ import {SortablePageableTableComponent} from '@app/shared/components/sortable-pa
 import {BaseTableComponent} from '@app/shared/components/base-table-component';
 import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 
-import {
-  Email,
-  EmailCreate,
-  EmailEditDialogService,
-  EmailMember,
-  EmailService,
-  EmailTableService
-} from '@app/features/emails';
+import {EmailService, EmailTableService, EmailEditDialogService} from '@app/features/emails/services';
+import {EmailCreate, EmailMember, Email} from '@app/features/emails/models';
 
 @Component({
   selector: 'app-list-emails',
