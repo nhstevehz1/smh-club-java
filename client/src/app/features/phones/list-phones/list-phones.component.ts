@@ -6,14 +6,10 @@ import {SortablePageableTableComponent} from '@app/shared/components/sortable-pa
 import {BaseTableComponent} from '@app/shared/components/base-table-component';
 import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 
-import {
-  Phone,
-  PhoneCreate,
-  PhoneEditDialogService,
-  PhoneMember,
-  PhoneService,
-  PhoneTableService
-} from '@app/features/phones';
+import {PhoneService} from '@app/features/phones/services/phone.service';
+import {PhoneTableService} from '@app/features/phones/services/phone-table.service';
+import {PhoneCreate, PhoneMember, Phone} from '@app/features/phones/models/phone';
+import {PhoneEditDialogService} from '@app/features/phones/services/phone-edit-dialog.service';
 
 @Component({
   selector: 'app-list-phones',

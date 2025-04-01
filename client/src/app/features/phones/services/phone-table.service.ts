@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {BaseTableService} from '@app/shared/services/table-service';
 
-import {PhoneMember, PhoneType} from '@app/features/phones';
+import {PhoneMember, PhoneType} from '@app/features/phones/models/phone';
 
 @Injectable({
   providedIn: 'root'

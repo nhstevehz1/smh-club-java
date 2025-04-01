@@ -10,7 +10,8 @@ import {BaseEditorComponent} from '@app/shared/components/base-editor';
 import {FormControlError} from '@app/shared/components/editor-form-fields';
 import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
 
-import {PhoneTypeFormFieldComponent, Phone} from '@app/features/phones';
+import {Phone} from '@app/features/phones/models/phone';
+import {PhoneTypeFormFieldComponent} from '@app/features/phones/phone-type-form-field/phone-type-form-field.component';
 
 @Component({
   selector: 'app-phone-editor',

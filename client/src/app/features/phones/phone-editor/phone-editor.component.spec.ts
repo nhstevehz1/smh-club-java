@@ -15,7 +15,8 @@ import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing'
 
 import {getFormFieldValue} from '@app/shared/testing';
 
-import {PhoneEditorComponent, Phone, PhoneType} from '@app/features/phones';
+import {Phone, PhoneType} from '@app/features/phones/models/phone';
+import {PhoneEditorComponent} from './phone-editor.component';
 
 describe('PhoneEditorComponent', () => {
   let component: PhoneEditorComponent;

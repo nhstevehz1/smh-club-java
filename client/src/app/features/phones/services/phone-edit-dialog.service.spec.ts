@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PhoneEditDialogService } from '@app/features/phones';
+import { PhoneEditDialogService } from './phone-edit-dialog.service';
 
 describe('PhoneEditDialogService', () => {
   let service: PhoneEditDialogService;

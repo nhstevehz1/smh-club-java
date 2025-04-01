@@ -6,9 +6,8 @@ import {FormModelGroup} from '@app/shared/components/base-editor';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {PagedData} from '@app/shared/services/api-service';
 
-import {
-  PhoneEditorComponent, PhoneCreate, PhoneMember, Phone, PhoneType
-} from '@app/features/phones';
+import {PhoneCreate, PhoneMember, Phone, PhoneType} from '@app/features/phones/models/phone';
+import {PhoneEditorComponent} from '@app/features/phones/phone-editor/phone-editor.component';
 
 export function generatePhonePageData(page: number, size: number, total: number): PagedData<PhoneMember> {
     const content = generatePhoneList(size);

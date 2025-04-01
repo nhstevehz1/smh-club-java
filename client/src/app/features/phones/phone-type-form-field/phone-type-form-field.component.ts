@@ -6,7 +6,7 @@ import {SelectFormFieldComponent} from '@app/shared/components/editor-form-field
 import {FormControlError} from '@app/shared/components/editor-form-fields';
 import {SelectOption} from '@app/shared/components/editor-form-fields';
 
-import {PhoneType} from '@app/features/phones';
+import {PhoneType} from '@app/features/phones/models/phone';
 
 @Component({
   selector: 'app-phone-type-form-field',

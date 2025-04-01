@@ -3,7 +3,8 @@ import {FormControl} from '@angular/forms';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {PhoneTypeFormFieldComponent, PhoneType} from '@app/features/phones';
+import {PhoneType} from '@app/features/phones/models/phone';
+import {PhoneTypeFormFieldComponent} from './phone-type-form-field.component';
 
 describe('PhoneTypeFormFieldComponent', () => {
   let component: PhoneTypeFormFieldComponent;

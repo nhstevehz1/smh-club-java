@@ -1,4 +1,3 @@
-import {PhoneType} from './phone-type';
 import {FullName} from '@app/shared/models';
 
 export interface PhoneCreate {
@@ -14,4 +13,10 @@ export interface Phone extends PhoneCreate {
 
 export interface PhoneMember extends Phone {
     full_name: FullName;
+}
+
+export enum PhoneType {
+  Home = 'Home',
+  Work = 'Work',
+  Mobile = 'Mobile'
 }

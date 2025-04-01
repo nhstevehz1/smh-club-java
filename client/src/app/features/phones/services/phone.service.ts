@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
 
-import {Phone, PhoneCreate, PhoneMember, PhoneType} from '@app/features/phones';
+import {Phone, PhoneCreate, PhoneMember, PhoneType} from '@app/features/phones/models/phone';
 
 @Injectable()
 export class PhoneService extends BaseApiService<PhoneMember, PhoneCreate, Phone> {

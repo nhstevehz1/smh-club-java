@@ -6,11 +6,10 @@ import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {FormModelGroup} from '@app/shared/components/base-editor';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service';
 
-import {PhoneEditorComponent, Phone, PhoneType} from '@app/features/phones';
+import {Phone, PhoneType} from '@app/features/phones/models/phone';
+import {PhoneEditorComponent} from '@app/features/phones/phone-editor/phone-editor.component';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class PhoneEditDialogService extends BaseEditDialogService<Phone> {
 
   constructor(dialog: MatDialog,
