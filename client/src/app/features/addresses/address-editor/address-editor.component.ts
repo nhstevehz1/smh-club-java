@@ -6,9 +6,9 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 
-import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields';
+import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields/input-form-field/input-form-field.component';
 import {FormControlError} from '@app/shared/components/editor-form-fields/models/form-control-error';
-import {BaseEditorComponent} from '@app/shared/components/base-editor';
+import {BaseEditorComponent} from '@app/shared/components/base-editor/base-editor.component';
 
 import {
   AddressTypeFormFieldComponent

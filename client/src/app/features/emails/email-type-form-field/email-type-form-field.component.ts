@@ -3,11 +3,11 @@ import {FormControl} from '@angular/forms';
 
 import {MatFormFieldAppearance} from '@angular/material/form-field';
 
+import {EmailType} from '@app/features/emails/models';
 import {
-  SelectFormFieldComponent, SelectOption, FormControlError
-} from '@app/shared/components/editor-form-fields';
-
-import {EmailType} from '@app/features/emails/models/email';
+  SelectFormFieldComponent
+} from '@app/shared/components/editor-form-fields/select-form-field/select-form-field.component';
+import {FormControlError, SelectOption} from '@app/shared/components/editor-form-fields/models';
 
 @Component({
   selector: 'app-email-type-form-field',

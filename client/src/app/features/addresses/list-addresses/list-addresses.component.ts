@@ -1,10 +1,10 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 
-import {AuthService} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
 
-import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
-import {BaseTableComponent} from '@app/shared/components/base-table-component';
-import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
+import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
+import {EditAction, EditEvent} from '@app/shared/components/edit-dialog/models';
 
 import {AddressCreate, AddressMember, Address} from '@app/features/addresses/models/address';
 import {AddressService} from '@app/features/addresses/services/address.service';

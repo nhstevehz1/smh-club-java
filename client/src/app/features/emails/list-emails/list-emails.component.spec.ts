@@ -1,5 +1,4 @@
 
-
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
@@ -8,8 +7,7 @@ import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {of, throwError} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AuthService} from '@app/core/auth';
-import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
+import {AuthService} from '@app/core/auth/services/auth.service';
 import {PagedData, PageRequest} from '@app/shared/services/api-service';
 import {asyncData} from '@app/shared/testing/test-helpers';
 
@@ -26,6 +24,7 @@ import {EmailMember, Email} from '@app/features/emails/models/email';
 import {EmailTableService} from '@app/features/emails/services/email-table.service';
 import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
 import {EmailService} from '@app/features/emails/services/email.service';
+import {EditAction, EditEvent, EditDialogInput, EditDialogResult} from '@app/shared/components/edit-dialog/models';
 
 describe('ListEmailsComponent', () => {
   let fixture: ComponentFixture<ListEmailsComponent>;

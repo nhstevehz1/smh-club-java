@@ -10,9 +10,9 @@ import {MatButtonHarness} from '@angular/material/button/testing';
 
 import {TranslateModule} from '@ngx-translate/core';
 
-import {FormModelGroup} from '@app/shared/components/base-editor';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {getFormFieldValue} from '@app/shared/testing';
-import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing';
+import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing/editor-header-harness';
 
 import {Email, EmailType} from '@app/features/emails/models/email';
 import {EmailEditorComponent} from './email-editor.component';

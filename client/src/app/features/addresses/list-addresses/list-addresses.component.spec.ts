@@ -5,9 +5,8 @@ import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {of, throwError} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AuthService} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
 
-import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog';
 import {PageRequest} from '@app/shared/services/api-service';
 import {asyncData} from '@app/shared/testing';
 
@@ -24,6 +23,7 @@ import {AddressService} from '@app/features/addresses/services/address.service';
 import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {ListAddressesComponent} from './list-addresses.component';
+import {EditEvent, EditDialogInput, EditDialogResult, EditAction} from '@app/shared/components/edit-dialog/models';
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;

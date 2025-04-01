@@ -1,9 +1,9 @@
 import {FormControl, FormGroup} from '@angular/forms';
 
 import {generatePagedData} from '@app/shared/testing';
-import {FormModelGroup} from '@app/shared/components/base-editor';
-import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
-import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 import {PagedData} from '@app/shared/services/api-service';
 
 import {AddressMember, AddressType, AddressCreate, Address} from '@app/features/addresses/models/address';

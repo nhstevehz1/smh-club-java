@@ -3,9 +3,9 @@ import {FormControl} from '@angular/forms';
 
 import {MatFormFieldAppearance} from '@angular/material/form-field';
 
-import {SelectFormFieldComponent} from '@app/shared/components/editor-form-fields';
-import {FormControlError} from '@app/shared/components/editor-form-fields';
-import {SelectOption} from '@app/shared/components/editor-form-fields';
+import {SelectFormFieldComponent} from '@app/shared/components/editor-form-fields/select-form-field/select-form-field.component';
+import {FormControlError} from '@app/shared/components/editor-form-fields/models';
+import {SelectOption} from '@app/shared/components/editor-form-fields/models';
 
 import {AddressType} from '@app/features/addresses/models/address';
 

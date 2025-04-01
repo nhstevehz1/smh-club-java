@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
-import {BaseTableService} from '@app/shared/services/table-service';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
+import {BaseTableService} from '@app/shared/services/table-service/base-table.service';
 
 import {AddressMember, AddressType} from '@app/features/addresses/models/address';
 
