@@ -2,12 +2,12 @@ import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {FormModelGroup} from '@app/shared/components/base-editor';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {
-  EditAction, EditDialogComponent, EditDialogInput, EditDialogResult
-} from '@app/shared/components/edit-dialog';
-
-import {EditDialogService} from '@app/shared/services';
+  EditAction, EditDialogInput, EditDialogResult
+} from '@app/shared/components/edit-dialog/models';
+import {EditDialogComponent} from '@app/shared/components/edit-dialog/edit-dialog.component';
+import {EditDialogService} from '@app/shared/services/dialog-edit-service/edit-dialog-service';
 
 export abstract class BaseEditDialogService<T> implements EditDialogService<T>{
 

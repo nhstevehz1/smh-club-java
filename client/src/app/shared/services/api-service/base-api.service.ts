@@ -1,7 +1,8 @@
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {CrudService, PagedData, PageRequest} from '@app/shared/services';
+import {CrudService} from '@app/shared/services/api-service/crud-service';
+import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 export abstract class BaseApiService<L, C, T> implements CrudService<L, C, T> {
 
