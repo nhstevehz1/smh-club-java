@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import {BaseTableService} from '@app/shared/services';
-import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
-
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 import {RenewalMember} from '@app/features/renewals/models/renewal';
+import {BaseTableService} from '@app/shared/services/table-service/base-table.service';
 
 @Injectable({
   providedIn: 'root'
