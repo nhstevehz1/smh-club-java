@@ -7,7 +7,8 @@ import {SortDirection} from '@angular/material/sort';
 import {first, merge, mergeMap, Observable, tap} from 'rxjs';
 import {startWith, switchMap} from 'rxjs/operators';
 
-import {AuthService, PermissionType} from '@app/core/auth';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
 
 import {ColumnDef, SortablePageableTableComponent} from '@app-shared/components/sortable-pageable-table';
 import {Updatable} from '@app-shared/models/updatable';
@@ -15,7 +16,6 @@ import {BaseTableService} from '@app-shared/services/table-service';
 import {PagedData, PageRequest, SortDef, BaseApiService} from '@app-shared/services/api-service';
 import {BaseEditDialogService} from '@app-shared/services/dialog-edit-service';
 import {EditAction, EditDialogInput, EditDialogResult} from '@app/shared/components/edit-dialog';
-
 
 @Component({
   selector: 'app-base-table-ex',

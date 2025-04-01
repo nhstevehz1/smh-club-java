@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import {NonNullableFormBuilder} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 
-import {FormModelGroup} from '@app/shared/components/base-editor';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service';
 import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 
-import {TestEditorComponent, TestModel} from '@app/shared/components/base-table-component/testing';
+import {FormModelGroup} from '@app/shared/components/base-editor/form-model-group';
+import {
+  TestEditorComponent
+} from '@app/shared/components/base-table-component/testing/test-editor/test-editor.component';
+import {TestModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 
 @Injectable()
 export class TestEditDialogService extends BaseEditDialogService<TestModel>{

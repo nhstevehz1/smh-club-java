@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {BaseTableService} from '@app/shared/services/table-service';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 
-import {TestModel} from '@app/shared/components/base-table-component/testing';
+import {TestModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 
 @Injectable()
 export class TestTableService extends BaseTableService<TestModel>{

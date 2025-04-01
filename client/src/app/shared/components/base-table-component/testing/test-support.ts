@@ -2,7 +2,7 @@ import {PagedData} from '@app/shared/services/api-service';
 
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {generatePagedData} from '@app/shared/testing';
-import {TestModel} from '@app/shared/components/base-table-component/testing';
+import {TestModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 
 export function generateTestModelPagedData(page: number, size: number, total: number): PagedData<TestModel> {
   const content = generateTestModelList(size);

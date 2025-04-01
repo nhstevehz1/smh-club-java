@@ -2,21 +2,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {AuthService} from '@app/core/auth';
-
+import {AuthService} from '@app/core/auth/services/auth.service';
 
 import {asyncData} from '@app/shared/testing/test-helpers';
 import {PagedData} from '@app/shared/services/api-service';
 
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
+import {TestService} from '@app/shared/components/base-table-component/testing/services/test.service';
+import {TestTableService} from '@app/shared/components/base-table-component/testing/services/test-table.service';
 import {
-  ListTestComponent,
-  TestService,
-  TestTableService,
-  TestEditDialogService, TestModel,
-  generateTestModelPagedData, generateTestModelColumnDefs
-} from '@app/shared/components/base-table-component/testing';
-
+  TestEditDialogService
+} from '@app/shared/components/base-table-component/testing/services/test-edit-dialog.service';
+import {
+  generateTestModelPagedData,
+  generateTestModelColumnDefs
+} from '@app/shared/components/base-table-component/testing/test-support';
+import {ListTestComponent} from '@app/shared/components/base-table-component/testing/list-test/list-test.component';
+import {TestModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 
 describe('ListTestComponent', () => {
   let component: ListTestComponent;

@@ -1,16 +1,19 @@
 import {Component} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 
-import {AuthService} from '@app/core/auth';
-import {BaseTableComponent} from '@app/shared/components/base-table-component';
 
 import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table';
 import {EditAction, EditEvent} from '@app/shared/components/edit-dialog';
 
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {TestCreate, TestModel} from '@app/shared/components/base-table-component/testing/models/test-models';
+import {TestService} from '@app/shared/components/base-table-component/testing/services/test.service';
+import {TestTableService} from '@app/shared/components/base-table-component/testing/services/test-table.service';
+
 import {
-  TestEditDialogService, TestService, TestTableService,
-  TestCreate, TestModel
-} from '@app/shared/components/base-table-component/testing';
+  TestEditDialogService
+} from '@app/shared/components/base-table-component/testing/services/test-edit-dialog.service';
 
 @Component({
   selector: 'app-list-test',
