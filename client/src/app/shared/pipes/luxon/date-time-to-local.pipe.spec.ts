@@ -1,4 +1,4 @@
-import {DateTimeToLocalPipe} from './date-time-to-local.pipe';
+import {DateTimeToLocalPipe} from '@app/shared/pipes';
 import {DateTime} from 'luxon';
 
 describe('DateTimeToLocalPipe', () => {

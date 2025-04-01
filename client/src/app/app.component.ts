@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {MainLayoutComponent} from './core/layout/main-layout/main-layout.component';
-import {AuthService} from './core/auth/services/auth.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {TranslateService} from '@ngx-translate/core';
+
+import {AuthService} from '@app/core/auth';
+import {MainLayoutComponent} from '@app/core/layout';
 
 @Component({
   selector: 'app-root',

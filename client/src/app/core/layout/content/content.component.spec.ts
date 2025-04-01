@@ -1,12 +1,12 @@
-import {ContentComponent} from './content.component';
+import {ContentComponent, NavItem} from '@app/core/layout';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {AuthService} from '../../auth/services/auth.service';
+import {AuthService, PermissionType} from '@app/core/auth';
 import {provideRouter, Router} from '@angular/router';
-import {PermissionType} from '../../auth/models/permission-type';
+
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
@@ -16,16 +16,15 @@ import {
   MatSidenavHarness
 } from '@angular/material/sidenav/testing';
 import {MatNavListHarness} from '@angular/material/list/testing';
-import {NavItem} from './models/nav-item';
 import {MatIconHarness} from '@angular/material/icon/testing';
-import SpyObj = jasmine.SpyObj;
+
 import {TranslateModule} from '@ngx-translate/core';
 
 describe('ContentComponent', () => {
   let fixture: ComponentFixture<ContentComponent>;
   let component: ContentComponent;
   let loader: HarnessLoader;
-  let authServiceMock: SpyObj<AuthService>
+  let authServiceMock: jasmine.SpyObj<AuthService>
   const navListMock: NavItem[] = [
     {
       iconName: 'testIconRead',

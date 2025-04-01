@@ -1,6 +1,4 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {HeaderComponent} from './header.component';
 import {provideRouter, RouterLink} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatMenuModule} from '@angular/material/menu';
@@ -18,6 +16,7 @@ import {MatIconHarness} from '@angular/material/icon/testing';
 import {MatSlideToggleHarness} from '@angular/material/slide-toggle/testing';
 import {By} from '@angular/platform-browser';
 import {TranslateModule} from '@ngx-translate/core';
+import {HeaderComponent} from '@app/core/layout';
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;

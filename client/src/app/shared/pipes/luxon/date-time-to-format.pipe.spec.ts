@@ -1,4 +1,4 @@
-import {DateTimeToFormatPipe} from './date-time-to-format.pipe';
+import {DateTimeToFormatPipe} from '@app/shared/pipes';
 import {DateTime} from 'luxon';
 
 describe('DateTimeToFormatPipe', () => {
