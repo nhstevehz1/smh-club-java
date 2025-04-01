@@ -6,7 +6,7 @@ import {map} from 'rxjs/operators';
 
 import {BaseApiService, PagedData, PageRequest} from '@app/shared/services/api-service';
 
-import {Address, AddressCreate, AddressMember, AddressType} from '@app/features/addresses/models';
+import {Address, AddressCreate, AddressMember, AddressType} from '@app/features/addresses/models/address-models';
 
 @Injectable()
 export class AddressService extends BaseApiService<AddressMember, AddressCreate, Address>{

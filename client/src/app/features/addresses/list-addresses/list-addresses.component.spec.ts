@@ -17,11 +17,13 @@ import {
   generateAddressDialogInput,
   generateAddressMember,
   generateAddressPagedData
-} from '@app/features/addresses/testing';
+} from '@app/features/addresses/testing/test-support';
 
+import {AddressMember, Address} from '@app/features/addresses/models/address-models';
+import {AddressService} from '@app/features/addresses/services/address.service';
+import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
+import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {ListAddressesComponent} from './list-addresses.component';
-import {AddressService, AddressEditDialogService, AddressTableService} from '@app/features/addresses/services';
-import {AddressMember, Address} from '@app/features/addresses/models';
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;

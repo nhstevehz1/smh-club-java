@@ -11,9 +11,9 @@ import {AuthService, PermissionType} from '@app/core/auth';
 
 import {ColumnDef, SortablePageableTableComponent} from '@app-shared/components/sortable-pageable-table';
 import {Updatable} from '@app-shared/models/updatable';
-import {TableService} from '@app-shared/services/table-service';
-import {CrudService, PagedData, PageRequest, SortDef} from '@app-shared/services/api-service';
-import {EditDialogService} from '@app-shared/services/dialog-edit-service';
+import {TableService, BaseTableService} from '@app-shared/services/table-service';
+import {CrudService, PagedData, PageRequest, SortDef, BaseApiService} from '@app-shared/services/api-service';
+import {EditDialogService, BaseEditDialogService} from '@app-shared/services/dialog-edit-service';
 import {EditAction, EditDialogInput, EditDialogResult} from '@app/shared/components/edit-dialog';
 
 
@@ -35,9 +35,9 @@ export abstract class BaseTableComponent<C, T extends Updatable, L> implements O
   errors = signal<string | undefined>(undefined);
 
   protected constructor(protected auth: AuthService,
-                        protected apiSvc: CrudService<L, C, T>,
-                        protected tableSvc: TableService<L>,
-                        protected dialogSvc: EditDialogService<T>) {
+                        protected apiSvc: BaseApiService<L, C, T>,
+                        protected tableSvc: BaseTableService<L>,
+                        protected dialogSvc: BaseEditDialogService<T>) {
   }
 
   ngOnInit() {

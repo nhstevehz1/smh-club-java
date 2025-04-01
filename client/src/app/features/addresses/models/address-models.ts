@@ -1,6 +1,4 @@
 import {FullName} from '@app/shared/models';
-import {AddressType} from './address-type';
-
 
 export interface AddressCreate {
     address1: string;
@@ -18,4 +16,10 @@ export interface Address extends AddressCreate {
 
 export interface AddressMember extends Address {
     full_name: FullName;
+}
+
+export enum AddressType {
+  Home = 'Home',
+  Work = 'Work',
+  Other = 'Other'
 }

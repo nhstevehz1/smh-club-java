@@ -6,8 +6,8 @@ import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table';
 import {PagedData} from '@app/shared/services/api-service';
 
-import {AddressMember, AddressType, AddressCreate, Address} from '@app/features/addresses/models';
-import {AddressEditorComponent} from '@app/features/addresses/address-editor';
+import {AddressMember, AddressType, AddressCreate, AddressModels} from '@app/features/addresses/models/address-models';
+import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
 
 export function generateAddressPagedData(page: number, size: number, total: number): PagedData<AddressMember> {
     const content = generateAddressList(size);
@@ -53,7 +53,7 @@ export function generateAddressCreate(): AddressCreate {
   }
 }
 
-export function generateAddress(): Address {
+export function generateAddress(): AddressModels {
   return {
     id: 0,
     member_id: 0,
@@ -66,7 +66,7 @@ export function generateAddress(): Address {
   }
 }
 
-export function generateAddressForm(): FormModelGroup<Address> {
+export function generateAddressForm(): FormModelGroup<AddressModels> {
   return new FormGroup({
     id: new FormControl(0, {nonNullable: true}),
     member_id: new FormControl(0, {nonNullable: true}),
@@ -79,7 +79,7 @@ export function generateAddressForm(): FormModelGroup<Address> {
   });
 }
 
-export function generateAddressDialogInput(context: Address, action: EditAction): EditDialogInput<Address>{
+export function generateAddressDialogInput(context: AddressModels, action: EditAction): EditDialogInput<AddressModels>{
   return {
     title: 'test',
     component: AddressEditorComponent,

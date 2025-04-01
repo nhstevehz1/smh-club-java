@@ -10,9 +10,10 @@ import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields
 import {FormControlError} from '@app/shared/components/editor-form-fields/models/form-control-error';
 import {BaseEditorComponent} from '@app/shared/components/base-editor';
 
-import {AddressTypeFormFieldComponent} from '@app/features/addresses/address-type-form-field';
-import {Address} from '@app/features/addresses/models';
-
+import {
+  AddressTypeFormFieldComponent
+} from '@app/features/addresses/address-type-form-field/address-type-form-field.component';
+import {Address} from '@app/features/addresses/models/address-models';
 
 @Component({
   selector: 'app-address-editor',
