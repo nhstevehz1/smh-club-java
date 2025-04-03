@@ -8,7 +8,6 @@ import {MockEditor2Component} from '@app/shared/components/base-editor/testing/m
 import {HarnessLoader} from '@angular/cdk/testing';
 import {EditorHarness} from '@app/shared/components/base-editor/testing/editor-harness';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {async} from 'rxjs';
 
 describe('DialogOutletDirective', () => {
   let component: EditorOutletHostComponent;
