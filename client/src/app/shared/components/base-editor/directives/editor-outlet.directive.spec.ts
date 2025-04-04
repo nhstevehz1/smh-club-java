@@ -5,14 +5,11 @@ import {
   EditorOutletHostComponent
 } from '@app/shared/components/base-editor/testing/editor-outlet-host/editor-outlet-host.component';
 import {MockEditor2Component} from '@app/shared/components/base-editor/testing/mock-editor2/mock-editor2.component';
-import {HarnessLoader} from '@angular/cdk/testing';
-import {EditorHarness} from '@app/shared/components/base-editor/testing/editor-harness';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {By} from '@angular/platform-browser';
 
 describe('DialogOutletDirective', () => {
   let component: EditorOutletHostComponent;
   let fixture: ComponentFixture<EditorOutletHostComponent>;
-  let loader: HarnessLoader;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -28,17 +25,18 @@ describe('DialogOutletDirective', () => {
 
     fixture = TestBed.createComponent(EditorOutletHostComponent);
     component = fixture.componentInstance;
-    loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  fit('should create', async () => {
+  it('should create', async () => {
     fixture.detectChanges();
     await fixture.whenStable();
     expect(component).toBeTruthy();
   });
 
-  fit('should contain embedded component', async () => {
-    const harness = await loader.getHarnessOrNull(EditorHarness);
-    expect(harness).toBeTruthy();
+  it('should contain embedded component', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const element = fixture.debugElement.query(By.css('app-mock-editor2'));
+    expect(element).toBeTruthy();
   });
 });
