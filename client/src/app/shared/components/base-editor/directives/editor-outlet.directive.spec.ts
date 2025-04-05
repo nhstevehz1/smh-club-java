@@ -1,11 +1,12 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
 import {TranslateModule} from '@ngx-translate/core';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {
   EditorOutletHostComponent
 } from '@app/shared/components/base-editor/testing/editor-outlet-host/editor-outlet-host.component';
-import {MockEditor2Component} from '@app/shared/components/base-editor/testing/mock-editor2/mock-editor2.component';
-import {By} from '@angular/platform-browser';
+import {MockEditorComponent} from '@app/shared/components/base-editor/testing/mock-editor/mock-editor.component';
+
 
 describe('DialogOutletDirective', () => {
   let component: EditorOutletHostComponent;
@@ -15,7 +16,7 @@ describe('DialogOutletDirective', () => {
     await TestBed.configureTestingModule({
       imports: [
         EditorOutletHostComponent,
-        MockEditor2Component,
+        MockEditorComponent,
         TranslateModule.forRoot({})
       ],
       providers: [
@@ -36,7 +37,7 @@ describe('DialogOutletDirective', () => {
   it('should contain embedded component', async () => {
     fixture.detectChanges();
     await fixture.whenStable();
-    const element = fixture.debugElement.query(By.css('app-mock-editor2'));
+    const element = fixture.debugElement.query(By.css('app-mock-editor'));
     expect(element).toBeTruthy();
   });
 });

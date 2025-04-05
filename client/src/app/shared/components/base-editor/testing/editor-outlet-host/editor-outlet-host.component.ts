@@ -4,7 +4,7 @@ import {EditorModel} from '@app/shared/components/base-editor/testing/models/Edi
 import {EditorOutletDirective} from '@app/shared/components/base-editor/directives/editor-outlet.directive';
 import {EditorConfig} from '@app/shared/components/base-editor/models/editor-config';
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {MockEditor2Component} from '@app/shared/components/base-editor/testing/mock-editor2/mock-editor2.component';
+import {MockEditorComponent} from '@app/shared/components/base-editor/testing/mock-editor/mock-editor.component';
 
 @Component({
   selector: 'app-dialog-outlet-host',
@@ -12,22 +12,21 @@ import {MockEditor2Component} from '@app/shared/components/base-editor/testing/m
     ReactiveFormsModule,
     EditorOutletDirective,
   ],
-  templateUrl: './editor-outlet-host.component.html',
-  styleUrl: './editor-outlet-host.component.scss'
+  templateUrl: './editor-outlet-host.component.html'
 })
 export class EditorOutletHostComponent {
 
   form: WritableSignal<FormModelGroup<EditorModel>>;
-  component: WritableSignal<Type<MockEditor2Component>>;
+  component: WritableSignal<Type<MockEditorComponent>>;
 
   constructor() {
 
-    const config: EditorConfig<EditorModel, MockEditor2Component> = {
+    const config: EditorConfig<EditorModel, MockEditorComponent> = {
       form: new FormGroup({
         id: new FormControl(0, {nonNullable: true}),
         editorField: new FormControl('', {nonNullable: true})
       }),
-      component: MockEditor2Component
+      component: MockEditorComponent
     }
 
     this.form = signal(config.form);

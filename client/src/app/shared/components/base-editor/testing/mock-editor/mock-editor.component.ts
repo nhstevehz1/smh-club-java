@@ -4,17 +4,16 @@ import {
   InputFormFieldComponent
 } from '@app/shared/components/editor-form-fields/input-form-field/input-form-field.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {BaseEditorExComponent} from '@app/shared/components/base-editor/base-editor-ex.component';
+import {BaseEditorComponent} from '@app/shared/components/base-editor/base-editor.component';
 
 @Component({
-  selector: 'app-mock-editor2',
+  selector: 'app-mock-editor',
   imports: [
     InputFormFieldComponent,
     ReactiveFormsModule
   ],
-  templateUrl: './mock-editor2.component.html',
-  styleUrl: './mock-editor2.component.scss'
+  templateUrl: './mock-editor.component.html'
 })
-export class MockEditor2Component extends BaseEditorExComponent<EditorModel>{
+export class MockEditorComponent extends BaseEditorComponent<EditorModel>{
   field = computed(() => this.editorForm()!.controls.editorField);
 }
