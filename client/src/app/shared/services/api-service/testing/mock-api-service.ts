@@ -3,31 +3,31 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 import {
-  MockCreateModel,
-  MockFullNameModel,
-  MockModel
+  ApiCreateMode,
+  ApiFullNameModel,
+  ApiModel
 } from '@app/shared/services/api-service/testing/mock-api-data';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 
 @Injectable()
-export class MockCrudService extends BaseApiService<MockFullNameModel, MockCreateModel, MockModel> {
+export class MockApiService extends BaseApiService<ApiFullNameModel, ApiCreateMode, ApiModel> {
 
   constructor(http: HttpClient) {
     super('/api/v1/mock', http);
   }
 
-  override getPagedData(pageRequest: PageRequest): Observable<PagedData<MockFullNameModel>> {
+  override getPagedData(pageRequest: PageRequest): Observable<PagedData<ApiFullNameModel>> {
     return super.getPagedData(pageRequest);
   }
 
-  override create(create: MockCreateModel): Observable<MockModel> {
+  override create(create: ApiCreateMode): Observable<ApiModel> {
     return super.create(create);
   }
 
-  override update(id: number, update: MockModel): Observable<MockModel> {
-    return super.update(id, update);
+  override update(update: ApiModel): Observable<ApiModel> {
+    return super.update(update);
   }
 
   override delete(id: number): Observable<void> {

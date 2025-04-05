@@ -1,11 +1,12 @@
 import {Observable} from 'rxjs';
 
 import {PagedData, PageRequest} from '@app-shared/services/api-service/models';
+import {Updatable} from '@app/shared/models/updatable';
 
-export interface CrudService<L, C, T>  {
+export interface CrudService<L, C, T extends Updatable>  {
   readonly baseUri: string;
   getPagedData(pageRequest: PageRequest): Observable<PagedData<L>>;
   create(create: C): Observable<T>;
-  update(id: number, update: T): Observable<T>;
+  update(update: T): Observable<T>;
   delete(id: number): Observable<void>;
 }

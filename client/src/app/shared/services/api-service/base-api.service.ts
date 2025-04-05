@@ -3,8 +3,9 @@ import {Observable} from 'rxjs';
 
 import {CrudService} from '@app/shared/services/api-service/crud-service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
+import {Updatable} from '@app/shared/models/updatable';
 
-export abstract class BaseApiService<L, C, T> implements CrudService<L, C, T> {
+export abstract class BaseApiService<L, C, T extends Updatable> implements CrudService<L, C, T> {
 
   readonly baseUri: string;
 
@@ -28,8 +29,8 @@ export abstract class BaseApiService<L, C, T> implements CrudService<L, C, T> {
     return this.http.post<T>(this.baseUri, create);
   }
 
-  update(id: number, update: T): Observable<T> {
-    return this.http.put<T>(`${this.baseUri}/${id}`, update );
+  update(update: T): Observable<T> {
+    return this.http.put<T>(`${this.baseUri}/${update.id}`, update );
   }
 
   delete(id: number): Observable<void> {
