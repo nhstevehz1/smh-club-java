@@ -10,11 +10,11 @@ import {TestHelpers} from '@app/shared/testing';
 
 export class EmailTest {
   static generatePagedData(page: number, size: number, total: number): PagedData<EmailMember> {
-    const content = this.generateEmailList(size);
+    const content = this.generateList(size);
     return TestHelpers.generatePagedData(page, size, total, content);
   }
 
-  static generateEmailList(size: number): EmailMember[] {
+  static generateList(size: number): EmailMember[] {
     const list: EmailMember[] = [];
 
     for (let ii = 0; ii < size; ii++) {

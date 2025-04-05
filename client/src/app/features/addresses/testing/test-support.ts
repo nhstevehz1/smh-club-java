@@ -9,11 +9,11 @@ import {TestHelpers} from '@app/shared/testing';
 
 export class AddressTest {
   static generatePagedData(page: number, size: number, total: number): PagedData<AddressMember> {
-    const content = this.generateAddressList(size);
+    const content = this.generateList(size);
     return TestHelpers.generatePagedData(page, size, total, content);
   }
 
-  static generateAddressList(size: number): AddressMember[] {
+  static generateList(size: number): AddressMember[] {
     const list: AddressMember[] = [];
 
     for (let ii = 0; ii < size; ii++) {
@@ -65,7 +65,7 @@ export class AddressTest {
     }
   }
 
-  static generateAddressForm(): FormModelGroup<Address> {
+  static generateForm(): FormModelGroup<Address> {
     return new FormGroup({
       id: new FormControl(0, {nonNullable: true}),
       member_id: new FormControl(0, {nonNullable: true}),
@@ -85,7 +85,7 @@ export class AddressTest {
       action: action,
       editorConfig: {
         component: AddressEditorComponent,
-        form: this.generateAddressForm()
+        form: this.generateForm()
       }
     }
   }

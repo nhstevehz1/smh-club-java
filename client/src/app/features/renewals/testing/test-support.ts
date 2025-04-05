@@ -6,7 +6,7 @@ import {TestHelpers} from '@app/shared/testing';
 
 export class RenewalTest {
 
-  static generateRenewalPageData(page: number, size: number, total: number): PagedData<RenewalMember> {
+  static generatePageData(page: number, size: number, total: number): PagedData<RenewalMember> {
     const content = this.generateList(size);
     return TestHelpers.generatePagedData(page, size, total, content);
   }

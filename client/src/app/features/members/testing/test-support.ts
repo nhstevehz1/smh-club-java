@@ -6,11 +6,11 @@ import {TestHelpers} from '@app/shared/testing';
 
 export class MemberTest {
   static generatePagedData(page: number, size: number, total: number): PagedData<Member> {
-    const content = this.generateMemberList(size);
+    const content = this.generateList(size);
     return TestHelpers.generatePagedData(page, size, total, content);
   }
 
-  static generateMemberList(size: number): Member[] {
+  static generateList(size: number): Member[] {
     const list: Member[] = [];
 
     for(let ii = 0; ii < size; ii++) {
