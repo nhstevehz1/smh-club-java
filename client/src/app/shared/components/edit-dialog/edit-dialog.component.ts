@@ -1,87 +1,70 @@
-import {Component, computed, Inject, Optional, Signal, signal, WritableSignal} from '@angular/core';
+import {Component, computed, signal, WritableSignal} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {NgComponentOutlet} from '@angular/common';
 
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle
-} from '@angular/material/dialog';
-import {MatButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
+import {MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
-import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {TranslatePipe} from '@ngx-translate/core';
-
-import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {EditDialogInput} from '@app/shared/components/edit-dialog/models/edit-dialog-input';
 import {EditAction} from '@app/shared/components/edit-dialog/models/edit-action';
+import {Editor} from '@app/shared/components/base-editor/editor';
+import {EditorOutletDirective} from '@app/shared/components/base-editor/directives/editor-outlet.directive';
+import {EditDialog} from '@app/shared/components/edit-dialog/edit-dialog';
 
 @Component({
   selector: 'app-edit-dialog',
   imports: [
-    MatDialogContent,
-    MatDialogTitle,
-    MatButton,
-    MatDialogActions,
-    MatIcon,
-    MatTooltip,
     ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltip,
     TranslatePipe,
-    NgComponentOutlet
+    EditorOutletDirective
   ],
   templateUrl: './edit-dialog.component.html',
   styleUrl: './edit-dialog.component.scss'
 })
-export class EditDialogComponent<T> {
-  editForm: Signal<FormModelGroup<T>>;
-  title: WritableSignal<string>;
-  component: Signal<any>;
-  inputs: Signal<any>;
-  context: WritableSignal<T>;
-  isDeleteAction: WritableSignal<boolean>;
+export class EditDialogComponent<T, C extends Editor<T>> implements EditDialog<T, C> {
 
-  private readonly dialogData: EditDialogInput<T>;
-
-  constructor(public dialogRef: MatDialogRef<EditDialogComponent<T>, EditDialogInput<T>>,
-              @Optional() @Inject(MAT_DIALOG_DATA) public data: EditDialogInput<T>){
-
-    this.dialogData = {...data};
-
-    if (this.dialogData.action == EditAction.Edit) {
-      this.dialogData.form.patchValue(this.dialogData.context!)
+  readonly editForm = computed(() => {
+    const form = this.dialogInput().editorConfig.form;
+    if(this.dialogInput().action == EditAction.Edit) {
+      form.patchValue(this.dialogInput().context!);
+    } else {
+      form.reset();
     }
+    return form;
+  });
 
-    this.editForm = computed(() => this.dialogData.form);
-    this.title = signal(this.dialogData.title);
-    this.component = computed(() => this.dialogData.component);
-    this.inputs = computed(() => {
-      return {
-        editorForm: this.editForm(),
-        fieldAppearance: 'outline' as MatFormFieldAppearance
-      }
-    })
-    this.context = signal(this.dialogData.context);
-    this.isDeleteAction = signal(this.dialogData.action == EditAction.Delete);
+
+  readonly title = computed(() => this.dialogInput().title);
+  readonly isDeleteAction = computed(() => this.dialogInput().action == EditAction.Delete);
+  readonly editorConfig = computed(() => this.dialogInput().editorConfig);
+
+  readonly dialogInput: WritableSignal<EditDialogInput<T, C>>;
+
+  constructor(protected dialogRef: MatDialogRef<EditDialogComponent<T, C>, EditDialogInput<T, C>>,
+              protected data: EditDialogInput<T, C>){
+    this.dialogInput = signal({...data});
   }
 
   onCancel(): void {
-    this.dialogData.action = EditAction.Cancel;
-    this.closeDialog(this.dialogData);
+    this.dialogInput().action = EditAction.Cancel;
+    this.closeDialog(this.dialogInput());
   }
 
   onSave(): void {
-    this.dialogData.context = this.editForm().value as T;
-    this.closeDialog(this.dialogData);
+    this.dialogInput().context = this.editForm().value as T;
+    this.closeDialog(this.dialogInput());
   }
 
   onDelete(): void {
-    this.closeDialog(this.dialogData);
+    this.closeDialog(this.dialogInput());
   }
 
-  private closeDialog(result: EditDialogInput<T>): void {
+  private closeDialog(result: EditDialogInput<T, C>): void {
     this.dialogRef.close(result);
   }
 }

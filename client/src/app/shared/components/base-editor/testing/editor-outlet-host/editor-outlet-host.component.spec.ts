@@ -28,7 +28,7 @@ describe('DialogOutletHostComponent', () => {
 
   });
 
-  fit('should create', async () => {
+  it('should create', async () => {
     fixture.detectChanges();
     await fixture.whenStable();
     expect(component).toBeTruthy();

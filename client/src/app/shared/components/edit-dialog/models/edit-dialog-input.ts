@@ -1,10 +1,10 @@
 import {EditAction} from '@app/shared/components/edit-dialog/models/edit-action';
-import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {EditorConfig} from '@app/shared/components/base-editor/models/editor-config';
+import {Editor} from '@app/shared/components/base-editor/editor';
 
-export interface EditDialogInput<T> {
+export interface EditDialogInput<T, C extends Editor<T>> {
   title: string,
   context: T,
-  form: FormModelGroup<T>,
-  component: any,
   action: EditAction
+  editorConfig: EditorConfig<T, C>
 }
