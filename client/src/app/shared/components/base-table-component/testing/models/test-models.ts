@@ -1,7 +1,7 @@
 import {Updatable} from '@app/shared/models/updatable';
 
-export interface TestCreate {
-  test: string,
+export interface TableModelCreate {
+  tableField: string,
 }
 
-export interface TestModel extends TestCreate, Updatable {}
+export interface TableModel extends TableModelCreate, Updatable {}
