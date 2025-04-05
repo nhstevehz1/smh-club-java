@@ -1,10 +1,10 @@
-import {EditDialogInput, EditAction, EditDialogResult} from '@app/shared/components/edit-dialog/models';
-import {EditDialogModel, DialogTest} from '@app/shared/components/edit-dialog/testing/test-support';
+import {EditDialogInput, EditAction, EditDialogResult} from '@app/shared/components/base-edit-dialog/models';
+import {EditDialogModel, DialogTest} from '@app/shared/components/base-edit-dialog/testing/test-support';
 import {
   MockDialogEditorComponent
-} from '@app/shared/components/edit-dialog/testing/mock-dialog-editor/mock-dialog-editor.component';
+} from '@app/shared/components/base-edit-dialog/testing/mock-dialog-editor/mock-dialog-editor.component';
 import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {MockDialogComponent} from '@app/shared/components/edit-dialog/testing/mock-dialog/mock-dialog.component';
+import {MockDialogComponent} from '@app/shared/components/base-edit-dialog/testing/mock-dialog/mock-dialog.component';
 import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TranslateModule} from '@ngx-translate/core';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
