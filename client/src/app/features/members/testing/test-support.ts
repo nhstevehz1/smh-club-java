@@ -3,6 +3,7 @@ import {DateTime} from 'luxon';
 import {Member} from '@app/features/members/models/member';
 import {PagedData} from '@app/shared/services/api-service/models';
 import {TestHelpers} from '@app/shared/testing';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 
 export class MemberTest {
   static generatePagedData(page: number, size: number, total: number): PagedData<Member> {
@@ -14,21 +15,10 @@ export class MemberTest {
     const list: Member[] = [];
 
     for(let ii = 0; ii < size; ii++) {
-      const member: Member = this.generateMemberDetails(ii);
+      const member: Member = this.generateMember(ii);
       list.push(member);
     }
     return list;
-  }
-
-  static generateMemberDetails(prefix: number): Member {
-    const member = this.generateMember(prefix);
-
-    const str = JSON.stringify(member);
-
-    const details: Member = JSON.parse(str);
-    details.id = prefix;
-    details.member_number = prefix;
-    return details;
   }
 
   static generateMember(prefix: number): Member {
@@ -68,5 +58,36 @@ export class MemberTest {
       birth_date: member.birth_date,
       joined_date: member.joined_date,
     }
+  }
+
+  static generateColumnDefs(): ColumnDef<Member>[] {
+    return [{
+      columnName: 'member_number',
+      displayName: 'members.list.columns.memberNumber',
+      translateDisplayName: false,
+      isSortable: true,
+      cell: (element: Member) => `${element.member_number}`
+    }, {
+      columnName: 'first_name',
+      displayName: 'members.list.columns.firstName',
+      isSortable: true,
+      cell: (element: Member) => `${element.first_name}`
+    }, {
+      columnName: 'last_name',
+      displayName: 'members.list.columns.lastName',
+      isSortable: true,
+      cell: (element: Member) => `${element.last_name}`
+    }, {
+      columnName: 'birth_date',
+      displayName: 'members.list.columns.birthDate',
+      isSortable: true,
+      cell: (element: Member) => `${element.birth_date}`
+    }, {
+      columnName: 'joined_date',
+      displayName: 'members.list.columns.joinedDate',
+      isSortable: true,
+      cell: (element: Member) => `${element.joined_date}`
+    }
+    ];
   }
 }

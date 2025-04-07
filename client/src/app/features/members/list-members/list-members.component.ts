@@ -19,7 +19,8 @@ import {
   SortablePageableTableComponent
 } from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
-import {EditEvent} from '@app/shared/components/edit-dialog/models';
+import {EditEvent} from '@app/shared/components/base-edit-dialog/models';
+import {MemberEditorComponent} from '@app/features/members/member-editor/member-editor.component';
 
 @Component({
   selector: 'app-list-members',
@@ -39,7 +40,7 @@ import {EditEvent} from '@app/shared/components/edit-dialog/models';
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent extends BaseTableComponent<MemberCreate, Member, Member> {
+export class ListMembersComponent extends BaseTableComponent<MemberCreate, Member, Member, MemberEditorComponent> {
 
   constructor(auth: AuthService,
               svc: MemberService,
@@ -55,6 +56,6 @@ export class ListMembersComponent extends BaseTableComponent<MemberCreate, Membe
   }
 
   onViewClick(event: EditEvent<Member>): void {
-    this.router.navigate(['p/member/view', event.data.id]).then();
+    this.router.navigate(['p/members/view', event.data.id]).then();
   }
 }

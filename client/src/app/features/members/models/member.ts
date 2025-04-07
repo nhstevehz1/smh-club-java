@@ -17,10 +17,3 @@ export interface MemberCreate {
 export interface Member extends MemberCreate {
     id: number;
 }
-
-export interface MemberDetails extends Member {
-    addresses: Address[];
-    emails: Email[];
-    phones: Phone[];
-    renewals: Renewal[];
-}

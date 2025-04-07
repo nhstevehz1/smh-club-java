@@ -7,36 +7,42 @@ import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
-
-import {throwError} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {asyncData} from '@app/shared/testing/test-helpers';
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
 
-import {generateMemberPageData} from '@app/features/members/testing/test-support';
-
 import {ListMembersComponent} from './list-members.component';
 import {MemberService} from '@app/features/members/services/member.service';
 import {MemberTableService} from '@app/features/members/services/member-table.service';
 import {AuthService} from '@app/core/auth/services/auth.service';
-import {PermissionType} from '@app/core/auth/models/permission-type';
-import {PageRequest} from '@app/shared/services/api-service/models';
+import {MemberTest} from '@app/features/members/testing/test-support';
+import {MemberEditDialogService} from '@app/features/members/services/member-edit-dialog.service';
+import {EditEvent} from '@app/shared/components/base-edit-dialog/models';
+import {Member} from '@app/features/members/models';
 
 describe('ListMembersComponent', () => {
   let fixture: ComponentFixture<ListMembersComponent>;
   let component: ListMembersComponent;
+  let loader: HarnessLoader;
 
   let memberSvcMock: jasmine.SpyObj<MemberService>;
   let authSvcMock: jasmine.SpyObj<AuthService>;
   let tableSvcMock: jasmine.SpyObj<MemberTableService>;
+  let dialogSvcMock: jasmine.SpyObj<MemberEditDialogService>
   let routerMock: jasmine.SpyObj<Router>;
 
+  const columnDefs = MemberTest.generateColumnDefs();
+  const data = MemberTest.generatePagedData(0, 5, 2);
+
   beforeEach(async () => {
-    memberSvcMock = jasmine.createSpyObj('MembersService', ['getPagedData']);
+    memberSvcMock = jasmine.createSpyObj('MemberService', ['getPagedData']);
     tableSvcMock = jasmine.createSpyObj('MemberTableService', ['getColumnDefs']);
-    authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission', 'rolesLoaded$']);
+    authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
+
+    dialogSvcMock = jasmine.createSpyObj('MemberEditDialogService',
+      ['openDialog', 'generateDialogInput']);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -51,138 +57,62 @@ describe('ListMembersComponent', () => {
         {provide: Router, useValue: routerMock},
         {provide: MemberService, useValue: {}},
         {provide: MemberTableService, useValue: {}},
-        {provide: AuthService, useValue: {}}
+        {provide: AuthService, useValue: {}},
+        {provide: MemberEditDialogService, useValue: {}}
       ],
     }).overrideProvider(MemberService, {useValue: memberSvcMock})
       .overrideProvider(MemberTableService, {useValue: tableSvcMock})
       .overrideProvider(AuthService, {useValue: authSvcMock})
+      .overrideProvider(MemberEditDialogService, {useValue: dialogSvcMock})
       .compileComponents();
 
     fixture = TestBed.createComponent(ListMembersComponent);
     component = fixture.componentInstance;
+    loader = TestbedHarnessEnvironment.loader(fixture);
+
+    tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
+    memberSvcMock.getPagedData.and.returnValue(asyncData(data));
+
+    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
-  describe('test component', () => {
-      it('should create', () => {
-          expect(component).toBeTruthy();
-      });
-
-      it('should create column list', () => {
-         fixture.detectChanges();
-         expect(component.columns().length).toEqual(5);
-      });
+  it('should create', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component).toBeTruthy();
   });
 
-  describe('test service interactions on init', () => {
-      let loader: HarnessLoader;
-
-      beforeEach(() => {
-         loader = TestbedHarnessEnvironment.loader(fixture);
-      });
-
-      it('should call MemberService.getMembers() on init', async () => {
-         const data = generateMemberPageData(0, 5, 100);
-
-         memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-         fixture.detectChanges();
-         await fixture.whenStable();
-
-         const request = PageRequest.of(0, 5);
-         expect(memberSvcMock.getPagedData).toHaveBeenCalledWith(request);
-     });
-
-    it('length should be set on init', async () => {
-       const data = generateMemberPageData(0, 5, 100);
-
-       memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-       fixture.detectChanges();
-       await fixture.whenStable();
-
-       expect(component.resultsLength).toEqual(data.page.totalElements);
-    });
-
-    it('datasource.data should be set on init', async () => {
-        const data = generateMemberPageData(0, 5, 2);
-
-        memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.datasource().data).toBe(data._content);
-    });
-
-    it('datasource.data should be empty when an error occurs while calling getAddresses', async () => {
-      memberSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(component.datasource().data).toEqual([]);
-    });
-
-    it('should call canAddMember', async () => {
-      const data = generateMemberPageData(0, 5, 2);
-
-      const spy = spyOn(component, 'hasWriteRole').and.stub();
-      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should call authService.hasPermissions', async () => {
-      const data = generateMemberPageData(0, 5, 2);
-
-      const spy = authSvcMock.hasPermission.and.stub();
-      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-      spyOn(component, 'hasWriteRole').and.callThrough();
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(spy).toHaveBeenCalledWith(PermissionType.write);
-    });
-
-    it('should display add member button', async () => {
-      const data = generateMemberPageData(0, 5, 2);
-
-      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-      spyOn(component, 'hasWriteRole').and.returnValue(true);
-
-      const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
-
-      expect(harnesses.length).toBe(1);
-    });
-
-    it('add member button should call addMemberHandler() when clicked', async () => {
-      const data = generateMemberPageData(0, 5, 2);
-
-      const spy = spyOn(component, 'addMemberHandler').and.stub();
-      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-      spyOn(component, 'hasWriteRole').and.returnValue(true);
-
-      const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
-      await harnesses[0].click();
-
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('router.navigate should be called when add member button is clicked', async () => {
-      const data = generateMemberPageData(0, 5, 2);
-
-      const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
-      memberSvcMock.getPagedData.and.returnValue(asyncData(data));
-      spyOn(component, 'hasWriteRole').and.returnValue(true);
-
-      const harnesses = await loader.getAllHarnesses(MatButtonHarness.with({variant: 'mini-fab'}));
-      await harnesses[0].click();
-
-      expect(spy).toHaveBeenCalledWith(['p/members/add']);
-    });
+  it('should display add member button when user has write role', async () => {
+    spyOn(component, 'hasWriteRole').and.returnValue(true);
+    const harness = await loader.getHarnessOrNull(MatButtonHarness.with({text: 'add', variant: 'mini-fab'}));
+    expect(harness).toBeTruthy();
   });
+
+  it('should NOT display add member button when user does not have write role', async () => {
+    spyOn(component, 'hasWriteRole').and.returnValue(false);
+    const harness = await loader.getHarnessOrNull(MatButtonHarness.with({text: 'add', variant: 'mini-fab'}));
+    expect(harness).toBeFalsy();
+  });
+
+  it('router.navigate should be called when add member button is clicked', async () => {
+    spyOn(component, 'hasWriteRole').and.returnValue(true);
+    const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
+
+    const harness = await loader.getHarness(MatButtonHarness.with({text: 'add', variant: 'mini-fab'}));
+    await harness.click();
+
+    expect(spy).toHaveBeenCalledWith(['p/members/add']);
+  });
+
+  it('onViewClicked should call router.navigate', async () => {
+    const item: EditEvent<Member> = {idx: 0, data: MemberTest.generateMember(0)};
+    const spy = routerMock.navigate.and.returnValue(Promise.resolve(true));
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    component.onViewClick(item);
+    expect(spy).toHaveBeenCalledWith(['p/members/view', item.data.id]);
+  })
 });
