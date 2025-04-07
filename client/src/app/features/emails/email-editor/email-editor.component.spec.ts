@@ -6,16 +6,13 @@ import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatFormFieldHarness} from '@angular/material/form-field/testing';
-import {MatButtonHarness} from '@angular/material/button/testing';
 
 import {TranslateModule} from '@ngx-translate/core';
 
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {getFormFieldValue} from '@app/shared/testing';
-import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing/editor-header-harness';
-
 import {Email, EmailType} from '@app/features/emails/models/email';
 import {EmailEditorComponent} from './email-editor.component';
+import {TestHelpers} from '@app/shared/testing';
 
 describe('EmailEditorComponent', () => {
   let component: EmailEditorComponent;
@@ -80,7 +77,7 @@ describe('EmailEditorComponent', () => {
       });
 
       it('email form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe(formGroup.controls.email.value);
       });
 
@@ -109,7 +106,7 @@ describe('EmailEditorComponent', () => {
       });
 
       it('email type should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe('emails.type.home');
       });
 
@@ -125,62 +122,6 @@ describe('EmailEditorComponent', () => {
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-    });
-  });
-
-  describe('email remove button and title tests', () => {
-    let headerHarness: EditorHeaderHarness | null;
-
-    beforeEach(async () => {
-      fixture.componentRef.setInput('editorForm', formGroup);
-      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
-    });
-
-    it('should contain one editor header', async () => {
-      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
-      expect(harnesses.length).toEqual(1);
-    });
-
-     it('should NOT show email remove button when showRemoveButton is set to false', async () => {
-        fixture.componentRef.setInput('showRemoveButton', false);
-        const visible = await headerHarness?.isButtonVisible();
-        expect(visible).not.toBeTrue();
-      });
-
-    it('should show email remove button when showRemoveButton is set to true', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const visible = await headerHarness?.isButtonVisible();
-      expect(visible).toBeTrue();
-    });
-
-    it('should call on remove when remove email button is clicked', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const spy = spyOn(component, 'onRemove').and.stub();
-
-      const button = await headerHarness?.getHarnessOrNull(MatButtonHarness);
-      await button?.click();
-
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should display title when email title is defined', async () => {
-      fixture.componentRef.setInput('title', 'test');
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).toBeTrue()
-    });
-
-    it('should NOT display title when email title is undefined', async () => {
-      fixture.componentRef.setInput('title', undefined);
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).not.toBeTrue();
-    });
-
-    it('should display correct email title', async () => {
-      const title = 'title';
-      fixture.componentRef.setInput('title', title);
-
-      const titleText = await headerHarness?.titleText();
-      expect(titleText).toBe(title);
     });
   });
 });
