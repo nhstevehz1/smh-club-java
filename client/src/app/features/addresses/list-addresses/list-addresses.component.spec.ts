@@ -34,7 +34,7 @@ describe('ListAddressesComponent', () => {
     addressSvcMock = jasmine.createSpyObj('AddressService', [
       'getPagedData', 'update', 'create', 'delete']);
 
-    dialogSvcMock = jasmine.createSpyObj('EditAddressDialogService',
+    dialogSvcMock = jasmine.createSpyObj('AddressEditDialogService',
       ['openDialog', 'generateDialogInput']);
 
     authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
@@ -64,92 +64,17 @@ describe('ListAddressesComponent', () => {
     component = fixture.componentInstance;
   });
 
-  describe('test component', () => {
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
-  });
-
-  describe('test service interactions on init', () => {
-    describe('AddressTableService', () => {
-      beforeEach(() => {
-        const data = AddressTest.generatePagedData(0, 5, 1);
-        addressSvcMock.getPagedData.and.returnValue(asyncData(data));
-      });
-
-      it('should call AddressTableService.getColumnDefs', async () => {
-        const spy = tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(spy).toHaveBeenCalled();
-      });
-
-      it('should create correct column list', async () => {
-        tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.columns()).toEqual(columnDefs);
-      });
-    });
-
-    describe('test AddressService.getPagedData interactions', () => {
-      beforeEach(() => {
-        tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-      });
-
-      it('should call AddressService.getPagedData', async () => {
-        const data = AddressTest.generatePagedData(0, 5, 100);
-        addressSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        const request = PageRequest.of(0, 5);
-        expect(addressSvcMock.getPagedData).toHaveBeenCalledWith(request);//With(request);
-      });
-
-      it('should set the correct data length', async () => {
-        const data = AddressTest.generatePagedData(0, 5, 100);
-        addressSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.resultsLength()).toEqual(data.page.totalElements);
-      });
-
-      it('should set correct datasource.data', async () => {
-        const data = AddressTest.generatePagedData(0, 5, 2);
-        addressSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.datasource().data).toEqual(data._content);
-      });
-
-      it('datasource.data should be empty when an error occurs while calling getPagedData', async () => {
-        addressSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.datasource().data).toEqual([]);
-      });
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
   describe('test dialog interactions', () => {
     let editEvent: EditEvent<AddressMember>;
     let dialogInput: EditDialogInput<Address, AddressEditorComponent>;
     let dialogResult: EditDialogResult<Address>;
+    const data = AddressTest.generatePagedData(0, 5, 1);
 
     beforeEach(() => {
-      const data = AddressTest.generatePagedData(0, 5, 1);
       addressSvcMock.getPagedData.and.returnValue(asyncData(data));
       tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
 

@@ -1,7 +1,8 @@
 import {Component, ViewEncapsulation} from '@angular/core';
+import {mergeMap, map} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
-
 import {
   SortablePageableTableComponent
 } from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
@@ -13,8 +14,7 @@ import {AddressService} from '@app/features/addresses/services/address.service';
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
-import {mergeMap, map} from 'rxjs/operators';
-import {of} from 'rxjs';
+
 
 @Component({
   selector: 'app-list-addresses',
@@ -39,26 +39,27 @@ export class ListAddressesComponent
     const title = 'addresses.list.dialog.update';
     const context = event.data as Address
     const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Edit);
+
     this.openEditDialog(dialogInput).pipe(
-      mergeMap(result => {
-        if(result.action == EditAction.Edit) {
-          return this.apiSvc.update(result.context);
+      mergeMap(addressResult => {
+        if(addressResult.action == EditAction.Edit) {
+          return this.apiSvc.update(addressResult.context);
         } else {
           return of(null);
         }
       })
     ).subscribe({
-      next: result => {
-        if(result) {
+      next: addressResult => {
+        if(addressResult) {
           const update: AddressMember = {
-            id: result.id,
-            member_id: result.member_id,
-            address1: result.address1,
-            address2: result.address2,
-            city: result.city,
-            state: result.state,
-            postal_code: result.postal_code,
-            address_type: result.address_type,
+            id: addressResult.id,
+            member_id: addressResult.member_id,
+            address1: addressResult.address1,
+            address2: addressResult.address2,
+            city: addressResult.city,
+            state: addressResult.state,
+            postal_code: addressResult.postal_code,
+            address_type: addressResult.address_type,
             full_name: event.data.full_name
           }
           this.updateItem(update)

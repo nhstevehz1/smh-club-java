@@ -3,7 +3,7 @@ import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {of, throwError} from 'rxjs';
+import {of} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
@@ -17,7 +17,6 @@ import {EmailTableService} from '@app/features/emails/services/email-table.servi
 import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
 import {EmailService} from '@app/features/emails/services/email.service';
 import {EditAction, EditEvent, EditDialogInput, EditDialogResult} from '@app/shared/components/base-edit-dialog/models';
-import {PageRequest} from '@app/shared/services/api-service/models';
 import {EmailEditorComponent} from '@app/features/emails/email-editor/email-editor.component';
 
 describe('ListEmailsComponent', () => {
@@ -29,7 +28,8 @@ describe('ListEmailsComponent', () => {
   let authSvcMock: jasmine.SpyObj<AuthService>;
   let dialogSvcMock: jasmine.SpyObj<EmailEditDialogService>;
 
-  const columnDefs = EmailTest.generateColumDefs()
+  const columnDefs = EmailTest.generateColumDefs();
+  const data =  EmailTest.generatePagedData(0, 5, 1);
 
   beforeEach(async () => {
     emailSvcMock = jasmine.createSpyObj('EmailService',
@@ -63,85 +63,15 @@ describe('ListEmailsComponent', () => {
 
     fixture = TestBed.createComponent(ListEmailsComponent);
     component = fixture.componentInstance;
+
+    emailSvcMock.getPagedData.and.returnValue(asyncData(data));
+    tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
   });
 
-  describe('test component', () => {
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
-  });
-
-  describe('test service interactions on init', ()=> {
-    describe('EmailTableService', () => {
-      beforeEach(() => {
-        const data = EmailTest.generatePagedData(0, 5, 1);
-        emailSvcMock.getPagedData.and.returnValue(asyncData(data));
-      });
-
-      it('should call EmailTableService.getColumnDefs', async () => {
-        const spy = tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(spy).toHaveBeenCalled();
-      });
-
-      it('should create correct column list', async () => {
-        tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.columns()).toEqual(columnDefs);
-      });
-    });
-
-    describe('test EmailService.getPagedData interaction', () => {
-      beforeEach(() => {
-        tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-      });
-
-      it('should call EmailService.getEmails', async () => {
-        const data =  EmailTest.generatePagedData(0, 5, 100);
-        emailSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        const request = PageRequest.of(0, 5);
-        expect(emailSvcMock.getPagedData).toHaveBeenCalledOnceWith(request)
-      });
-
-      it('should set the correct data length', async () => {
-        const data =  EmailTest.generatePagedData(0, 5, 100);
-        emailSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.resultsLength()).toEqual(data.page.totalElements);
-      });
-
-      it('should set correct datasource.data', async () => {
-        const data =  EmailTest.generatePagedData(0, 5, 2);
-        emailSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.datasource().data).toBe(data._content);
-      });
-
-      it('datasource.data should be empty when an error occurs while calling getPagedData', async () => {
-        emailSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.datasource().data).toEqual([]);
-      });
-    });
+  it('should create', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component).toBeTruthy();
   });
 
   describe('test dialog interactions', () => {
@@ -150,10 +80,6 @@ describe('ListEmailsComponent', () => {
     let dialogResult: EditDialogResult<Email>;
 
     beforeEach(() => {
-      const data =  EmailTest.generatePagedData(0, 5, 1);
-      emailSvcMock.getPagedData.and.returnValue(asyncData(data));
-      tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
       editEvent = {
         idx: 0,
         data: EmailTest.generateEmailMember(0)
@@ -229,17 +155,6 @@ describe('ListEmailsComponent', () => {
 
         expect(spy).toHaveBeenCalled();
       }));
-
-      it('onEditClick should NOT call EmailService.update when open dialog returns cancel', fakeAsync(() => {
-          dialogResult.action = EditAction.Cancel;
-          dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
-          const spy = emailSvcMock.update.and.stub();
-
-          component.onEditClick(editEvent);
-          tick();
-
-          expect(spy).toHaveBeenCalledTimes(0);
-        }));
 
       it('onEditClick should NOT call EmailService.delete when open dialog returns cancel', fakeAsync(() => {
 

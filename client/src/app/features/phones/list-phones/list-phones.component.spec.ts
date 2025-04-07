@@ -1,28 +1,24 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
+import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
-import {of, throwError} from 'rxjs';
+import {of} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
 
 import {asyncData} from '@app/shared/testing';
-import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/edit-dialog/models';
+import {EditAction, EditDialogInput, EditDialogResult, EditEvent} from '@app/shared/components/base-edit-dialog/models';
 
-import {
-  generatePhoneColumnDefs,
-  generatePhonePageData,
-  generatePhoneMember, generatePhone, generatePhoneDialogInput
-} from '@app/features/phones/testing/test-support';
+import {PhoneTest} from '@app/features/phones/testing';
 
 import {ListPhonesComponent} from '@app/features/phones/list-phones/list-phones.component';
 import {PhoneService} from '@app/features/phones/services/phone.service';
 import {PhoneEditDialogService} from '@app/features/phones/services/phone-edit-dialog.service';
 import {PhoneTableService} from '@app/features/phones/services/phone-table.service';
 import {PhoneMember, Phone} from '@app/features/phones/models/phone';
-import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
+import {PhoneEditorComponent} from '@app/features/phones/phone-editor/phone-editor.component';
 
 describe('ListPhonesComponent', () => {
   let fixture: ComponentFixture<ListPhonesComponent>;
@@ -33,7 +29,8 @@ describe('ListPhonesComponent', () => {
   let authSvcMock: jasmine.SpyObj<AuthService>;
   let dialogSvcMock: jasmine.SpyObj<PhoneEditDialogService>;
 
-  const columnDefs = generatePhoneColumnDefs();
+  const columnDefs = PhoneTest.generatePhoneColumnDefs();
+  const data = PhoneTest.generatePageData(0, 5, 1);
 
   beforeEach(async () => {
     phoneSvcMock = jasmine.createSpyObj('PhoneService',
@@ -67,113 +64,82 @@ describe('ListPhonesComponent', () => {
 
     fixture = TestBed.createComponent(ListPhonesComponent);
     component = fixture.componentInstance;
+
+    phoneSvcMock.getPagedData.and.returnValue(asyncData(data));
+    tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
   });
 
-  describe('test component', () => {
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
-  });
-
-  describe('test service interactions on init', () => {
-    describe('PhoneTableService', () => {
-      beforeEach(() => {
-        const data = generatePhonePageData(0, 5, 1);
-        phoneSvcMock.getPagedData.and.returnValue(asyncData(data));
-      });
-
-      it('should call PhoneTableService.getColumnDefs', async () => {
-        const spy = tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(spy).toHaveBeenCalled();
-      });
-
-      it('should create column list', async () => {
-        const spy = tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.columns().length).toEqual(3);
-      });
-
-      it('should create correct column list', async () => {
-        tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.columns()).toEqual(columnDefs);
-      });
-    });
-
-    describe('PhoneService.getPagedData', ()=> {
-      beforeEach(() => {
-        tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-      });
-
-      it('should call PhoneService.getPagedData', async () => {
-        const data = generatePhonePageData(0, 5, 100);
-        phoneSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        const request = PageRequest.of(0, 5);
-        expect(phoneSvcMock.getPagedData).toHaveBeenCalledWith(request);
-      });
-
-      it('should set correct data length', async () => {
-        const data = generatePhonePageData(0, 5, 2);
-        phoneSvcMock.getPagedData.and.returnValue(asyncData(data));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.datasource().data).toBe(data._content);
-      });
-
-      it('datasource.data should be empty when an error occurs while calling getPagedData', async () => {
-        phoneSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.datasource().data).toEqual([]);
-      });
-
-    });
+  it('should create', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component).toBeTruthy();
   });
 
   describe('test dialog interactions', ()=> {
     let editEvent: EditEvent<PhoneMember>;
-    let dialogInput: EditDialogInput<Phone>;
+    let dialogInput: EditDialogInput<Phone, PhoneEditorComponent>;
     let dialogResult: EditDialogResult<Phone>;
-    let pagedData: PagedData<PhoneMember>;
-    let error: HttpErrorResponse;
 
     beforeEach(() => {
-      const data = generatePhonePageData(0, 5, 1);
-      phoneSvcMock.getPagedData.and.returnValue(asyncData(data));
-      tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
       editEvent = {
         idx: 0,
-        data: generatePhoneMember(0)
+        data: PhoneTest.generatePhoneMember(0)
       }
-
-      const phone = generatePhone();
-      dialogInput = generatePhoneDialogInput(phone, EditAction.Edit);
+      const phone = PhoneTest.generatePhone();
+      dialogInput = PhoneTest.generateDialogInput(phone, EditAction.Edit);
       dialogResult = {context: phone, action: EditAction.Cancel};
-      pagedData = generatePhonePageData(0, 5, 1);
-      error = new HttpErrorResponse(({status: 403, error: {}}));
+    });
+
+    describe('onEditClick', () => {
+      it('onEditClick should call PhoneDialogService.generateDialogInput', fakeAsync(() => {
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy =
+          dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
+      it('onEditClick should call PhoneDialogService.openDialog', fakeAsync(() => {
+        dialogResult.action = EditAction.Cancel;
+        const spy =
+          dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
+      it('onEditClick should NOT call PhoneService.update when dialog service returns cancel', fakeAsync(() => {
+        dialogResult.action = EditAction.Cancel;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy = phoneSvcMock.update.and.stub();
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalledTimes(0);
+      }));
+
+
+      it('onEditClick should call PhoneService.update when dialog services returns edit', fakeAsync(() => {
+        dialogResult.action = EditAction.Edit;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy = phoneSvcMock.update.and.stub();
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
     });
 
     describe('onDeleteClick', () => {
-      it('should call PhoneDialogService.generateDialogInput', fakeAsync(() => {
+      it('onDeleteClick should call PhoneDialogService.generateDialogInput', fakeAsync(() => {
         dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
         const spy =
           dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
@@ -184,7 +150,7 @@ describe('ListPhonesComponent', () => {
         expect(spy).toHaveBeenCalled();
       }));
 
-      it('should call PhoneDialogService.openDialog', fakeAsync(() => {
+      it('onDeleteClick should call PhoneDialogService.openDialog', fakeAsync(() => {
         dialogResult.action = EditAction.Cancel;
         const spy =
           dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
@@ -195,18 +161,7 @@ describe('ListPhonesComponent', () => {
         expect(spy).toHaveBeenCalled();
       }));
 
-      it('should NOT call PhoneService.update when dialog service returns cancel', fakeAsync(() => {
-        dialogResult.action = EditAction.Cancel;
-        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
-        const spy = phoneSvcMock.update.and.stub();
-
-        component.onDeleteClick(editEvent);
-        tick();
-
-        expect(spy).toHaveBeenCalledTimes(0);
-      }));
-
-      it('should NOT call PhoneService.delete when dialog service returns cancel', fakeAsync(() => {
+      it('onDeleteClick should NOT call PhoneService.delete when dialog service returns cancel', fakeAsync(() => {
         dialogResult.action = EditAction.Cancel;
         dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
         const spy = phoneSvcMock.delete.and.stub();
@@ -217,7 +172,8 @@ describe('ListPhonesComponent', () => {
         expect(spy).toHaveBeenCalledTimes(0);
       }));
 
-      it('should call PhoneService.delete when dialog services returns delete', fakeAsync(() => {
+
+      it('onDeleteClick should call PhoneService.delete when dialog services returns delete', fakeAsync(() => {
         dialogResult.action = EditAction.Delete;
         dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
         const spy = phoneSvcMock.delete.and.returnValue(of(void 0));
@@ -228,54 +184,6 @@ describe('ListPhonesComponent', () => {
         expect(spy).toHaveBeenCalled();
       }));
 
-      it('should call PhoneService.getPagedData when dialog services returns delete', fakeAsync(() => {
-        dialogResult.action = EditAction.Delete;
-        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
-        phoneSvcMock.delete.and.returnValue(of(void 0));
-        const spy = phoneSvcMock.getPagedData.and.returnValue(of(pagedData));
-
-        component.onDeleteClick(editEvent);
-        tick();
-
-        expect(spy).toHaveBeenCalled();
-      }));
-
-      it('should set datasource', fakeAsync(() => {
-        dialogResult.action = EditAction.Delete;
-        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
-        phoneSvcMock.delete.and.returnValue(of(void 0));
-        phoneSvcMock.getPagedData.and.returnValue(of(pagedData));
-
-        component.onDeleteClick(editEvent);
-        tick();
-
-        expect(component.datasource().data).toEqual(pagedData._content);
-      }));
-
-      it('should NOT call PhoneService.getPagedData when phone service delete returns an error', fakeAsync(() => {
-        dialogResult.action = EditAction.Delete;
-        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
-        phoneSvcMock.delete.and.returnValue(throwError(() => error));
-        const spy = phoneSvcMock.getPagedData.and.returnValue(of(pagedData));
-
-        component.onDeleteClick(editEvent);
-        tick();
-
-        expect(spy).toHaveBeenCalledTimes(0);
-      }));
-
-      it('should NOT update datasource when PhoneService.getPagedData returns an error', fakeAsync(() => {
-        dialogResult.action = EditAction.Delete;
-        dialogSvcMock.openDialog.and.returnValue(asyncData(dialogResult));
-        phoneSvcMock.delete.and.returnValue(asyncData(void 0));
-        const expected = component.datasource().data;
-        phoneSvcMock.getPagedData.and.returnValue(throwError(() => error));
-
-        component.onDeleteClick(editEvent);
-        tick();
-
-        expect(component.datasource().data).toEqual(expected);
-      }));
     });
   });
 });

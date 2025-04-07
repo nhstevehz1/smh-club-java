@@ -5,26 +5,19 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
-import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {Renewal} from '@app/features/renewals/models';
-import {FormGroup, FormControl} from '@angular/forms';
 import {DateTime} from 'luxon';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {MatFormFieldHarness} from '@angular/material/form-field/testing';
 import {TestHelpers} from '@app/shared/testing';
+import {RenewalTest} from '@app/features/renewals/testing/test-support';
 
 describe('RenewalEditorComponent', () => {
   let component: RenewalEditorComponent;
   let fixture: ComponentFixture<RenewalEditorComponent>;
   let loader: HarnessLoader;
 
-  const formGroup: FormModelGroup<Renewal> = new FormGroup({
-    id: new FormControl(0, {nonNullable: true}),
-    member_id: new FormControl(0, {nonNullable: true}),
-    renewal_date: new FormControl(DateTime.now(), {nonNullable: true}),
-    renewal_year: new FormControl(DateTime.now().year, {nonNullable: true})
-  })
+  const formGroup = RenewalTest.generateForm();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

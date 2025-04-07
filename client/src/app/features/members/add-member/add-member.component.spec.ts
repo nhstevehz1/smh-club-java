@@ -11,11 +11,10 @@ import {MatButtonHarness} from '@angular/material/button/testing';
 import {Observable, Subject} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {generateMember} from '@app/features/members/testing/test-support';
-
 import {Member} from '@app/features/members/models/member';
 import {MemberService} from '@app/features/members/services/member.service';
 import {AddMemberComponent} from './add-member.component';
+import {MemberTest} from '@app/features/members/testing/test-support';
 
 
 describe('AddMemberComponent', () => {
@@ -24,7 +23,7 @@ describe('AddMemberComponent', () => {
 
   let memberSvcMock: jasmine.SpyObj<MemberService>;
   let routerMock: jasmine.SpyObj<Router>;
-  const memberMock: Member = generateMember(1);
+  const memberMock: Member = MemberTest.generateMember(1);
 
   let createSubject$: Subject<Member>;
   let createMember$: Observable<Member>;

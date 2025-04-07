@@ -26,8 +26,7 @@ import {Editor} from '@app/shared/components/base-editor/editor';
 @Component({
   selector: 'app-base-table',
   imports: [],
-  template: ``,
-  styles: ``
+  template: ``
 })
 export abstract class BaseTableComponent<C, T extends Updatable, L extends Updatable, E extends Editor<T>> implements OnInit, AfterViewInit {
 
