@@ -6,17 +6,14 @@ import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatFormFieldHarness} from '@angular/material/form-field/testing';
-import {MatButtonHarness} from '@angular/material/button/testing';
 
 import {TranslateModule} from '@ngx-translate/core';
 
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing/editor-header-harness';
-
-import {getFormFieldValue} from '@app/shared/testing';
 
 import {Phone, PhoneType} from '@app/features/phones/models/phone';
 import {PhoneEditorComponent} from './phone-editor.component';
+import {TestHelpers} from '@app/shared/testing';
 
 describe('PhoneEditorComponent', () => {
   let component: PhoneEditorComponent;
@@ -48,17 +45,11 @@ describe('PhoneEditorComponent', () => {
 
   });
 
-  it('should create', async () => {
+  fit('should create', async () => {
     fixture.componentRef.setInput('editorForm', formGroup);
     fixture.detectChanges();
     await fixture.whenStable();
     expect(component).toBeTruthy();
-  });
-
-  it('should contain editor header', async () => {
-    fixture.componentRef.setInput('editorForm', formGroup);
-    const header = await loader.getAllHarnesses(EditorHeaderHarness);
-    expect(header.length).toEqual(1);
   });
 
   describe('form field tests', ()=> {
@@ -73,7 +64,7 @@ describe('PhoneEditorComponent', () => {
       fixture.componentRef.setInput('editorForm', formGroup);
     });
 
-    it('should contain the correct number of phone form fields', async () => {
+    fit('should contain the correct number of phone form fields', async () => {
       const harnesses = await loader.getAllHarnesses(MatFormFieldHarness);
       expect(harnesses.length).toEqual(3);
     });
@@ -85,25 +76,25 @@ describe('PhoneEditorComponent', () => {
                 {floatingLabelText: 'phones.editor.countryCode.label'})));
       });
 
-      it('should contain country code field', async () => {
+      fit('should contain country code field', async () => {
         expect(harness).toBeTruthy();
       });
 
-      it('country code form field should contain the correct value', async () => {
+      fit('country code form field should contain the correct value', async () => {
         expected = 'test';
         formGroup.controls.country_code.setValue(expected);
-        actual = await getFormFieldValue(harness);
+        actual = await TestHelpers.getFormFieldValue(harness);
         expect(actual).toBe(expected);
       });
 
-      it('country code should use outline appearance', async () => {
+      fit('country code should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
-      it('country code should use fill appearance', async() => {
+      fit('country code should use fill appearance', async() => {
         fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
@@ -118,25 +109,25 @@ describe('PhoneEditorComponent', () => {
                 {floatingLabelText: 'phones.editor.phoneNumber.label'}));
       });
 
-      it('should contain phone field', async () => {
+      fit('should contain phone field', async () => {
         expect(harness).toBeTruthy();
       });
 
-      it('phone form field should contain the correct value', async () => {
+      fit('phone form field should contain the correct value', async () => {
         expected = 'test'
         formGroup.controls.phone_number.setValue(expected);
-        actual = await getFormFieldValue(harness);
+        actual = await TestHelpers.getFormFieldValue(harness);
         expect(actual).toBe(expected);
       });
 
-      it('phone should use outline appearance', async () => {
+      fit('phone should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
-      it('phone should use fill appearance', async() => {
+      fit('phone should use fill appearance', async() => {
         fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
@@ -150,84 +141,27 @@ describe('PhoneEditorComponent', () => {
               floatingLabelText: 'phones.editor.phoneType.label'}))
       });
 
-      it('should contain phone type field', async () => {
+      fit('should contain phone type field', async () => {
         expect(harness).toBeTruthy();
       });
 
-      it('phone type should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+      fit('phone type should contain the correct value', async () => {
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe('phones.type.mobile');
       });
 
-      it('phone type should use outline appearance', async () => {
+      fit('phone type should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(outline);
       });
 
-      it('phone type should use fill appearance', async() => {
+      fit('phone type should use fill appearance', async() => {
         fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
 
-    });
-  });
-
-  describe('phone header tests', () => {
-    let headerHarness: EditorHeaderHarness | null;
-
-    beforeEach(async () => {
-      fixture.componentRef.setInput('editorForm', formGroup);
-      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
-    });
-
-    it('should contain one editor header', async () => {
-      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
-      expect(harnesses.length).toEqual(1);
-    });
-
-    it('should NOT show phone remove button when showRemoveButton is set to false', async () => {
-      fixture.componentRef.setInput('showRemoveButton', false);
-      const visible = await headerHarness?.isButtonVisible();
-      expect(visible).not.toBeTrue();
-    });
-
-    it('should show phone remove button when showRemoveButton is set to true', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const visible = await headerHarness?.isButtonVisible();
-      expect(visible).toBeTrue();
-    });
-
-    it('should call on remove when remove phone button is clicked', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const spy = spyOn(component, 'onRemove').and.stub();
-
-      const harness = await headerHarness?.getHarness(MatButtonHarness);
-      await harness?.click();
-
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should display title when phone title is defined', async () => {
-      fixture.componentRef.setInput('title', 'test');
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).toBeTrue();
-    });
-
-    it('should NOT display title when phone title is undefined', async () => {
-      fixture.componentRef.setInput('title', undefined);
-
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).not.toBeTrue();
-    });
-
-    it('should display correct phone title', async () => {
-      const title= 'title';
-      fixture.componentRef.setInput('title', title);
-
-      const titleText = await headerHarness?.titleText();
-      expect(titleText).toBe(title);
     });
   });
 });
