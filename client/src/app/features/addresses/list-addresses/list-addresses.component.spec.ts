@@ -185,7 +185,7 @@ describe('ListAddressesComponent', () => {
         expect(spy).toHaveBeenCalled();
       }));
 
-      it('onDeleteClick should NOT call AddressService when EditAddressDialogService.open return cancel', fakeAsync(() => {
+      it('onDeleteClick should NOT call AddressService.delete when open dialog return cancel', fakeAsync(() => {
         dialogResult.action = EditAction.Cancel;
         dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
         const spy = addressSvcMock.delete.and.stub();

@@ -41,26 +41,24 @@ export class ListAddressesComponent
     const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Edit);
     this.openEditDialog(dialogInput).pipe(
       mergeMap(result => {
-        if(result.action != EditAction.Cancel) {
-          return this.apiSvc.update(result.context).pipe(
-            map(() => result)
-          );
+        if(result.action == EditAction.Edit) {
+          return this.apiSvc.update(result.context);
         } else {
-          return of(result);
+          return of(null);
         }
       })
     ).subscribe({
       next: result => {
-        if(result.action == EditAction.Edit) {
+        if(result) {
           const update: AddressMember = {
-            id: result.context.id,
-            member_id: result.context.member_id,
-            address1: result.context.address1,
-            address2: result.context.address2,
-            city: result.context.city,
-            state: result.context.state,
-            postal_code: result.context.postal_code,
-            address_type: result.context.address_type,
+            id: result.id,
+            member_id: result.member_id,
+            address1: result.address1,
+            address2: result.address2,
+            city: result.city,
+            state: result.state,
+            postal_code: result.postal_code,
+            address_type: result.address_type,
             full_name: event.data.full_name
           }
           this.updateItem(update)
@@ -76,18 +74,18 @@ export class ListAddressesComponent
     const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Delete);
 
     this.openEditDialog(dialogInput).pipe(
-      mergeMap(result => {
-        if(result.action == EditAction.Delete) {
-          return this.apiSvc.delete(result.context.id).pipe(
-            map(() => result)
+      mergeMap(addressResult => {
+        if(addressResult.action == EditAction.Delete) {
+          return this.apiSvc.delete(addressResult.context.id).pipe(
+            map(() => addressResult)
           );
         } else {
-          return of(result)
+          return of(addressResult)
         }
       })
     ).subscribe({
-      next: result=> {
-        if(result.action == EditAction.Delete) {
+      next: addressResult=> {
+        if(addressResult.action == EditAction.Delete) {
           this.deleteItem(event.idx);
         }
     },
