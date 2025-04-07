@@ -17,6 +17,8 @@ import {AddressTableService} from '@app/features/addresses/services/address-tabl
 import {ListAddressesComponent} from './list-addresses.component';
 import {EditEvent, EditDialogInput, EditDialogResult, EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
+import {PagedData} from '@app/shared/services/api-service/models';
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;
@@ -27,7 +29,8 @@ describe('ListAddressesComponent', () => {
   let dialogSvcMock: jasmine.SpyObj<AddressEditDialogService>;
   let tableSvcMock: jasmine.SpyObj<AddressTableService>
 
-  const columnDefs = AddressTest.generateColumnDefs();
+  let columnDefs: ColumnDef<AddressMember>[];
+  let data: PagedData<AddressMember>;
 
   beforeEach(async () => {
     addressSvcMock = jasmine.createSpyObj('AddressService', [
@@ -38,6 +41,9 @@ describe('ListAddressesComponent', () => {
 
     authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
     tableSvcMock = jasmine.createSpyObj('AddressTableService', ['getColumnDefs']);
+
+    columnDefs = AddressTest.generateColumnDefs();
+    data = AddressTest.generatePagedData(0, 5, 2);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -61,6 +67,9 @@ describe('ListAddressesComponent', () => {
 
     fixture = TestBed.createComponent(ListAddressesComponent);
     component = fixture.componentInstance;
+
+    addressSvcMock.getPagedData.and.returnValue(asyncData(data));
+    tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
   });
 
   it('should create', () => {
@@ -71,12 +80,9 @@ describe('ListAddressesComponent', () => {
     let editEvent: EditEvent<AddressMember>;
     let dialogInput: EditDialogInput<Address, AddressEditorComponent>;
     let dialogResult: EditDialogResult<Address>;
-    const data = AddressTest.generatePagedData(0, 5, 1);
+
 
     beforeEach(() => {
-      addressSvcMock.getPagedData.and.returnValue(asyncData(data));
-      tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-
       editEvent = {
         idx: 0,
         data: AddressTest.generateAddressMember(0)

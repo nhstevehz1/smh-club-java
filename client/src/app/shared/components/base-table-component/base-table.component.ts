@@ -46,7 +46,7 @@ export abstract class BaseTableComponent<C, T extends Updatable, L extends Updat
   }
 
   ngOnInit() {
-    this.columns.set(this.tableSvc.getColumnDefs());
+    this.columns.update(() => this.tableSvc.getColumnDefs());
   }
 
   ngAfterViewInit() {

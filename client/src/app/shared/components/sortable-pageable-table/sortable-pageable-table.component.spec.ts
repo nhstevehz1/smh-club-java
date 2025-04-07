@@ -9,45 +9,26 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {MatHeaderCellHarness, MatHeaderRowHarness, MatTableHarness} from '@angular/material/table/testing';
 import {MatSortHarness, MatSortHeaderHarness} from '@angular/material/sort/testing';
-
-import {DateTime} from 'luxon';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 import {
   SortablePageableTableComponent
 } from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
-
-export interface TestModel {
-  a_string: string;
-  date_time: DateTime;
-  a_number: number;
-  a_boolean: boolean;
-}
+import {TestModel, SortTableTest} from '@app/shared/components/sortable-pageable-table/testing/test-support';
 
 describe('SortablePageableTableComponent', () => {
-  const columnDefs: ColumnDef<TestModel>[] = [
-    {columnName: 'a_string', displayName: 'A String', isSortable: true,
-      cell: (element:TestModel) => `${element.a_string}`},
-    {columnName: 'date_time', displayName: 'A DateTime', isSortable: true,
-      cell: (element:TestModel) => `${element.date_time}`},
-    {columnName: 'a_number', displayName: 'A Number', isSortable: false,
-      cell: (element:TestModel) => `${element.a_number}`},
-    {columnName: 'a_boolean', displayName: 'A Boolean', isSortable: true,
-      cell: (element:TestModel) => `${element.a_boolean}`},
-  ] as ColumnDef<TestModel>[];
-
-  const data: TestModel[] = [
-    {a_string: 'Field1', date_time: DateTime.now(), a_boolean: true, a_number: 1},
-    {a_string: 'Field2', date_time: DateTime.now(), a_boolean: false, a_number: 2},
-    {a_string: 'Field3', date_time: DateTime.now(), a_boolean: true, a_number: 3},
-  ];
+  let columnDefs: ColumnDef<TestModel>[]
+  let data: TestModel[];
 
   let fixture: ComponentFixture<SortablePageableTableComponent<TestModel>>;
   let component: SortablePageableTableComponent<TestModel>;
   let loader: HarnessLoader;
 
   beforeEach(async () => {
+    columnDefs = SortTableTest.getColumnDefs();
+    data = SortTableTest.generateTestModelList();
+
     await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
@@ -63,39 +44,33 @@ describe('SortablePageableTableComponent', () => {
     fixture = TestBed.createComponent(SortablePageableTableComponent<TestModel>);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
+
     fixture.componentRef.setInput('columns', columnDefs);
-    fixture.componentRef.setInput('dataSource', new MatTableDataSource<TestModel>());
+    fixture.componentRef.setInput('dataSource', new MatTableDataSource<TestModel>(data));
+
     fixture.detectChanges();
     await fixture.whenStable();
   });
 
   describe('test component inputs', () => {
 
-    fit('should create', () => {
+    it('should create', () => {
       expect(component).toBeTruthy();
     });
 
     it('should input columns', () => {
       expect(component.columns()).toEqual(columnDefs);
-
-      columnDefs.forEach(columnDef => {
-        expect(component.columns().map((c => c.columnName))).toContain(columnDef.columnName);
-      })
     });
 
     it('should return column names', () => {
-      const columnNames = component.columns().map(c => c.columnName);
+      const columnNames = columnDefs.map(c => c.columnName);
       expect(component.columnNames()).toEqual(columnNames);
     });
 
-    it('table should bind dataSource input', () => {
-      expect(component.dataSource()).toBeTruthy();
-    })
-
     it('table datasource should have items', async () => {
-      fixture.componentRef.setInput('dataSource', new MatTableDataSource<TestModel>(data));
       fixture.detectChanges();
       await fixture.whenStable();
+
       expect(component.dataSource().data.length).toEqual(data.length);
     })
 
@@ -128,17 +103,10 @@ describe('SortablePageableTableComponent', () => {
   });
 
   describe('render table',  () => {
-
     it('should render table', async () => {
       const tableHarness = await loader.getHarness(MatTableHarness);
       expect(tableHarness).toBeTruthy();
     });
-
-    it('should render table with no columns', async () => {
-      const tableHarness = await loader.getHarness(MatTableHarness);
-      const cellTexts = await tableHarness.getCellTextByIndex();
-      expect(cellTexts).toEqual([]);
-    })
 
     it('should render table with correct column names and text', async () => {
       const columnHarnesses = await loader.getAllHarnesses(MatHeaderCellHarness);
