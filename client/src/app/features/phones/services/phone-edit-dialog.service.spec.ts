@@ -6,7 +6,9 @@ describe('PhoneEditDialogService', () => {
   let service: PhoneEditDialogService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [PhoneEditDialogService]
+    });
     service = TestBed.inject(PhoneEditDialogService);
   });
 

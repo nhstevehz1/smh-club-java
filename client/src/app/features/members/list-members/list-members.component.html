@@ -1,7 +1,7 @@
 <div class="container">
   @if(hasWriteRole()) {
     <div class="action-container">
-      <button mat-mini-fab [matTooltip]="'members.list.addNewMember' | translate" (click)="addMemberHandler()">
+      <button mat-mini-fab [matTooltip]="'members.list.addNewMember' | translate" (click)="onAddMemberClick()">
           <mat-icon>add</mat-icon>
       </button>
     </div>

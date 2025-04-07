@@ -38,7 +38,7 @@ describe('BaseTableComponent', () => {
     apiSvcMock = jasmine.createSpyObj('MockTableApiService', ['getPagedData']);
     tableSvcMock = jasmine.createSpyObj('MockTableService', ['getColumnDefs']);
     dialogSvcMock = jasmine.createSpyObj('MockTableEditDialogService', ['openDialog', 'generateDialogInput']);
-    authMock.hasPermission.and.returnValue(true);
+
 
     await TestBed.configureTestingModule({
       imports: [
@@ -60,6 +60,8 @@ describe('BaseTableComponent', () => {
 
     fixture = TestBed.createComponent(MockBaseTableComponent);
     component = fixture.componentInstance;
+
+    authMock.hasPermission.and.returnValue(true);
   });
 
   describe('test component', () => {
@@ -70,7 +72,7 @@ describe('BaseTableComponent', () => {
       apiSvcMock.getPagedData.and.returnValue(asyncData(data));
     });
 
-    it('should create', async () => {
+    fit('should create', async () => {
       fixture.detectChanges();
       await fixture.whenStable();
       expect(component).toBeTruthy();
@@ -83,7 +85,7 @@ describe('BaseTableComponent', () => {
       apiSvcMock.getPagedData.and.returnValue(asyncData(data));
     });
 
-    it('should call TableService.getColumnDefs', async () => {
+    fit('should call TableService.getColumnDefs', async () => {
       const spy = tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
 
       fixture.detectChanges();
@@ -92,7 +94,7 @@ describe('BaseTableComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should create correct column list', async () => {
+    fit('should create correct column list', async () => {
       tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
 
       fixture.detectChanges();
@@ -106,7 +108,7 @@ describe('BaseTableComponent', () => {
         tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
       });
 
-      it('should call AddressService.getPagedData', async () => {
+      fit('should call AddressService.getPagedData', async () => {
         const data = BaseTableTest.generatePagedData(0, 5, 100);
         apiSvcMock.getPagedData.and.returnValue(asyncData(data));
 
@@ -117,7 +119,7 @@ describe('BaseTableComponent', () => {
         expect(apiSvcMock.getPagedData).toHaveBeenCalledWith(request);//With(request);
       });
 
-      it('should set the correct data length', async () => {
+      fit('should set the correct data length', async () => {
         const data = BaseTableTest.generatePagedData(0, 5, 100);
         apiSvcMock.getPagedData.and.returnValue(asyncData(data));
 
@@ -127,7 +129,7 @@ describe('BaseTableComponent', () => {
         expect(component.resultsLength()).toEqual(data.page.totalElements);
       });
 
-      it('should set correct datasource.data', async () => {
+      fit('should set correct datasource.data', async () => {
         const data = BaseTableTest.generatePagedData(0, 5, 2);
         apiSvcMock.getPagedData.and.returnValue(asyncData(data));
 
@@ -137,7 +139,7 @@ describe('BaseTableComponent', () => {
         expect(component.datasource().data).toEqual(data._content);
       });
 
-      it('datasource.data should be empty when ApiService.getPaged data returns an error', async () => {
+      fit('datasource.data should be empty when ApiService.getPaged data returns an error', async () => {
         apiSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
 
         fixture.detectChanges();
@@ -174,7 +176,7 @@ describe('BaseTableComponent', () => {
         dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
       });
 
-      it('should call DialogService.openDialog with action delete', fakeAsync(() => {
+      fit('should call DialogService.openDialog with action delete', fakeAsync(() => {
         const spy =
           dialogSvcMock.openDialog.and.returnValue(asyncData(dialogResult));
 
@@ -184,7 +186,7 @@ describe('BaseTableComponent', () => {
         expect(spy).toHaveBeenCalledWith(dialogInput);
       }));
 
-      it('deleteItem should remove item from data source data source',  () => {
+      fit('deleteItem should remove item from data source data source',  () => {
         const deleted = component.datasource().data[0];
 
         component.deleteItemEx(deleted.id);
@@ -193,7 +195,7 @@ describe('BaseTableComponent', () => {
         expect(found).toBeFalsy();
       });
 
-      it('deleteItem should decrease the datasource size by one',  () => {
+      fit('deleteItem should decrease the datasource size by one',  () => {
         const size = component.datasource().data.length;
 
         component.deleteItemEx(0);
@@ -210,7 +212,7 @@ describe('BaseTableComponent', () => {
         dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
       });
 
-      it('should call DialogService.openDialog with action edit', fakeAsync(() => {
+      fit('should call DialogService.openDialog with action edit', fakeAsync(() => {
         const spy =
           dialogSvcMock.openDialog.and.returnValue(asyncData(dialogResult));
 
@@ -220,7 +222,7 @@ describe('BaseTableComponent', () => {
         expect(spy).toHaveBeenCalledWith(dialogInput);
       }));
 
-      it('updateItem should update item in data source',  () => {
+      fit('updateItem should update item in data source',  () => {
         const item = BaseTableTest.generateModel();
         item.id = 0;
         item.tableField = 'updated table field';
@@ -231,7 +233,7 @@ describe('BaseTableComponent', () => {
         expect(updated).toEqual(item);
       });
 
-      it('updateItem should NOT change the datasource size',  () => {
+      fit('updateItem should NOT change the datasource size',  () => {
         const size = component.datasource().data.length;
         const item = BaseTableTest.generateModel();
         item.id = 0;

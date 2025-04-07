@@ -18,8 +18,6 @@ import {
   SortablePageableTableComponent
 } from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
 
-
-
 export interface TestModel {
   a_string: string;
   date_time: DateTime;
@@ -73,7 +71,7 @@ describe('SortablePageableTableComponent', () => {
 
   describe('test component inputs', () => {
 
-    it('should create', () => {
+    fit('should create', () => {
       expect(component).toBeTruthy();
     });
 

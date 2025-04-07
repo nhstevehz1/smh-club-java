@@ -19,7 +19,7 @@ import {
   SortablePageableTableComponent
 } from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
-import {EditEvent} from '@app/shared/components/base-edit-dialog/models';
+import {EditEvent, EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {MemberEditorComponent} from '@app/features/members/member-editor/member-editor.component';
 
 @Component({
@@ -51,8 +51,8 @@ export class ListMembersComponent extends BaseTableComponent<MemberCreate, Membe
     super(auth, svc, tableSvc, dialogSvc);
   }
 
-  addMemberHandler(): void {
-    this.router.navigate(['p/members/add']).then();
+  onAddMemberClick(): void {
+
   }
 
   onViewClick(event: EditEvent<Member>): void {

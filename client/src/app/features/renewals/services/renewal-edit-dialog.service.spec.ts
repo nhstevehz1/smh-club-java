@@ -6,7 +6,9 @@ describe('RenewalEditDialogService', () => {
   let service: RenewalEditDialogService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [RenewalEditDialogService]
+    });
     service = TestBed.inject(RenewalEditDialogService);
   });
 
