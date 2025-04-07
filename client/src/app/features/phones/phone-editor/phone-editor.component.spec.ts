@@ -45,7 +45,7 @@ describe('PhoneEditorComponent', () => {
 
   });
 
-  fit('should create', async () => {
+  it('should create', async () => {
     fixture.componentRef.setInput('editorForm', formGroup);
     fixture.detectChanges();
     await fixture.whenStable();
@@ -64,7 +64,7 @@ describe('PhoneEditorComponent', () => {
       fixture.componentRef.setInput('editorForm', formGroup);
     });
 
-    fit('should contain the correct number of phone form fields', async () => {
+    it('should contain the correct number of phone form fields', async () => {
       const harnesses = await loader.getAllHarnesses(MatFormFieldHarness);
       expect(harnesses.length).toEqual(3);
     });
@@ -76,25 +76,25 @@ describe('PhoneEditorComponent', () => {
                 {floatingLabelText: 'phones.editor.countryCode.label'})));
       });
 
-      fit('should contain country code field', async () => {
+      it('should contain country code field', async () => {
         expect(harness).toBeTruthy();
       });
 
-      fit('country code form field should contain the correct value', async () => {
+      it('country code form field should contain the correct value', async () => {
         expected = 'test';
         formGroup.controls.country_code.setValue(expected);
         actual = await TestHelpers.getFormFieldValue(harness);
         expect(actual).toBe(expected);
       });
 
-      fit('country code should use outline appearance', async () => {
+      it('country code should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
-      fit('country code should use fill appearance', async() => {
+      it('country code should use fill appearance', async() => {
         fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
@@ -109,25 +109,25 @@ describe('PhoneEditorComponent', () => {
                 {floatingLabelText: 'phones.editor.phoneNumber.label'}));
       });
 
-      fit('should contain phone field', async () => {
+      it('should contain phone field', async () => {
         expect(harness).toBeTruthy();
       });
 
-      fit('phone form field should contain the correct value', async () => {
+      it('phone form field should contain the correct value', async () => {
         expected = 'test'
         formGroup.controls.phone_number.setValue(expected);
         actual = await TestHelpers.getFormFieldValue(harness);
         expect(actual).toBe(expected);
       });
 
-      fit('phone should use outline appearance', async () => {
+      it('phone should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
 
         expect(appearance).toBe(outline);
       });
 
-      fit('phone should use fill appearance', async() => {
+      it('phone should use fill appearance', async() => {
         fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
@@ -141,22 +141,22 @@ describe('PhoneEditorComponent', () => {
               floatingLabelText: 'phones.editor.phoneType.label'}))
       });
 
-      fit('should contain phone type field', async () => {
+      it('should contain phone type field', async () => {
         expect(harness).toBeTruthy();
       });
 
-      fit('phone type should contain the correct value', async () => {
+      it('phone type should contain the correct value', async () => {
         const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe('phones.type.mobile');
       });
 
-      fit('phone type should use outline appearance', async () => {
+      it('phone type should use outline appearance', async () => {
         fixture.componentRef.setInput('fieldAppearance', outline);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(outline);
       });
 
-      fit('phone type should use fill appearance', async() => {
+      it('phone type should use fill appearance', async() => {
         fixture.componentRef.setInput('fieldAppearance', fill);
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
