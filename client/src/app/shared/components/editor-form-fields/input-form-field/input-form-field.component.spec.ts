@@ -102,7 +102,6 @@ describe('InputFormFieldComponent', () => {
       const val = 'fill' as MatFormFieldAppearance;
       fixture.componentRef.setInput('appearance', val);
       const appearance = await harness.getAppearance();
-      console.debug(component.appearance());
       expect(appearance).toBe(val);
     });
 
