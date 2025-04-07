@@ -8,7 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 
 import {TranslatePipe} from '@ngx-translate/core';
 
-import {EditEvent} from '@app/shared/components/edit-dialog/models';
+import {EditEvent} from '@app/shared/components/base-edit-dialog/models';
 import {
   CustomMatPaginatorIntlService
 } from '@app/shared/components/sortable-pageable-table/services/custom-mat-paginator-intl.service';
@@ -47,24 +47,12 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   );
 
   columnNames = computed<string[]>(() => {
-    console.debug('columns', this.columns());
     const names = this.columns().map(c => c.columnName);
     if (this.shouldShowActions()) {
       names.push('action');
     }
     return names;
   });
-
-  /*constructor() {
-    this.columnNames =  computed<string[]>(() => {
-      const names = this.columns().map(c => c.columnName);
-      if (this.shouldShowActions()) {
-        names.push('action');
-      }
-      return names;
-    });
-  }*/
-
 
   editClicked = output<EditEvent<T>>();
   deleteClicked = output<EditEvent<T>>();
@@ -77,7 +65,7 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   paginator!: MatPaginator;
 
   ngAfterViewInit() {
-    // revert back to page 0 if it had been changed.
+    // revert back to page 0 if sort changed.
     this.sort!.sortChange.subscribe(() => this.paginator!.pageIndex = 0);
   }
 
