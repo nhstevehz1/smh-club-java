@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
-import {EditDialogComponent} from '@app/shared/components/edit-dialog/edit-dialog.component';
+import {BaseEditDialogComponent} from '@app/shared/components/base-edit-dialog/base-edit-dialog.component';
 
 @Component({
   selector: 'app-edit-email-dialog',
   imports: [
-    EditDialogComponent
+    BaseEditDialogComponent
   ],
   templateUrl: './edit-email-dialog.component.html',
   styleUrl: './edit-email-dialog.component.scss'
