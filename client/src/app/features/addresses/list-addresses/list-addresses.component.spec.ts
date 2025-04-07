@@ -8,21 +8,16 @@ import {TranslateModule} from '@ngx-translate/core';
 import {AuthService} from '@app/core/auth/services/auth.service';
 import {asyncData} from '@app/shared/testing';
 
-import {
-  generateAddress,
-  generateAddressColumnDefs,
-  generateAddressDialogInput,
-  generateAddressMember,
-  generateAddressPagedData
-} from '@app/features/addresses/testing/test-support';
+import {AddressTest} from '@app/features/addresses/testing/test-support';
 
 import {AddressMember, Address} from '@app/features/addresses/models/address';
 import {AddressService} from '@app/features/addresses/services/address.service';
 import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {ListAddressesComponent} from './list-addresses.component';
-import {EditEvent, EditDialogInput, EditDialogResult, EditAction} from '@app/shared/components/edit-dialog/models';
+import {EditEvent, EditDialogInput, EditDialogResult, EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {PageRequest} from '@app/shared/services/api-service/models';
+import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
 
 describe('ListAddressesComponent', () => {
   let fixture: ComponentFixture<ListAddressesComponent>;
@@ -33,7 +28,7 @@ describe('ListAddressesComponent', () => {
   let dialogSvcMock: jasmine.SpyObj<AddressEditDialogService>;
   let tableSvcMock: jasmine.SpyObj<AddressTableService>
 
-  const columnDefs = generateAddressColumnDefs();
+  const columnDefs = AddressTest.generateColumnDefs();
 
   beforeEach(async () => {
     addressSvcMock = jasmine.createSpyObj('AddressService', [
@@ -71,14 +66,14 @@ describe('ListAddressesComponent', () => {
 
   describe('test component', () => {
     it('should create', () => {
-        expect(component).toBeTruthy();
+      expect(component).toBeTruthy();
     });
   });
 
   describe('test service interactions on init', () => {
     describe('AddressTableService', () => {
       beforeEach(() => {
-        const data = generateAddressPagedData(0, 5, 1);
+        const data = AddressTest.generatePagedData(0, 5, 1);
         addressSvcMock.getPagedData.and.returnValue(asyncData(data));
       });
 
@@ -107,7 +102,7 @@ describe('ListAddressesComponent', () => {
       });
 
       it('should call AddressService.getPagedData', async () => {
-        const data = generateAddressPagedData(0, 5, 100);
+        const data = AddressTest.generatePagedData(0, 5, 100);
         addressSvcMock.getPagedData.and.returnValue(asyncData(data));
 
         fixture.detectChanges();
@@ -118,7 +113,7 @@ describe('ListAddressesComponent', () => {
       });
 
       it('should set the correct data length', async () => {
-        const data = generateAddressPagedData(0, 5, 100);
+        const data = AddressTest.generatePagedData(0, 5, 100);
         addressSvcMock.getPagedData.and.returnValue(asyncData(data));
 
         fixture.detectChanges();
@@ -128,7 +123,7 @@ describe('ListAddressesComponent', () => {
       });
 
       it('should set correct datasource.data', async () => {
-        const data = generateAddressPagedData(0, 5, 2);
+        const data = AddressTest.generatePagedData(0, 5, 2);
         addressSvcMock.getPagedData.and.returnValue(asyncData(data));
 
         fixture.detectChanges();
@@ -150,24 +145,24 @@ describe('ListAddressesComponent', () => {
 
   describe('test dialog interactions', () => {
     let editEvent: EditEvent<AddressMember>;
-    let dialogInput: EditDialogInput<Address>;
+    let dialogInput: EditDialogInput<Address, AddressEditorComponent>;
     let dialogResult: EditDialogResult<Address>;
 
     beforeEach(() => {
-      const data = generateAddressPagedData(0, 5, 1);
+      const data = AddressTest.generatePagedData(0, 5, 1);
       addressSvcMock.getPagedData.and.returnValue(asyncData(data));
       tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
 
       editEvent = {
         idx: 0,
-        data: generateAddressMember(0)
+        data: AddressTest.generateAddressMember(0)
       }
-      const address = generateAddress();
-      dialogInput = generateAddressDialogInput(address, EditAction.Edit);
+      const address = AddressTest.generateAddress();
+      dialogInput = AddressTest.generateDialogInput(address, EditAction.Edit);
       dialogResult = {context: address, action: EditAction.Cancel};
     });
 
-    describe('onDelete', () => {
+    describe('onDeleteClick', () => {
       it('onDeleteClick should call AddressDialogService.generateDialogInput', fakeAsync(() => {
         dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
         const spy =
@@ -190,18 +185,7 @@ describe('ListAddressesComponent', () => {
         expect(spy).toHaveBeenCalled();
       }));
 
-      it('onDeleteClick should NOT call AddressService.update when EditAddressDialogService.open return cancel', fakeAsync(() => {
-        dialogResult.action = EditAction.Cancel;
-        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
-        const spy = addressSvcMock.update.and.stub();
-
-        component.onDeleteClick(editEvent);
-        tick();
-
-        expect(spy).toHaveBeenCalledTimes(0);
-      }));
-
-      it('onDeleteClick should NOT call AddressService.deleteAddress when EditAddressDialogService.open return cancel', fakeAsync(() => {
+      it('onDeleteClick should NOT call AddressService when EditAddressDialogService.open return cancel', fakeAsync(() => {
         dialogResult.action = EditAction.Cancel;
         dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
         const spy = addressSvcMock.delete.and.stub();
@@ -210,6 +194,62 @@ describe('ListAddressesComponent', () => {
         tick();
 
         expect(spy).toHaveBeenCalledTimes(0);
+      }));
+
+      it('onDeleteClick should call AddressService.delete when open dialog returns delete', fakeAsync(() => {
+        dialogResult.action = EditAction.Delete;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy = addressSvcMock.delete.and.stub();
+
+        component.onDeleteClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalledTimes(1);
+      }));
+    });
+
+    describe('onEditClick', () => {
+      it('onEditClick should call AddressDialogService.generateDialogInput', fakeAsync(() => {
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy =
+          dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
+      it('onEditClick should call AddressEditDialogService.openDialog', fakeAsync(() => {
+        const spy =
+          dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
+      it('onEditClick should NOT call AddressService.update when EditAddressDialogService.open return cancel', fakeAsync(() => {
+        dialogResult.action = EditAction.Cancel;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy = addressSvcMock.update.and.stub();
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalledTimes(0);
+      }));
+
+      it('onDeleteClick should call AddressService.update when open dialog returns edit', fakeAsync(() => {
+        dialogResult.action = EditAction.Edit;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy = addressSvcMock.update.and.stub();
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalledTimes(1);
       }));
     });
   });
