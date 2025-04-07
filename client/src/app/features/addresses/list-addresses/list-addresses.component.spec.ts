@@ -2,7 +2,7 @@ import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing'
 import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
-import {of, throwError} from 'rxjs';
+import {of} from 'rxjs';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
@@ -16,7 +16,6 @@ import {AddressEditDialogService} from '@app/features/addresses/services/address
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {ListAddressesComponent} from './list-addresses.component';
 import {EditEvent, EditDialogInput, EditDialogResult, EditAction} from '@app/shared/components/base-edit-dialog/models';
-import {PageRequest} from '@app/shared/services/api-service/models';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
 
 describe('ListAddressesComponent', () => {
