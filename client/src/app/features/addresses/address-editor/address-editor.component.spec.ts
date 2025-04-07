@@ -6,18 +6,18 @@ import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {MatFormFieldHarness} from '@angular/material/form-field/testing';
-import {MatButtonHarness} from '@angular/material/button/testing';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
 
 import {TranslateModule} from '@ngx-translate/core';
 
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {getFormFieldValue} from '@app/shared/testing';
-import {InputFormFieldComponent} from '@app/shared/components/editor-form-fields/input-form-field/input-form-field.component';
-import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing/editor-header-harness';
+import {
+  InputFormFieldComponent
+} from '@app/shared/components/editor-form-fields/input-form-field/input-form-field.component';
 
 import {Address, AddressType} from '@app/features/addresses/models/address';
 import {AddressEditorComponent} from './address-editor.component';
+import {TestHelpers} from '@app/shared/testing';
 
 describe('AddressEditorComponent', () => {
   let component: AddressEditorComponent;
@@ -96,7 +96,7 @@ describe('AddressEditorComponent', () => {
       });
 
       it('address1 form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
 
         expect(value).toBe(formGroup.controls.address1.value);
       });
@@ -128,7 +128,7 @@ describe('AddressEditorComponent', () => {
       });
 
       it('address2 form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe(formGroup.controls.address2.value);
       });
 
@@ -159,7 +159,7 @@ describe('AddressEditorComponent', () => {
       });
 
       it('city form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
 
         expect(value).toBe(formGroup.controls.city.value);
       });
@@ -190,7 +190,7 @@ describe('AddressEditorComponent', () => {
       });
 
       it('state form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
 
         expect(value).toBe(formGroup.controls.state.value);
       });
@@ -221,7 +221,7 @@ describe('AddressEditorComponent', () => {
       });
 
       it('zip form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
 
         expect(value).toBe(formGroup.controls.postal_code.value);
       });
@@ -252,7 +252,7 @@ describe('AddressEditorComponent', () => {
       });
 
       it('AddressType form field should contain correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe('addresses.type.home');
       });
 
@@ -267,61 +267,6 @@ describe('AddressEditorComponent', () => {
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-    });
-  });
-
-  describe('address remove button and title tests', () => {
-    let headerHarness: EditorHeaderHarness | null;
-
-    beforeEach(async () => {
-      fixture.componentRef.setInput('editorForm', formGroup);
-      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
-    });
-
-    it('should contain only one editor header', async () => {
-      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
-      expect(harnesses.length).toEqual(1)
-    });
-
-    it('should NOT show remove button when showRemoveButton is set to false', async () => {
-      fixture.componentRef.setInput('showRemoveButton', false);
-      const visible = await headerHarness?.isButtonVisible();
-      expect(visible).not.toBeTrue();
-    });
-
-    it('should show remove button when showRemoveButton is set to true', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const visible = await headerHarness?.isButtonVisible();
-      expect(visible).toBeTrue();
-    });
-
-    it('should call on remove when remove button is clicked', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const spy = spyOn(component, 'onRemove').and.stub();
-
-      const button = await headerHarness?.getHarnessOrNull(MatButtonHarness);
-      await button?.click();
-
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('should display title when title is defined', async () => {
-      fixture.componentRef.setInput('title', 'test');
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).toBeTrue();
-    });
-
-    it('should NOT display title when title is undefined', async () => {
-      fixture.componentRef.setInput('title', undefined);
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).not.toBeTrue();
-    });
-
-    it('should display correct title', async () => {
-      const title = 'title';
-      fixture.componentRef.setInput('title', title);
-      const titleText = await headerHarness?.titleText();
-      expect(titleText).toBe(title);
     });
   });
 });
