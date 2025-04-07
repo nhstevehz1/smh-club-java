@@ -1,7 +1,7 @@
 import {Component, computed, input} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {FormControlError} from '@app/shared/components/editor-form-fields/models';
+import {FormControlError, InputType} from '@app/shared/components/editor-form-fields/models';
 import {Renewal} from '@app/features/renewals/models/renewal';
 import {
   InputFormFieldComponent
@@ -27,4 +27,5 @@ export class RenewalEditorComponent extends BaseEditorComponent<Renewal>{
 
   renewalYear = computed(() => this.editorForm()!.controls.renewal_year);
   renewalYearErrors = input<FormControlError[]>();
+  protected readonly InputType = InputType;
 }
