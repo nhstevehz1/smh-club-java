@@ -1,5 +1,5 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
+import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
@@ -17,7 +17,7 @@ import {EmailTableService} from '@app/features/emails/services/email-table.servi
 import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
 import {EmailService} from '@app/features/emails/services/email.service';
 import {EditAction, EditEvent, EditDialogInput, EditDialogResult} from '@app/shared/components/base-edit-dialog/models';
-import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
+import {PageRequest} from '@app/shared/services/api-service/models';
 import {EmailEditorComponent} from '@app/features/emails/email-editor/email-editor.component';
 
 describe('ListEmailsComponent', () => {
@@ -148,8 +148,6 @@ describe('ListEmailsComponent', () => {
     let editEvent: EditEvent<EmailMember>;
     let dialogInput: EditDialogInput<Email, EmailEditorComponent>;
     let dialogResult: EditDialogResult<Email>;
-    let pagedData: PagedData<EmailMember>;
-    let error: HttpErrorResponse;
 
     beforeEach(() => {
       const data =  EmailTest.generatePagedData(0, 5, 1);
@@ -160,10 +158,8 @@ describe('ListEmailsComponent', () => {
         idx: 0,
         data: EmailTest.generateEmailMember(0)
       }
-      pagedData =  EmailTest.generatePagedData(0, 5, 1);
       dialogInput = EmailTest.generateDialogInput(editEvent.data, EditAction.Edit);
       dialogResult = {context: editEvent.data, action: EditAction.Cancel};
-      error = new HttpErrorResponse({status: 403, error: {}});
     });
 
     describe('onDelete', () => {
