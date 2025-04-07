@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, tick, fakeAsync} from '@angular/core/testing';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';
 import {TranslateModule} from '@ngx-translate/core';
 
@@ -6,73 +6,68 @@ import {AuthService} from '@app/core/auth/services/auth.service';
 
 import {asyncData} from '@app/shared/testing/test-helpers';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
-import {MockTestService} from '@app/shared/components/base-table-component/testing/services/mock-test.service';
-import {MockTestTableService} from '@app/shared/components/base-table-component/testing/services/mock-test-table.service';
+import {MockTableApiService} from '@app/shared/components/base-table-component/testing/services/mock-table-api.service';
+import {MockTableService} from '@app/shared/components/base-table-component/testing/services/mock-table.service';
 import {
-  MockTestEditDialogService
-} from '@app/shared/components/base-table-component/testing/services/mock-test-edit-dialog.service';
+  MockTableEditDialogService
+} from '@app/shared/components/base-table-component/testing/services/mock-table-edit-dialog.service';
+import {BaseTableTest} from '@app/shared/components/base-table-component/testing/test-support';
 import {
-  generateTableModelPagedData,
-  generateTableModelColumnDefs,
-  generateTableModel,
-  generateTestDialogInput
-} from '@app/shared/components/base-table-component/testing/test-support';
-import {MockTestListComponent} from '@app/shared/components/base-table-component/testing/list-test/mock-test-list.component';
+  MockBaseTableComponent
+} from '@app/shared/components/base-table-component/testing/mock-table/mock-base-table.component';
 import {TableModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 import {PagedData, PageRequest} from '@app/shared/services/api-service/models';
-import {throwError, of} from 'rxjs';
-import {EditEvent, EditDialogInput, EditDialogResult, EditAction} from '@app/shared/components/edit-dialog/models';
-import {MockTableEditor} from '@app/shared/components/base-table-component/testing/mock-editor/mock-table-editor';
+import {throwError} from 'rxjs';
+import {EditEvent, EditDialogResult, EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
+import {MockTableEditorComponent} from '@app/shared/components/base-table-component/testing/mock-editor/mock-table-editor.component';
 
 describe('BaseTableComponent', () => {
-  let component: MockTestListComponent;
-  let fixture: ComponentFixture<MockTestListComponent>;
+  let component: MockBaseTableComponent;
+  let fixture: ComponentFixture<MockBaseTableComponent>;
 
   let authMock: jasmine.SpyObj<AuthService>;
-  let svcMock: jasmine.SpyObj<MockTestService>;
-  let tableSvcMock: jasmine.SpyObj<MockTestTableService>;
-  let dialogSvcMock: jasmine.SpyObj<MockTestEditDialogService>;
+  let apiSvcMock: jasmine.SpyObj<MockTableApiService>;
+  let tableSvcMock: jasmine.SpyObj<MockTableService>;
+  let dialogSvcMock: jasmine.SpyObj<MockTableEditDialogService>;
 
   let data: PagedData<TableModel>;
   let columnDefs: ColumnDef<TableModel>[];
 
   beforeEach(async () => {
     authMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
-    svcMock = jasmine.createSpyObj('MockTestService', ['getPagedData', 'update', 'delete']);
-    tableSvcMock = jasmine.createSpyObj('MockTestTableService', ['getColumnDefs']);
-    dialogSvcMock = jasmine.createSpyObj('MockTestEditDialogService', ['generateForm', 'generateDialogInput']);
+    apiSvcMock = jasmine.createSpyObj('MockTableApiService', ['getPagedData']);
+    tableSvcMock = jasmine.createSpyObj('MockTableService', ['getColumnDefs']);
+    dialogSvcMock = jasmine.createSpyObj('MockTableEditDialogService', ['openDialog', 'generateDialogInput']);
     authMock.hasPermission.and.returnValue(true);
 
     await TestBed.configureTestingModule({
       imports: [
-        MockTestListComponent,
+        MockBaseTableComponent,
         TranslateModule.forRoot({})
       ],
       providers: [
         {provide: AuthService, useValue: {}},
-        {provide: MockTestService, useValue: {}},
-        {provide: MockTestTableService, useValue: {}},
-        {provide: MockTestEditDialogService, useValue: {}},
+        {provide: MockTableApiService, useValue: {}},
+        {provide: MockTableService, useValue: {}},
+        {provide: MockTableEditDialogService, useValue: {}},
         provideNoopAnimations()
       ]
     }).overrideProvider(AuthService, {useValue: authMock})
-      .overrideProvider(MockTestService, {useValue: svcMock})
-      .overrideProvider(MockTestTableService, {useValue: tableSvcMock})
-      .overrideProvider(MockTestEditDialogService, {useValue: dialogSvcMock})
+      .overrideProvider(MockTableApiService, {useValue: apiSvcMock})
+      .overrideProvider(MockTableService, {useValue: tableSvcMock})
+      .overrideProvider(MockTableEditDialogService, {useValue: dialogSvcMock})
       .compileComponents();
 
-    fixture = TestBed.createComponent(MockTestListComponent);
+    fixture = TestBed.createComponent(MockBaseTableComponent);
     component = fixture.componentInstance;
-
-
   });
 
   describe('test component', () => {
     beforeEach(() => {
-      data = generateTableModelPagedData(0, 5, 1);
-      columnDefs = generateTableModelColumnDefs();
+      data = BaseTableTest.generatePagedData(0, 5, 1);
+      columnDefs = BaseTableTest.generateColumnDefs();
       tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
-      svcMock.getPagedData.and.returnValue(asyncData(data));
+      apiSvcMock.getPagedData.and.returnValue(asyncData(data));
     });
 
     it('should create', async () => {
@@ -84,8 +79,8 @@ describe('BaseTableComponent', () => {
 
   describe('test service interactions on init', ()=> {
     beforeEach(() => {
-      const data = generateTableModelPagedData(0, 5,1);
-      svcMock.getPagedData.and.returnValue(asyncData(data));
+      const data = BaseTableTest.generatePagedData(0, 5,1);
+      apiSvcMock.getPagedData.and.returnValue(asyncData(data));
     });
 
     it('should call TableService.getColumnDefs', async () => {
@@ -112,19 +107,19 @@ describe('BaseTableComponent', () => {
       });
 
       it('should call AddressService.getPagedData', async () => {
-        const data = generateTableModelPagedData(0, 5, 100);
-        svcMock.getPagedData.and.returnValue(asyncData(data));
+        const data = BaseTableTest.generatePagedData(0, 5, 100);
+        apiSvcMock.getPagedData.and.returnValue(asyncData(data));
 
         fixture.detectChanges();
         await fixture.whenStable();
 
         const request = PageRequest.of(0, 5);
-        expect(svcMock.getPagedData).toHaveBeenCalledWith(request);//With(request);
+        expect(apiSvcMock.getPagedData).toHaveBeenCalledWith(request);//With(request);
       });
 
       it('should set the correct data length', async () => {
-        const data = generateTableModelPagedData(0, 5, 100);
-        svcMock.getPagedData.and.returnValue(asyncData(data));
+        const data = BaseTableTest.generatePagedData(0, 5, 100);
+        apiSvcMock.getPagedData.and.returnValue(asyncData(data));
 
         fixture.detectChanges();
         await fixture.whenStable();
@@ -133,8 +128,8 @@ describe('BaseTableComponent', () => {
       });
 
       it('should set correct datasource.data', async () => {
-        const data = generateTableModelPagedData(0, 5, 2);
-        svcMock.getPagedData.and.returnValue(asyncData(data));
+        const data = BaseTableTest.generatePagedData(0, 5, 2);
+        apiSvcMock.getPagedData.and.returnValue(asyncData(data));
 
         fixture.detectChanges();
         await fixture.whenStable();
@@ -143,46 +138,108 @@ describe('BaseTableComponent', () => {
       });
 
       it('datasource.data should be empty when ApiService.getPaged data returns an error', async () => {
-        svcMock.getPagedData.and.returnValue(throwError(() => 'error'));
+        apiSvcMock.getPagedData.and.returnValue(throwError(() => 'error'));
 
         fixture.detectChanges();
         await fixture.whenStable();
 
         expect(component.datasource().data).toEqual([]);
       });
-
     });
   });
 
-  describe('test dialog interactions', () => {
+  describe('test dialog service interactions', () => {
     let editEvent: EditEvent<TableModel>;
-    let dialogInput: EditDialogInput<TableModel, MockTableEditor>;
+    let dialogInput: EditDialogInput<TableModel, MockTableEditorComponent>;
     let dialogResult: EditDialogResult<TableModel>;
 
-    beforeEach(() => {
-      const data = generateTableModelPagedData(0, 5, 1);
-      svcMock.getPagedData.and.returnValue(asyncData(data));
+    beforeEach(async () => {
+      const data = BaseTableTest.generatePagedData(0, 5, 2);
+      apiSvcMock.getPagedData.and.returnValue(asyncData(data));
       tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
 
       editEvent = {
         idx: 0,
-        data: generateTableModel()
+        data: BaseTableTest.generateModel()
       }
-      const model = generateTableModel();
-      dialogInput = generateTestDialogInput(model, EditAction.Edit);
-      dialogResult = {context: model, action: EditAction.Cancel};
+      fixture.detectChanges();
+      await fixture.whenStable();
     });
 
-    xdescribe('openDialog with EventAction.Delete', () => {
-      xit('should call DialogService.generateDialogInput', () => {
-        dialogResult.action = EditAction.Cancel;
+    describe('openDialog with EventAction.Delete', () => {
+      beforeEach(() => {
+        const model = BaseTableTest.generateModel();
+        dialogInput = BaseTableTest.generateDialogInput(model, EditAction.Delete);
+        dialogResult = {context: model, action: EditAction.Delete};
+        dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
+      });
+
+      it('should call DialogService.openDialog with action delete', fakeAsync(() => {
         const spy =
-          dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+          dialogSvcMock.openDialog.and.returnValue(asyncData(dialogResult));
 
         component.onDeleteClick(editEvent);
         tick();
 
-        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(dialogInput);
+      }));
+
+      it('deleteItem should remove item from data source data source',  () => {
+        const deleted = component.datasource().data[0];
+
+        component.deleteItemEx(deleted.id);
+
+        const found = component.datasource().data.find(item => item.id == deleted.id);
+        expect(found).toBeFalsy();
+      });
+
+      it('deleteItem should decrease the datasource size by one',  () => {
+        const size = component.datasource().data.length;
+
+        component.deleteItemEx(0);
+
+        expect(component.datasource().data.length).toEqual(size-1);
+      });
+    });
+
+    describe('openDialog with EventAction.Edit', () => {
+      beforeEach(() => {
+        const model = BaseTableTest.generateModel();
+        dialogInput = BaseTableTest.generateDialogInput(model, EditAction.Edit);
+        dialogResult = {context: model, action: EditAction.Edit};
+        dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
+      });
+
+      it('should call DialogService.openDialog with action edit', fakeAsync(() => {
+        const spy =
+          dialogSvcMock.openDialog.and.returnValue(asyncData(dialogResult));
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalledWith(dialogInput);
+      }));
+
+      it('updateItem should update item in data source',  () => {
+        const item = BaseTableTest.generateModel();
+        item.id = 0;
+        item.tableField = 'updated table field';
+
+        component.updateItemEx(item);
+        const updated = component.datasource().data[0];
+
+        expect(updated).toEqual(item);
+      });
+
+      it('updateItem should NOT change the datasource size',  () => {
+        const size = component.datasource().data.length;
+        const item = BaseTableTest.generateModel();
+        item.id = 0;
+        item.tableField = 'updated table field';
+
+        component.updateItemEx(item);
+
+        expect(component.datasource().data.length).toEqual(size);
       });
     });
   });

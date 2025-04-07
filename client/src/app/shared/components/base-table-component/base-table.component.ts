@@ -4,7 +4,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {MatTableDataSource} from '@angular/material/table';
 import {SortDirection} from '@angular/material/sort';
 
-import {first, merge, mergeMap, Observable, tap} from 'rxjs';
+import {first, merge, Observable} from 'rxjs';
 import {startWith, switchMap} from 'rxjs/operators';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
@@ -14,12 +14,13 @@ import {ColumnDef} from '@app-shared/components/sortable-pageable-table/models';
 import {Updatable} from '@app-shared/models/updatable';
 import {BaseTableService} from '@app-shared/services/table-service/base-table.service';
 import {BaseEditDialogService} from '@app-shared/services/dialog-edit-service/base-edit-dialog.service';
-import {EditDialogInput, EditAction, EditDialogResult} from '@app/shared/components/edit-dialog/models';
+import {EditDialogInput, EditDialogResult} from '@app/shared/components/base-edit-dialog/models';
 import {
   SortablePageableTableComponent
 } from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, SortDef, PagedData} from '@app/shared/services/api-service/models';
+import {Editor} from '@app/shared/components/base-editor/editor';
 
 
 @Component({
@@ -28,21 +29,21 @@ import {PageRequest, SortDef, PagedData} from '@app/shared/services/api-service/
   template: ``,
   styles: ``
 })
-export abstract class BaseTableComponent<C, T extends Updatable, L> implements OnInit, AfterViewInit {
+export abstract class BaseTableComponent<C, T extends Updatable, L extends Updatable, E extends Editor<T>> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   table!: SortablePageableTableComponent<L>;
 
-  resultsLength = signal(0);
-  datasource = signal(new MatTableDataSource<L>());
-  columns = signal<ColumnDef<L>[]>([]);
-  hasWriteRole = computed(() => this.auth.hasPermission(PermissionType.write));
-  errors = signal<string | undefined>(undefined);
+  readonly resultsLength = signal(0);
+  readonly datasource = signal(new MatTableDataSource<L>());
+  readonly columns = signal<ColumnDef<L>[]>([]);
+  readonly hasWriteRole = computed(() => this.auth.hasPermission(PermissionType.write));
+  readonly errors = signal<string | undefined>(undefined);
 
   protected constructor(protected auth: AuthService,
                         protected apiSvc: BaseApiService<L, C, T>,
                         protected tableSvc: BaseTableService<L>,
-                        protected dialogSvc: BaseEditDialogService<T>) {
+                        protected dialogSvc: BaseEditDialogService<T, E>) {
   }
 
   ngOnInit() {
@@ -61,34 +62,24 @@ export abstract class BaseTableComponent<C, T extends Updatable, L> implements O
     });
   }
 
-  protected openEditDialog(dialogInput: EditDialogInput<T>): Observable<EditDialogResult<T>> {
-    return this.dialogSvc.openDialog(dialogInput).pipe(
-      tap(result => {
-        if(result.action == EditAction.Edit) {
-          this.updateEntity(result.context)
-        } else if(result.action == EditAction.Delete) {
-          this.deleteEntity(result.context);
-        }
-      }),
-    );
+  protected openEditDialog(dialogInput: EditDialogInput<T, E>): Observable<EditDialogResult<T>> {
+    return this.dialogSvc.openDialog(dialogInput);
   }
 
-  private updateEntity(entity: T) {
-    this.apiSvc.update(entity.id, entity).pipe(
-      mergeMap(() => this.getCurrentPage())
-    ).subscribe({
-      next: data => this.processPageData(data),
-      error: (err: HttpErrorResponse) => this.processRequestError(err)
+  protected updateItem(entity: L) {
+    this.datasource.update((ds) => {
+      const idx = ds.data.findIndex(item => item.id === entity.id);
+      ds.data[idx] = entity;
+      return ds;
     });
   }
 
-  private deleteEntity(entity: T) {
-    this.apiSvc.delete(entity.id).pipe(
-      mergeMap(() => this.getCurrentPage())
-    ).subscribe({
-      next: data => this.processPageData(data),
-      error: (err: HttpErrorResponse) => this.processRequestError(err)
-    })
+  protected deleteItem(id: number) {
+    this.datasource.update((ds) => {
+      const idx = ds.data.findIndex(item => item.id === id);
+       ds.data.splice(idx, 1);
+      return ds;
+    });
   }
 
   private getPageRequest(pageIndex?: number, pageSize?: number,
@@ -118,8 +109,11 @@ export abstract class BaseTableComponent<C, T extends Updatable, L> implements O
   }
 
   protected processPageData(data: PagedData<L>): void {
-    this.resultsLength.set(data.page.totalElements);
-    this.datasource().data = data._content;
+    this.resultsLength.update(() => data.page.totalElements);
+    this.datasource.update((ds) => {
+      ds.data = data._content;
+      return ds;
+    });
   }
 
   protected processRequestError(err: HttpErrorResponse): void {

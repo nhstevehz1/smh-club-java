@@ -3,22 +3,21 @@ import { Injectable } from '@angular/core';
 import {BaseTableService} from '@app/shared/services/table-service/base-table.service';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 
-import {TestModel} from '@app/shared/components/base-table-component/testing/models/test-models';
+import {TableModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 
 @Injectable()
-export class TestTableService extends BaseTableService<TestModel>{
+export class MockTableService extends BaseTableService<TableModel>{
 
   constructor() {
     super();
   }
 
-  getColumnDefs(): ColumnDef<TestModel>[] {
-    console.debug('table service get column defs');
+  getColumnDefs(): ColumnDef<TableModel>[] {
     return [{
       columnName: 'test',
       displayName: 'text',
       isSortable: false,
-      cell:(element: TestModel) => `${element.test}`
+      cell:(element: TableModel) => `${element.tableField}`
     }];
   }
 }

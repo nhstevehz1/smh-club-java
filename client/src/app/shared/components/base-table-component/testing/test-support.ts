@@ -4,7 +4,7 @@ import {PagedData} from '@app/shared/services/api-service/models';
 import {EditDialogInput, EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {FormGroup, FormControl} from '@angular/forms';
-import {MockTableEditor} from '@app/shared/components/base-table-component/testing/mock-editor/mock-table-editor';
+import {MockTableEditorComponent} from '@app/shared/components/base-table-component/testing/mock-editor/mock-table-editor.component';
 import {Updatable} from '@app/shared/models/updatable';
 
 
@@ -52,13 +52,13 @@ export class BaseTableTest {
     });
   }
 
-  static generateDialogInput(model: TableModel, action: EditAction): EditDialogInput<TableModel, MockTableEditor> {
+  static generateDialogInput(model: TableModel, action: EditAction): EditDialogInput<TableModel, MockTableEditorComponent> {
     return {
       title: 'test title',
       context: model,
       action: action,
       editorConfig: {
-        component: MockTableEditor,
+        component: MockTableEditorComponent,
         form: this.generateForm()
       }
     }
