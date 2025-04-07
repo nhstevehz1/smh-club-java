@@ -3,7 +3,7 @@ import {NonNullableFormBuilder, Validators} from '@angular/forms';
 
 import {MatDialog} from '@angular/material/dialog';
 
-import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
+import {EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service/base-edit-dialog.service';
 
@@ -11,7 +11,7 @@ import {Address, AddressType} from '@app/features/addresses/models/address';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
 
 @Injectable()
-export class AddressEditDialogService extends BaseEditDialogService<Address> {
+export class AddressEditDialogService extends BaseEditDialogService<Address, AddressEditorComponent> {
 
   constructor(dialog: MatDialog,
               private fb: NonNullableFormBuilder) {
@@ -31,14 +31,17 @@ export class AddressEditDialogService extends BaseEditDialogService<Address> {
     });
   }
 
-  generateDialogInput(title: string, context: Address, action: EditAction): EditDialogInput<Address> {
+  generateDialogInput(title: string, context: Address, action: EditAction)
+    : EditDialogInput<Address, AddressEditorComponent> {
+
     return {
       title: title,
-      component: AddressEditorComponent,
-      form: this.generateForm(),
       context: context,
-      action: action
+      action: action,
+      editorConfig: {
+        component: AddressEditorComponent,
+        form: this.generateForm()
+      }
     }
   }
-
 }

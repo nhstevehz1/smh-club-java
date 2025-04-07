@@ -34,8 +34,8 @@ export class PhoneService extends BaseApiService<PhoneMember, PhoneCreate, Phone
     )
   }
 
-  override update(id: number, update: Phone): Observable<Phone> {
-    return super.update(id, update).pipe(
+  override update(update: Phone): Observable<Phone> {
+    return super.update(update).pipe(
       map(data => {
         data.phone_type = data.phone_type as unknown as PhoneType
         return data;

@@ -46,8 +46,8 @@ export class MemberService extends BaseApiService<Member, MemberCreate, Member> 
     );
   }
 
-  override update(id: number, update: Member): Observable<Member> {
-    return super.update(id, update).pipe(
+  override update(update: Member): Observable<Member> {
+    return super.update(update).pipe(
       map(data => {
         let date = data.birth_date as unknown as string;
         data.birth_date = DateTime.fromISO(date);

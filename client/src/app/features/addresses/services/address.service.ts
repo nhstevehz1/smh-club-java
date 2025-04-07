@@ -34,8 +34,8 @@ export class AddressService extends BaseApiService<AddressMember, AddressCreate,
     );
   }
 
-  override update(id: number, update: Address): Observable<Address> {
-    return super.update(id, update).pipe(
+  override update(update: Address): Observable<Address> {
+    return super.update(update).pipe(
       map(data => {
         data.address_type = data.address_type as unknown as AddressType;
         return data;

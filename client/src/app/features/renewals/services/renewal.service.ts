@@ -41,8 +41,8 @@ export class RenewalService extends BaseApiService<RenewalMember, RenewalCreate,
     );
   }
 
-  override update(id: number, update: Renewal): Observable<Renewal> {
-    return super.update(id, update).pipe(
+  override update(update: Renewal): Observable<Renewal> {
+    return super.update(update).pipe(
       map(data => {
         const date = data.renewal_date as unknown as string;
         data.renewal_date = DateTime.fromISO(date);

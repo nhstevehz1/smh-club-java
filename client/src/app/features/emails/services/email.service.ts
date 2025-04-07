@@ -35,8 +35,8 @@ export class EmailService extends BaseApiService<EmailMember, EmailCreate, Email
     )
   }
 
-  override update(id: number, update: Email): Observable<Email> {
-    return super.update(id, update).pipe(
+  override update(update: Email): Observable<Email> {
+    return super.update(update).pipe(
       map(data => {
         data.email_type = data.email_type as unknown as EmailType;
         return data;

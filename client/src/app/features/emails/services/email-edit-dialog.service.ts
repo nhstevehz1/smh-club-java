@@ -4,14 +4,14 @@ import {NonNullableFormBuilder, Validators} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
+import {EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service/base-edit-dialog.service';
 
 import {Email, EmailType} from '@app/features/emails/models/email';
 import {EmailEditorComponent} from '@app/features/emails/email-editor/email-editor.component';
 
 @Injectable()
-export class EmailEditDialogService extends BaseEditDialogService<Email> {
+export class EmailEditDialogService extends BaseEditDialogService<Email, EmailEditorComponent> {
   constructor(dialog: MatDialog,
               private fb: NonNullableFormBuilder) {
     super(dialog);
@@ -26,13 +26,15 @@ export class EmailEditDialogService extends BaseEditDialogService<Email> {
     });
   }
 
-  generateDialogInput(title: string, context: Email, action: EditAction): EditDialogInput<Email> {
+  generateDialogInput(title: string, context: Email, action: EditAction): EditDialogInput<Email, EmailEditorComponent> {
     return {
       title: title,
-      component: EmailEditorComponent,
-      form: this.generateForm(),
       context: context,
-      action: action
+      action: action,
+      editorConfig: {
+        component: EmailEditorComponent,
+        form: this.generateForm()
+      }
     }
   }
 }

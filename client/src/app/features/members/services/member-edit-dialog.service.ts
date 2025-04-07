@@ -6,13 +6,13 @@ import {DateTime} from 'luxon';
 
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service/base-edit-dialog.service';
-import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
+import {EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
 
 import {Member} from '@app/features/members/models/member';
 import {MemberEditorComponent} from '@app/features/members/member-editor/member-editor.component';
 
 @Injectable()
-export class MemberEditDialogService extends BaseEditDialogService<Member> {
+export class MemberEditDialogService extends BaseEditDialogService<Member, MemberEditorComponent> {
 
   constructor(dialog: MatDialog,
               private fb: NonNullableFormBuilder) {
@@ -32,13 +32,17 @@ export class MemberEditDialogService extends BaseEditDialogService<Member> {
     });
   }
 
-  generateDialogInput(title: string, context: Member, action: EditAction): EditDialogInput<Member> {
+  generateDialogInput(title: string, context: Member, action: EditAction)
+    : EditDialogInput<Member, MemberEditorComponent> {
+
     return {
       title: title,
-      component: MemberEditorComponent,
-      form: this.generateForm(),
       context: context,
-      action: action
+      action: action,
+      editorConfig: {
+        component: MemberEditorComponent,
+        form: this.generateForm()
+      }
     }
   }
 }

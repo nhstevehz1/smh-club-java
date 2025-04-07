@@ -4,14 +4,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {DateTime} from 'luxon';
 
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {EditAction, EditDialogInput} from '@app/shared/components/edit-dialog/models';
+import {EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
 import {BaseEditDialogService} from '@app/shared/services/dialog-edit-service/base-edit-dialog.service';
 
 import {Renewal} from '@app/features/renewals/models/renewal';
 import {RenewalEditorComponent} from '@app/features/renewals/renewal-editor/renewal-editor.component';
 
 @Injectable()
-export class RenewalEditDialogService extends BaseEditDialogService<Renewal>{
+export class RenewalEditDialogService extends BaseEditDialogService<Renewal, RenewalEditorComponent>{
 
   constructor(dialog: MatDialog,
               private fb: NonNullableFormBuilder) {
@@ -27,13 +27,17 @@ export class RenewalEditDialogService extends BaseEditDialogService<Renewal>{
     });
   }
 
-  generateDialogInput(title: string, context: Renewal, action: EditAction): EditDialogInput<Renewal> {
+  generateDialogInput(title: string, context: Renewal, action: EditAction)
+    : EditDialogInput<Renewal, RenewalEditorComponent> {
+
     return {
       title: title,
-      component: RenewalEditorComponent,
-      form: this.generateForm(),
       context: context,
-      action: action
+      action: action,
+      editorConfig: {
+        component: RenewalEditorComponent,
+        form: this.generateForm()
+      }
     }
   }
 }
