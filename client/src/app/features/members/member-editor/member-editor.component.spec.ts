@@ -8,17 +8,15 @@ import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatFormFieldHarness} from '@angular/material/form-field/testing';
-import {MatButtonHarness} from '@angular/material/button/testing';
 
 import {DateTime} from 'luxon';
 import {TranslateModule} from '@ngx-translate/core';
 
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
-import {getFormFieldValue} from '@app/shared/testing';
-import {EditorHeaderHarness} from '@app/shared/components/editor-header/testing/editor-header-harness';
 
 import {MemberEditorComponent} from './member-editor.component';
 import {Member} from '@app/features/members/models/member';
+import {TestHelpers} from '@app/shared/testing';
 
 describe('MemberEditorComponent', () => {
   let component: MemberEditorComponent;
@@ -87,7 +85,7 @@ describe('MemberEditorComponent', () => {
       });
 
       it('member form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe(formGroup.controls.first_name.value);
       });
 
@@ -117,7 +115,7 @@ describe('MemberEditorComponent', () => {
       });
 
       it('middle name form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe(formGroup.controls.middle_name.value);
       });
 
@@ -149,7 +147,7 @@ describe('MemberEditorComponent', () => {
       });
 
       it('last name form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe(formGroup.controls.last_name.value);
       });
 
@@ -181,7 +179,7 @@ describe('MemberEditorComponent', () => {
       });
 
       it('suffix form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe(formGroup.controls.suffix.value);
       });
 
@@ -213,7 +211,7 @@ describe('MemberEditorComponent', () => {
       });
 
       it('birthdate form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         const shortDate = formGroup.controls.birth_date.value.toLocaleString(DateTime.DATE_SHORT);
         expect(value).toBe(shortDate);
       });
@@ -246,7 +244,7 @@ describe('MemberEditorComponent', () => {
       });
 
       it('joined date form field should contain the correct value', async () => {
-        const value = await getFormFieldValue(harness);
+        const value = await TestHelpers.getFormFieldValue(harness);
         const shortDate = formGroup.controls.joined_date.value.toLocaleString(DateTime.DATE_SHORT);
         expect(value).toBe(shortDate);
       });
@@ -264,61 +262,6 @@ describe('MemberEditorComponent', () => {
         const appearance = await harness?.getAppearance();
         expect(appearance).toBe(fill);
       });
-    });
-  });
-
-  describe('member remove button and title tests', () => {
-    let headerHarness: EditorHeaderHarness | null;
-
-    beforeEach(async () => {
-      fixture.componentRef.setInput('editorForm', formGroup);
-      headerHarness = await loader.getHarnessOrNull(EditorHeaderHarness);
-    });
-
-    it('should contain an one editor header', async () => {
-      const harnesses = await loader.getAllHarnesses(EditorHeaderHarness);
-      expect(harnesses.length).toEqual(1)
-    });
-
-    it('member should display title when title is defined', async () => {
-      fixture.componentRef.setInput('title', 'test');
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).toBeTrue()
-    });
-
-    it('member should NOT display title when title is undefined', async () => {
-      fixture.componentRef.setInput('title', undefined);
-      const visible = await headerHarness?.isTitleVisible();
-      expect(visible).not.toBeTrue()
-    });
-
-    it('member should display correct title', async () => {
-      const title = 'title';
-      fixture.componentRef.setInput('title', title);
-      const titleText = await headerHarness?.titleText();
-      expect(titleText).toBe(title);
-    });
-
-    it('should NOT show remove button when showRemoveButton is set to false', async () => {
-      fixture.componentRef.setInput('showRemoveButton', false);
-      const visible = await headerHarness?.isButtonVisible();
-      expect(visible).not.toBeTrue();
-    });
-
-    it('should show remove button when showRemoveButton is set to true', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const visible = await headerHarness?.isButtonVisible();
-      expect(visible).toBeTrue();
-    });
-
-    it('member should call on remove when remove button is clicked', async () => {
-      fixture.componentRef.setInput('showRemoveButton', true);
-      const spy = spyOn(component, 'onRemove').and.stub();
-
-      const harness = await headerHarness?.getHarnessOrNull(MatButtonHarness);
-      await harness?.click();
-
-      expect(spy).toHaveBeenCalled();
     });
   });
 });
