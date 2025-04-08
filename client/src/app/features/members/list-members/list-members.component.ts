@@ -21,6 +21,8 @@ import {
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
 import {EditEvent, EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {MemberEditorComponent} from '@app/features/members/member-editor/member-editor.component';
+import {map, mergeMap} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-list-members',
@@ -52,7 +54,7 @@ export class ListMembersComponent extends BaseTableComponent<MemberCreate, Membe
   }
 
   onAddMemberClick(): void {
-
+    this.router.navigate(['p/members/add']).then();
   }
 
   onViewClick(event: EditEvent<Member>): void {

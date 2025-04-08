@@ -13,8 +13,4 @@ import {MemberService} from '@app/features/members/services/member.service';
 })
 export class ViewMemberComponent {
 
-  constructor(svc: MemberService,
-              auth: AuthService){}
-
-
 }
