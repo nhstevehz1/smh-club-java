@@ -1,5 +1,5 @@
 import {ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection} from '@angular/core';
-import {provideRouter} from '@angular/router';
+import {provideRouter, withComponentInputBinding} from '@angular/router';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
 import {provideAnimations} from '@angular/platform-browser/animations';
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     provideZoneChangeDetection({eventCoalescing: true}),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(
         withInterceptors([
           loadingSpinnerInterceptor,
