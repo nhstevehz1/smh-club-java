@@ -19,7 +19,12 @@ import {map} from 'rxjs/operators';
 @Component({
   selector: 'app-list-emails',
   imports: [SortablePageableTableComponent],
-  providers: [EmailService, AuthService],
+  providers: [
+    EmailService,
+    AuthService,
+    EmailTableService,
+    EmailEditDialogService
+  ],
   templateUrl: './list-emails.component.html',
   styleUrl: './list-emails.component.scss'
 })
