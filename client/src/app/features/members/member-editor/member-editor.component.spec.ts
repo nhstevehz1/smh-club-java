@@ -69,7 +69,7 @@ describe('MemberEditorComponent', () => {
 
     it('should contain the correct number of member form fields', async () => {
       const harnesses = await loader.getAllHarnesses(MatFormFieldHarness);
-      expect(harnesses.length).toEqual(6);
+      expect(harnesses.length).toEqual(7);
     });
 
     describe('first name field tests', () => {

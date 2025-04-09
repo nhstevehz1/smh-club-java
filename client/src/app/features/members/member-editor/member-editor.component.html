@@ -1,52 +1,62 @@
 <div [formGroup]=editorForm()! class="flex-column space-evenly">
-    <div class="flex-row start gap">
-        <app-input-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]="firstName()"
-            [controlErrors]="firstNameErrors()"
-            label="members.editor.firstName.label">
-        </app-input-form-field>
-        <app-input-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]=middleName()
-            [controlErrors]="middleNameErrors()"
-            label="members.editor.middleName.label">
-        </app-input-form-field>
-    </div>
+  <div class="flex-row start">
+    <app-input-form-field
+      ngDefaultControl
+      [appearance]="fieldAppearance()"
+      [formControl]="memberNumber()"
+      [controlErrors]="memberNumberErrors()"
+      [inputType]="InputType.Number"
+      label="members.editor.memberNumber.label">
+    </app-input-form-field>
+  </div>
+  <div class="flex-row start gap">
+    <app-input-form-field
+      ngDefaultControl
+      [appearance]="fieldAppearance()"
+      [formControl]="firstName()"
+      [controlErrors]="firstNameErrors()"
+      label="members.editor.firstName.label">
+    </app-input-form-field>
+    <app-input-form-field
+      ngDefaultControl
+      [appearance]="fieldAppearance()"
+      [formControl]=middleName()
+      [controlErrors]="middleNameErrors()"
+      label="members.editor.middleName.label">
+    </app-input-form-field>
+  </div>
 
-    <div class="flex-row start gap">
-        <app-input-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]="lastNameSignal()"
-            [controlErrors]="lastNameErrors()"
-            label="members.editor.lastName.label">
-        </app-input-form-field>
-        <app-input-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]="suffix()"
-            [controlErrors]="suffixErrors()"
-            label="members.editor.suffix.label">
-        </app-input-form-field>
-    </div>
+  <div class="flex-row start gap">
+    <app-input-form-field
+      ngDefaultControl
+      [appearance]="fieldAppearance()"
+      [formControl]="lastName()"
+      [controlErrors]="lastNameErrors()"
+      label="members.editor.lastName.label">
+    </app-input-form-field>
+    <app-input-form-field
+      ngDefaultControl
+      [appearance]="fieldAppearance()"
+      [formControl]="suffix()"
+      [controlErrors]="suffixErrors()"
+      label="members.editor.suffix.label">
+    </app-input-form-field>
+  </div>
 
-    <div class="flex-row start gap">
-        <app-date-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]="birthDate()"
-            [controlErrors]="birthDateErrors()"
-            label="members.editor.birthDate.label">
-        </app-date-form-field>
-        <app-date-form-field
-            ngDefaultControl
-            [appearance]="fieldAppearance()"
-            [formControl]="joinedDate()"
-            [controlErrors]="joinedDateErrors()"
-            label="members.editor.joinedDate.label">
-        </app-date-form-field>
-    </div>
+  <div class="flex-row start gap">
+    <app-date-form-field
+      ngDefaultControl
+      [appearance]="fieldAppearance()"
+      [formControl]="birthDate()"
+      [controlErrors]="birthDateErrors()"
+      label="members.editor.birthDate.label">
+    </app-date-form-field>
+    <app-date-form-field
+      ngDefaultControl
+      [appearance]="fieldAppearance()"
+      [formControl]="joinedDate()"
+      [controlErrors]="joinedDateErrors()"
+      label="members.editor.joinedDate.label">
+    </app-date-form-field>
+  </div>
 </div>

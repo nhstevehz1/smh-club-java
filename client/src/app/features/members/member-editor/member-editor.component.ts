@@ -14,7 +14,7 @@ import {
 import {
   DateFormFieldComponent
 } from '@app/shared/components/editor-form-fields/date-form-field/date-form-field.component';
-import {FormControlError} from '@app/shared/components/editor-form-fields/models';
+import {FormControlError, InputType} from '@app/shared/components/editor-form-fields/models';
 
 @Component({
   selector: 'app-member-editor',
@@ -35,7 +35,8 @@ import {FormControlError} from '@app/shared/components/editor-form-fields/models
 })
 export class MemberEditorComponent extends BaseEditorComponent<Member> {
 
-    memberNumberSignal= computed(() => this.editorForm()!.controls.member_number);
+    memberNumber= computed(() => this.editorForm()!.controls.member_number);
+    memberNumberErrors = input<FormControlError[]>();
 
     firstName= computed(() => this.editorForm()!.controls.first_name);
     firstNameErrors= input<FormControlError[]>();
@@ -43,7 +44,7 @@ export class MemberEditorComponent extends BaseEditorComponent<Member> {
     middleName= computed(() => this.editorForm()!.controls.middle_name);
     middleNameErrors= input<FormControlError[]>();
 
-    lastNameSignal= computed(() => this.editorForm()!.controls.last_name);
+    lastName= computed(() => this.editorForm()!.controls.last_name);
     lastNameErrors= input<FormControlError[]>();
 
     suffix= computed(() => this.editorForm()!.controls.suffix);
@@ -59,4 +60,5 @@ export class MemberEditorComponent extends BaseEditorComponent<Member> {
         super();
     }
 
+  protected readonly InputType = InputType;
 }
