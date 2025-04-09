@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ViewMemberComponent } from './view-member.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MemberService} from '@app/features/members/services/member.service';
-import {async} from 'rxjs';
 import {MemberTest} from '@app/features/members/testing/test-support';
 import {asyncData} from '@app/shared/testing';
 import {Member} from '@app/features/members/models';

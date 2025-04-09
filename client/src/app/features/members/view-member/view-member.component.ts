@@ -1,4 +1,4 @@
-import {Component, WritableSignal, signal, OnInit, input, computed} from '@angular/core';
+import {Component, signal, OnInit, input, computed} from '@angular/core';
 
 import {AuthService} from '@app/core/auth/services/auth.service';
 

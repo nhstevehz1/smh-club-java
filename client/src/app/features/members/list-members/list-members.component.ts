@@ -33,6 +33,7 @@ import {MemberEditorComponent} from '@app/features/members/member-editor/member-
   ],
     providers: [
       MemberService,
+      MemberEditDialogService,
       MemberTableService,
       TranslateService,
       DateTimeToFormatPipe
