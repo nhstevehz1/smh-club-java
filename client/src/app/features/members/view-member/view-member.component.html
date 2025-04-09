@@ -1,1 +1,10 @@
-<p>view-member works!</p>
+<div class="container">
+  @if(member()) {
+    <app-data-display [data]="fullName()"/>
+    <div class="flex-row start gap">
+      <app-data-display [data]="member()!.member_number" label="members.view.memberNumber" />
+      <app-data-display [data]="member()!.birth_date" label="members.view.birthDate" />
+      <app-data-display [data]="member()!.joined_date" label="members.view.joinedDate" />
+    </div>
+  }
+</div>

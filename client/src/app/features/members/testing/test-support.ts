@@ -46,20 +46,6 @@ export class MemberTest {
     });
   }
 
-  static generateMemberUpdate(): Member {
-    const member = this.generateMember(1);
-    return {
-      id: 0,
-      member_number: member.member_number,
-      first_name: member.first_name,
-      middle_name: member.middle_name,
-      last_name: member.last_name,
-      suffix: member.suffix,
-      birth_date: member.birth_date,
-      joined_date: member.joined_date,
-    }
-  }
-
   static generateColumnDefs(): ColumnDef<Member>[] {
     return [{
       columnName: 'member_number',
