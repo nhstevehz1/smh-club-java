@@ -1,7 +1,7 @@
-import {Component, computed, signal, WritableSignal} from '@angular/core';
+import {Component, computed, signal, WritableSignal, Inject} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import {MatDialogRef, MatDialogModule, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -45,7 +45,7 @@ export class BaseEditDialogComponent<T, C extends Editor<T>> implements EditDial
   readonly dialogInput: WritableSignal<EditDialogInput<T, C>>;
 
   constructor(protected dialogRef: MatDialogRef<BaseEditDialogComponent<T, C>, EditDialogInput<T, C>>,
-              protected data: EditDialogInput<T, C>){
+              @Inject(MAT_DIALOG_DATA) protected data: EditDialogInput<T, C>){
     this.dialogInput = signal({...data});
   }
 
