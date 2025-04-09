@@ -1,0 +1,27 @@
+@if(createForm()) {
+  <form class="container" [formGroup]="createForm()!" (ngSubmit)="onSave()">
+    <h2 mat-dialog-title>
+      <span>{{ 'members.add.title' | translate }}</span>
+    </h2>
+    <mat-divider></mat-divider>
+    <app-member-editor [editorForm]="createForm()!"></app-member-editor>
+    <mat-divider></mat-divider>
+    <div class="flex-row end gap">
+      <button class="cancel-button"
+              mat-button
+              type="button"
+              (click)="onCancel()"
+              matTooltip="member.add.cancelTooltip">
+        <mat-icon>cancel</mat-icon>
+      </button>
+      <button class="submit-button"
+              mat-button
+              type="submit"
+              [disabled]="this.createForm()!.invalid || this.createForm()!.untouched"
+              (click)="onSave()"
+              matTooltip="member.add.saveToolTip">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </form>
+}
