@@ -236,7 +236,15 @@
         "joinedDate": "Fecha de incorporación",
         "lastName": "Apellido",
         "memberNumber": "Número"
+      },
+      "dialog": {
+        "create": "Añadir nuevo miembro"
       }
+    },
+    "view": {
+      "birthDate": "Fecha de nacimiento",
+      "joinedDate": "Fecha de incorporación",
+      "number": "Número"
     }
   },
   "okCancel": {

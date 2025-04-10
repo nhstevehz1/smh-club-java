@@ -236,7 +236,15 @@
         "joinedDate": "Joined date",
         "lastName": "Last name",
         "memberNumber": "Number"
+      },
+      "dialog": {
+        "create": "Add new member"
       }
+    },
+    "view": {
+      "birthDate": "Birth Date",
+      "joinedDate": "Joined Date",
+      "number": "Number"
     }
   },
   "okCancel": {
