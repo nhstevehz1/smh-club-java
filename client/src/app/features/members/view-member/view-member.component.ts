@@ -12,7 +12,6 @@ import {DataDisplayComponent} from '@app/shared/components/data-display/data-dis
 import {DateTimeToLocalPipe, DateTimeToFormatPipe} from '@app/shared/pipes';
 import {DateTime} from 'luxon';
 import {TranslateService, LangChangeEvent} from '@ngx-translate/core';
-import {single} from 'rxjs';
 
 @Component({
   selector: 'app-view-member',
