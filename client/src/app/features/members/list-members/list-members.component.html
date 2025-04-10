@@ -1,7 +1,7 @@
 <div class="container">
   @if(hasWriteRole()) {
     <div class="action-container">
-      <button mat-mini-fab [matTooltip]="'members.list.addNewMember' | translate" (click)="onAddMemberClick()">
+      <button mat-icon-button [matTooltip]="'members.list.addNewMember' | translate" (click)="onAddMemberClick()">
           <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -11,6 +11,8 @@
     [columns]="columns()"
     [resultsLength]="resultsLength()"
     [hasWriteRole]="hasWriteRole()"
-    (viewClicked)="onViewClick($event)">
+    (viewClicked)="onViewClick($event)"
+    showEditButton="true"
+    showViewButton="true">
   </app-sortable-pageable-table>
 </div>

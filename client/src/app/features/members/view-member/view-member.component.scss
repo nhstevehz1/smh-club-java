@@ -1,5 +1,21 @@
 .container {
   display: flex;
+  flex-direction: row;
+  margin: 15px;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
   flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--mat-sys-level3);
+  padding: 10px;
+}
+
+.data-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 15px;
 }

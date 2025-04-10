@@ -20,47 +20,43 @@ export class MemberService extends BaseApiService<Member, MemberCreate, Member> 
     return super.getPagedData(pageRequest).pipe(
         map(pd => {
           if(pd && pd._content){
-              pd._content.forEach(m => {
-                let date = m.birth_date as unknown as string;
-                m.birth_date = DateTime.fromISO(date);
-
-                date = m.joined_date as unknown as string;
-                m.joined_date = DateTime.fromISO(date);
-              })
+            pd._content.map(m => this.castDateTimeValues(m))
           }
           return pd;
         })
     );
   }
 
+  override get(id: number): Observable<Member> {
+    return super.get(id).pipe(
+      map(data => this.castDateTimeValues(data))
+    );
+  }
+
   override create(create: MemberCreate): Observable<Member> {
     return super.create(create).pipe(
-      map(data => {
-        let date = data.birth_date as unknown as string;
-        data.birth_date = DateTime.fromISO(date);
-
-        date = data.joined_date as unknown as string;
-        data.joined_date = DateTime.fromISO(date);
-        return data;
-      })
+      map(data => this.castDateTimeValues(data))
     );
   }
 
   override update(update: Member): Observable<Member> {
     return super.update(update).pipe(
-      map(data => {
-        let date = data.birth_date as unknown as string;
-        data.birth_date = DateTime.fromISO(date);
-
-        date = data.joined_date as unknown as string;
-        data.joined_date = DateTime.fromISO(date);
-        return data;
-      })
+      map(data => this.castDateTimeValues(data))
     )
   }
 
   override delete(id: number): Observable<void> {
     return super.delete(id);
+  }
+
+  private castDateTimeValues(member: Member): Member {
+      let date = member.birth_date as unknown as string;
+      member.birth_date = DateTime.fromISO(date);
+
+      date = member.joined_date as unknown as string;
+      member.joined_date = DateTime.fromISO(date);
+
+      return member;
   }
 
 }

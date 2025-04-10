@@ -1,21 +1,21 @@
 import {Component, input, output} from '@angular/core';
 
 import {MatCardTitle} from '@angular/material/card';
-import {MatFabButton} from '@angular/material/button';
-import {MatTooltip} from '@angular/material/tooltip';
-import {MatIcon} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
 
 import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ok-cancel',
-    imports: [
-        MatCardTitle,
-        MatIcon,
-        MatTooltip,
-        MatFabButton,
-        TranslatePipe
-    ],
+  imports: [
+    MatCardTitle,
+    MatIconModule,
+    MatTooltipModule,
+    TranslatePipe,
+    MatButtonModule
+  ],
   templateUrl: './ok-cancel.component.html',
   styleUrl: './ok-cancel.component.scss'
 })

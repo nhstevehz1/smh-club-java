@@ -15,6 +15,7 @@ import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {Member, MemberCreate} from '@app/features/members/models';
 import {MemberService} from '@app/features/members/services/member.service';
 import {MemberEditDialogService} from '@app/features/members/services/member-edit-dialog.service';
+import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 
 
 @Component({
@@ -28,6 +29,12 @@ import {MemberEditDialogService} from '@app/features/members/services/member-edi
     MatButtonModule,
     MatIconModule,
     MatTooltipModule
+  ],
+  providers: [
+    MemberService,
+    MemberEditDialogService,
+    Location,
+    provideLuxonDateAdapter()
   ],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss'
