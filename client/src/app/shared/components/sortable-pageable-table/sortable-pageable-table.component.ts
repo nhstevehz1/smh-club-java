@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, input, output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, input, output, ViewChild, booleanAttribute} from '@angular/core';
 
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatSort, MatSortModule} from '@angular/material/sort';
@@ -38,10 +38,10 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   pageSizes = input<number[]>([5,10,25,100]);
   pageSize = input<number>(5);
   resultsLength = input<number>(0);
-  hasWriteRole = input(false);
-  showEditButton = input(false);
-  showDeleteButton = input(false);
-  showViewButton = input(false);
+  hasWriteRole = input(false, {transform: booleanAttribute});
+  showEditButton = input(false, {transform: booleanAttribute});
+  showDeleteButton = input(false, {transform: booleanAttribute});
+  showViewButton = input(false, {transform: booleanAttribute});
   shouldShowActions = computed(() =>
     this.showViewButton() || (this.hasWriteRole() && (this.showEditButton() || this.showDeleteButton()))
   );
