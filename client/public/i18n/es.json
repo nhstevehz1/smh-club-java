@@ -215,6 +215,9 @@
         },
         "label": "Apellido"
       },
+      "memberNumber": {
+        "label": "Número de socio"
+      },
       "middleName": {
         "error": {
           "required": "segundo nombre obligatorio"

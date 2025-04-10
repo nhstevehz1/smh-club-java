@@ -215,6 +215,9 @@
         },
         "label": "Nom de famille"
       },
+      "memberNumber": {
+        "label": "Numéro de membre"
+      },
       "middleName": {
         "error": {
           "required": "le deuxième prénom est obligatoire"

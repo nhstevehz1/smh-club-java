@@ -215,6 +215,9 @@
         },
         "label": "Last name"
       },
+      "memberNumber": {
+        "label": "Member number"
+      },
       "middleName": {
         "error": {
           "required": "middle name is required"
