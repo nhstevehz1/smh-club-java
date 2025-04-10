@@ -242,6 +242,9 @@
       }
     },
     "view": {
+      "back": {
+        "toolTip": "Go back"
+      },
       "birthDate": "Birth Date",
       "joinedDate": "Joined Date",
       "number": "Number"

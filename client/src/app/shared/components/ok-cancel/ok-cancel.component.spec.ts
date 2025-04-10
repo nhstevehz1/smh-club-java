@@ -29,7 +29,7 @@ describe('OkCancelComponent', () => {
     fixture = TestBed.createComponent(OkCancelComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    harness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'fab'}));
+    harness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
   });
 
   it('should create', () => {

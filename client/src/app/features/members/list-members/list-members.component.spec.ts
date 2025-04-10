@@ -85,13 +85,13 @@ describe('ListMembersComponent', () => {
 
   it('should display add member button when user has write role', async () => {
     spyOn(component, 'hasWriteRole').and.returnValue(true);
-    const harness = await loader.getHarnessOrNull(MatButtonHarness.with({text: 'add', variant: 'mini-fab'}));
+    const harness = await loader.getHarnessOrNull(MatButtonHarness.with({text: 'add', variant: 'icon'}));
     expect(harness).toBeTruthy();
   });
 
   it('should NOT display add member button when user does not have write role', async () => {
     spyOn(component, 'hasWriteRole').and.returnValue(false);
-    const harness = await loader.getHarnessOrNull(MatButtonHarness.with({text: 'add', variant: 'mini-fab'}));
+    const harness = await loader.getHarnessOrNull(MatButtonHarness.with({text: 'add', variant: 'icon'}));
     expect(harness).toBeFalsy();
   });
 
@@ -99,7 +99,7 @@ describe('ListMembersComponent', () => {
     spyOn(component, 'hasWriteRole').and.returnValue(true);
     const spy = routerMock.navigate.and.returnValue(Promise.resolve(true))
 
-    const harness = await loader.getHarness(MatButtonHarness.with({text: 'add', variant: 'mini-fab'}));
+    const harness = await loader.getHarness(MatButtonHarness.with({text: 'add', variant: 'icon'}));
     await harness.click();
 
     expect(spy).toHaveBeenCalledWith(['p/members/add']);

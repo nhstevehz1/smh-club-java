@@ -242,6 +242,9 @@
       }
     },
     "view": {
+      "back": {
+        "toolTip": "Retourner"
+      },
       "birthDate": "Date de naissance",
       "joinedDate": "Date d'adhésion",
       "number": "Nombre"
