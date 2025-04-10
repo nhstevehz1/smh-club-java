@@ -10,7 +10,6 @@ import {Member} from '@app/features/members/models';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
-import {async} from 'rxjs';
 
 describe('ViewMemberComponent', () => {
   let component: ViewMemberComponent;
