@@ -1,22 +1,15 @@
-import {Directive, input, output} from '@angular/core';
-import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {FormModelGroup} from "./form-model-group";
+import {Component, input} from '@angular/core';
+import {MatFormFieldAppearance} from '@angular/material/form-field';
 
-@Directive()
-export abstract class BaseEditorComponent<T> {
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {Editor} from '@app/shared/components/base-editor/editor';
 
-  editorForm = input.required<FormModelGroup<T>>();
-
-  title = input<string>();
-
-  fieldAppearance
-      = input<MatFormFieldAppearance>();
-
-  showRemoveButton = input(false);
-
-  remove = output<void>();
-
-  onRemove(): void {
-    this.remove.emit();
-  }
+@Component({
+  selector: 'app-base-editor',
+  template: ``,
+  styles: ``
+})
+export abstract class BaseEditorComponent<T> implements Editor<T> {
+  public editorForm = input<FormModelGroup<T> | undefined>(undefined);
+  public fieldAppearance = input<MatFormFieldAppearance>('outline' as MatFormFieldAppearance);
 }

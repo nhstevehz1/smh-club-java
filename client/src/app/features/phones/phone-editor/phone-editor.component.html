@@ -1,11 +1,5 @@
-<div [formGroup]="editorForm()">
+<div [formGroup]="editorForm()!">
     <div class="flex-column space-evenly">
-        <app-editor-header
-            [title]="title()"
-            [showRemoveButton]="showRemoveButton()"
-            (removeClick)="onRemove()">
-        </app-editor-header>
-
         <div class="flex-row start">
             <app-input-form-field
                 ngDefaultControl

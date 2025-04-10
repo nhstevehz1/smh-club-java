@@ -1,25 +1,19 @@
-<div [formGroup]="editorForm()" class="flex-column space-evenly">
-        <app-editor-header
-            [title]="title()"
-            [showRemoveButton]="showRemoveButton()"
-            (removeClick)="onRemove()">
-        </app-editor-header>
+<div [formGroup]="editorForm()!" class="flex-column space-evenly">
+   <div class="flex-row start gap">
+      <app-input-form-field
+          ngDefaultControl
+          [appearance]="fieldAppearance()"
+          [formControl]="email()"
+          [controlErrors]="emailErrors()"
+          label="emails.editor.email.label">
+      </app-input-form-field>
 
-        <div class="flex-row start gap">
-            <app-input-form-field
-                ngDefaultControl
-                [appearance]="fieldAppearance()"
-                [formControl]="email()"
-                [controlErrors]="emailErrors()"
-                label="emails.editor.email.label">
-            </app-input-form-field>
-
-            <app-email-type-form-field
-                ngDefaultControl
-                [appearance]="fieldAppearance()"
-                [formControl]="emailType()"
-                [controlErrors]="emailTypeErrors()"
-                label="emails.editor.emailType.label">
-            </app-email-type-form-field>
-        </div>
+      <app-email-type-form-field
+          ngDefaultControl
+          [appearance]="fieldAppearance()"
+          [formControl]="emailType()"
+          [controlErrors]="emailTypeErrors()"
+          label="emails.editor.emailType.label">
+      </app-email-type-form-field>
+  </div>
 </div>

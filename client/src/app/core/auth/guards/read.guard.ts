@@ -1,9 +1,10 @@
 import {CanActivateFn, Router} from '@angular/router';
-import {inject, isDevMode} from "@angular/core";
-import {AuthService} from "../services/auth.service";
-import {take} from "rxjs/operators";
-import {tap} from "rxjs";
-import {PermissionType} from "../models/permission-type";
+import {inject, isDevMode} from '@angular/core';
+import {take} from 'rxjs/operators';
+import {tap} from 'rxjs';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
 
 export const readGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
@@ -20,7 +21,7 @@ export const readGuard: CanActivateFn = (route, state) => {
           if(!isAuthed) {
               router.navigate(['p/login']).then();
           } else if(!authService.hasPermission(PermissionType.read)){
-              router.navigate(['p/access-denied']);
+              router.navigate(['p/access-denied']).then();
           }
       })
   );

@@ -1,11 +1,13 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ProfileComponent} from './profile.component';
-import {AuthService} from "../../services/auth.service";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {MatListHarness} from "@angular/material/list/testing";
-import {AuthUser} from "../../models/auth-user";
-import {TranslateModule} from "@ngx-translate/core";
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {MatListHarness} from '@angular/material/list/testing';
+
+import {TranslateModule} from '@ngx-translate/core';
+
+import {ProfileComponent} from '@app/core/auth/pages/profile/profile.component';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {AuthUser} from '@app/core/auth/models/auth-user';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;

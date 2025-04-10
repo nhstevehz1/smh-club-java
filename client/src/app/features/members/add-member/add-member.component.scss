@@ -1,53 +1,5 @@
-@use "@angular/material" as mat;
-
-.container{
+.container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-mat-card {
-  margin-top: 15px;
-  max-width: 600px;
-}
-
-mat-divider {
-  margin-top: 7px;
-  margin-bottom: 7px;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.title-container {
-  margin-left: 20px;
-  margin-right: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.section-container {
-  border-radius: 5px;
-  padding: 5px;
-  border: 2px solid var(--mat-sys-outline-variant);
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.action-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: end;
   gap: 15px;
 }
-
-add-address {}
-add-email {}
-add-phone {}

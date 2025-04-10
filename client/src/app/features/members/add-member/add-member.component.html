@@ -1,146 +1,27 @@
-<div class="container">
-    @if(!submitted()) {
-        <form [formGroup]="createFormSignal()" (ngSubmit)="onSave()">
-            <mat-card data-testid="card">
-                <div class="title-container">
-                    <mat-card-title>{{'members.add.title' | translate}}</mat-card-title>
-                    <mat-error>* = {{ 'members.add.required' | translate }}</mat-error>
-                </div>
-                <mat-card-content class="content">
-                    <!-- member section -->
-                    <div class="section-container" >
-                        <div class="flex-row start">
-                            <mat-card-subtitle>{{'members.add.card.member.subTitle' | translate}}</mat-card-subtitle>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <app-member-editor
-                                [editorForm]="memberFormComputed()"
-                                [fieldAppearance]="fieldAppearance()"
-                        ></app-member-editor>
-                    </div>
-
-                    <!-- address section -->
-                    <div class="section-container">
-                        <div class="title-container">
-                            <mat-card-subtitle>
-                                @if(addressFormsComputed().length > 1) {
-                                    {{'members.add.card.addresses.subtitle.addresses' | translate }}
-                                } @else {
-                                    {{'members.add.card.addresses.subtitle.address' | translate }}
-                                }
-                            </mat-card-subtitle>
-                            <button class="add-address"
-                                    mat-icon-button
-                                    matTooltip="{{'members.add.card.addresses.addToolTip' | translate}}"
-                                    (click)="onAddAddress()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
-                        <mat-divider></mat-divider>
-                        @for (form of addressFormsComputed().controls; track form; let idx = $index) {
-                            <app-address-editor
-                                    (removeClick)="onDeleteAddress(idx)"
-                                    [showRemoveButton]="addressFormsComputed().length>1"
-                                    [editorForm]="form"
-                                    [fieldAppearance]="fieldAppearance()"
-                            ></app-address-editor>
-                            @if(idx < addressFormsComputed().length - 1) {
-                                <mat-divider></mat-divider>
-                            }
-                        }
-                    </div>
-
-                    <!-- phone section -->
-                    <div class="section-container">
-                        <div class="title-container">
-                            <mat-card-subtitle>
-                                @if(phoneFormsComputed().length > 1) {
-                                    {{'members.add.card.phones.subtitle.phoneNumbers' | translate }}
-                                } @else {
-                                    {{'members.add.card.phones.subtitle.phoneNumber' | translate }}
-                                }
-                            </mat-card-subtitle>
-                            <button class="add-phone"
-                                    mat-icon-button
-                                    matTooltip="{{'members.add.phones.addToolTip' | translate}}}"
-                                    (click)="onAddPhone()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
-                        <mat-divider></mat-divider>
-                        @for(form of phoneFormsComputed().controls; track form; let idx = $index) {
-                            <app-phone-editor
-                                    (removeClick)="onDeletePhone(idx)"
-                                    [showRemoveButton]="phoneFormsComputed().length>1"
-                                    [editorForm]="form"
-                                    [fieldAppearance]="fieldAppearance()"
-                            ></app-phone-editor>
-                            @if(idx < phoneFormsComputed().length - 1) {
-                                <mat-divider></mat-divider>
-                            }
-                        }
-                    </div>
-
-                    <!-- email section -->
-                    <div class="section-container">
-                        <div class="title-container">
-                            <mat-card-subtitle>
-                                @if(emailFormsComputed().length > 1) {
-                                    {{'members.add.card.emails.subtitle.emails' | translate }}
-                                } @else {
-                                    {{'members.add.card.emails.subtitle.email' | translate }}
-                                }
-                            </mat-card-subtitle>
-                            <button class="add-email"
-                                    mat-icon-button
-                                    matTooltip="{{'members.add.card.emails.addToolTip' | translate }}"
-                                    (click)="onAddEmail()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
-                        <mat-divider></mat-divider>
-                        @for (form of emailFormsComputed().controls; track form; let idx = $index) {
-                            <app-email-editor
-                                    (removeClick)="onDeleteEmail(idx)"
-                                    [showRemoveButton]="emailFormsComputed().length>1"
-                                    [editorForm]="form"
-                                    [fieldAppearance]="fieldAppearance()"
-                            ></app-email-editor>
-
-                            @if(idx < emailFormsComputed().length - 1) {
-                                <mat-divider></mat-divider>
-                            }
-                        }
-
-                    </div>
-                </mat-card-content>
-                <mat-card-actions align="end">
-                    <button class="cancel"
-                            mat-button
-                            type="button"
-                            (click)="onOkOrCancel()"
-                            matTooltip="{{'members.add.card.action.cancelToolTip' | translate}}">
-                        <mat-icon>cancel</mat-icon>
-                        <span>{{'members.add.card.action.cancel' | translate}}</span>
-                    </button>
-                    <button class="submit"
-                            mat-button
-                            type="submit"
-                            [disabled]="createFormSignal().invalid"
-                            matTooltip="{{'members.add.card.action.submitToolTip' | translate}}}">
-                        <mat-icon>save</mat-icon>
-                        <span>{{'members.add.card.action.submit' | translate}}</span>
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        </form>
-    } @else {
-        <div class="flex-row center">
-            <app-ok-cancel
-                    title="{{'members.add.card.action.okCancel.title' | translate}}"
-                    buttonToolTip="{{'members.add.card.action.okCancel.toolTip' | translate}}"
-                    (buttonClick)="onOkOrCancel()"
-            ></app-ok-cancel>
-        </div>
-    }
-</div>
+@if(createForm()) {
+  <form class="container" [formGroup]="createForm()!" (ngSubmit)="onSave()">
+    <h2 mat-dialog-title>
+      <span>{{ 'members.add.title' | translate }}</span>
+    </h2>
+    <mat-divider></mat-divider>
+    <app-member-editor [editorForm]="createForm()!"></app-member-editor>
+    <mat-divider></mat-divider>
+    <div class="flex-row end gap">
+      <button class="cancel-button"
+              mat-button
+              type="button"
+              (click)="onCancel()"
+              matTooltip="member.add.cancelTooltip">
+        <mat-icon>cancel</mat-icon>
+      </button>
+      <button class="submit-button"
+              mat-button
+              type="submit"
+              [disabled]="this.createForm()!.invalid || this.createForm()!.untouched"
+              (click)="onSave()"
+              matTooltip="member.add.saveToolTip">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </form>
+}

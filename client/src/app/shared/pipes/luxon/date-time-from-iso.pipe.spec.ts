@@ -1,5 +1,5 @@
-import {DateTimeFromIsoPipe} from './date-time-from-iso.pipe';
-import {DateTime} from "luxon";
+import {DateTime} from 'luxon';
+import {DateTimeFromIsoPipe} from '@app/shared/pipes';
 
 describe('DateTimeFromIsoPipe', () => {
   const pipe = new DateTimeFromIsoPipe();

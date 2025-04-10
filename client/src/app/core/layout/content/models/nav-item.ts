@@ -1,4 +1,4 @@
-import {PermissionType} from "../../../auth/models/permission-type";
+import {PermissionType} from '@app/core/auth/models/permission-type';
 
 export interface NavItem {
     displayName: string;

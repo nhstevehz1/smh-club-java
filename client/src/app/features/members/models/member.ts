@@ -1,9 +1,6 @@
-import {DateTime} from "luxon";
-import {AddressCreate} from "../../addresses/models/address";
-import {EmailCreate} from "../../emails/models/email";
-import {PhoneCreate} from "../../phones/models/phone";
+import {DateTime} from 'luxon';
 
-export interface MemberBase {
+export interface MemberCreate {
     member_number: number;
     first_name: string;
     middle_name: string;
@@ -13,12 +10,6 @@ export interface MemberBase {
     joined_date: DateTime;
 }
 
-export interface Member extends MemberBase {
+export interface Member extends MemberCreate {
     id: number;
-}
-
-export interface MemberCreate extends MemberBase {
-    addresses: AddressCreate[];
-    emails: EmailCreate[];
-    phones: PhoneCreate[];
 }

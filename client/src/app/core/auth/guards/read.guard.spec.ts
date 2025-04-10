@@ -1,10 +1,11 @@
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRouteSnapshot, CanActivateFn, provideRouter, Router} from '@angular/router';
 
+import {Observable, Subject} from 'rxjs';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {PermissionType} from '@app/core/auth/models/permission-type';
 import {readGuard} from './read.guard';
-import {AuthService} from "../services/auth.service";
-import {Observable, Subject} from "rxjs";
-import {PermissionType} from "../models/permission-type";
 
 describe('readGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>

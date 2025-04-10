@@ -1,164 +1,65 @@
-import {Component, computed, signal, WritableSignal} from '@angular/core';
-import {MatCardModule} from "@angular/material/card";
-import {MatInputModule} from "@angular/material/input";
-import {FormArray, ReactiveFormsModule} from "@angular/forms";
-import {MatFormFieldAppearance, MatFormFieldModule} from "@angular/material/form-field";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {provideLuxonDateAdapter} from "@angular/material-luxon-adapter";
-import {MatSelectModule} from "@angular/material/select";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {AddressEditorComponent} from "../../addresses/address-editor/address-editor.component";
-import {MemberEditorComponent} from "../member-editor/member-editor.component";
-import {PhoneEditorComponent} from "../../phones/phone-editor/phone-editor.component";
-import {EmailEditorComponent} from "../../emails/email-editor/email-editor.component";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
-import {MemberCreate} from "../models/member";
-import {AddressCreate} from "../../addresses/models/address";
-import {EmailCreate} from "../../emails/models/email";
-import {PhoneCreate} from "../../phones/models/phone";
-import {MatTooltip} from "@angular/material/tooltip";
-import {MatDivider} from "@angular/material/divider";
-import {MembersService} from "../services/members.service";
-import {Router} from "@angular/router";
-import {OkCancelComponent} from "../../../shared/components/ok-cancel/ok-cancel.component";
-import {TranslatePipe} from "@ngx-translate/core";
-import {AddressService} from "../../addresses/services/address.service";
-import {EmailService} from "../../emails/services/email.service";
-import {PhoneService} from "../../phones/services/phone.service";
+import {Component, signal, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {Location} from '@angular/common';
+import {ReactiveFormsModule} from '@angular/forms';
+
+import {MatDialogTitle} from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
+
+import {MemberEditorComponent} from '@app/features/members/member-editor/member-editor.component';
+import {FormModelGroup} from '@app/shared/components/base-editor/models';
+import {Member, MemberCreate} from '@app/features/members/models';
+import {MemberService} from '@app/features/members/services/member.service';
+import {MemberEditDialogService} from '@app/features/members/services/member-edit-dialog.service';
+import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
+
 
 @Component({
-  selector: 'app-create-member',
-    imports: [
-        MatFormFieldModule,
-        MatCardModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatSelectModule,
-        MatIconModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        AddressEditorComponent,
-        MemberEditorComponent,
-        PhoneEditorComponent,
-        EmailEditorComponent,
-        MatTooltip,
-        MatDivider,
-        OkCancelComponent,
-        TranslatePipe
-    ],
+  selector: 'app-add-member',
+  imports: [
+    MemberEditorComponent,
+    MatDialogTitle,
+    TranslatePipe,
+    ReactiveFormsModule,
+    MatDividerModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+  ],
   providers: [
-      provideLuxonDateAdapter(),
-      MembersService,
-      AddressService,
-      EmailService,
-      PhoneService
+    MemberService,
+    MemberEditDialogService,
+    Location,
+    provideLuxonDateAdapter()
   ],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss'
 })
-export class AddMemberComponent {
+export class AddMemberComponent implements OnInit {
+  readonly createForm = signal<FormModelGroup<Member> | undefined>(undefined);
 
-    createFormSignal: WritableSignal<FormModelGroup<MemberCreate>>;
+  constructor(private apiSvc: MemberService,
+              private dialogSvc: MemberEditDialogService,
+              private router: Router,
+              private location: Location) {}
 
-    memberFormComputed = computed(() =>
-        this.createFormSignal() as unknown as FormModelGroup<MemberCreate>);
+  ngOnInit(): void {
+    this.createForm.set(this.dialogSvc.generateForm());
+  }
 
-    addressFormsComputed = computed(() =>
-        this.createFormSignal().controls.addresses as unknown as FormArray<FormModelGroup<AddressCreate>>);
+  onSave(): void {
+    this.apiSvc.create(this.createForm()!.value as MemberCreate).subscribe({
+      next: member => this.router.navigate(['p/members/view', member.id]).then(),
+      error: err => console.debug(err) // TODO display error
+    })
+  }
 
-    emailFormsComputed = computed(() =>
-        this.createFormSignal().controls.emails as unknown as FormArray<FormModelGroup<EmailCreate>>);
-
-    phoneFormsComputed = computed(() =>
-        this.createFormSignal().controls.phones as unknown as FormArray<FormModelGroup<PhoneCreate>>);
-
-    fieldAppearance
-        = signal<MatFormFieldAppearance>('outline');
-
-    errorMessage = signal<string | null>(null);
-
-    submitted = signal(false);
-
-
-    constructor(private memberSvc: MembersService,
-                private addressSvc: AddressService,
-                private emailSvc: EmailService,
-                private phoneSvc: PhoneService,
-                private router: Router) {
-
-
-        const addressForm = this.addressSvc.generateCreateForm();
-        const emailForm = this.emailSvc.generateCreateForm();
-        const phoneForm = this.phoneSvc.generateCreateForm();
-        const createForm = this.memberSvc.generateCreateForm(addressForm, emailForm, phoneForm);
-        this.createFormSignal = signal(createForm);
-    }
-
-    onSave(): void {
-        if (this.createFormSignal().valid) {
-            this.memberSvc.createMember(this.createFormSignal().value as MemberCreate).subscribe({
-              next: () =>  {
-                  this.errorMessage.set(null)
-                  this.submitted.set(true);
-              },
-              error: (err) => {
-                  let errMsg: string;
-                  if (err.error instanceof Error) {
-                      // A client-side or network error occurred.
-                      console.debug(`Client of network error: ${err}`);
-                      errMsg = 'An error has occurred.  Contact your administrator.';
-                  } else {
-                      // The backend returned an unsuccessful response code.
-                      console.debug(`Server error, ${err}`);
-                      errMsg = `Error code: ${err.status}, server error.  Contact your administrator.`;
-                  }
-                  this.errorMessage.set(errMsg);
-              }
-            });
-        } else {
-            this.errorMessage.set('Invalid data');
-            return;
-        }
-    }
-
-    onOkOrCancel(): void {
-        this.router.navigate(['p/members']).then();
-    }
-
-    onAddAddress(): void {
-        this.getAddresses().push(this.addressSvc.generateCreateForm());
-    }
-
-    onDeleteAddress(idx: number): void {
-        this.getAddresses().removeAt(idx);
-    }
-
-    onAddEmail(): void {
-        this.getEmails().push(this.emailSvc.generateCreateForm());
-    }
-
-    onDeleteEmail(idx: number): void {
-        this.getEmails().removeAt(idx);
-    }
-
-    onAddPhone(): void {
-        this.getPhones().push(this.phoneSvc.generateCreateForm());
-    }
-
-    onDeletePhone(idx: number): void {
-        this.getPhones().removeAt(idx);
-    }
-
-    private getAddresses(): FormArray<FormModelGroup<AddressCreate>> {
-        return this.createFormSignal().get('addresses') as FormArray<FormModelGroup<AddressCreate>>;
-    }
-
-    private getEmails(): FormArray<FormModelGroup<EmailCreate>> {
-        return this.createFormSignal().get('emails') as FormArray<FormModelGroup<EmailCreate>>;
-    }
-
-    private getPhones(): FormArray<FormModelGroup<PhoneCreate>> {
-        return this.createFormSignal().get('phones') as FormArray<FormModelGroup<PhoneCreate>>;
-    }
+  onCancel(): void {
+    // go back to last page viewed
+    this.location.back();
+  }
 }

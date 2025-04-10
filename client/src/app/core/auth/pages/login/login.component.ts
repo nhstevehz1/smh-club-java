@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {OkCancelComponent} from "../../../../shared/components/ok-cancel/ok-cancel.component";
-import {AuthService} from "../../services/auth.service";
+import {OkCancelComponent} from '@app/shared/components/ok-cancel/ok-cancel.component';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
 
 @Component({
   selector: 'app-login',

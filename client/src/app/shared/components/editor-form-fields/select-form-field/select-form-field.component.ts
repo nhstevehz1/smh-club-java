@@ -1,10 +1,13 @@
 import {Component, input} from '@angular/core';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {TranslatePipe} from "@ngx-translate/core";
-import {ReactiveFormsModule} from "@angular/forms";
-import {MatSelectModule} from "@angular/material/select";
-import {SelectOption} from "../models/select-option";
-import {BaseInputComponent} from '../base-input-component';
+import {ReactiveFormsModule} from '@angular/forms';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+
+import {TranslatePipe} from '@ngx-translate/core';
+
+import {BaseInputComponent} from '@app/shared/components/editor-form-fields/base-input-component';
+import {SelectOption} from '@app/shared/components/editor-form-fields/models';
 
 @Component({
   selector: 'app-select-form-field',

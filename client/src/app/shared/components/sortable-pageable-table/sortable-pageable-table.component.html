@@ -1,5 +1,5 @@
 <mat-table matSort [dataSource]="dataSource()">
-    @for (column of column(); track column.columnName) {
+    @for (column of columns(); track column.columnName) {
         <ng-container [matColumnDef]=column.columnName>
             @if (column.isSortable) {
                 <mat-header-cell [attr.id]=column.columnName *matHeaderCellDef mat-sort-header>
@@ -14,6 +14,23 @@
                 {{column.cell(row) | translate}}
             </mat-cell>
         </ng-container>
+    }
+
+    @if(shouldShowActions()) {
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row; let i = index" class="action-container">
+          @if(showViewButton()) {
+            <button mat-button (click)="onViewClick(row, i)">View</button>
+          }
+          @if(showEditButton()){
+            <button mat-button (click)="onEditClick(row, i)">Edit</button>
+          }
+          @if(showDeleteButton()){
+            <button mat-button (click)="onDeleteClick(row, i)">Delete</button>
+          }
+        </mat-cell>
+      </ng-container>
     }
     <mat-header-row *matHeaderRowDef="columnNames(); sticky: true"></mat-header-row>
     <mat-row *matRowDef="let row;  columns: columnNames()"></mat-row>

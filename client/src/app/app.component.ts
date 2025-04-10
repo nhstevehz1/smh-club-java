@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {MainLayoutComponent} from "./core/layout/main-layout/main-layout.component";
-import {AuthService} from "./core/auth/services/auth.service";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {TranslateService} from "@ngx-translate/core";
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {TranslateService} from '@ngx-translate/core';
+
+import {MainLayoutComponent} from '@app/core/layout/main-layout/main-layout.component';
+import {AuthService} from '@app/core/auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,7 @@ export class AppComponent implements OnInit {
     if(language && this.translate.langs.includes(language)){
       this.translate.use(language);
     } else {
-      this.translate.use(this.translate.getBrowserLang() || "en");
+      this.translate.use(this.translate.getBrowserLang() || 'en');
     }
 
     this.translate.onLangChange.subscribe(() =>

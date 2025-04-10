@@ -1,5 +1,5 @@
-import {DateTimeToFormatPipe} from './date-time-to-format.pipe';
-import {DateTime} from "luxon";
+import {DateTimeToFormatPipe} from '@app/shared/pipes';
+import {DateTime} from 'luxon';
 
 describe('DateTimeToFormatPipe', () => {
   const pipe = new DateTimeToFormatPipe();

@@ -1,5 +1,5 @@
-import {DateTime} from "luxon";
-import {FullName} from "../../../shared/models/full-name";
+import {DateTime} from 'luxon';
+import {FullName} from '@app/shared/models';
 
 export interface RenewalCreate {
     renewal_date: DateTime;

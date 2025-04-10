@@ -1,10 +1,12 @@
 import {booleanAttribute, Component, computed, input, output,} from '@angular/core';
-import {MatDivider} from "@angular/material/divider";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {MatLabel} from "@angular/material/form-field";
-import {TranslatePipe} from "@ngx-translate/core";
-import {NgClass} from "@angular/common";
+import {NgClass} from '@angular/common';
+
+import {MatDivider} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatLabel} from '@angular/material/form-field';
+
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-editor-header',

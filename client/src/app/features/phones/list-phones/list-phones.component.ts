@@ -1,112 +1,95 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
+
 import {
   SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {PhoneService} from "../services/phone.service";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {PhoneMember} from "../models/phone";
-import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {MatTableDataSource} from "@angular/material/table";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {PhoneType} from "../models/phone-type";
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
+import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/models';
+
+import {PhoneService} from '@app/features/phones/services/phone.service';
+import {PhoneTableService} from '@app/features/phones/services/phone-table.service';
+import {PhoneCreate, PhoneMember, Phone} from '@app/features/phones/models/phone';
+import {PhoneEditDialogService} from '@app/features/phones/services/phone-edit-dialog.service';
+import {PhoneEditorComponent} from '@app/features/phones/phone-editor/phone-editor.component';
+import {mergeMap, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-phones',
   imports: [SortablePageableTableComponent],
-  providers: [PhoneService],
+  providers: [
+    PhoneService,
+    AuthService,
+    PhoneTableService,
+    PhoneEditDialogService
+  ],
   templateUrl: './list-phones.component.html',
   styleUrl: './list-phones.component.scss'
 })
-export class ListPhonesComponent extends BaseTableComponent<PhoneMember> implements OnInit, AfterViewInit {
+export class ListPhonesComponent extends BaseTableComponent<PhoneCreate, Phone, PhoneMember, PhoneEditorComponent>  {
 
-  @ViewChild(SortablePageableTableComponent, {static: true})
-  private _table!: SortablePageableTableComponent<PhoneMember>;
-
-  resultsLength = 0;
-  datasource = new MatTableDataSource<PhoneMember>();
-  columns: ColumnDef<PhoneMember>[] = [];
-
-  private phoneTypeMap = new Map<PhoneType, string>([
-     [PhoneType.Work, 'phones.type.work'],
-     [PhoneType.Home, 'phones.type.home'],
-     [PhoneType.Mobile, 'phones.type.mobile']
-  ]);
-
-  constructor(private svc: PhoneService) {
-    super();
+  constructor(auth: AuthService,
+              svc: PhoneService,
+              tableSvc: PhoneTableService,
+              dialogSvc: PhoneEditDialogService) {
+    super(auth, svc, tableSvc, dialogSvc);
   }
 
-  ngOnInit(): void {
-    this.columns = this.getColumns();
-  }
+  onEditClick(event: EditEvent<PhoneMember>) {
+    const title = 'phones.list.dialog.update';
+    const context = event.data as Phone;
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Edit)
 
-  ngAfterViewInit(): void {
-    merge(this._table.sort.sortChange, this._table.paginator.page)
-        .pipe(
-            startWith({}),
-            switchMap(() => {
-              // assemble the dynamic page request
-              const pr = this.getPageRequest(
-                  this._table.paginator.pageIndex, this._table.paginator.pageSize,
-                  this._table.sort.active, this._table.sort.direction);
-
-              // pipe any errors to an Observable of null
-              return this.svc.getPhones(pr)
-                  .pipe(catchError(err => {
-                    console.log(err);
-                    return observableOf(null);
-                  }));
-            }),
-            map(data => {
-              // if the data returned s null due to an error.  Map the null data to an empty array
-              if (data === null) {
-                return [];
-              }
-
-              // set the results length in case it has changed.
-              this.resultsLength = data.page.totalElements;
-
-              // map the content array only
-              return data._content;
-            })
-        ).subscribe({
-          // set the data source with the new page
-          next: data => this.datasource.data = data!
-        });
-  }
-
-  protected getColumns(): ColumnDef<PhoneMember>[] {
-    return [
-      {
-        columnName: 'phone_number',
-        displayName: 'phones.list.columns.phoneNumber',
-        isSortable: true,
-        cell: (element: PhoneMember) => this.getPhoneNumber(element)
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(phoneResult => {
+        if(phoneResult.action == EditAction.Edit) {
+          return this.apiSvc.update(phoneResult.context);
+        } else {
+          return of(null);
+        }
+      })
+    ).subscribe({
+      next: phoneResult => {
+        if(phoneResult) {
+          const update: PhoneMember = {
+            id: phoneResult.id,
+            member_id: phoneResult.member_id,
+            country_code: phoneResult.country_code,
+            phone_number: phoneResult.phone_number,
+            phone_type: phoneResult.phone_type,
+            full_name: event.data.full_name
+          }
+          this.updateItem(update);
+        }
       },
-      {
-        columnName: 'phone_type',
-        displayName: 'phones.list.columns.phoneType',
-        isSortable: false,
-        cell: (element: PhoneMember) => this.phoneTypeMap.get(element.phone_type)
-      },
-      {
-        columnName: 'full_name',
-        displayName: 'phones.list.columns.fullName',
-        isSortable: true,
-        cell: (element: PhoneMember) => this.getFullName(element.full_name)
-      },
-    ];
+      error: err => this.errors.set(err)
+    });
   }
 
-  private getPhoneNumber(phoneMember: PhoneMember): string {
-    const code = phoneMember.country_code;
-    const number = phoneMember.phone_number;
+  onDeleteClick(event: EditEvent<PhoneMember>) {
+    const title = 'phones.list.dialog.delete';
+    const context = event.data as Phone;
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Delete);
 
-    // format phone number exp: (555) 555-5555
-    const regex = /^(\d{3})(\d{3})(\d{4})$/;
-    const formated = number.replace(regex, '($1) $2-$3');
-
-    return `+${code} ${formated}`;
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(phoneResult => {
+        if(phoneResult.action == EditAction.Delete) {
+          return this.apiSvc.delete(phoneResult.context.id).pipe(
+            map(() => phoneResult)
+          );
+        } else {
+          return of(phoneResult);
+        }
+      })
+    ).subscribe({
+      next: phoneResult => {
+        if(phoneResult.action == EditAction.Delete) {
+          this.deleteItem(event.idx)
+        }
+      },
+      error: err => this.errors.set(err)
+    });
   }
 }

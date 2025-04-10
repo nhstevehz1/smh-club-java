@@ -1,78 +1,49 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {PageRequest} from "../../../shared/models/page-request";
-import {Observable} from "rxjs";
-import {PagedData} from "../../../shared/models/paged-data";
-import {AddressCreate, Address, AddressMember} from "../models/address";
-import {map} from "rxjs/operators";
-import {AddressType} from "../models/address-type";
-import {NonNullableFormBuilder, Validators} from "@angular/forms";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
+import {HttpClient} from '@angular/common/http';
+
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {Address, AddressCreate, AddressMember, AddressType} from '@app/features/addresses/models/address';
+import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
+import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 @Injectable()
-export class AddressService {
-  public readonly BASE_API = '/api/v1/addresses';
+export class AddressService extends BaseApiService<AddressMember, AddressCreate, Address>{
 
-  constructor(private http: HttpClient, private fb: NonNullableFormBuilder) {}
+  constructor(http: HttpClient) {
+    super('/api/v1/addresses', http)
+  }
 
-  getAddresses(pageRequest: PageRequest): Observable<PagedData<AddressMember>> {
-    const query = pageRequest.createQuery();
-    const uri = query == null ? this.BASE_API : this.BASE_API + query;
-
-    return this.http.get<PagedData<AddressMember>>(uri).pipe(
+  override getPagedData(pageRequest: PageRequest): Observable<PagedData<AddressMember>> {
+    return super.getPagedData(pageRequest).pipe(
       map(pd => {
         if (pd && pd._content) {
           pd._content.forEach(a => a.address_type = a.address_type as unknown as AddressType);
         }
         return pd;
+      }));
+  }
+
+  override create(create: AddressCreate): Observable<Address> {
+    return super.create(create).pipe(
+      map(data => {
+        data.address_type = data.address_type as unknown as AddressType;
+        return data;
       })
     );
   }
 
-  createAddress(create: AddressCreate): Observable<Address> {
-    return this.http.post<AddressCreate>(this.BASE_API, create).pipe(
-        map(data => JSON.stringify(data)),
-        map(data => JSON.parse(data) as Address),
-        map(data => {
-          data.address_type = data.address_type as unknown as AddressType;
-          return data;
-        })
+  override update(update: Address): Observable<Address> {
+    return super.update(update).pipe(
+      map(data => {
+        data.address_type = data.address_type as unknown as AddressType;
+        return data;
+      })
     );
   }
 
-  updateAddress(update: AddressCreate): Observable<Address> {
-    return this.http.put<Address>(`${this.BASE_API}/`, update).pipe(
-        map(data => JSON.stringify(data)),
-        map(data => JSON.parse(data) as Address),
-        map(data => {
-          data.address_type = data.address_type as unknown as AddressType;
-          return data;
-        })
-    );
+  override delete(id: number): Observable<void> {
+    return super.delete(id);
   }
-
-  generateCreateForm(): FormModelGroup<AddressCreate> {
-    return this.fb.group({
-      address1: ['', [Validators.required]],
-      address2: [''],
-      city: ['', [Validators.required]],
-      state: ['', [Validators.required, Validators.minLength(2)]],
-      postal_code: ['', [Validators.required, Validators.minLength(5)]],
-      address_type: [AddressType.Home, [Validators.required]]
-    });
-  }
-
-  generateUpdateForm(update: Address): FormModelGroup<Address> {
-    return this.fb.group({
-      id: [update.id, Validators.required],
-      member_id: [update.member_id, [Validators.required, Validators.min(1)]],
-      address1: [update.address1, [Validators.required]],
-      address2: [update.address2],
-      city: [update.city, [Validators.required]],
-      state: [update.state, [Validators.required, Validators.minLength(2)]],
-      postal_code: [update.postal_code, [Validators.required, Validators.minLength(5)]],
-      address_type: [update.address_type, [Validators.required]]
-    });
-  }
-
 }

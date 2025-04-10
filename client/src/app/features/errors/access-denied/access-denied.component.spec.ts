@@ -1,8 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+
+import {TranslateModule} from '@ngx-translate/core';
 
 import {AccessDeniedComponent} from './access-denied.component';
-import {TranslateModule} from "@ngx-translate/core";
-import {By} from "@angular/platform-browser";
 
 describe('AccessDeniedComponent', () => {
   let component: AccessDeniedComponent;

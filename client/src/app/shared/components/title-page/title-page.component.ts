@@ -1,6 +1,6 @@
 import {Component, computed, input} from '@angular/core';
-import {MatIcon} from "@angular/material/icon";
-import {TranslatePipe} from "@ngx-translate/core";
+import {MatIcon} from '@angular/material/icon';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-title-page',

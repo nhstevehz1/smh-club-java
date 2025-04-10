@@ -1,10 +1,18 @@
-import {AfterViewInit, Component, computed, input, ViewChild} from '@angular/core';
-import {ColumnDef} from "./models/column-def";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {MatSort, MatSortModule} from "@angular/material/sort";
-import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
-import {CustomMatPaginatorIntlService} from "./services/custom-mat-paginator-intl.service";
-import {TranslatePipe} from "@ngx-translate/core";
+import {AfterViewInit, Component, computed, input, output, ViewChild, booleanAttribute} from '@angular/core';
+
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatPaginator, MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+
+import {TranslatePipe} from '@ngx-translate/core';
+
+import {EditEvent} from '@app/shared/components/base-edit-dialog/models';
+import {
+  CustomMatPaginatorIntlService
+} from '@app/shared/components/sortable-pageable-table/services/custom-mat-paginator-intl.service';
+import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 
 @Component({
   selector: 'app-sortable-pageable-table',
@@ -12,10 +20,11 @@ import {TranslatePipe} from "@ngx-translate/core";
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    TranslatePipe
+    TranslatePipe,
+    MatIconModule,
+    MatButtonModule
   ],
-  providers: [
-    {
+  providers: [{
       provide: MatPaginatorIntl,
       useClass: CustomMatPaginatorIntlService
     }
@@ -24,23 +33,30 @@ import {TranslatePipe} from "@ngx-translate/core";
   styleUrl: './sortable-pageable-table.component.scss'
 })
 export class SortablePageableTableComponent<T> implements AfterViewInit {
-  column
-      = input.required<ColumnDef<T>[]>();
+  columns = input<ColumnDef<T>[]>([]);
+  dataSource = input.required<MatTableDataSource<T>>();
+  pageSizes = input<number[]>([5,10,25,100]);
+  pageSize = input<number>(5);
+  resultsLength = input<number>(0);
+  hasWriteRole = input(false, {transform: booleanAttribute});
+  showEditButton = input(false, {transform: booleanAttribute});
+  showDeleteButton = input(false, {transform: booleanAttribute});
+  showViewButton = input(false, {transform: booleanAttribute});
+  shouldShowActions = computed(() =>
+    this.showViewButton() || (this.hasWriteRole() && (this.showEditButton() || this.showDeleteButton()))
+  );
 
-  dataSource
-      = input.required<MatTableDataSource<T>>();
+  columnNames = computed<string[]>(() => {
+    const names = this.columns().map(c => c.columnName);
+    if (this.shouldShowActions()) {
+      names.push('action');
+    }
+    return names;
+  });
 
-  pageSizes
-      = input<number[]>([5,10,25,100]);
-
-  pageSize
-      = input<number>(5);
-
-  resultsLength
-      = input<number>(0);
-
-  columnNames= computed<string[]>(() =>
-      this.column().map(c => c.columnName));
+  editClicked = output<EditEvent<T>>();
+  deleteClicked = output<EditEvent<T>>();
+  viewClicked = output<EditEvent<T>>();
 
   @ViewChild(MatSort, {static: true})
   sort!: MatSort;
@@ -49,11 +65,19 @@ export class SortablePageableTableComponent<T> implements AfterViewInit {
   paginator!: MatPaginator;
 
   ngAfterViewInit() {
-    // revert back to page 0 if it had been changed.
+    // revert back to page 0 if sort changed.
     this.sort!.sortChange.subscribe(() => this.paginator!.pageIndex = 0);
   }
 
-  shouldTranslate(column: ColumnDef<T>): boolean {
-    return column.translateDisplayName || true;
+  onViewClick(element: T, index: number): void {
+    this.viewClicked.emit({idx: index, data: element});
+  }
+
+  onEditClick(element: T, index: number): void {
+    this.editClicked.emit({idx: index, data: element});
+  }
+
+  onDeleteClick(element: T, index: number) {
+    this.deleteClicked.emit({idx: index, data: element});
   }
 }

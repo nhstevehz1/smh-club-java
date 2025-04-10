@@ -1,103 +1,96 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
-import {EmailMember} from "../models/email";
+import {Component} from '@angular/core';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
+
 import {
-    SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {EmailService} from "../services/email.service";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {EmailType} from "../models/email-type";
+  SortablePageableTableComponent
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
+import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/models';
+
+import {EmailCreate, EmailMember, Email} from '@app/features/emails/models/email';
+import {EmailService} from '@app/features/emails/services/email.service';
+import {EmailTableService} from '@app/features/emails/services/email-table.service';
+import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
+import {EmailEditorComponent} from '@app/features/emails/email-editor/email-editor.component';
+import {mergeMap, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
-    selector: 'app-list-emails',
-    imports: [SortablePageableTableComponent],
-    providers: [EmailService],
-    templateUrl: './list-emails.component.html',
-    styleUrl: './list-emails.component.scss'
+  selector: 'app-list-emails',
+  imports: [SortablePageableTableComponent],
+  providers: [
+    EmailService,
+    AuthService,
+    EmailTableService,
+    EmailEditDialogService
+  ],
+  templateUrl: './list-emails.component.html',
+  styleUrl: './list-emails.component.scss'
 })
 export class ListEmailsComponent
-    extends BaseTableComponent<EmailMember> implements OnInit, AfterViewInit {
+  extends BaseTableComponent<EmailCreate, Email, EmailMember, EmailEditorComponent> {
 
-    @ViewChild(SortablePageableTableComponent, {static: true})
-    private _table!: SortablePageableTableComponent<EmailMember>;
+  constructor(auth: AuthService,
+              svc: EmailService,
+              tableSvc: EmailTableService,
+              dialogSvc: EmailEditDialogService) {
+      super(auth, svc, tableSvc, dialogSvc);
+  }
 
-    resultsLength = 0;
-    datasource = new MatTableDataSource<EmailMember>();
-    columns: ColumnDef<EmailMember>[] = [];
+  onEditClick(event: EditEvent<EmailMember>): void {
+    const title = 'emails.list.dialog.update'
+    const context = event.data as Email;
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Edit);
 
-    private emailTypeMap = new Map<EmailType, string>([
-       [EmailType.Work, 'emails.type.work'],
-       [EmailType.Home, 'emails.type.home'],
-       [EmailType.Other, 'emails.type.other']
-    ]);
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(emailResult => {
+        if(emailResult.action == EditAction.Edit) {
+          return this.apiSvc.update(emailResult.context);
+        } else {
+          return of(null);
+        }
+      })
+    ).subscribe({
+      next: emailResult => {
+        if(emailResult) {
+          const update: EmailMember = {
+            id: emailResult.id,
+            member_id: emailResult.member_id,
+            email: emailResult.email,
+            email_type: emailResult.email_type,
+            full_name: event.data.full_name
+          }
+          this.updateItem(update);
+        }
+      },
+      error: err => this.errors.set(err)
+    });
+  }
 
-    constructor(private svc: EmailService) {
-        super();
-    }
+  onDeleteClick(event: EditEvent<EmailMember>): void {
+    const title = 'emails.list.dialog.delete';
+    const context = event.data as Email;
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Delete);
 
-    ngOnInit(): void {
-        this.columns = this.getColumns();
-    }
-
-    ngAfterViewInit(): void {
-        merge(this._table.sort.sortChange, this._table.paginator.page)
-            .pipe(
-                startWith({}),
-                switchMap(() => {
-                    // assemble the dynamic page request
-                    const pr = this.getPageRequest(
-                        this._table.paginator.pageIndex, this._table.paginator.pageSize,
-                        this._table.sort.active, this._table.sort.direction);
-
-                    // pipe any errors to an Observable of null
-                    return this.svc.getEmails(pr)
-                        .pipe(catchError(err => {
-                            console.log(err);
-                            return observableOf(null);
-                        }));
-                }),
-                map(data => {
-                    // if the data returned s null due to an error.  Map the null data to an empty array
-                    if (data === null) {
-                        return [];
-                    }
-
-                    // set the results length in case it has changed.
-                    this.resultsLength = data.page.totalElements;
-
-                    // map the content array only
-                    return data._content;
-                })
-            ).subscribe({
-                // set the data source with the new page
-                next: data => this.datasource.data = data!
-            });
-    }
-
-    protected getColumns(): ColumnDef<EmailMember>[] {
-        return [
-            {
-                columnName: 'email',
-                displayName: 'emails.list.columns.email',
-                isSortable: true,
-                cell:(element: EmailMember) => `${element.email}`
-            },
-            {
-                columnName: 'email_type',
-                displayName: 'emails.list.columns.emailType',
-                isSortable: false,
-                cell:(element: EmailMember) => this.emailTypeMap.get(element.email_type)
-            },
-            {
-                columnName: 'full_name',
-                displayName: 'emails.list.columns.fullName',
-                isSortable: true,
-                cell:(element: EmailMember) => this.getFullName(element.full_name)
-            }
-        ];
-    }
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(deleteResult => {
+        if(deleteResult.action == EditAction.Delete) {
+          return this.apiSvc.delete(deleteResult.context.id).pipe(
+            map(() => deleteResult)
+          );
+        } else {
+          return of(deleteResult)
+        }
+      })
+    ).subscribe({
+      next: email => {
+        if(email.action == EditAction.Delete) {
+          this.deleteItem(event.idx);
+        }
+      },
+      error: err => this.errors.set(err)
+    });
+  }
 
 }

@@ -47,6 +47,11 @@
         "fullName": "Member",
         "postalCode": "Postal code",
         "state": "State"
+      },
+      "dialog": {
+        "create": "Create address",
+        "delete": "Delete address?",
+        "update": "Update address"
       }
     },
     "type": {
@@ -92,6 +97,11 @@
         "email": "Email",
         "emailType": "Type",
         "fullName": "Member"
+      },
+      "dialog": {
+        "create": "Create email",
+        "delete": "Delete email?",
+        "update": "Update email"
       }
     },
     "type": {
@@ -226,7 +236,18 @@
         "joinedDate": "Joined date",
         "lastName": "Last name",
         "memberNumber": "Number"
+      },
+      "dialog": {
+        "create": "Add new member"
       }
+    },
+    "view": {
+      "back": {
+        "toolTip": "Go back"
+      },
+      "birthDate": "Birth Date",
+      "joinedDate": "Joined Date",
+      "number": "Number"
     }
   },
   "okCancel": {
@@ -257,6 +278,11 @@
         "fullName": "Member",
         "phoneNumber": "Phone",
         "phoneType": "Type"
+      },
+      "dialog": {
+        "create": "Create phone",
+        "delete": "Delete phone?",
+        "update": "Update phone"
       }
     },
     "type": {
@@ -271,6 +297,11 @@
         "fullName": "Member",
         "renewalDate": "Renewal date",
         "renewalYear": "For year"
+      },
+      "dialog": {
+        "create": "Create renewal",
+        "delete": "Delete renewal?",
+        "update": "Update renewal"
       }
     }
   },

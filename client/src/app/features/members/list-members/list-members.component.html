@@ -1,15 +1,18 @@
 <div class="container">
-    @if(canAddMember()) {
-        <div class="action-container">
-            <button mat-mini-fab [matTooltip]="'members.list.addNewMember' | translate" (click)="addMemberHandler()">
-                <mat-icon>add</mat-icon>
-            </button>
-        </div>
-    }
-
-    <app-sortable-pageable-table
-        [dataSource]="datasource"
-        [columns]="columns"
-        [resultsLength]="resultsLength">
-    </app-sortable-pageable-table>
+  @if(hasWriteRole()) {
+    <div class="action-container">
+      <button mat-icon-button [matTooltip]="'members.list.addNewMember' | translate" (click)="onAddMemberClick()">
+          <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  }
+  <app-sortable-pageable-table
+    [dataSource]="datasource()"
+    [columns]="columns()"
+    [resultsLength]="resultsLength()"
+    [hasWriteRole]="hasWriteRole()"
+    (viewClicked)="onViewClick($event)"
+    showEditButton="true"
+    showViewButton="true">
+  </app-sortable-pageable-table>
 </div>

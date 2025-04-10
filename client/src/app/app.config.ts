@@ -1,22 +1,22 @@
 import {ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection} from '@angular/core';
-import {provideRouter} from '@angular/router';
+import {provideRouter, withComponentInputBinding} from '@angular/router';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {DOCUMENT} from '@angular/common';
+import {provideAnimations} from '@angular/platform-browser/animations';
+import {provideOAuthClient} from 'angular-oauth2-oidc';
 
-import {routes} from './app.routes';
-import {provideHttpClient, withInterceptors} from "@angular/common/http";
-import {loadingSpinnerInterceptor} from "./core/loading/loading-spinner.interceptor";
-import {provideAnimations} from "@angular/platform-browser/animations";
-import {provideOAuthClient} from "angular-oauth2-oidc";
-import {customOauthInterceptor} from "./core/auth/interceptors/custom-oauth.interceptor";
-import {authAppInitFactory} from "./core/auth/factories/auth-app-init-factory";
-import {AuthService} from "./core/auth/services/auth.service";
-import {DOCUMENT} from "@angular/common";
-import {provideNgxTranslate} from "./core/i18n/providers/ngx-translate-provider";
+import {routes} from '@app/app.routes';
+import {customOauthInterceptor} from '@app/core/auth/interceptors/custom-oauth.interceptor';
+import {authAppInitFactory} from '@app/core/auth/factories/auth-app-init-factory';
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {provideNgxTranslate} from '@app/core/i18n/providers/ngx-translate-provider';
+import {loadingSpinnerInterceptor} from '@app/core/loading/loading-spinner.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     provideZoneChangeDetection({eventCoalescing: true}),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(
         withInterceptors([
           loadingSpinnerInterceptor,

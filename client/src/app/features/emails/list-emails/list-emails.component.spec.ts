@@ -1,92 +1,185 @@
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+
+import {of} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
+import {asyncData} from '@app/shared/testing/test-helpers';
+
+import {EmailTest} from '@app/features/emails/testing/test-support';
+
 import {ListEmailsComponent} from './list-emails.component';
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {EmailService} from "../services/email.service";
-import {provideHttpClient} from "@angular/common/http";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {generateEmailPagedData} from "../test/email-test";
-import {asyncData} from "../../../shared/test-helpers/test-helpers";
-import {PageRequest} from "../../../shared/models/page-request";
-import {throwError} from "rxjs";
-import {TranslateModule} from "@ngx-translate/core";
-import SpyObj = jasmine.SpyObj;
+import {EmailMember, Email} from '@app/features/emails/models/email';
+import {EmailTableService} from '@app/features/emails/services/email-table.service';
+import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
+import {EmailService} from '@app/features/emails/services/email.service';
+import {EditAction, EditEvent, EditDialogInput, EditDialogResult} from '@app/shared/components/base-edit-dialog/models';
+import {EmailEditorComponent} from '@app/features/emails/email-editor/email-editor.component';
 
 describe('ListEmailsComponent', () => {
   let fixture: ComponentFixture<ListEmailsComponent>;
   let component: ListEmailsComponent;
-  let emailServiceMock: SpyObj<EmailService>;
+
+  let emailSvcMock: jasmine.SpyObj<EmailService>;
+  let tableSvcMock: jasmine.SpyObj<EmailTableService>
+  let authSvcMock: jasmine.SpyObj<AuthService>;
+  let dialogSvcMock: jasmine.SpyObj<EmailEditDialogService>;
+
+  const columnDefs = EmailTest.generateColumDefs();
+  const data =  EmailTest.generatePagedData(0, 5, 1);
 
   beforeEach(async () => {
-    emailServiceMock = jasmine.createSpyObj('EmailService', ['getEmails']);
+    emailSvcMock = jasmine.createSpyObj('EmailService',
+      ['getPagedData', 'create', 'update', 'delete']);
+
+    dialogSvcMock = jasmine.createSpyObj('EditEmailDialogService',
+      ['openDialog', 'generateDialogInput']);
+
+    tableSvcMock = jasmine.createSpyObj('EmailTableService', ['getColumnDefs']);
+    authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
+
     await TestBed.configureTestingModule({
       imports: [
         ListEmailsComponent,
         TranslateModule.forRoot({})
       ],
       providers: [
-          {provide: EmailService, useValue: {}},
-          provideHttpClient(),
-          provideHttpClientTesting(),
-          provideNoopAnimations()
+        {provide: EmailService, useValue: {}},
+        {provide: AuthService, useValue: {}},
+        {provide: EmailTableService, useValue: {}},
+        {provide: EmailEditDialogService, useValue: {}},
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideNoopAnimations()
       ],
-    }).overrideComponent(ListEmailsComponent,
-      { set: {providers: [{provide: EmailService, useValue: emailServiceMock}]}}
-    ).compileComponents();
+    }).overrideProvider(EmailService, {useValue: emailSvcMock})
+      .overrideProvider(AuthService, {useValue: authSvcMock})
+      .overrideProvider(EmailTableService, {useValue: tableSvcMock})
+      .overrideProvider(EmailEditDialogService, {useValue: dialogSvcMock})
+      .compileComponents();
+
     fixture = TestBed.createComponent(ListEmailsComponent);
     component = fixture.componentInstance;
+
+    emailSvcMock.getPagedData.and.returnValue(asyncData(data));
+    tableSvcMock.getColumnDefs.and.returnValue(columnDefs);
   });
 
-  describe('test component', () => {
-      it('should create', () => {
-          expect(component).toBeTruthy();
-      });
-
-      it('should create column list', () => {
-         fixture.detectChanges();
-         expect(component.columns.length).toBe(3);
-      });
+  it('should create', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component).toBeTruthy();
   });
 
-  describe('test service interactions on init', () => {
+  describe('test dialog interactions', () => {
+    let editEvent: EditEvent<EmailMember>;
+    let dialogInput: EditDialogInput<Email, EmailEditorComponent>;
+    let dialogResult: EditDialogResult<Email>;
 
-     it('should call EmailService.getEmails on init', async () => {
-         const data = generateEmailPagedData(0, 5, 100);
-         emailServiceMock.getEmails.and.returnValue(asyncData(data));
+    beforeEach(() => {
+      editEvent = {
+        idx: 0,
+        data: EmailTest.generateEmailMember(0)
+      }
+      dialogInput = EmailTest.generateDialogInput(editEvent.data, EditAction.Edit);
+      dialogResult = {context: editEvent.data, action: EditAction.Cancel};
+    });
 
-         fixture.detectChanges();
-         await fixture.whenStable();
+    describe('onDelete', () => {
+      it('onDeleteClick should call EmailService.generateEmailDialogInput', fakeAsync(() => {
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy =
+          dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
 
-         const request = PageRequest.of(0, 5);
-         expect(emailServiceMock.getEmails).toHaveBeenCalledOnceWith(request)
-     });
+        component.onDeleteClick(editEvent);
+        tick();
 
-      it('length should be set on init', async () => {
-         const data = generateEmailPagedData(0, 5, 100);
-         emailServiceMock.getEmails.and.returnValue(asyncData(data));
+        expect(spy).toHaveBeenCalled();
+      }));
 
-         fixture.detectChanges();
-         await fixture.whenStable();
+      it('onDeleteClick should call EmailEditDialogService.openDialog', fakeAsync(() => {
+        dialogResult.action = EditAction.Cancel;
+        const spy =
+          dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
 
-         expect(component.resultsLength).toEqual(data.page.totalElements);
-      });
+        component.onDeleteClick(editEvent);
+        tick();
 
-      it('datasource.data should be set on init', async () => {
-         const data = generateEmailPagedData(0, 5, 2);
-         emailServiceMock.getEmails.and.returnValue(asyncData(data));
+        expect(spy).toHaveBeenCalled();
+      }));
 
-         fixture.detectChanges();
-         await fixture.whenStable();
+      it('onDeleteClick should NOT call EmailService.delete when open dialog returns cancel', fakeAsync(() => {
+        dialogResult.action = EditAction.Cancel;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy = emailSvcMock.delete.and.stub();
 
-         expect(component.datasource.data).toBe(data._content);
-      });
+        component.onDeleteClick(editEvent);
+        tick();
 
-      it('datasource.data should be empty when an error occurs while calling getEmails', async () => {
-          emailServiceMock.getEmails.and.returnValue(throwError(() => 'error'));
+        expect(spy).toHaveBeenCalledTimes(0);
+      }));
 
-          fixture.detectChanges();
-          await fixture.whenStable();
+      it('onDeleteClick should call EmailService.delete when open dialog returns delete', fakeAsync(() => {
+        dialogResult.action = EditAction.Delete;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy = emailSvcMock.delete.and.returnValue(of(void 0));
 
-          expect(component.datasource.data).toEqual([]);
-      });
+        component.onDeleteClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+    });
+
+    describe('onEditClick', () => {
+      it('onEditClick should call EmailDialogService..generateDialogInput', fakeAsync(() => {
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy =
+          dialogSvcMock.generateDialogInput.and.returnValue(dialogInput);
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
+      it('onEditClick should call EmailEditDialogService.openDialog', fakeAsync(() => {
+        const spy =
+          dialogSvcMock.openDialog.and.returnValue(of({context: EmailTest.generateEmail(), action: EditAction.Cancel}));
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
+      it('onEditClick should NOT call EmailService.delete when open dialog returns cancel', fakeAsync(() => {
+
+          dialogResult.action = EditAction.Cancel;
+          dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+          const spy = emailSvcMock.delete.and.stub();
+
+          component.onEditClick(editEvent);
+          tick();
+
+          expect(spy).toHaveBeenCalledTimes(0);
+        }));
+
+      it('onEditClick should call EmailService.updateEMail when open dialog returns edit', fakeAsync(() => {
+
+        dialogResult.action = EditAction.Edit;
+        dialogSvcMock.openDialog.and.returnValue(of(dialogResult));
+        const spy =
+          emailSvcMock.update.and.returnValue(of(dialogResult.context));
+
+        component.onEditClick(editEvent);
+        tick();
+
+        expect(spy).toHaveBeenCalled();
+      }));
+    });
   });
 });

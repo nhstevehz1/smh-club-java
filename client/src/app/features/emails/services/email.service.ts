@@ -1,26 +1,22 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {PageRequest} from "../../../shared/models/page-request";
-import {Observable} from "rxjs";
-import {EmailCreate, EmailMember, Email} from "../models/email";
-import {PagedData} from "../../../shared/models/paged-data";
-import {map} from "rxjs/operators";
-import {EmailType} from "../models/email-type";
-import {NonNullableFormBuilder, Validators} from "@angular/forms";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
+import {HttpClient} from '@angular/common/http';
+
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {PagedData, PageRequest} from '@app/shared/services/api-service/models';
+import {Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails/models/email';
+import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 
 @Injectable()
-export class EmailService {
-  private  BASE_API = '/api/v1/emails';
+export class EmailService extends BaseApiService<EmailMember, EmailCreate, Email> {
 
-  constructor(private http: HttpClient,
-              private fb: NonNullableFormBuilder) {}
+  constructor(http: HttpClient) {
+    super('/api/v1/emails', http);
+  }
 
-  public getEmails(pageRequest: PageRequest): Observable<PagedData<EmailMember>> {
-    const query = pageRequest.createQuery();
-    const uri = query == null ? this.BASE_API : this.BASE_API + query;
-
-    return this.http.get<PagedData<EmailMember>>(uri).pipe(
+  override getPagedData(pageRequest: PageRequest): Observable<PagedData<EmailMember>> {
+    return super.getPagedData(pageRequest).pipe(
       map(pd => {
         if (pd && pd._content) {
           pd._content.forEach(e => e.email_type = e.email_type as unknown as EmailType);
@@ -30,19 +26,25 @@ export class EmailService {
     );
   }
 
-  generateCreateForm(): FormModelGroup<EmailCreate> {
-      return this.fb.group({
-          email: ['', [Validators.required, Validators.email]],
-          email_type: [EmailType.Home, [Validators.required]]
-      });
+  override create(create: EmailCreate): Observable<Email> {
+    return super.create(create).pipe(
+      map(data => {
+        data.email_type = data.email_type as unknown as EmailType;
+        return data;
+      })
+    )
   }
 
-  generateUpdateForm(update: Email): FormModelGroup<Email> {
-      return this.fb.group({
-          id: [update.id],
-          member_id: [update.member_id],
-          email: [update.email, [Validators.required, Validators.email]],
-          email_type: [update.email_type, [Validators.required]]
-      });
+  override update(update: Email): Observable<Email> {
+    return super.update(update).pipe(
+      map(data => {
+        data.email_type = data.email_type as unknown as EmailType;
+        return data;
+      })
+    )
+  }
+
+  override delete(id: number): Observable<void> {
+    return super.delete(id);
   }
 }

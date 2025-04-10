@@ -1,8 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {TitlePageComponent} from './title-page.component';
-import {TranslateModule} from "@ngx-translate/core";
-import {By} from "@angular/platform-browser";
 
 describe('TitlePageComponent', () => {
   let component: TitlePageComponent;

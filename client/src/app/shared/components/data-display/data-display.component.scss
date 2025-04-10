@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.label {
+  font-family: var(--mat-sys-label-medium-font), serif;
+  font-size: var(--mat-sys-label-medium-size);
+  line-height: var(--mat-sys-label-medium-line-height);
+}
+
+.value {
+  font-family: var(--mat-sys-label-large-font), serif;
+  font-size: var(--mat-sys-label-large-size);
+  line-height: var(--mat-sys-label-large-line-height);
+  font-weight: bold;
+}

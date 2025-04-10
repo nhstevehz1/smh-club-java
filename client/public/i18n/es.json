@@ -47,6 +47,11 @@
         "fullName": "Miembro",
         "postalCode": "Código postal",
         "state": "Estado"
+      },
+      "dialog": {
+        "create": "Crear dirección",
+        "delete": "¿Borrar dirección?",
+        "update": "Actualizar dirección"
       }
     },
     "type": {
@@ -92,6 +97,11 @@
         "email": "Correo electrónico",
         "emailType": "Tipo",
         "fullName": "Miembro"
+      },
+      "dialog": {
+        "create": "Crear correo electrónico",
+        "delete": "¿Borrar el correo electrónico?",
+        "update": "Actualizar correo electrónico"
       }
     },
     "type": {
@@ -226,7 +236,18 @@
         "joinedDate": "Fecha de incorporación",
         "lastName": "Apellido",
         "memberNumber": "Número"
+      },
+      "dialog": {
+        "create": "Añadir nuevo miembro"
       }
+    },
+    "view": {
+      "back": {
+        "toolTip": "Volver atrás"
+      },
+      "birthDate": "Fecha de nacimiento",
+      "joinedDate": "Fecha de incorporación",
+      "number": "Número"
     }
   },
   "okCancel": {
@@ -257,6 +278,11 @@
         "fullName": "Miembro",
         "phoneNumber": "Teléfono",
         "phoneType": "Tipo"
+      },
+      "dialog": {
+        "create": "Crear teléfono",
+        "delete": "¿Borrar teléfono?",
+        "update": "Actualizar teléfono"
       }
     },
     "type": {
@@ -271,6 +297,11 @@
         "fullName": "Miembro",
         "renewalDate": "Fecha de renovación",
         "renewalYear": "Por año"
+      },
+      "dialog": {
+        "create": "Crear renovación",
+        "delete": "¿Borrar la renovación?",
+        "update": "Renovación de la actualización"
       }
     }
   },

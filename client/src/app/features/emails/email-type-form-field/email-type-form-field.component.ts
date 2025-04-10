@@ -1,12 +1,13 @@
 import {Component, input, signal} from '@angular/core';
-import {FormControl} from "@angular/forms";
-import {EmailType} from "../models/email-type";
+import {FormControl} from '@angular/forms';
+
+import {MatFormFieldAppearance} from '@angular/material/form-field';
+
+import {EmailType} from '@app/features/emails/models';
 import {
   SelectFormFieldComponent
-} from "../../../shared/components/editor-form-fields/select-form-field/select-form-field.component";
-import {MatFormFieldAppearance} from "@angular/material/form-field";
-import {FormControlError} from "../../../shared/components/editor-form-fields/models/form-control-error";
-import {SelectOption} from '../../../shared/components/editor-form-fields/models/select-option';
+} from '@app/shared/components/editor-form-fields/select-form-field/select-form-field.component';
+import {FormControlError, SelectOption} from '@app/shared/components/editor-form-fields/models';
 
 @Component({
   selector: 'app-email-type-form-field',

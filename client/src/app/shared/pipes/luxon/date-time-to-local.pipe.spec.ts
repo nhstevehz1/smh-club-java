@@ -1,5 +1,5 @@
-import {DateTimeToLocalPipe} from './date-time-to-local.pipe';
-import {DateTime} from "luxon";
+import {DateTimeToLocalPipe} from '@app/shared/pipes';
+import {DateTime} from 'luxon';
 
 describe('DateTimeToLocalPipe', () => {
   const pipe = new DateTimeToLocalPipe();

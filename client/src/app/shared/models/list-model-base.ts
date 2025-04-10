@@ -1,4 +1,4 @@
-import {FullName} from "./full-name";
+import {FullName} from '@app/shared/models/full-name';
 
 export interface ListModelBase {
     member_number: number;

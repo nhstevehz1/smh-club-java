@@ -1,26 +1,21 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {PageRequest} from "../../../shared/models/page-request";
-import {PhoneCreate, PhoneMember, Phone} from "../models/phone";
-import {PagedData} from "../../../shared/models/paged-data";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {PhoneType} from "../models/phone-type";
-import {NonNullableFormBuilder, Validators} from "@angular/forms";
-import {FormModelGroup} from "../../../shared/components/base-editor/form-model-group";
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {PagedData, PageRequest} from '@app/shared/services/api-service/models';
+import {Phone, PhoneCreate, PhoneMember, PhoneType} from '@app/features/phones/models/phone';
+import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 
 @Injectable()
-export class PhoneService {
-  private  BASE_API = '/api/v1/phones';
+export class PhoneService extends BaseApiService<PhoneMember, PhoneCreate, Phone> {
 
-  constructor(private http: HttpClient,
-              private fb: NonNullableFormBuilder) {}
+  constructor(http: HttpClient) {
+    super('/api/v1/phones', http);
+  }
 
-  public getPhones(pageRequest: PageRequest): Observable<PagedData<PhoneMember>> {
-    const query = pageRequest.createQuery();
-    const uri = query == null ? this.BASE_API : this.BASE_API + query;
-
-    return this.http.get<PagedData<PhoneMember>>(uri).pipe(
+  override getPagedData(pageRequest: PageRequest): Observable<PagedData<PhoneMember>> {
+    return super.getPagedData(pageRequest).pipe(
         map(pd => {
           if (pd && pd._content) {
               pd._content.forEach(p => p.phone_type as unknown as PhoneType);
@@ -30,21 +25,25 @@ export class PhoneService {
     );
   }
 
-  generateCreateForm(): FormModelGroup<PhoneCreate> {
-      return this.fb.group({
-          country_code: ['1', [Validators.required]],
-          phone_number: ['', [Validators.required]],
-          phone_type: [PhoneType.Home, [Validators.required]],
-      });
+  override create(create: PhoneCreate): Observable<Phone> {
+    return super.create(create).pipe(
+      map(data => {
+        data.phone_type = data.phone_type as unknown as PhoneType
+        return data;
+      })
+    )
   }
 
-    generateUpdateForm(update: Phone): FormModelGroup<Phone> {
-        return this.fb.group({
-            id: [update.id],
-            member_id: [update.member_id],
-            country_code: [update.country_code, [Validators.required]],
-            phone_number: [update.phone_number, [Validators.required]],
-            phone_type: [update.phone_type, [Validators.required]],
-        });
-    }
+  override update(update: Phone): Observable<Phone> {
+    return super.update(update).pipe(
+      map(data => {
+        data.phone_type = data.phone_type as unknown as PhoneType
+        return data;
+      })
+    )
+  }
+
+  override delete(id: number): Observable<void> {
+    return super.delete(id);
+  }
 }

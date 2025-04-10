@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="content">
+    @if(member()) {
+      <app-data-display [data]="fullName()"/>
+      <app-data-display [data]="member()!.member_number" label="members.view.number" />
+      <div class="data-row">
+         <app-data-display
+          [data]="birthDate() | dateTimeToLocal | dateTimeToFormat: DateTime.DATE_SHORT: {locale: lang()}"
+          label="members.view.birthDate" />
+        <app-data-display
+          [data]="joinedDate() | dateTimeToLocal | dateTimeToFormat: DateTime.DATE_SHORT : {locale: lang()}"
+          label="members.view.joinedDate" />
+      </div>
+      <mat-divider />
+      <div class="flex-row center">
+        <button mat-icon-button
+                [matTooltip]="'members.view.back.toolTip' | translate"
+                (click)="onBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+</div>

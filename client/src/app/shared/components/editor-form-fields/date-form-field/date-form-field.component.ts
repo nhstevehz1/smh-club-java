@@ -1,11 +1,14 @@
 import {Component} from '@angular/core';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {ReactiveFormsModule} from "@angular/forms";
-import {TranslatePipe} from "@ngx-translate/core";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {DateTime} from "luxon";
-import {BaseInputComponent} from "../base-input-component";
-import {MatInputModule} from "@angular/material/input";
+import {ReactiveFormsModule} from '@angular/forms';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+
+import {TranslatePipe} from '@ngx-translate/core';
+import {DateTime} from 'luxon';
+
+import {BaseInputComponent} from '@app/shared/components/editor-form-fields/base-input-component';
 
 @Component({
   selector: 'app-date-form-field',

@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {TranslateModule} from '@ngx-translate/core';
 
 import {LanguageSwitcherComponent} from './language-switcher.component';
-import {TranslateModule} from "@ngx-translate/core";
 
 describe('LanguageSwitcherComponent', () => {
   let component: LanguageSwitcherComponent;

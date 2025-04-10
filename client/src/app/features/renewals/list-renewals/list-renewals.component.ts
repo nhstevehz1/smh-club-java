@@ -1,95 +1,94 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
+import {mergeMap, map} from 'rxjs/operators';
+import {of} from 'rxjs';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
 import {
   SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {RenewalService} from "../services/renewal.service";
-import {MatTableDataSource} from "@angular/material/table";
-import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {RenewalMember} from "../models/renewal";
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
+import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/models';
+
+import {RenewalCreate, RenewalMember, Renewal} from '@app/features/renewals/models/renewal';
+import {RenewalService} from '@app/features/renewals/services/renewal.service';
+import {RenewalTableService} from '@app/features/renewals/services/renewal-table.service';
+import {RenewalEditDialogService} from '@app/features/renewals/services/renewal-edit-dialog.service';
+import {RenewalEditorComponent} from '@app/features/renewals/renewal-editor/renewal-editor.component';
 
 @Component({
   selector: 'app-list-renewals',
   imports: [SortablePageableTableComponent],
-  providers: [RenewalService],
+  providers: [RenewalService, AuthService],
   templateUrl: './list-renewals.component.html',
   styleUrl: './list-renewals.component.scss'
 })
 export class ListRenewalsComponent
-    extends BaseTableComponent<RenewalMember> implements OnInit, AfterViewInit {
+  extends BaseTableComponent<RenewalCreate, Renewal, RenewalMember, RenewalEditorComponent>  {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<RenewalMember>;
 
-  resultsLength = 0;
-  datasource = new MatTableDataSource<RenewalMember>();
-  columns: ColumnDef<RenewalMember>[] = [];
-
-  constructor(private svc: RenewalService) {
-    super();
+  constructor(auth: AuthService,
+              svc: RenewalService,
+              tableSvc: RenewalTableService,
+              dialogSvc: RenewalEditDialogService) {
+    super(auth, svc, tableSvc, dialogSvc);
   }
 
-  ngOnInit(): void {
-    this.columns = this.getColumns();
-  }
 
-  ngAfterViewInit(): void {
-    merge(this._table.sort.sortChange, this._table.paginator.page)
-        .pipe(
-            startWith({}),
-            switchMap(() => {
-              // assemble the dynamic page request
-              const pr = this.getPageRequest(
-                  this._table.paginator.pageIndex, this._table.paginator.pageSize,
-                  this._table.sort.active, this._table.sort.direction);
+  onEditClick(event: EditEvent<RenewalMember>): void {
+    const title = 'renewals.list.dialog.update';
+    const context = event.data as Renewal;
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Edit)
 
-              // pipe any errors to an Observable of null
-              return this.svc.getRenewals(pr)
-                  .pipe(catchError(err => {
-                    console.log(err);
-                    return observableOf(null);
-                  }));
-            }),
-            map(data => {
-              // if the data returned s null due to an error.  Map the null data to an empty array
-              if (data === null) {
-                return [];
-              }
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(renewalResult => {
+        if(renewalResult.action == EditAction.Edit) {
+          return this.apiSvc.update(renewalResult.context);
+        } else {
+          return of(null);
+        }
+      })
+    ).subscribe({
+      next: renewalResult => {
+        if(renewalResult) {
+          const update: RenewalMember = {
+            id: renewalResult.id,
+            member_id: renewalResult.member_id,
+            renewal_year: renewalResult.renewal_year,
+            renewal_date: renewalResult.renewal_date,
+            full_name: event.data.full_name
+          }
+          this.updateItem(update);
+        }
 
-              // set the results length in case it has changed.
-              this.resultsLength = data.page.totalElements;
-
-              // map the content array only
-              return data._content;
-            })
-        ).subscribe({
-          // set the data source with the new page
-          next: data => this.datasource.data = data!
-        });
-  }
-
-  protected getColumns(): ColumnDef<RenewalMember>[] {
-    return [
-      {
-        columnName: 'renewal_date',
-        displayName: 'renewals.list.columns.renewalDate',
-        isSortable: true,
-        cell: (element: RenewalMember) => `${element.renewal_date}`,
       },
-      {
-        columnName: 'renewal_year',
-        displayName: 'renewals.list.columns.renewalYear',
-        isSortable: true,
-        cell: (element: RenewalMember) => `${element.renewal_year}`
+      error: err => this.errors.set(err)
+    });
+  }
+
+  onDeleteClick(event: EditEvent<RenewalMember>): void {
+    const title = 'renewals.list.dialog.delete';
+    const context = event.data as Renewal
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Delete)
+
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(renewalResult => {
+        if(renewalResult.action == EditAction.Delete) {
+          return this.apiSvc.delete(renewalResult.context.id).pipe(
+            map(() => renewalResult)
+          );
+        } else {
+          return of(renewalResult);
+        }
+      })
+    ).subscribe({
+      next: renewalResult => {
+        if (renewalResult.action == EditAction.Delete) {
+          this.deleteItem(event.idx);
+        }
       },
-      {
-        columnName: 'full_name',
-        displayName: 'renewals.list.columns.fullName',
-        isSortable: true,
-        cell: (element: RenewalMember) => this.getFullName(element.full_name)
-      }
-    ];
+      error: err => this.errors.set(err)
+    });
   }
 }

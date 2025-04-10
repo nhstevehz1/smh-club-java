@@ -1,19 +1,19 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SelectFormFieldComponent} from './select-form-field.component';
-import {TestStringEnum} from "./test-support/test-support";
-import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
-import {SelectOption} from "../models/select-option";
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {TranslateModule, TranslatePipe} from "@ngx-translate/core";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatSelectModule} from "@angular/material/select";
-import {MatFormFieldHarness} from "@angular/material/form-field/testing";
-import {MatSelectHarness} from "@angular/material/select/testing";
-import {By} from "@angular/platform-browser";
-import {FormControlError} from "../models/form-control-error";
+import {TestStringEnum} from '@app/shared/components/editor-form-fields/select-form-field/testing/test-support';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {SelectOption} from '../models/select-option';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldHarness} from '@angular/material/form-field/testing';
+import {MatSelectHarness} from '@angular/material/select/testing';
+import {By} from '@angular/platform-browser';
+import {FormControlError} from '../models/form-control-error';
 
 describe('SelectFormFieldComponent', () => {
   let component: SelectFormFieldComponent<TestStringEnum>;

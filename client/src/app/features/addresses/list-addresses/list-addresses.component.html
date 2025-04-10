@@ -1,7 +1,12 @@
 <div class="container">
-    <app-sortable-pageable-table
-            [dataSource]="datasource"
-            [columns]="columns"
-            [resultsLength]="resultsLength">
-    </app-sortable-pageable-table>
+  <app-sortable-pageable-table
+    [dataSource]="datasource()"
+    [columns]="columns()"
+    [resultsLength]="resultsLength()"
+    [hasWriteRole]="hasWriteRole()"
+    (editClicked)="onEditClick($event)"
+    (deleteClicked)="onDeleteClick($event)"
+    showEditButton="true"
+    showDeleteButton="true">
+  </app-sortable-pageable-table>
 </div>

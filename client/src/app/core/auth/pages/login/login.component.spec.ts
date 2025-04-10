@@ -1,7 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {TranslateModule} from '@ngx-translate/core';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
 import {LoginComponent} from './login.component';
-import {AuthService} from "../../services/auth.service";
-import {TranslateModule} from "@ngx-translate/core";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

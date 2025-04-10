@@ -1,11 +1,14 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {By} from '@angular/platform-browser';
+
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {MatButtonHarness} from '@angular/material/button/testing';
+
+import {TranslateModule} from '@ngx-translate/core';
+
 import {OkCancelComponent} from './ok-cancel.component';
-import {HarnessLoader} from "@angular/cdk/testing";
-import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {provideNoopAnimations} from "@angular/platform-browser/animations";
-import {By} from "@angular/platform-browser";
-import {MatButtonHarness} from "@angular/material/button/testing";
-import {TranslateModule} from "@ngx-translate/core";
 
 describe('OkCancelComponent', () => {
   let component: OkCancelComponent;
@@ -26,7 +29,7 @@ describe('OkCancelComponent', () => {
     fixture = TestBed.createComponent(OkCancelComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    harness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'fab'}));
+    harness = await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon'}));
   });
 
   it('should create', () => {
@@ -50,7 +53,7 @@ describe('OkCancelComponent', () => {
   });
 
   it('should call onButtonClicked', async () => {
-    const spy = spyOn(component, "onButtonClicked").and.stub();
+    const spy = spyOn(component, 'onButtonClicked').and.stub();
     await harness?.click();
     expect(spy).toHaveBeenCalled();
   })

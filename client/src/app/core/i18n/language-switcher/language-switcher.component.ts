@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {MatSelectModule} from "@angular/material/select";
-import {TranslateService} from "@ngx-translate/core";
+import {MatSelectModule} from '@angular/material/select';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-language-switcher',

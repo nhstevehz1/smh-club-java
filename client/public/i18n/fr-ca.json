@@ -47,6 +47,11 @@
         "fullName": "Membre",
         "postalCode": "Code Postal",
         "state": "État"
+      },
+      "dialog": {
+        "create": "Créer une adresse",
+        "delete": "Supprimer l'adresse ?",
+        "update": "Mise à jour de l'adresse"
       }
     },
     "type": {
@@ -92,6 +97,11 @@
         "email": "Courriel",
         "emailType": "Type",
         "fullName": "Membre"
+      },
+      "dialog": {
+        "create": "Créer un courriel",
+        "delete": "Supprimer le courrier électronique ?",
+        "update": "Mise à jour du courrier électronique"
       }
     },
     "type": {
@@ -226,7 +236,18 @@
         "joinedDate": "Date d'adhésion",
         "lastName": "Nom de famille",
         "memberNumber": "Nombre"
+      },
+      "dialog": {
+        "create": "Ajouter un nouveau membre"
       }
+    },
+    "view": {
+      "back": {
+        "toolTip": "Retourner"
+      },
+      "birthDate": "Date de naissance",
+      "joinedDate": "Date d'adhésion",
+      "number": "Nombre"
     }
   },
   "okCancel": {
@@ -257,6 +278,11 @@
         "fullName": "Membre",
         "phoneNumber": "Téléphone",
         "phoneType": "Type"
+      },
+      "dialog": {
+        "create": "Créer un téléphone",
+        "delete": "Supprimer le téléphone ?",
+        "update": "Mise à jour du téléphone"
       }
     },
     "type": {
@@ -271,6 +297,11 @@
         "fullName": "Membre",
         "renewalDate": "Date de renouvellement",
         "renewalYear": "Pour l'année"
+      },
+      "dialog": {
+        "create": "Créer un renouveau",
+        "delete": "Supprimer le renouvellement ?",
+        "update": "Renouvellement de la mise à jour"
       }
     }
   },

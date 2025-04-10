@@ -1,127 +1,97 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
+import {mergeMap, map} from 'rxjs/operators';
+import {of} from 'rxjs';
+
+import {AuthService} from '@app/core/auth/services/auth.service';
 import {
   SortablePageableTableComponent
-} from "../../../shared/components/sortable-pageable-table/sortable-pageable-table.component";
-import {AddressService} from "../services/address.service";
-import {MatTableDataSource} from "@angular/material/table";
-import {ColumnDef} from "../../../shared/components/sortable-pageable-table/models/column-def";
-import {AddressMember} from "../models/address";
-import {BaseTableComponent} from "../../../shared/components/base-table-component/base-table-component";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {AddressType} from "../models/address-type";
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
+import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/models';
+
+import {AddressCreate, AddressMember, Address} from '@app/features/addresses/models/address';
+import {AddressService} from '@app/features/addresses/services/address.service';
+import {AddressTableService} from '@app/features/addresses/services/address-table.service';
+import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
+import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
+
 
 @Component({
   selector: 'app-list-addresses',
   imports: [SortablePageableTableComponent],
-  providers: [AddressService],
+  providers: [AddressService, AddressTableService, AddressEditDialogService],
   templateUrl: './list-addresses.component.html',
   styleUrl: './list-addresses.component.scss',
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class ListAddressesComponent extends BaseTableComponent<AddressMember> implements OnInit, AfterViewInit {
-  @ViewChild(SortablePageableTableComponent, {static: true})
-  private _table!: SortablePageableTableComponent<ColumnDef<AddressMember>>;
+export class ListAddressesComponent
+  extends BaseTableComponent<AddressCreate, Address, AddressMember, AddressEditorComponent> {
 
-  resultsLength = 0;
-  datasource = new MatTableDataSource<AddressMember>();
-  columns: ColumnDef<AddressMember>[] = [];
-
-  private readonly addressTypeMap: Map<AddressType, string> = new Map<AddressType, string>([
-      [AddressType.Home, 'addresses.type.home'],
-      [AddressType.Work, 'addresses.type.work'],
-      [AddressType.Other, 'addresses.type.other']
-  ]);
-
-  constructor(private svc: AddressService) {
-    super();
+  constructor(auth: AuthService,
+              svc: AddressService,
+              tableSvc: AddressTableService,
+              dialogSvc: AddressEditDialogService,
+              ) {
+    super(auth, svc, tableSvc, dialogSvc );
   }
 
-  ngOnInit(): void {
-    this.columns = this.getColumns();
+  onEditClick(event: EditEvent<AddressMember>): void {
+    const title = 'addresses.list.dialog.update';
+    const context = event.data as Address
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Edit);
+
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(addressResult => {
+        if(addressResult.action == EditAction.Edit) {
+          return this.apiSvc.update(addressResult.context);
+        } else {
+          return of(null);
+        }
+      })
+    ).subscribe({
+      next: addressResult => {
+        if(addressResult) {
+          const update: AddressMember = {
+            id: addressResult.id,
+            member_id: addressResult.member_id,
+            address1: addressResult.address1,
+            address2: addressResult.address2,
+            city: addressResult.city,
+            state: addressResult.state,
+            postal_code: addressResult.postal_code,
+            address_type: addressResult.address_type,
+            full_name: event.data.full_name
+          }
+          this.updateItem(update)
+        }
+      },
+      error: err => this.errors.set(err)
+    })
   }
 
-  ngAfterViewInit(): void {
-    merge(this._table.sort.sortChange, this._table.paginator.page)
-        .pipe(
-            startWith({}),
-            switchMap(() => {
-              // assemble the dynamic page request
-              const pr = this.getPageRequest(
-                  this._table.paginator.pageIndex, this._table.paginator.pageSize,
-                  this._table.sort.active, this._table.sort.direction);
+  onDeleteClick(event: EditEvent<AddressMember>): void {
+    const title = 'addresses.list.dialog.delete';
+    const context = event.data as Address
+    const dialogInput = this.dialogSvc.generateDialogInput(title, context, EditAction.Delete);
 
-              // pipe any errors to an Observable of null
-              return this.svc.getAddresses(pr)
-                  .pipe(catchError(err => {
-                    console.log(err);
-                    return observableOf(null);
-                  }));
-            }),
-            map(data => {
-              // if the data returned s null due to an error.  Map the null data to an empty array
-              if (data === null) {
-                return [];
-              }
-
-              // set the results length in case it has changed.
-              this.resultsLength = data.page.totalElements;
-
-              // map the content array only
-              return data._content;
-            })
-        ).subscribe({
-          // set the data source with the new page
-          next: data => this.datasource.data = data!
-        });
-  }
-
-  protected getColumns(): ColumnDef<AddressMember>[] {
-    return [
-
-      {
-        columnName: 'address1',
-        displayName: 'addresses.list.columns.address',
-        isSortable: true,
-        cell: (element: AddressMember) => this.getStreet(element)
-      },
-      {
-        columnName: 'city',
-        displayName: 'addresses.list.columns.city',
-        isSortable: true,
-        cell: (element: AddressMember) => `${element.city}`
-      },
-      {
-        columnName: 'state',
-        displayName: 'addresses.list.columns.state',
-        isSortable: true,
-        cell: (element: AddressMember) => `${element.state}`
-      },
-      {
-        columnName: 'zip',
-        displayName: 'addresses.list.columns.postalCode',
-        isSortable: true,
-        cell: (element: AddressMember) => `${element.postal_code}`
-      },
-      {
-        columnName: 'address_type',
-        displayName: 'addresses.list.columns.addressType',
-        isSortable: false,
-        cell: (element: AddressMember) => this.addressTypeMap.get(element.address_type)//`${element.address_type}`
-      },
-      {
-        columnName: 'full_name',
-        displayName: 'addresses.list.columns.fullName',
-        isSortable: true,
-        cell: (element: AddressMember) =>  this.getFullName(element.full_name) //`${element.full_name.last_first}`
-      }
-    ];
-  }
-
-  private getStreet(address: AddressMember): string {
-    const street1 = address.address1;
-    const street2 = address.address2 || ''
-    return street2.length > 0 ? `${street1}, ${street2}` : street1;
+    this.openEditDialog(dialogInput).pipe(
+      mergeMap(addressResult => {
+        if(addressResult.action == EditAction.Delete) {
+          return this.apiSvc.delete(addressResult.context.id).pipe(
+            map(() => addressResult)
+          );
+        } else {
+          return of(addressResult)
+        }
+      })
+    ).subscribe({
+      next: addressResult=> {
+        if(addressResult.action == EditAction.Delete) {
+          this.deleteItem(event.idx);
+        }
+    },
+      error: err => this.errors.set(err)
+    });
   }
 
 
