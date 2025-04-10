@@ -12,5 +12,5 @@ import {DateTime} from 'luxon';
 })
 export class DataDisplayComponent {
   label = input<string>();
-  data = input.required<string | number | DateTime>();
+  data = input.required<string | number | DateTime | null>();
 }
