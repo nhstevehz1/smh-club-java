@@ -62,7 +62,7 @@ Realm Information:
 The master realm admin credentials are *admin/admin*. 
 
 ## Next steps
-- Add update, and delete functionality in the Angular front end app.
+- Enhance View Member component to include lists of addresses, phones, emails, and renewals.
 - Add e2e testing to the Angular Front end app.
 - Create custom themes for the Angular front end app.
 
