@@ -8,12 +8,12 @@ export const memberRoutes: Routes = [{
       .then(mod => mod.ListMembersComponent),
     canActivate: [readGuard]
   }, {
-    path: 'p/members/add',
+    path: 'add',
     loadComponent: () => import('./add-member/add-member.component')
         .then(mod => mod.AddMemberComponent),
     canActivate: [writeGuard]
   }, {
-    path: 'p/members/view:id',
+    path: 'view/:id',
     loadComponent: () => import('./view-member/view-member.component')
       .then(mod => mod.ViewMemberComponent),
     canActivate: [readGuard]
