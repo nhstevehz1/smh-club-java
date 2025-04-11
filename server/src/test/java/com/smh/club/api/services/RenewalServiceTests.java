@@ -1,7 +1,5 @@
 package com.smh.club.api.services;
 
-import java.util.Optional;
-
 import com.smh.club.api.contracts.mappers.RenewalMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
@@ -29,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
@@ -306,6 +306,32 @@ public class RenewalServiceTests extends ServiceTests {
 
         //verify
         verify(renRepoMock).deleteById(id);
+        verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
+    }
+
+    @Test
+    public void getByMemberId_returns_renewal_list() {
+        // setup
+        var member = Instancio.create(MemberEntity.class);
+
+        var entities = Instancio.ofList(RenewalEntity.class)
+            .size(5).create();
+
+        var dtoList = Instancio.ofList(RenewalDto.class)
+            .size(5).create();
+        dtoList.forEach(dto -> dto.setMemberId(member.getId()));
+
+        when(renRepoMock.findAllByMemberId(member.getId())).thenReturn(entities);
+        when(renMapMock.toDtoList(entities)).thenReturn(dtoList);
+
+        // execute
+        var ret = svc.findAllByMemberId(member.getId());
+
+        // verify
+        assertNotNull(ret);
+        assertEquals(dtoList, ret);
+        verify(renRepoMock).findAllByMemberId(member.getId());
+        verify(renMapMock).toDtoList(entities);
         verifyNoMoreInteractions(renRepoMock, renMapMock, memRepoMock);
     }
 }

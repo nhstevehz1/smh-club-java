@@ -1,7 +1,5 @@
 package com.smh.club.api.services;
 
-import java.util.Optional;
-
 import com.smh.club.api.contracts.mappers.EmailMapper;
 import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
@@ -28,6 +26,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
@@ -294,6 +294,32 @@ public class EmailServiceTests extends ServiceTests {
 
         //verify
         verify(emailRepoMock).deleteById(id);
+        verifyNoMoreInteractions(emailRepoMock, emailMapMock, memRepoMock);
+    }
+
+    @Test
+    public void getByMemberId_returns_email_list() {
+        // setup
+        var member = Instancio.create(MemberEntity.class);
+
+        var entities = Instancio.ofList(EmailEntity.class)
+            .size(5).create();
+
+        var dtoList = Instancio.ofList(EmailDto.class)
+            .size(5).create();
+        dtoList.forEach(dto -> dto.setMemberId(member.getId()));
+
+        when(emailRepoMock.findAllByMemberId(member.getId())).thenReturn(entities);
+        when(emailMapMock.toDtoList(entities)).thenReturn(dtoList);
+
+        // execute
+        var ret = svc.findAllByMemberId(member.getId());
+
+        // verify
+        assertNotNull(ret);
+        assertEquals(dtoList, ret);
+        verify(emailRepoMock).findAllByMemberId(member.getId());
+        verify(emailMapMock).toDtoList(entities);
         verifyNoMoreInteractions(emailRepoMock, emailMapMock, memRepoMock);
     }
 }

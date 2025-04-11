@@ -40,7 +40,7 @@ public class RenewalController {
      * @return A {@link ResponseEntity} containing a page of {@link RenewalFullNameDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping
+    @GetMapping("page")
     public ResponseEntity<PagedDto<RenewalFullNameDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(RenewalFullNameDto.class)

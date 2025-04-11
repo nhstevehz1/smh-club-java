@@ -40,7 +40,7 @@ public class PhoneController {
      * @return A {@link ResponseEntity} containing a page of {@link PhoneFullNameDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping
+    @GetMapping("page")
     public ResponseEntity<PagedDto<PhoneFullNameDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(PhoneFullNameDto.class)

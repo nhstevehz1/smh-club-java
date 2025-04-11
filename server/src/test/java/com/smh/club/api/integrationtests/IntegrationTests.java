@@ -99,7 +99,7 @@ public abstract class IntegrationTests {
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParams(testParams.getQuery())
                 .when()
-                .get(testParams.getPath());
+                .get(testParams.getPath() + "/page");
 
         result.then()
             .expect(status().isOk())

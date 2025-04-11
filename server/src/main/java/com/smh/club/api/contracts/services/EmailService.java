@@ -1,11 +1,14 @@
 package com.smh.club.api.contracts.services;
 
+import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
 import com.smh.club.api.response.PagedDto;
-import java.util.Optional;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Business logic for emails.
@@ -19,6 +22,14 @@ public interface EmailService {
      * @return A {@link PagedDto} of type {@link EmailFullNameDto}.
      */
     PagedDto<EmailFullNameDto> getPage(Pageable pageable);
+
+    /**
+     * Finds all email addresses belonging to member.
+     *
+     * @param memberId The {@link MemberEntity} id.
+     * @return A list of {@link EmailDto}'s.
+     */
+    List<EmailDto> findAllByMemberId(int memberId);
 
     /**
      * Retrieves an email from the database.

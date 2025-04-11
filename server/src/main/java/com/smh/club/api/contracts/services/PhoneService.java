@@ -1,11 +1,14 @@
 package com.smh.club.api.contracts.services;
 
+import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
 import com.smh.club.api.response.PagedDto;
-import java.util.Optional;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Business logic for phones.
@@ -19,6 +22,14 @@ public interface PhoneService {
      * @return A {@link PagedDto} of type {@link PhoneFullNameDto}.
      */
     PagedDto<PhoneFullNameDto> getPage(Pageable pageable);
+
+    /**
+     * Finds all phone numbers belonging to member.
+     *
+     * @param memberId The {@link MemberEntity} id.
+     * @return A list of {@link PhoneDto}'s.
+     */
+    List<PhoneDto> findAllByMemberId(int memberId);
 
     /**
      * Retrieves a phone from the database.

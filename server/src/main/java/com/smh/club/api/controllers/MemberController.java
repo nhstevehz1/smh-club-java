@@ -1,6 +1,8 @@
 package com.smh.club.api.controllers;
 
+import com.smh.club.api.contracts.services.AddressService;
 import com.smh.club.api.contracts.services.MemberService;
+import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
@@ -19,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Defines REST endpoints that targets member objects in the database.
@@ -42,7 +46,7 @@ public class MemberController {
      * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping
+    @GetMapping("page")
     public ResponseEntity<PagedDto<MemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(MemberDto.class)

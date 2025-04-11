@@ -1,7 +1,5 @@
 package com.smh.club.api.services;
 
-import java.util.Optional;
-
 import com.smh.club.api.contracts.mappers.PhoneMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
@@ -28,6 +26,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
@@ -309,4 +309,29 @@ public class PhoneServiceTests extends ServiceTests {
         verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
     }
 
+    @Test
+    public void getByMemberId_returns_phone_list() {
+        // setup
+        var member = Instancio.create(MemberEntity.class);
+
+        var entities = Instancio.ofList(PhoneEntity.class)
+            .size(5).create();
+
+        var dtoList = Instancio.ofList(PhoneDto.class)
+            .size(5).create();
+        dtoList.forEach(dto -> dto.setMemberId(member.getId()));
+
+        when(phnRepoMock.findAllByMemberId(member.getId())).thenReturn(entities);
+        when(phnMapMock.toDtoList(entities)).thenReturn(dtoList);
+
+        // execute
+        var ret = svc.findAllByMemberId(member.getId());
+
+        // verify
+        assertNotNull(ret);
+        assertEquals(dtoList, ret);
+        verify(phnRepoMock).findAllByMemberId(member.getId());
+        verify(phnMapMock).toDtoList(entities);
+        verifyNoMoreInteractions(phnRepoMock, phnMapMock, memRepoMock);
+    }
 }

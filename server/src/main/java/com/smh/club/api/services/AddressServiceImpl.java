@@ -9,6 +9,8 @@ import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
 import com.smh.club.api.response.PagedDto;
+
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +49,15 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var page = addressMapper.toPage(addressRepo.findAll(pageRequest));
 
         return PagedDto.of(page);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<AddressDto> findAllByMemberId(int id) {
+        var addresses = addressRepo.findAllByMemberId(id);
+        return addressMapper.toDtoList(addresses);
     }
 
     /**
