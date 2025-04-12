@@ -6,7 +6,6 @@ import {AddressTest} from '@app/features/addresses/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatIconHarness} from '@angular/material/icon/testing';
-import {async} from 'rxjs';
 import {DataDisplayHarness} from '@app/shared/components/data-display/testing/data-display-harness';
 
 describe('ViewAddressComponent', () => {

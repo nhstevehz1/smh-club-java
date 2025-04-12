@@ -2,7 +2,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
-import {AddressMember, AddressType, AddressCreate, Address} from '@app/features/addresses/models/address';
+import {AddressMember, AddressType, Address} from '@app/features/addresses/models/address';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
 import {PagedData} from '@app/shared/services/api-service/models';
 import {TestHelpers} from '@app/shared/testing';
