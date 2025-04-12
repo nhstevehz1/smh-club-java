@@ -31,7 +31,7 @@ describe('ViewRenewalComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  fit('should create', async () => {
+  it('should create', async () => {
     fixture.componentRef.setInput('renewal', renewal);
 
     fixture.detectChanges();
@@ -40,7 +40,7 @@ describe('ViewRenewalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should display year', async () => {
+  it('should display year', async () => {
     fixture.componentRef.setInput('renewal', renewal);
     const str = renewal.renewal_year.toString();
 
@@ -50,7 +50,7 @@ describe('ViewRenewalComponent', () => {
     expect(harness).toBeTruthy();
   });
 
-  fit('year field should NOT display label', async () => {
+  it('year field should NOT display label', async () => {
     fixture.componentRef.setInput('renewal', renewal);
     const str = renewal.renewal_year.toString();
 
@@ -61,7 +61,7 @@ describe('ViewRenewalComponent', () => {
     expect(label).toBeFalsy();
   });
 
-  fit('should display renewal date', async () => {
+  it('should display renewal date', async () => {
     fixture.componentRef.setInput('renewal', renewal);
     const dtString =
       renewal.renewal_date.toLocaleString(DateTime.DATE_SHORT, {locale: 'en'})
@@ -72,7 +72,7 @@ describe('ViewRenewalComponent', () => {
     expect(harness).toBeTruthy();
   });
 
-  fit('renewal date filed should NOT should display label', async () => {
+  it('renewal date filed should NOT should display label', async () => {
     fixture.componentRef.setInput('renewal', renewal);
     const dtString =
       renewal.renewal_date.toLocaleString(DateTime.DATE_SHORT, {locale: 'en'})
