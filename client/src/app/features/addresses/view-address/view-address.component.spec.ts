@@ -96,7 +96,6 @@ describe('ViewAddressComponent', () => {
   });
 
   it('should display city, state, postal code', async () => {
-
     fixture.componentRef.setInput('address', address);
     const str = `${address.city}, ${address.state} ${address.postal_code}`;
     console.debug(str);
