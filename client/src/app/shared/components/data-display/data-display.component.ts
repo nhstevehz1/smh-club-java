@@ -11,6 +11,7 @@ import {DateTime} from 'luxon';
   styleUrl: './data-display.component.scss'
 })
 export class DataDisplayComponent {
+  id = input<string>();
   label = input<string>();
   data = input.required<string | number | DateTime | null>();
 }
