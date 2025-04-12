@@ -77,12 +77,33 @@ describe('ViewAddressComponent', () => {
     expect(harness).toBeTruthy();
   });
 
+  it('address1 field should NOT have a label', async () => {
+    fixture.componentRef.setInput('address', address);
+
+    const harness = await
+      loader.getHarness(DataDisplayHarness.with({value: address.address1}));
+    const label = await harness.getLabel();
+
+    expect(label).toBeFalsy();
+  });
+
   it('should display address2 when address2 is defined', async () => {
     address.address2 = 'my address2';
     fixture.componentRef.setInput('address', address);
     const harness = await
       loader.getHarnessOrNull(DataDisplayHarness.with({value: address.address2}));
     expect(harness).toBeTruthy();
+  });
+
+  it('address 2 should not have a label', async () => {
+    address.address2 = 'my address2';
+    fixture.componentRef.setInput('address', address);
+
+    const harness = await
+      loader.getHarness(DataDisplayHarness.with({value: address.address2}));
+    const label = await harness.getLabel();
+
+    expect(label).toBeFalsy();
   });
 
   it('should NOT display address2 when address2 is NOT defined', async () => {
@@ -98,11 +119,21 @@ describe('ViewAddressComponent', () => {
   it('should display city, state, postal code', async () => {
     fixture.componentRef.setInput('address', address);
     const str = `${address.city}, ${address.state} ${address.postal_code}`;
-    console.debug(str);
 
     const harness = await
       loader.getHarnessOrNull(DataDisplayHarness.with({value: str}));
 
     expect(harness).toBeTruthy();
+  });
+
+  it('city, state, postal code field should have a label', async () => {
+    fixture.componentRef.setInput('address', address);
+    const str = `${address.city}, ${address.state} ${address.postal_code}`;
+
+    const harness = await
+      loader.getHarness(DataDisplayHarness.with({value: str}));
+    const label = await harness.getLabel();
+
+    expect(label).toBeFalsy();
   });
 });

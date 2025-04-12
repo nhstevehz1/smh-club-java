@@ -28,7 +28,7 @@ describe('ViewEmailComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  fit('should create', async () => {
+  it('should create', async () => {
     fixture.componentRef.setInput('email', email);
 
     fixture.detectChanges();
@@ -37,13 +37,13 @@ describe('ViewEmailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should display an icon', async () => {
+  it('should display an icon', async () => {
     fixture.componentRef.setInput('email', email);
     const harness = await loader.getHarnessOrNull(MatIconHarness);
     expect(harness).toBeTruthy();
   });
 
-  fit('should display the home icon', async () => {
+  it('should display the home icon', async () => {
     email.email_type = EmailType.Home;
     fixture.componentRef.setInput('email', email);
 
@@ -52,7 +52,7 @@ describe('ViewEmailComponent', () => {
     expect(name).toEqual('home');
   });
 
-  fit('should display the work icon', async () => {
+  it('should display the work icon', async () => {
     email.email_type = EmailType.Work;
     fixture.componentRef.setInput('email', email);
 
@@ -61,7 +61,7 @@ describe('ViewEmailComponent', () => {
     expect(name).toEqual('corporate_fare');
   });
 
-  fit('should display the other icon', async () => {
+  it('should display the other icon', async () => {
     email.email_type = EmailType.Other;
     fixture.componentRef.setInput('email', email);
 
@@ -70,12 +70,22 @@ describe('ViewEmailComponent', () => {
     expect(name).toEqual('question_mark');
   });
 
-  fit('should display email', async () => {
+  it('should display email', async () => {
     fixture.componentRef.setInput('email', email);
 
     const harness = await
       loader.getHarnessOrNull(DataDisplayHarness.with({value: email.email}));
 
     expect(harness).toBeTruthy();
+  });
+
+  it('email field should NOT have a label', async () => {
+    fixture.componentRef.setInput('email', email);
+
+    const harness = await
+      loader.getHarness(DataDisplayHarness.with({value: email.email}));
+    const label = await harness?.getLabel();
+
+    expect(label).toBeFalsy();
   });
 });
