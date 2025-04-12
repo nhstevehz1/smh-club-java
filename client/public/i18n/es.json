@@ -245,12 +245,18 @@
       }
     },
     "view": {
+      "addresses": "Direcciones",
       "back": {
         "toolTip": "Volver atrás"
       },
       "birthDate": "Fecha de nacimiento",
+      "emailAddresses": "Direcciones de Correo Electrónico",
       "joinedDate": "Fecha de incorporación",
-      "number": "Número"
+      "member": "Miembro",
+      "memberDetails": "Miembros",
+      "number": "Número",
+      "phoneNumbers": "Números de teléfono",
+      "renewals": "Renovaciones"
     }
   },
   "okCancel": {
