@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {provideHttpClient} from '@angular/common/http';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 
 import {MockApiService} from '@app/shared/services/api-service/testing/mock-api-service';
 import {PageRequest} from '@app/shared/services/api-service/models';
-import {generateApiCreateModel, generateApiModel} from '@app/shared/services/api-service/testing/mock-api-data';
+import {BaseApiTest} from '@app/shared/services/api-service/testing/mock-api-data';
 
 describe('BaseApiService', () => {
   let service: MockApiService;
@@ -31,7 +31,7 @@ describe('BaseApiService', () => {
 
     service.getPagedData(pageRequest).subscribe();
 
-    const req = controller.expectOne(service.baseUri);
+    const req = controller.expectOne(service.baseUri + '/page');
     expect(req.request.method).toBe('GET');
 
     req.flush([false, true, false]);
@@ -40,8 +40,7 @@ describe('BaseApiService', () => {
 
   it('should call GET api with parameters when page request is populated', () => {
     const pageRequest: PageRequest = PageRequest.of(0, 0);
-    const uri = service.baseUri + pageRequest.createQuery();
-
+    const uri = `${service.baseUri}/page${pageRequest.createQuery()}`
     service.getPagedData(pageRequest).subscribe();
 
     const req = controller.expectOne(uri);
@@ -52,7 +51,7 @@ describe('BaseApiService', () => {
   });
 
   it('should call POST api', () =>{
-    const mockCreate = generateApiCreateModel();
+    const mockCreate = BaseApiTest.generateCreateModel();
 
     service.create(mockCreate).subscribe();
 
@@ -64,7 +63,7 @@ describe('BaseApiService', () => {
   });
 
   it('should call PUT api', () =>{
-    const model = generateApiModel();
+    const model = BaseApiTest.generateModel();
     const uri = `${service.baseUri}/${model.id}`;
 
     service.update(model).subscribe();
