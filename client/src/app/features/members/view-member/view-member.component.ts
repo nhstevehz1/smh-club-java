@@ -4,6 +4,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatExpansionModule} from '@angular/material/expansion';
 import {DateTime} from 'luxon';
 import {TranslateService, LangChangeEvent, TranslatePipe} from '@ngx-translate/core';
 
@@ -17,6 +18,10 @@ import {Email} from '@app/features/emails/models';
 import {Renewal} from '@app/features/renewals/models';
 import {DataDisplayComponent} from '@app/shared/components/data-display/data-display.component';
 import {DateTimeToLocalPipe, DateTimeToFormatPipe} from '@app/shared/pipes';
+import {ViewAddressComponent} from '@app/features/addresses/view-address/view-address.component';
+import {ViewPhoneComponent} from '@app/features/phones/view-phone/view-phone.component';
+import {ViewEmailComponent} from '@app/features/emails/view-email/view-email.component';
+import {ViewRenewalComponent} from '@app/features/renewals/view-renewal/view-renewal.component';
 
 @Component({
   selector: 'app-view-member',
@@ -28,7 +33,12 @@ import {DateTimeToLocalPipe, DateTimeToFormatPipe} from '@app/shared/pipes';
     MatIconModule,
     MatTooltipModule,
     MatDividerModule,
-    TranslatePipe
+    MatExpansionModule,
+    TranslatePipe,
+    ViewAddressComponent,
+    ViewPhoneComponent,
+    ViewEmailComponent,
+    ViewRenewalComponent
   ],
   providers: [MemberService, AuthService],
   templateUrl: './view-member.component.html',
@@ -58,6 +68,8 @@ export class ViewMemberComponent implements OnInit {
   emails = signal<Email[]>([]);
   renewals = signal<Renewal[]>([]);
 
+  private addressesOpened = false;
+
   constructor(private memberSvc: MemberService,
               private location: Location,
               translate: TranslateService) {
@@ -72,6 +84,26 @@ export class ViewMemberComponent implements OnInit {
   ngOnInit(): void {
     this.memberSvc.get(this.id()).subscribe({
       next: member => this.member.set(member),
+      error: err => console.debug(err) // TODO: display error
+    });
+
+    this.memberSvc.getAddresses(this.id()).subscribe({
+      next: data => this.addresses.set(data),
+      error: err => console.debug(err) // TODO: display error
+    });
+
+    this.memberSvc.getPhones(this.id()).subscribe({
+      next: data => this.phones.set(data),
+      error: err => console.debug(err) // TODO: display error
+    });
+
+    this.memberSvc.getEmails(this.id()).subscribe({
+      next: data => this.emails.set(data),
+      error: err => console.debug(err) // TODO: display error
+    });
+
+    this.memberSvc.getRenewals(this.id()).subscribe({
+      next: data => this.renewals.set(data),
       error: err => console.debug(err) // TODO: display error
     });
   }

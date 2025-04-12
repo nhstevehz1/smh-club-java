@@ -22,7 +22,9 @@ describe('ViewMemberComponent', () => {
   let member: Member;
 
   beforeEach(async () => {
-    apiSvcMock = jasmine.createSpyObj('MemberService', ['get']);
+    apiSvcMock = jasmine.createSpyObj('MemberService',
+      ['get', 'getAddresses', 'getEmails', 'getPhones', 'getRenewals']);
+
     locationMock = jasmine.createSpyObj('Location', ['back']);
 
     await TestBed.configureTestingModule({
@@ -43,17 +45,24 @@ describe('ViewMemberComponent', () => {
 
     member = MemberTest.generateMember(1);
     fixture.componentRef.setInput('id', member.id);
+
+    apiSvcMock.getAddresses.and.returnValue(asyncData([]));
+    apiSvcMock.getEmails.and.returnValue(asyncData([]));
+    apiSvcMock.getPhones.and.returnValue(asyncData([]));
+    apiSvcMock.getRenewals.and.returnValue(asyncData([]));
   });
 
-  it('should create', async () => {
+  fit('should create', async () => {
     apiSvcMock.get.and.returnValue(asyncData(member));
+
     fixture.detectChanges();
     await fixture.whenStable();
+
     expect(component).toBeTruthy();
   });
 
   describe('interactions on init', () => {
-    it('should call MemberService.get', async ()=> {
+    fit('should call MemberService.get', async ()=> {
       const spy = apiSvcMock.get.and.returnValue(asyncData(member));
 
       fixture.detectChanges();
@@ -62,7 +71,7 @@ describe('ViewMemberComponent', () => {
       expect(spy).toHaveBeenCalledWith(member.id);
     });
 
-    it('should set member', async () => {
+    fit('should set member', async () => {
       apiSvcMock.get.and.returnValue(asyncData(member));
 
       fixture.detectChanges();
@@ -71,7 +80,7 @@ describe('ViewMemberComponent', () => {
       expect(component.member()).toEqual(member);
     });
 
-    it('expect fullName to be correct', async ()=> {
+    fit('expect fullName to be correct', async ()=> {
       apiSvcMock.get.and.returnValue(asyncData(member));
       const fullName = `${member.first_name} ${member.middle_name} ${member.last_name} ${member.suffix}`
 
@@ -89,13 +98,13 @@ describe('ViewMemberComponent', () => {
       await fixture.whenStable();
     });
 
-    it('should contain back button', async () => {
+    fit('should contain back button', async () => {
       const harness =
         await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', text: 'arrow_back'}));
       expect(harness).toBeTruthy();
     });
 
-    it('back button click should call onBack', async () => {
+    fit('back button click should call onBack', async () => {
       const spy = spyOn(component, 'onBack').and.stub();
       const harness =
         await loader.getHarness(MatButtonHarness.with({variant: 'icon', text: 'arrow_back'}));
@@ -105,10 +114,12 @@ describe('ViewMemberComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('onBack should call Location.back', async () => {
+    fit('onBack should call Location.back', async () => {
       const spy = locationMock.back.and.stub();
       component.onBack();
       expect(spy).toHaveBeenCalled();
     });
+
+    fit('should contain name')
   });
 });
