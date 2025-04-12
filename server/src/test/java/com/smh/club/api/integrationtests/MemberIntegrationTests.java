@@ -235,7 +235,7 @@ public class MemberIntegrationTests extends IntegrationTests {
             .auth().none()
             .params(map)
             .when()
-            .get(path)
+            .get(path + "/page")
             .then().assertThat()
             .status(HttpStatus.BAD_REQUEST)
             .expect(jsonPath("$.validation-errors").isNotEmpty());

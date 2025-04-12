@@ -215,6 +215,9 @@
         },
         "label": "Last name"
       },
+      "memberNumber": {
+        "label": "Member number"
+      },
       "middleName": {
         "error": {
           "required": "middle name is required"
@@ -242,12 +245,18 @@
       }
     },
     "view": {
+      "addresses": "Addresses",
       "back": {
         "toolTip": "Go back"
       },
       "birthDate": "Birth Date",
+      "emailAddresses": "Email Addresses",
       "joinedDate": "Joined Date",
-      "number": "Number"
+      "member": "Member",
+      "memberDetails": "Member Details",
+      "number": "Number",
+      "phoneNumbers": "Phone Numbers",
+      "renewals": "Renewals"
     }
   },
   "okCancel": {

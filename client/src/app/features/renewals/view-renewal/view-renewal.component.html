@@ -1,0 +1,6 @@
+<div class="flex-row gap">
+  <app-data-display [data]="year()"/>
+  <app-data-display
+    [data]="date() | dateTimeToLocal | dateTimeToFormat: DateTime.DATE_SHORT: {locale: lang()}">
+  </app-data-display>
+</div>

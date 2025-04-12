@@ -72,6 +72,35 @@ describe('MemberEditorComponent', () => {
       expect(harnesses.length).toEqual(7);
     });
 
+    describe('member number field tests', () => {
+      beforeEach(async () => {
+        harness =
+          await loader.getHarnessOrNull(MatFormFieldHarness.with({
+            floatingLabelText: 'members.editor.memberNumber.label'}))
+      });
+
+      it('should contain member number field', async () => {
+        expect(harness).toBeTruthy();
+      });
+
+      it('member number form field should contain the correct value', async () => {
+        const value = await TestHelpers.getFormFieldValue(harness);
+        expect(value).toBe(formGroup.controls.member_number.value.toString());
+      });
+
+      it('member number should use outline appearance', async () => {
+        fixture.componentRef.setInput('fieldAppearance', outline);
+        const appearance = await harness?.getAppearance();
+        expect(appearance).toBe(outline);
+      });
+
+      it('member number should use fill appearance', async() => {
+        fixture.componentRef.setInput('fieldAppearance', fill);
+        const appearance = await harness?.getAppearance();
+        expect(appearance).toBe(fill);
+      });
+    });
+
     describe('first name field tests', () => {
 
       beforeEach(async () => {
@@ -80,11 +109,11 @@ describe('MemberEditorComponent', () => {
               floatingLabelText: 'members.editor.firstName.label'}))
       });
 
-      it('should contain member field', async () => {
+      it('should contain first name field', async () => {
         expect(harness).toBeTruthy();
       });
 
-      it('member form field should contain the correct value', async () => {
+      it('first name form field should contain the correct value', async () => {
         const value = await TestHelpers.getFormFieldValue(harness);
         expect(value).toBe(formGroup.controls.first_name.value);
       });

@@ -1,7 +1,5 @@
 package com.smh.club.api.services;
 
-import java.util.Optional;
-
 import com.smh.club.api.contracts.mappers.AddressMapper;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
@@ -29,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
@@ -326,6 +326,32 @@ public class AddressServiceTests extends ServiceTests {
         // verify
         assertEquals(count, response);
         verify(addRepoMock).count();
+        verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
+    }
+
+    @Test
+    public void getByMemberId_returns_address_list() {
+        // setup
+        var member = Instancio.create(MemberEntity.class);
+
+        var entities = Instancio.ofList(AddressEntity.class)
+            .size(5).create();
+
+        var dtoList = Instancio.ofList(AddressDto.class)
+            .size(5).create();
+        dtoList.forEach(dto -> dto.setMemberId(member.getId()));
+
+        when(addRepoMock.findAllByMemberId(member.getId())).thenReturn(entities);
+        when(addMapMock.toDtoList(entities)).thenReturn(dtoList);
+
+        // execute
+        var ret = svc.findAllByMemberId(member.getId());
+
+        // verify
+        assertNotNull(ret);
+        assertEquals(dtoList, ret);
+        verify(addRepoMock).findAllByMemberId(member.getId());
+        verify(addMapMock).toDtoList(entities);
         verifyNoMoreInteractions(addRepoMock, addMapMock, memRepoMock);
     }
 }

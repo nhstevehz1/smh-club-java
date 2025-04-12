@@ -22,7 +22,9 @@ describe('ViewMemberComponent', () => {
   let member: Member;
 
   beforeEach(async () => {
-    apiSvcMock = jasmine.createSpyObj('MemberService', ['get']);
+    apiSvcMock = jasmine.createSpyObj('MemberService',
+      ['get', 'getAddresses', 'getEmails', 'getPhones', 'getRenewals']);
+
     locationMock = jasmine.createSpyObj('Location', ['back']);
 
     await TestBed.configureTestingModule({
@@ -43,12 +45,19 @@ describe('ViewMemberComponent', () => {
 
     member = MemberTest.generateMember(1);
     fixture.componentRef.setInput('id', member.id);
+
+    apiSvcMock.getAddresses.and.returnValue(asyncData([]));
+    apiSvcMock.getEmails.and.returnValue(asyncData([]));
+    apiSvcMock.getPhones.and.returnValue(asyncData([]));
+    apiSvcMock.getRenewals.and.returnValue(asyncData([]));
   });
 
   it('should create', async () => {
     apiSvcMock.get.and.returnValue(asyncData(member));
+
     fixture.detectChanges();
     await fixture.whenStable();
+
     expect(component).toBeTruthy();
   });
 

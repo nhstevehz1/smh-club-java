@@ -40,7 +40,7 @@ public class EmailController {
      * @return A {@link ResponseEntity} containing a page of {@link EmailFullNameDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping
+    @GetMapping("page")
     public ResponseEntity<PagedDto<EmailFullNameDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(EmailFullNameDto.class)

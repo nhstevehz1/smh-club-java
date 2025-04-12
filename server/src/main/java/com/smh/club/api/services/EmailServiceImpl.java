@@ -9,7 +9,6 @@ import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
 import com.smh.club.api.dto.email.EmailFullNameDto;
 import com.smh.club.api.response.PagedDto;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -48,6 +50,15 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         var page = emailMapper.toPage(emailRepo.findAll(pageRequest));
 
         return PagedDto.of(page);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<EmailDto> findAllByMemberId(int id) {
+        var emails = emailRepo.findAllByMemberId(id);
+        return emailMapper.toDtoList(emails);
     }
 
     /**

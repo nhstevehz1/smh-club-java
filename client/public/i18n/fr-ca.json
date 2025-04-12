@@ -215,6 +215,9 @@
         },
         "label": "Nom de famille"
       },
+      "memberNumber": {
+        "label": "Numéro de membre"
+      },
       "middleName": {
         "error": {
           "required": "le deuxième prénom est obligatoire"
@@ -242,12 +245,18 @@
       }
     },
     "view": {
+      "addresses": "Adresses",
       "back": {
         "toolTip": "Retourner"
       },
       "birthDate": "Date de naissance",
+      "emailAddresses": "Adresses électroniques",
       "joinedDate": "Date d'adhésion",
-      "number": "Nombre"
+      "member": "Membre",
+      "memberDetails": "Détails du membre",
+      "number": "Nombre",
+      "phoneNumbers": "Numéros de téléphone",
+      "renewals": "Renouvellements"
     }
   },
   "okCancel": {

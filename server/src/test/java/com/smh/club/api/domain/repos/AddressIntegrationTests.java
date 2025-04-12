@@ -3,7 +3,6 @@ package com.smh.club.api.domain.repos;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -21,12 +20,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("tests")
 @RunWith(SpringRunner.class)
@@ -180,6 +178,22 @@ class AddressIntegrationTests extends PersistenceTestsBase {
         // verify
         assertNotNull(result);
         assertTrue(result.containsAll(addresses));
+    }
+
+    @Test
+    public void findAllByMemberId() {
+        // setup
+        var addresses = addressRepo.saveAllAndFlush(createList(100, members));
+        var memberId = addresses.get(50).getMember().getId();
+        var expected = addresses.stream().filter(a -> a.getMember().getId() == memberId).toList();
+
+        // execute
+        var result = addressRepo.findAllByMemberId(memberId);
+
+        // verify
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertTrue(result.containsAll(expected));
     }
 
     private AddressEntity createEntity(List<MemberEntity> members) {

@@ -9,7 +9,6 @@ import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.phone.PhoneFullNameDto;
 import com.smh.club.api.response.PagedDto;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -48,6 +50,15 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var page = phoneMapper.toPage(phoneRepo.findAll(pageRequest));
 
         return PagedDto.of(page);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PhoneDto> findAllByMemberId(int id) {
+        var phones = phoneRepo.findAllByMemberId(id);
+        return phoneMapper.toDtoList(phones);
     }
 
     /**

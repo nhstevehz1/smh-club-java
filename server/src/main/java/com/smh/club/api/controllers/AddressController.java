@@ -41,7 +41,7 @@ public class AddressController {
      * @return A {@link ResponseEntity} containing a page of {@link AddressFullNameDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping
+    @GetMapping("page")
     public ResponseEntity<PagedDto<AddressFullNameDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(AddressFullNameDto.class)

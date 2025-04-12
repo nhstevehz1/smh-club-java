@@ -1,8 +1,18 @@
+@use '@angular/material' as mat;
+
 .container {
   display: flex;
   flex-direction: row;
-  margin: 15px;
+  margin-top: 15px;
   justify-content: center;
+}
+
+.row-gap {
+  gap: 10px;
+}
+
+.col-gap {
+  gap: 15px;
 }
 
 .content {
@@ -13,9 +23,14 @@
   padding: 10px;
 }
 
-.data-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 15px;
-}
+@include mat.expansion-overrides((
+  header-text-font: var(--mat-sys-title-small-font),
+  header-text-size: var(--mat-sys-title-small-size),
+  header-text-weight: var(--mat-sys-title-small-weight),
+  header-text-line-height: var(--mat-sys-title-small-line-height),
+  header-text-tracking: var(--mat-sys-title-small-tracking)
+));
+
+@include mat.list-overrides((
+  list-item-one-line-container-height: -3
+))

@@ -1,9 +1,12 @@
 package com.smh.club.api.contracts.services;
 
+import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.address.AddressFullNameDto;
 import com.smh.club.api.response.PagedDto;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
@@ -19,6 +22,14 @@ public interface AddressService {
      * @return A {@link PagedDto} of type {@link AddressFullNameDto}.
      */
     PagedDto<AddressFullNameDto> getPage(Pageable pageable);
+
+    /**
+     * Finds all addresses belonging to member.
+     *
+     * @param memberId The {@link MemberEntity} id.
+     * @return A list of {@link AddressDto}'s.
+     */
+    List<AddressDto> findAllByMemberId(int memberId);
 
     /**
      * Retrieves an address from the database.

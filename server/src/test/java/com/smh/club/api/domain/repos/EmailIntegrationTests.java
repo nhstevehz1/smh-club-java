@@ -3,7 +3,6 @@ package com.smh.club.api.domain.repos;
 import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -20,11 +19,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @ActiveProfiles("tests")
@@ -135,6 +134,22 @@ public class EmailIntegrationTests extends PersistenceTestsBase {
 
         //verify
         assertTrue(ret.isEmpty());
+    }
+
+    @Test
+    public void findAllByMemberId() {
+        // setup
+        var addresses = emailRepo.saveAllAndFlush(createList(100, members));
+        var memberId = addresses.get(50).getMember().getId();
+        var expected = addresses.stream().filter(a -> a.getMember().getId() == memberId).toList();
+
+        // execute
+        var result = emailRepo.findAllByMemberId(memberId);
+
+        // verify
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertTrue(result.containsAll(expected));
     }
 
     private EmailEntity createEntity(List<MemberEntity> members) {

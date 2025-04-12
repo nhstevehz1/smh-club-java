@@ -22,9 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @ActiveProfiles("tests")
@@ -135,6 +133,22 @@ public class PhoneIntegrationTests extends PersistenceTestsBase {
 
         //verify
         assertTrue(ret.isEmpty());
+    }
+
+    @Test
+    public void findAllByMemberId() {
+        // setup
+        var addresses = phoneRepo.saveAllAndFlush(createList(100, members));
+        var memberId = addresses.get(50).getMember().getId();
+        var expected = addresses.stream().filter(a -> a.getMember().getId() == memberId).toList();
+
+        // execute
+        var result = phoneRepo.findAllByMemberId(memberId);
+
+        // verify
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertTrue(result.containsAll(expected));
     }
     
     private PhoneEntity createEntity(List<MemberEntity> members) {

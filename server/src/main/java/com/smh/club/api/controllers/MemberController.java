@@ -42,7 +42,7 @@ public class MemberController {
      * @return A {@link ResponseEntity} containing an {@link PagedDto} of type {@link MemberDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping
+    @GetMapping("page")
     public ResponseEntity<PagedDto<MemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
         @SortConstraint(MemberDto.class)
