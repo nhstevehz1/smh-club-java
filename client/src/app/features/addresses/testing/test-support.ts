@@ -41,26 +41,16 @@ export class AddressTest {
     }
   }
 
-  static generateAddressCreate(): AddressCreate {
-    return {
-      address1: 'Address1',
-      address2: 'Apt.',
-      city: 'City',
-      state: ' State',
-      postal_code: 'Zip',
-      address_type: AddressType.Home
-    }
-  }
-
   static generateAddress(): Address {
+    const prefix = 2;
     return {
-      id: 0,
-      member_id: 0,
-      address1: 'Address1',
-      address2: 'Apt.',
-      city: 'City',
-      state: ' State',
-      postal_code: 'Zip',
+      id: prefix,
+      member_id: prefix,
+      address1: prefix + 'Address1',
+      address2: 'Apt. ' + prefix,
+      city: prefix + 'City',
+      state: prefix + 'State',
+      postal_code: '55555',
       address_type: AddressType.Home
     }
   }

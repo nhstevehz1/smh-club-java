@@ -10,19 +10,23 @@ export abstract class BaseApiService<L, C, T extends Updatable> implements CrudS
   readonly baseUri: string;
 
   protected constructor(baseUri: string,
-                        private http: HttpClient) {
+                        protected http: HttpClient) {
     this.baseUri = baseUri;
   }
 
   getPagedData(pageRequest: PageRequest): Observable<PagedData<L>> {
     const query = pageRequest.createQuery();
-    const uri = query == null ? this.baseUri: this.baseUri + query;
+    const uri = query == null ? `${this.baseUri}/page`: `${this.baseUri}/page${query}`;
 
     return this.http.get<PagedData<L>>(uri);
   }
 
   get(id: number) : Observable<T> {
     return this.http.get<T>(`${this.baseUri}/${id}`);
+  }
+
+  getAll(): Observable<T[]> {
+    return this.http.get<T[]>(`${this.baseUri}/all`)
   }
 
   create(create: C): Observable<T> {
