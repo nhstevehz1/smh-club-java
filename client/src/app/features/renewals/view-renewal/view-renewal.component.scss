@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  margin: 15px;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.row-gap {
+  gap: 10px;
+}
