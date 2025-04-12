@@ -1,0 +1,19 @@
+<div class="content">
+  <ng-container />
+  <div class="flex-row end">
+    @if(showAllButtons() || showEditButton()){
+      <button mat-icon-button
+              matTooltip="base.view.edit.toolTip"
+              (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    }
+    @if(showAllButtons() || showDeleteButton()) {
+      <button mat-icon-button
+              matTooltip="base.view.edit.toolTip"
+              (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+  </div>
+</div>
