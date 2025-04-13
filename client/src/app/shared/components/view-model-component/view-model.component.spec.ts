@@ -5,8 +5,9 @@ import {
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness} from '@angular/material/button/testing';
+import {By} from '@angular/platform-browser';
 
-describe('BaseViewListPanelComponent', () => {
+describe('ViewModelComponent', () => {
   let component: MockViewModelHostComponent;
   let fixture: ComponentFixture<MockViewModelHostComponent>;
   let loader: HarnessLoader;
@@ -98,5 +99,13 @@ describe('BaseViewListPanelComponent', () => {
     await harness.click();
 
     expect(spy).toHaveBeenCalledWith(component.model());
+  });
+
+  it('should render content', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element = fixture.debugElement.query(By.css('span'));
+    expect(element).toBeTruthy();
   });
 });

@@ -13,7 +13,9 @@ import {ViewModelTest, ViewModel} from '@app/shared/components/view-model-compon
     [showEditButton]="showEdit()"
     [showDeleteButton]="showDelete()"
     (deleteClick)="onDelete(model())"
-    (editClick)="onEdit(model())"/>`
+    (editClick)="onEdit(model())">
+      <span>this is a test</span>
+  </app-view-model>`
 })
 export class MockViewModelHostComponent {
  model = signal(ViewModelTest.generateModel(1));
