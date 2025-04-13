@@ -4,4 +4,5 @@ export class ViewModelHarness extends ContentContainerComponentHarness {
   static hostSelector = 'app-view-model';
 
 
+
 }

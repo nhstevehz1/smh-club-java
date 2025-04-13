@@ -1,4 +1,6 @@
- <div class="flex-row row-gap">
-   <mat-icon>{{icon()}}</mat-icon>
+<app-view-model [item]="phone()">
+  <div class="flex-row row-gap">
+    <mat-icon>{{icon()}}</mat-icon>
     <app-data-display [data]="phoneNumber()"/>
- </div>
+  </div>
+</app-view-model>

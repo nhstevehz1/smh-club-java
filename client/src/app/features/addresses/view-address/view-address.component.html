@@ -1,8 +1,10 @@
-<div class="container col-gap">
-  <mat-icon>{{icon()}}</mat-icon>
-  <app-data-display [data]="address1()"/>
-  @if(showAddress2() && address2().length > 0) {
-    <app-data-display [data]="address2()"/>
-  }
-  <app-data-display [data]="cityStatePostalCode()"/>
-</div>
+<app-view-model [item]="address()">
+  <div class="container col-gap">
+    <mat-icon>{{icon()}}</mat-icon>
+    <app-data-display [data]="address1()"/>
+    @if(showAddress2() && address2().length > 0) {
+      <app-data-display [data]="address2()"/>
+    }
+    <app-data-display [data]="cityStatePostalCode()"/>
+  </div>
+</app-view-model>
