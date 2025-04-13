@@ -1,4 +1,4 @@
-import {Component, input, output} from '@angular/core';
+import {Component, input, output, model} from '@angular/core';
 import {Updatable} from '@app/shared/models/updatable';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -15,7 +15,7 @@ import {MatTooltip} from '@angular/material/tooltip';
   styleUrl: './view-model.component.scss'
 })
 export class ViewModelComponent<T extends Updatable> {
-  item = input.required<T>();
+  item = model.required<T>();
 
   showAllButtons = input(false);
 
