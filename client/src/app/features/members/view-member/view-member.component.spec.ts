@@ -1,16 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {Location} from '@angular/common';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TranslateModule} from '@ngx-translate/core';
 
-import { ViewMemberComponent } from './view-member.component';
-import {MemberService} from '@app/features/members/services/member.service';
+import {ViewMemberComponent} from './view-member.component';
 import {MemberTest} from '@app/features/members/testing/test-support';
-import {asyncData} from '@app/shared/testing';
 import {Member} from '@app/features/members/models';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatButtonHarness} from '@angular/material/button/testing';
-import {DataDisplayComponent} from '@app/shared/components/data-display/data-display.component';
 import {DataDisplayHarness} from '@app/shared/components/data-display/testing/data-display-harness';
 
 describe('ViewMemberComponent', () => {
