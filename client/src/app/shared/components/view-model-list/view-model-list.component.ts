@@ -1,9 +1,6 @@
-import {Component, model, input, output, OnInit, Signal} from '@angular/core';
-import {T} from '@angular/cdk/keycodes';
+import {Component, input, output, Signal, model} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
-import {FilterService} from '@app/shared/components/view-model-list/models/filter-service';
-import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {MatDivider} from '@angular/material/divider';
 
 @Component({
@@ -20,7 +17,7 @@ export class ViewModelListComponent<T> {
 
   filterId = input.required<number>();
 
-  list: Signal<T[]>;
+  list = model<T[]>();
   showAddButton = input(false);
   addClicked = output<void>();
 
@@ -28,8 +25,8 @@ export class ViewModelListComponent<T> {
     this.addClicked.emit();
   }
 
-  constructor(private filterSvc: FilterService<T>) {
+  /*constructor(private filterSvc: FilterService<T>) {
     this.list =
       toSignal(this.filterSvc.getAllByFilterId(this.filterId()), {initialValue: []});
-  }
+  }*/
 }
