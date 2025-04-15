@@ -1,9 +1,11 @@
 <div class="flex-column">
-  <div class="flex-row end">
-    <button mat-icon-button >
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-  <mat-divider/>
+  @if(showAddButton()) {
+    <div class="flex-row end">
+      <button mat-icon-button (click)="onAddItem()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <mat-divider/>
+  }
   <ng-content/>
 </div>
