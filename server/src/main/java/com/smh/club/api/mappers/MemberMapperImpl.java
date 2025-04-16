@@ -1,22 +1,18 @@
 package com.smh.club.api.mappers;
 
 import com.smh.club.api.contracts.mappers.MemberMapper;
-import com.smh.club.api.domain.entities.AddressEntity;
-import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.dto.address.AddressDto;
 import com.smh.club.api.dto.email.EmailDto;
-import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
-import java.util.List;
-
 import com.smh.club.api.dto.phone.PhoneDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * {@inheritDoc}
@@ -36,12 +32,8 @@ public class MemberMapperImpl extends DomainDataMapper implements MemberMapper {
      * {@inheritDoc}
      */
     @Override
-    public MemberEntity toEntity(MemberCreateDto dto) {
-        var entity = modelMapper.map(dto, MemberEntity.class);
-        dto.getAddresses().forEach(a -> entity.addAddress(modelMapper.map(a, AddressEntity.class)));
-        dto.getEmails().forEach(e -> entity.addEmail(modelMapper.map(e, EmailEntity.class)));
-        dto.getPhones().forEach(p -> entity.addPhone(modelMapper.map(p, PhoneEntity.class)));
-        return entity;
+    public MemberEntity toEntity(MemberDto dto) {
+        return modelMapper.map(dto, MemberEntity.class);
     }
 
     /**

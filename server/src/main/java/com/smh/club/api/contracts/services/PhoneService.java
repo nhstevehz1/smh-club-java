@@ -1,9 +1,8 @@
 package com.smh.club.api.contracts.services;
 
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
-import com.smh.club.api.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.dto.phone.PhoneMemberDto;
 import com.smh.club.api.response.PagedDto;
 import org.springframework.data.domain.Pageable;
 
@@ -19,9 +18,9 @@ public interface PhoneService {
      * Retrieves a page of phones from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link PhoneFullNameDto}.
+     * @return A {@link PagedDto} of type {@link PhoneMemberDto}.
      */
-    PagedDto<PhoneFullNameDto> getPage(Pageable pageable);
+    PagedDto<PhoneMemberDto> getPage(Pageable pageable);
 
     /**
      * Finds all phone numbers belonging to member.
@@ -42,10 +41,10 @@ public interface PhoneService {
     /**
      * Creates a phone and stores it in the database.
      *
-     * @param phone The {@link PhoneCreateDto} used to create the phone.
+     * @param phone The {@link PhoneDto} used to create the phone.
      * @return The newly created phone.
      */
-    PhoneDto createPhone(PhoneCreateDto phone);
+    PhoneDto createPhone(PhoneDto phone);
 
     /**
      * Updates a phone in the database.

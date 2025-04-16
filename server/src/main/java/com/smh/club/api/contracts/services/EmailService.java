@@ -1,9 +1,8 @@
 package com.smh.club.api.contracts.services;
 
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
-import com.smh.club.api.dto.email.EmailFullNameDto;
+import com.smh.club.api.dto.email.EmailMemberDto;
 import com.smh.club.api.response.PagedDto;
 import org.springframework.data.domain.Pageable;
 
@@ -19,9 +18,9 @@ public interface EmailService {
      * Retrieves a page of emails from the database.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link PagedDto} of type {@link EmailFullNameDto}.
+     * @return A {@link PagedDto} of type {@link EmailMemberDto}.
      */
-    PagedDto<EmailFullNameDto> getPage(Pageable pageable);
+    PagedDto<EmailMemberDto> getPage(Pageable pageable);
 
     /**
      * Finds all email addresses belonging to member.
@@ -42,10 +41,10 @@ public interface EmailService {
     /**
      * Creates an email and stores it in the database.
      *
-     * @param email The {@link EmailCreateDto} used to create the email.
+     * @param email The {@link EmailDto} used to create the email.
      * @return The newly created email.
      */
-    EmailDto createEmail(EmailCreateDto email);
+    EmailDto createEmail(EmailDto email);
 
     /**
      * Updates an email int he database.

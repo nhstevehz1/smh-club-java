@@ -1,11 +1,11 @@
 package com.smh.club.api.contracts.mappers;
 
 import com.smh.club.api.domain.entities.AddressEntity;
-import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
-import com.smh.club.api.dto.address.AddressFullNameDto;
-import java.util.List;
+import com.smh.club.api.dto.address.AddressMemberDto;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Maps address objects
@@ -13,12 +13,12 @@ import org.springframework.data.domain.Page;
 public interface AddressMapper {
 
     /**
-     * Maps an {@link AddressCreateDto} to an {@link AddressEntity}.
+     * Maps an {@link AddressDto} to an {@link AddressEntity}.
      *
-     * @param dto The {@link AddressCreateDto} to map.
+     * @param dto The {@link AddressDto} to map.
      * @return The resulting {@link AddressEntity}.
      */
-    AddressEntity toEntity(AddressCreateDto dto);
+    AddressEntity toEntity(AddressDto dto);
 
 
     /**
@@ -30,12 +30,12 @@ public interface AddressMapper {
     AddressDto toDto(AddressEntity entity);
 
     /**
-     * Maps an {@link AddressEntity} to an {@link AddressFullNameDto}
+     * Maps an {@link AddressEntity} to an {@link AddressMemberDto}
      *      *
      *      * @param entity {@link AddressEntity} to map.
-     *      * @return The resulting {@link AddressFullNameDto}.
+     *      * @return The resulting {@link AddressMemberDto}.
      */
-    AddressFullNameDto toAddressMemberDto(AddressEntity entity);
+    AddressMemberDto toAddressMemberDto(AddressEntity entity);
 
     /**
      * Updates an address object
@@ -58,7 +58,7 @@ public interface AddressMapper {
      * Maps a page of address entities to a page of DTOs.
      *
      * @param page The {@link Page} of {@link AddressEntity} to map.
-     * @return A page of {@link AddressFullNameDto}
+     * @return A page of {@link AddressMemberDto}
      */
-    Page<AddressFullNameDto> toPage(Page<AddressEntity> page);
+    Page<AddressMemberDto> toPage(Page<AddressEntity> page);
 }

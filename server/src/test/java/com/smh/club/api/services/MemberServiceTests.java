@@ -1,11 +1,8 @@
 package com.smh.club.api.services;
 
-import java.util.Optional;
-
 import com.smh.club.api.contracts.mappers.MemberMapper;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
 import org.instancio.Instancio;
@@ -27,6 +24,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
@@ -233,7 +232,7 @@ public class MemberServiceTests extends ServiceTests {
     @Test
     public void createMember_returns_member() {
         // setup
-        var create = Instancio.create(MemberCreateDto.class);
+        var create = Instancio.create(MemberDto.class);
         var member = Instancio.create(MemberDto.class);
         var entity = Instancio.create(MemberEntity.class);
 

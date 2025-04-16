@@ -1,20 +1,14 @@
 package com.smh.club.api.integrationtests;
 
-import static java.util.Comparator.comparingInt;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.dto.email.*;
 import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.email.EmailDto;
+import com.smh.club.api.dto.email.EmailMemberDto;
 import com.smh.club.api.response.CountResponse;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 import org.instancio.Instancio;
 import org.instancio.Selector;
 import org.instancio.junit.InstancioExtension;
@@ -43,8 +37,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
+import static java.util.Comparator.comparingInt;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -117,12 +118,12 @@ public class EmailIntegrationTests extends IntegrationTests {
                 .sorted(Comparator.comparingInt(EmailEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(EmailFullNameDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(EmailMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -139,13 +140,13 @@ public class EmailIntegrationTests extends IntegrationTests {
         Map<String, String> map = new HashMap<>();
         map.put(sortParamName,  "id,desc");
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(EmailFullNameDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(EmailMemberDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -163,12 +164,12 @@ public class EmailIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(sizeParamName, String.valueOf(pageSize));
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailMemberDto.class, map, path, sorted.size(),
             0, pageSize);
 
         var actual = executeListPage(testParams);
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(EmailFullNameDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(EmailMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -186,12 +187,12 @@ public class EmailIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(pageParamName, String.valueOf(page));
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(EmailMemberDto.class, map, path, sorted.size(),
             page, defaultPageSize);
 
         var actual = executeListPage(testParams);
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(EmailFullNameDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(EmailMemberDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -215,7 +216,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         map.put(sortParamName, sort);
         map.put(sizeParamName, String.valueOf(entitySize));
 
-        var testParams = PageTestParams.of(EmailFullNameDto.class, map, path, expected.getTotalElements(),
+        var testParams = PageTestParams.of(EmailMemberDto.class, map, path, expected.getTotalElements(),
             0, entitySize);
 
         var actual = executeListPage(testParams);
@@ -269,8 +270,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     @Test
     public void create_returns_dto_status_created() throws Exception {
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailCreateDto.class)
-            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(EmailDto.class)
+            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
             .create();
 
         // perform POST
@@ -296,8 +297,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailCreateDto.class)
-            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(EmailDto.class)
+            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
             .setBlank(nonNullableField)
             .create();
 
@@ -309,8 +310,8 @@ public class EmailIntegrationTests extends IntegrationTests {
     public void create_with_invalid_email_returns_bad_request() throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(EmailCreateDto.class)
-            .generate(field(EmailCreateDto::getMemberId), g -> g.oneOf(memberIdList))
+        var create = Instancio.of(EmailDto.class)
+            .generate(field(EmailDto::getMemberId), g -> g.oneOf(memberIdList))
             .set(field(EmailDto::getEmail), "X")
             .create();
 
@@ -443,11 +444,6 @@ public class EmailIntegrationTests extends IntegrationTests {
     }
 
     private void verify(EmailDto expected, EmailEntity actual) {
-        assertEquals(expected.getId(), actual.getId());
-        verify((EmailCreateDto) expected, actual);
-    }
-
-    private void verify(EmailCreateDto expected, EmailEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType().getEmailTypeName(),
@@ -461,7 +457,7 @@ public class EmailIntegrationTests extends IntegrationTests {
             actual.getEmailType().getEmailTypeName());
     }
 
-    private void verify(EmailEntity expected, EmailFullNameDto actual) {
+    private void verify(EmailEntity expected, EmailMemberDto actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getEmailType().getEmailTypeName(),
@@ -473,7 +469,7 @@ public class EmailIntegrationTests extends IntegrationTests {
         assertEquals(expected.getMember().getSuffix(), actual.getFullName().getSuffix());
     }
 
-    private void verify(List<EmailEntity> expected, List<EmailFullNameDto> actual) {
+    private void verify(List<EmailEntity> expected, List<EmailMemberDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
@@ -481,21 +477,21 @@ public class EmailIntegrationTests extends IntegrationTests {
         });
     }
 
-    private Map<String, SortFields<EmailEntity, EmailFullNameDto>> getSorts() {
+    private Map<String, SortFields<EmailEntity, EmailMemberDto>> getSorts() {
 
-        Map<String, SortFields<EmailEntity, EmailFullNameDto>> map = new HashMap<>();
+        Map<String, SortFields<EmailEntity, EmailMemberDto>> map = new HashMap<>();
         map.put("id", SortFields.of(Comparator.comparingInt(EmailEntity::getId),
-            Comparator.comparingInt(EmailFullNameDto::getId)));
+            Comparator.comparingInt(EmailMemberDto::getId)));
 
         map.put("email", SortFields.of(Comparator.comparing(EmailEntity::getEmail),
-            Comparator.comparing(EmailFullNameDto::getEmail)));
+            Comparator.comparing(EmailMemberDto::getEmail)));
 
         map.put("email_type", SortFields.of(Comparator.comparing(EmailEntity::getEmailType),
-            Comparator.comparing(EmailFullNameDto::getEmailType)));
+            Comparator.comparing(EmailMemberDto::getEmailType)));
 
         map.put("member_number", SortFields.of(
             Comparator.comparing(e -> e.getMember().getMemberNumber()),
-            Comparator.comparing(EmailFullNameDto::getMemberNumber)));
+            Comparator.comparing(EmailMemberDto::getMemberNumber)));
 
         map.put("full_name", SortFields.of(
             Comparator.comparing(e -> e.getMember().getLastName()),

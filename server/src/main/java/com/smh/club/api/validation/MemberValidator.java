@@ -1,6 +1,6 @@
 package com.smh.club.api.validation;
 
-import com.smh.club.api.dto.member.MemberBaseDto;
+import com.smh.club.api.dto.member.MemberDto;
 import com.smh.club.api.validation.constraints.BirthDate;
 import com.smh.club.api.validation.constraints.ValidMember;
 import jakarta.validation.ConstraintValidator;
@@ -17,7 +17,7 @@ import java.util.List;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 @Slf4j
-public class MemberValidator implements ConstraintValidator<ValidMember, MemberBaseDto> {
+public class MemberValidator implements ConstraintValidator<ValidMember, MemberDto> {
 
 
   @Override
@@ -27,7 +27,7 @@ public class MemberValidator implements ConstraintValidator<ValidMember, MemberB
   }
 
   @Override
-  public boolean isValid(MemberBaseDto memberDto, ConstraintValidatorContext constraintValidatorContext) {
+  public boolean isValid(MemberDto memberDto, ConstraintValidatorContext constraintValidatorContext) {
 
     try {
       var fields = getAllFields(memberDto.getClass());

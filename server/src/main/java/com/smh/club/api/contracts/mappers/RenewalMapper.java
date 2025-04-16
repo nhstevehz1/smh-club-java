@@ -1,11 +1,11 @@
 package com.smh.club.api.contracts.mappers;
 
 import com.smh.club.api.domain.entities.RenewalEntity;
-import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
-import com.smh.club.api.dto.renewal.RenewalFullNameDto;
-import java.util.List;
+import com.smh.club.api.dto.renewal.RenewalMemberDto;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Maps renewal objects.
@@ -13,12 +13,12 @@ import org.springframework.data.domain.Page;
 public interface RenewalMapper {
 
     /**
-     * Maps a {@link RenewalCreateDto} to a {@link RenewalEntity}.
+     * Maps a {@link RenewalDto} to a {@link RenewalEntity}.
      *
-     * @param dto The {@link RenewalCreateDto} to map.
+     * @param dto The {@link RenewalDto} to map.
      * @return The resulting {@link RenewalEntity}.
      */
-    RenewalEntity toEntity(RenewalCreateDto dto);
+    RenewalEntity toEntity(RenewalDto dto);
 
     /**
      * Maps a {@link RenewalEntity} to a {@link RenewalDto}.
@@ -29,12 +29,12 @@ public interface RenewalMapper {
     RenewalDto toDto(RenewalEntity entity);
 
     /**
-     * Maps a {@link RenewalEntity} to a {@link RenewalFullNameDto}.
+     * Maps a {@link RenewalEntity} to a {@link RenewalMemberDto}.
      *
      * @param entity {@link RenewalEntity} to map.
-     * @return The resulting {@link RenewalFullNameDto}.
+     * @return The resulting {@link RenewalMemberDto}.
      */
-    RenewalFullNameDto toRenewalMemberDto(RenewalEntity entity);
+    RenewalMemberDto toRenewalMemberDto(RenewalEntity entity);
 
     /**
      * Updates a renewal object
@@ -57,7 +57,7 @@ public interface RenewalMapper {
      * Maps a page of address entities to a page of DTOs.
      *
      * @param page The {@link Page} of {@link RenewalEntity} to map.
-     * @return A page of {@link RenewalFullNameDto}
+     * @return A page of {@link RenewalMemberDto}
      */
-    Page<RenewalFullNameDto> toPage(Page<RenewalEntity> page);
+    Page<RenewalMemberDto> toPage(Page<RenewalEntity> page);
 }

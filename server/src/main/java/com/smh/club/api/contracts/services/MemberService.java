@@ -1,11 +1,11 @@
 package com.smh.club.api.contracts.services;
 
-import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
 import com.smh.club.api.response.PagedDto;
-import java.util.Optional;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 /**
  * Business logic for members.
@@ -30,10 +30,10 @@ public interface MemberService {
     /**
      * Creates a member and stores it in the database.
      *
-     * @param member The {@link MemberCreateDto} used to create the member.
+     * @param member The {@link MemberDto} used to create the member.
      * @return The newly created {@link MemberDto}.
      */
-    MemberDto createMember(MemberCreateDto member);
+    MemberDto createMember(MemberDto member);
 
     /**
      * Updates a member in the database.

@@ -1,11 +1,11 @@
 package com.smh.club.api.contracts.mappers;
 
 import com.smh.club.api.domain.entities.PhoneEntity;
-import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
-import com.smh.club.api.dto.phone.PhoneFullNameDto;
-import java.util.List;
+import com.smh.club.api.dto.phone.PhoneMemberDto;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Maps phone objects
@@ -13,12 +13,12 @@ import org.springframework.data.domain.Page;
 public interface PhoneMapper {
 
     /**
-     * Maps a {@link PhoneCreateDto} to a {@link PhoneEntity}.
+     * Maps a {@link PhoneDto} to a {@link PhoneEntity}.
      *
-     * @param dto The {@link PhoneCreateDto} to map.
+     * @param dto The {@link PhoneDto} to map.
      * @return The resulting {@link PhoneEntity}.
      */
-    PhoneEntity toEntity(PhoneCreateDto dto);
+    PhoneEntity toEntity(PhoneDto dto);
 
     /**
      * Maps a {@link PhoneEntity} to a {@link PhoneDto}
@@ -29,12 +29,12 @@ public interface PhoneMapper {
     PhoneDto toDto(PhoneEntity entity);
 
     /**
-     * Maps a {@link PhoneEntity} to a {@link PhoneFullNameDto}
+     * Maps a {@link PhoneEntity} to a {@link PhoneMemberDto}
      *
      * @param entity {@link PhoneEntity} to map.
-     * @return The resulting {@link PhoneFullNameDto}.
+     * @return The resulting {@link PhoneMemberDto}.
      */
-    PhoneFullNameDto toPhoneMemberDto(PhoneEntity entity);
+    PhoneMemberDto toPhoneMemberDto(PhoneEntity entity);
 
     /**
      * Updates a phone object
@@ -58,7 +58,7 @@ public interface PhoneMapper {
      * Maps a page of address entities to a page of DTOs.
      *
      * @param page The {@link Page} of {@link PhoneEntity} to map.
-     * @return A page of {@link PhoneFullNameDto}
+     * @return A page of {@link PhoneMemberDto}
      */
-    Page<PhoneFullNameDto> toPage(Page<PhoneEntity> page);
+    Page<PhoneMemberDto> toPage(Page<PhoneEntity> page);
 }

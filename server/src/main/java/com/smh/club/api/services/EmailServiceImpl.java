@@ -5,9 +5,8 @@ import com.smh.club.api.contracts.services.EmailService;
 import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
-import com.smh.club.api.dto.email.EmailFullNameDto;
+import com.smh.club.api.dto.email.EmailMemberDto;
 import com.smh.club.api.response.PagedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<EmailFullNameDto> getPage(Pageable pageable) {
+    public PagedDto<EmailMemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -75,7 +74,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
      * {@inheritDoc}
      */
     @Override
-    public EmailDto createEmail(EmailCreateDto createDto) {
+    public EmailDto createEmail(EmailDto createDto) {
         log.debug("creating email: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -126,7 +125,7 @@ public class EmailServiceImpl extends AbstractServiceBase implements EmailServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSortString(o.getProperty(), EmailFullNameDto.class, EmailEntity.class)
+                    getSortString(o.getProperty(), EmailMemberDto.class, EmailEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

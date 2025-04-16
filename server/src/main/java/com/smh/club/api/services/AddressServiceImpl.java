@@ -5,13 +5,9 @@ import com.smh.club.api.contracts.services.AddressService;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
-import com.smh.club.api.dto.address.AddressFullNameDto;
+import com.smh.club.api.dto.address.AddressMemberDto;
 import com.smh.club.api.response.PagedDto;
-
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -38,7 +37,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<AddressFullNameDto> getPage(Pageable pageable) {
+    public PagedDto<AddressMemberDto> getPage(Pageable pageable) {
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
@@ -74,7 +73,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
      * {@inheritDoc}
      */
     @Override
-    public AddressDto createAddress(AddressCreateDto address) {
+    public AddressDto createAddress(AddressDto address) {
         log.debug("creating address: {}", address);
 
         var memberRef = memberRepo.getReferenceById(address.getMemberId());
@@ -126,7 +125,7 @@ public class AddressServiceImpl extends AbstractServiceBase implements AddressSe
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSortString(o.getProperty(), AddressFullNameDto.class, AddressEntity.class)
+                    getSortString(o.getProperty(), AddressMemberDto.class, AddressEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

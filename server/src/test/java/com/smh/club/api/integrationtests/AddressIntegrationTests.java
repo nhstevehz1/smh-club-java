@@ -1,11 +1,12 @@
 package com.smh.club.api.integrationtests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smh.club.api.dto.address.*;
 import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
+import com.smh.club.api.dto.address.AddressDto;
+import com.smh.club.api.dto.address.AddressMemberDto;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.instancio.Instancio;
 import org.instancio.Selector;
@@ -118,12 +119,12 @@ public class AddressIntegrationTests extends IntegrationTests {
                 .sorted(Comparator.comparingInt(AddressEntity::getId)).toList();
 
         Map<String,String> map = new HashMap<>();
-        var testParams = PageTestParams.of(AddressFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
-        assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressFullNameDto::getId)).toList(), actual);
+        assertEquals(actual.stream().sorted(Comparator.comparingInt(AddressMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -142,13 +143,13 @@ public class AddressIntegrationTests extends IntegrationTests {
         Map<String, String> map = new HashMap<>();
         map.put(sortParamName,  "id,desc");
 
-        var testParams = PageTestParams.of(AddressFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             0, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(AddressFullNameDto::getId).reversed()).toList(), actual);
+                .sorted(Comparator.comparingInt(AddressMemberDto::getId).reversed()).toList(), actual);
 
         var expected = sorted.stream().limit(defaultPageSize).toList();
 
@@ -166,13 +167,13 @@ public class AddressIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(sizeParamName, String.valueOf(pageSize));
 
-        var testParams = PageTestParams.of(AddressFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             0, pageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(AddressFullNameDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(AddressMemberDto::getId)).toList(), actual);
 
         var expected = sorted.stream().limit(pageSize).toList();
 
@@ -193,13 +194,13 @@ public class AddressIntegrationTests extends IntegrationTests {
         Map<String,String> map = new HashMap<>();
         map.put(pageParamName, String.valueOf(page));
 
-        var testParams = PageTestParams.of(AddressFullNameDto.class, map, path, sorted.size(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, sorted.size(),
             page, defaultPageSize);
 
         var actual = executeListPage(testParams);
 
         assertEquals(actual.stream()
-                .sorted(Comparator.comparingInt(AddressFullNameDto::getId)).toList(), actual);
+                .sorted(Comparator.comparingInt(AddressMemberDto::getId)).toList(), actual);
 
         var skip = defaultPageSize * page;
         var expected = sorted.stream().skip(skip).limit(defaultPageSize).toList();
@@ -223,7 +224,7 @@ public class AddressIntegrationTests extends IntegrationTests {
         map.put(sortParamName, sort);
         map.put(sizeParamName, String.valueOf(entitySize));
 
-        var testParams = PageTestParams.of(AddressFullNameDto.class, map, path, expected.getTotalElements(),
+        var testParams = PageTestParams.of(AddressMemberDto.class, map, path, expected.getTotalElements(),
             0, entitySize);
 
         var actual = executeListPage(testParams);
@@ -297,7 +298,7 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void create_returns_dto_status_created(String validPattern) throws Exception {
         // create addresses
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(AddressCreateDto.class)
+        var create = Instancio.of(AddressDto.class)
                 .generate(field(AddressDto::getMemberId),
                     g -> g.oneOf(memberIdList))
                 .generate(field(AddressDto::getPostalCode), g -> g.text().pattern(validPattern))
@@ -328,8 +329,8 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void create_with_nonNullable_field_returns_bad_request(Selector nonNullableField) throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(AddressCreateDto.class)
-            .generate(field(AddressCreateDto::getMemberId),
+        var create = Instancio.of(AddressDto.class)
+            .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
             .setBlank(nonNullableField)
             .create();
@@ -342,10 +343,10 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void create_with_null_postalCode_returns_bad_request() throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(AddressCreateDto.class)
-            .generate(field(AddressCreateDto::getMemberId),
+        var create = Instancio.of(AddressDto.class)
+            .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
-            .setBlank(field(AddressCreateDto::getPostalCode))
+            .setBlank(field(AddressDto::getPostalCode))
             .create();
 
         // perform POST
@@ -362,8 +363,8 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void create_nullableField_returns_dto_status_created(Selector nullableField) throws Exception {
         // create address
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(AddressCreateDto.class)
-            .generate(field(AddressCreateDto::getMemberId),
+        var create = Instancio.of(AddressDto.class)
+            .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
             .setBlank(nullableField)
             .create();
@@ -383,9 +384,9 @@ public class AddressIntegrationTests extends IntegrationTests {
     public void create_with_invalid_zip_returns_bad_request() throws Exception {
         // setup
         var memberIdList = memberRepo.findAll().stream().map(MemberEntity::getId).toList();
-        var create = Instancio.of(AddressCreateDto.class)
-            .set(field(AddressCreateDto::getPostalCode), "AAA")
-            .generate(field(AddressCreateDto::getMemberId),
+        var create = Instancio.of(AddressDto.class)
+            .set(field(AddressDto::getPostalCode), "AAA")
+            .generate(field(AddressDto::getMemberId),
                 g -> g.oneOf(memberIdList))
             .create();
 
@@ -522,14 +523,8 @@ public class AddressIntegrationTests extends IntegrationTests {
 
         return repo.saveAllAndFlush(entities);
     }
-    
 
     private void verify(AddressDto expected, AddressEntity actual) {
-        assertEquals(expected.getId(), actual.getId());
-        verify((AddressCreateDto)expected, actual);
-    }
-
-    private void verify(AddressCreateDto expected, AddressEntity actual) {
         assertEquals(expected.getMemberId(), actual.getMember().getId());
         assertEquals(expected.getAddress1(), actual.getAddress1());
         assertEquals(expected.getAddress2(), actual.getAddress2());
@@ -551,7 +546,7 @@ public class AddressIntegrationTests extends IntegrationTests {
             actual.getAddressType().getAddressTypeName());
     }
 
-    private void verify(AddressEntity expected, AddressFullNameDto actual) {
+    private void verify(AddressEntity expected, AddressMemberDto actual) {
         assertEquals(expected.getMember().getFirstName(), actual.getFullName().getFirstName());
         assertEquals(expected.getMember().getMiddleName(), actual.getFullName().getMiddleName());
         assertEquals(expected.getMember().getLastName(), actual.getFullName().getLastName());
@@ -565,7 +560,7 @@ public class AddressIntegrationTests extends IntegrationTests {
             actual.getAddressType().getAddressTypeName());
     }
 
-    private void verify(List<AddressEntity> expected, List<AddressFullNameDto> actual) {
+    private void verify(List<AddressEntity> expected, List<AddressMemberDto> actual) {
         expected.forEach(e -> {
             var found = actual.stream().filter(a -> a.getId() == e.getId()).findFirst();
             assertTrue(found.isPresent());
@@ -573,33 +568,33 @@ public class AddressIntegrationTests extends IntegrationTests {
         });
     }
 
-    private Map<String, SortFields<AddressEntity, AddressFullNameDto>> getSorts() {
+    private Map<String, SortFields<AddressEntity, AddressMemberDto>> getSorts() {
 
-        Map<String, SortFields<AddressEntity, AddressFullNameDto>> map = new HashMap<>();
+        Map<String, SortFields<AddressEntity, AddressMemberDto>> map = new HashMap<>();
         map.put("id", SortFields.of(Comparator.comparingInt(AddressEntity::getId),
-            Comparator.comparingInt(AddressFullNameDto::getId)));
+            Comparator.comparingInt(AddressMemberDto::getId)));
 
         map.put("address1", SortFields.of(Comparator.comparing(AddressEntity::getAddress1),
-            Comparator.comparing(AddressFullNameDto::getAddress1)));
+            Comparator.comparing(AddressMemberDto::getAddress1)));
 
         map.put("address2", SortFields.of(Comparator.comparing(AddressEntity::getAddress2),
-            Comparator.comparing(AddressFullNameDto::getAddress2)));
+            Comparator.comparing(AddressMemberDto::getAddress2)));
 
         map.put("city", SortFields.of(Comparator.comparing(AddressEntity::getCity),
-            Comparator.comparing(AddressFullNameDto::getCity)));
+            Comparator.comparing(AddressMemberDto::getCity)));
 
         map.put("state", SortFields.of(Comparator.comparing(AddressEntity::getState),
-            Comparator.comparing(AddressFullNameDto::getState)));
+            Comparator.comparing(AddressMemberDto::getState)));
 
         map.put("postal_code", SortFields.of(Comparator.comparing(AddressEntity::getPostalCode),
-            Comparator.comparing(AddressFullNameDto::getPostalCode)));
+            Comparator.comparing(AddressMemberDto::getPostalCode)));
 
         map.put("address_type", SortFields.of(Comparator.comparing(AddressEntity::getAddressType),
-            Comparator.comparing(AddressFullNameDto::getAddressType)));
+            Comparator.comparing(AddressMemberDto::getAddressType)));
 
         map.put("member_number", SortFields.of(
             Comparator.comparing(e -> e.getMember().getMemberNumber()),
-            Comparator.comparing(AddressFullNameDto::getMemberNumber)));
+            Comparator.comparing(AddressMemberDto::getMemberNumber)));
 
         map.put("full_name", SortFields.of(
             Comparator.comparing(e -> e.getMember().getLastName()),

@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.EmailEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.EmailRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
-import com.smh.club.api.dto.email.EmailFullNameDto;
+import com.smh.club.api.dto.email.EmailMemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -69,7 +68,7 @@ public class EmailServiceTests extends ServiceTests {
        var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-       var list = Instancio.ofList(EmailFullNameDto.class)
+       var list = Instancio.ofList(EmailMemberDto.class)
            .size(20)
            .create();
 
@@ -124,7 +123,7 @@ public class EmailServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(EmailFullNameDto.class)
+        var list = Instancio.ofList(EmailMemberDto.class)
             .size(20)
             .create();
 
@@ -164,7 +163,7 @@ public class EmailServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(EmailFullNameDto.class)
+        var list = Instancio.ofList(EmailMemberDto.class)
             .size(pageSize)
             .create();
 
@@ -225,7 +224,7 @@ public class EmailServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(EmailCreateDto.class)
+        var create = Instancio.of(EmailDto.class)
                 .set(field(EmailDto::getMemberId), member.getId())
                 .create();
 

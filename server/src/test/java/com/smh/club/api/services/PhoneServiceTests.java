@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
-import com.smh.club.api.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.dto.phone.PhoneMemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -68,7 +67,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneFullNameDto.class)
+        var list = Instancio.ofList(PhoneMemberDto.class)
             .size(20)
             .create();
 
@@ -123,7 +122,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneFullNameDto.class)
+        var list = Instancio.ofList(PhoneMemberDto.class)
             .size(20)
             .create();
 
@@ -162,7 +161,7 @@ public class PhoneServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(PhoneFullNameDto.class)
+        var list = Instancio.ofList(PhoneMemberDto.class)
             .size(pageSize)
             .create();
 
@@ -223,7 +222,7 @@ public class PhoneServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(PhoneCreateDto.class)
+        var create = Instancio.of(PhoneDto.class)
                 .set(field(PhoneDto::getMemberId), member.getId())
                 .create();
 
