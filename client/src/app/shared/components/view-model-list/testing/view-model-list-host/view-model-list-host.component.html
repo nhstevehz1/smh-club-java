@@ -1,3 +1,8 @@
-<app-view-model-list [list]="models()">
-
-</app-view-model-list>
+<app-view-model-list
+    [list]="models()"
+    [allowAdd]="allowAdd()"
+    [allowItemEdit]="allowEdit()"
+    [allowItemDelete]="allowDelete()"
+    (addClicked)="onAdd()"
+    (editItemClicked)="onEditItem($event)"
+    (deleteItemClicked)="onDeleteItem($event)"/>

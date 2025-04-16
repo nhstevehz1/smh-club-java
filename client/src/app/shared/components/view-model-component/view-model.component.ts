@@ -17,10 +17,8 @@ import {MatTooltip} from '@angular/material/tooltip';
 export class ViewModelComponent<T extends Updatable> {
   item = model.required<T>();
 
-  showAllButtons = input(false);
-
-  showEditButton = input(false);
-  showDeleteButton = input(false);
+  allowEdit = input(false);
+  allowDelete = input(false);
 
   editClick = output<T>();
   deleteClick = output<T>();

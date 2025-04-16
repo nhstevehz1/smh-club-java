@@ -9,9 +9,8 @@ import {ViewModelTest, ViewModel} from '@app/shared/components/view-model-compon
   ],
   template: `<app-view-model
     [item]="model()"
-    [showAllButtons]="showButtons()"
-    [showEditButton]="showEdit()"
-    [showDeleteButton]="showDelete()"
+    [allowEdit]="showEdit()"
+    [allowDelete]="showDelete()"
     (deleteClick)="onDelete(model())"
     (editClick)="onEdit(model())">
       <span>this is a test</span>
