@@ -4,8 +4,9 @@ import {Observable} from 'rxjs';
 import {CrudService} from '@app/shared/services/api-service/crud-service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 import {Updatable} from '@app/shared/models/updatable';
+import {PagedDataService} from '@app/shared/services/api-service/paged-data-service';
 
-export abstract class BaseApiService<L, C, T extends Updatable> implements CrudService<L, C, T> {
+export abstract class BaseApiService<T extends Updatable, P extends T> implements CrudService<T>, PagedDataService<P> {
 
   readonly baseUri: string;
 
@@ -14,11 +15,11 @@ export abstract class BaseApiService<L, C, T extends Updatable> implements CrudS
     this.baseUri = baseUri;
   }
 
-  getPagedData(pageRequest: PageRequest): Observable<PagedData<L>> {
+  getPagedData(pageRequest: PageRequest): Observable<PagedData<P>> {
     const query = pageRequest.createQuery();
     const uri = query == null ? `${this.baseUri}/page`: `${this.baseUri}/page${query}`;
 
-    return this.http.get<PagedData<L>>(uri);
+    return this.http.get<PagedData<P>>(uri);
   }
 
   get(id: number) : Observable<T> {
@@ -29,7 +30,7 @@ export abstract class BaseApiService<L, C, T extends Updatable> implements CrudS
     return this.http.get<T[]>(`${this.baseUri}/all`)
   }
 
-  create(create: C): Observable<T> {
+  create(create: T): Observable<T> {
     return this.http.post<T>(this.baseUri, create);
   }
 

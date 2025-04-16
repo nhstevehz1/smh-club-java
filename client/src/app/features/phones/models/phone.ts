@@ -1,14 +1,11 @@
 import {FullName} from '@app/shared/models';
 
-export interface PhoneCreate {
-    country_code: string;
-    phone_number: string;
-    phone_type: PhoneType;
-}
-
-export interface Phone extends PhoneCreate {
-    id: number;
-    member_id: number;
+export interface Phone {
+  id: number;
+  member_id: number;
+  country_code: string;
+  phone_number: string;
+  phone_type: PhoneType;
 }
 
 export interface PhoneMember extends Phone {

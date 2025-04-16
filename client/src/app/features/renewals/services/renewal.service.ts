@@ -5,13 +5,13 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DateTime} from 'luxon';
 
-import {Renewal, RenewalCreate, RenewalMember} from '@app/features/renewals/models/renewal';
+import {Renewal, RenewalMember} from '@app/features/renewals/models/renewal';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 
 @Injectable()
-export class RenewalService extends BaseApiService<RenewalMember, RenewalCreate, Renewal>{
+export class RenewalService extends BaseApiService<Renewal, RenewalMember>{
 
   constructor(http: HttpClient) {
     super('/api/v1/renewals', http);
@@ -31,7 +31,7 @@ export class RenewalService extends BaseApiService<RenewalMember, RenewalCreate,
     );
   }
 
-  override create(create: RenewalCreate): Observable<Renewal> {
+  override create(create: Renewal): Observable<Renewal> {
     return super.create(create).pipe(
       map(data => {
         const date = data.renewal_date as unknown as string;

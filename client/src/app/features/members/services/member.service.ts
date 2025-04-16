@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DateTime} from 'luxon';
 
-import {Member, MemberCreate} from '@app/features/members/models/member';
+import {Member} from '@app/features/members/models/member';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 import {Address} from '@app/features/addresses/models';
@@ -14,7 +14,7 @@ import {Phone} from '@app/features/phones/models';
 import {Renewal} from '@app/features/renewals/models';
 
 @Injectable()
-export class MemberService extends BaseApiService<Member, MemberCreate, Member> {
+export class MemberService extends BaseApiService<Member, Member> {
 
   constructor(http: HttpClient) {
     super('/api/v1/members', http);
@@ -31,15 +31,13 @@ export class MemberService extends BaseApiService<Member, MemberCreate, Member> 
     );
   }
 
-
-
   override get(id: number): Observable<Member> {
     return super.get(id).pipe(
       map(data => this.castDateTimeValues(data))
     );
   }
 
-  override create(create: MemberCreate): Observable<Member> {
+  override create(create: Member): Observable<Member> {
     return super.create(create).pipe(
       map(data => this.castDateTimeValues(data))
     );
