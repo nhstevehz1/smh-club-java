@@ -76,6 +76,18 @@
       "title": "Détails du profil"
     }
   },
+  "editDialog": {
+    "address": {
+      "create": "Créer une adresse",
+      "delete": "Supprimer l'adresse ?",
+      "update": "Mise à jour de l'adresse"
+    },
+    "email": {
+      "create": "Créer un courriel",
+      "delete": "Supprimer le courrier électronique ?",
+      "update": "Mise à jour du courrier électronique"
+    }
+  },
   "emails": {
     "editor": {
       "email": {
