@@ -11,7 +11,7 @@ import {AuthService} from '@app/core/auth/services/auth.service';
 
 import {DateTimeToFormatPipe} from '@app/shared/pipes';
 
-import {MemberCreate, Member} from '@app/features/members/models/member';
+import {Member} from '@app/features/members/models/member';
 import {MemberService} from '@app/features/members/services/member.service';
 import {MemberTableService} from '@app/features/members/services/member-table.service';
 import {MemberEditDialogService} from '@app/features/members/services/member-edit-dialog.service';
@@ -41,7 +41,7 @@ import {MemberEditorComponent} from '@app/features/members/member-editor/member-
   templateUrl: './list-members.component.html',
   styleUrl: './list-members.component.scss'
 })
-export class ListMembersComponent extends BaseTableComponent<MemberCreate, Member, Member, MemberEditorComponent> {
+export class ListMembersComponent extends BaseTableComponent<Member, Member, MemberEditorComponent> {
 
   constructor(auth: AuthService,
               svc: MemberService,

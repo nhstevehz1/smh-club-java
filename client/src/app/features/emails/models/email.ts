@@ -1,17 +1,14 @@
 import {FullName} from '@app/shared/models';
 
-export interface EmailCreate {
-    email: string;
-    email_type: EmailType;
-}
-
-export interface Email extends EmailCreate {
-    id: number;
-    member_id: number;
+export interface Email {
+  id: number;
+  member_id: number;
+  email: string;
+  email_type: EmailType;
 }
 
 export interface EmailMember extends Email {
-    full_name: FullName;
+  full_name: FullName;
 }
 
 export enum EmailType {

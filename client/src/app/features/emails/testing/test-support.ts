@@ -3,7 +3,7 @@ import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
 import {EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
 import {PagedData} from '@app/shared/services/api-service/models';
-import {EmailMember, EmailType, EmailCreate, Email} from '@app/features/emails/models/email';
+import {EmailMember, EmailType, Email} from '@app/features/emails/models/email';
 import {EmailEditorComponent} from '@app/features/emails/email-editor/email-editor.component';
 import {TestHelpers} from '@app/shared/testing';
 
@@ -35,13 +35,6 @@ export class EmailTest {
         last_name: prefix + ' Last',
         suffix: prefix + ' Suffix'
       }
-    }
-  }
-
-  static generateEmailCreate(): EmailCreate {
-    return {
-      email: 'test-create@email.com',
-      email_type: EmailType.Home
     }
   }
 

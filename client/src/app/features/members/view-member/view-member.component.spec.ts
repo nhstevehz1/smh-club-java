@@ -1,59 +1,38 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {Location} from '@angular/common';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TranslateModule} from '@ngx-translate/core';
 
-import { ViewMemberComponent } from './view-member.component';
-import {MemberService} from '@app/features/members/services/member.service';
+import {ViewMemberComponent} from './view-member.component';
 import {MemberTest} from '@app/features/members/testing/test-support';
-import {asyncData} from '@app/shared/testing';
 import {Member} from '@app/features/members/models';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatButtonHarness} from '@angular/material/button/testing';
+import {DataDisplayHarness} from '@app/shared/components/data-display/testing/data-display-harness';
 
 describe('ViewMemberComponent', () => {
   let component: ViewMemberComponent;
   let fixture: ComponentFixture<ViewMemberComponent>;
   let loader: HarnessLoader;
 
-  let apiSvcMock: jasmine.SpyObj<MemberService>;
-  let locationMock: jasmine.SpyObj<Location>;
-
   let member: Member;
 
   beforeEach(async () => {
-    apiSvcMock = jasmine.createSpyObj('MemberService',
-      ['get', 'getAddresses', 'getEmails', 'getPhones', 'getRenewals']);
-
-    locationMock = jasmine.createSpyObj('Location', ['back']);
 
     await TestBed.configureTestingModule({
       imports: [
         ViewMemberComponent,
         TranslateModule.forRoot({})
-      ], providers: [
-        {provide: MemberService, useValue: {}},
-        {provide: Location, useValue: {}}
       ]
-    }).overrideProvider(MemberService, {useValue: apiSvcMock})
-      .overrideProvider(Location, {useValue: locationMock})
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewMemberComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
 
     member = MemberTest.generateMember(1);
-    fixture.componentRef.setInput('id', member.id);
-
-    apiSvcMock.getAddresses.and.returnValue(asyncData([]));
-    apiSvcMock.getEmails.and.returnValue(asyncData([]));
-    apiSvcMock.getPhones.and.returnValue(asyncData([]));
-    apiSvcMock.getRenewals.and.returnValue(asyncData([]));
   });
 
   it('should create', async () => {
-    apiSvcMock.get.and.returnValue(asyncData(member));
+    fixture.componentRef.setInput('member', member);
 
     fixture.detectChanges();
     await fixture.whenStable();
@@ -61,63 +40,66 @@ describe('ViewMemberComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('interactions on init', () => {
-    it('should call MemberService.get', async ()=> {
-      const spy = apiSvcMock.get.and.returnValue(asyncData(member));
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(spy).toHaveBeenCalledWith(member.id);
+  describe('test component', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('member', member);
     });
 
-    it('should set member', async () => {
-      apiSvcMock.get.and.returnValue(asyncData(member));
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(component.member()).toEqual(member);
+    it('should contain the correct number of app-data-display elements', async ()=> {
+      const harnesses = await loader.getAllHarnesses(DataDisplayHarness);
+      expect(harnesses.length).toEqual(4);
     });
 
-    it('expect fullName to be correct', async ()=> {
-      apiSvcMock.get.and.returnValue(asyncData(member));
-      const fullName = `${member.first_name} ${member.middle_name} ${member.last_name} ${member.suffix}`
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(component.fullName()).toEqual(fullName);
-    });
-  });
-
-  describe('component interactions', () => {
-    beforeEach(async () => {
-      apiSvcMock.get.and.returnValue(asyncData(member));
-      fixture.detectChanges();
-      await fixture.whenStable();
-    });
-
-    it('should contain back button', async () => {
+    it('should should render full name', async ()=> {
       const harness =
-        await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', text: 'arrow_back'}));
+        await loader.getHarnessOrNull(DataDisplayHarness.with({selector: '#fullName'}));
       expect(harness).toBeTruthy();
     });
 
-    it('back button click should call onBack', async () => {
-      const spy = spyOn(component, 'onBack').and.stub();
+    it('full name should have the correct label', async ()=> {
       const harness =
-        await loader.getHarness(MatButtonHarness.with({variant: 'icon', text: 'arrow_back'}));
-
-      await harness.click();
-
-      expect(spy).toHaveBeenCalled();
+        await loader.getHarness(DataDisplayHarness.with({selector: '#fullName'}));
+      const label = await harness.getLabel();
+      expect(label).toEqual('members.view.member');
     });
 
-    it('onBack should call Location.back', async () => {
-      const spy = locationMock.back.and.stub();
-      component.onBack();
-      expect(spy).toHaveBeenCalled();
+    it('should should render member number', async ()=> {
+      const harness =
+        await loader.getHarnessOrNull(DataDisplayHarness.with({selector: '#memberNumber'}));
+      expect(harness).toBeTruthy();
+    });
+
+    it('member number should contain the correct label', async ()=> {
+      const harness =
+        await loader.getHarness(DataDisplayHarness.with({selector: '#memberNumber'}));
+      const label = await harness.getLabel();
+      expect(label).toEqual('members.view.number');
+    });
+
+    it('should should render birth date', async ()=> {
+      const harness =
+        await loader.getHarnessOrNull(DataDisplayHarness.with({selector: '#birthDate'}));
+      expect(harness).toBeTruthy();
+    });
+
+    it('birth date should have the correct label', async ()=> {
+      const harness =
+        await loader.getHarness(DataDisplayHarness.with({selector: '#birthDate'}));
+      const label = await harness.getLabel();
+      expect(label).toEqual('members.view.birthDate');
+    });
+
+    it('should should render joined date', async ()=> {
+      const harness =
+        await loader.getHarnessOrNull(DataDisplayHarness.with({selector: '#joinedDate'}));
+      expect(harness).toBeTruthy();
+    });
+
+    it('joined date should have the correct label', async ()=> {
+      const harness =
+        await loader.getHarness(DataDisplayHarness.with({selector: '#joinedDate'}));
+      const label = await harness.getLabel();
+      expect(label).toEqual('members.view.joinedDate');
     });
   });
 });

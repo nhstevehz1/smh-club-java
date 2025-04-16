@@ -10,7 +10,7 @@ import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/mod
 
 import {PhoneService} from '@app/features/phones/services/phone.service';
 import {PhoneTableService} from '@app/features/phones/services/phone-table.service';
-import {PhoneCreate, PhoneMember, Phone} from '@app/features/phones/models/phone';
+import {PhoneMember, Phone} from '@app/features/phones/models/phone';
 import {PhoneEditDialogService} from '@app/features/phones/services/phone-edit-dialog.service';
 import {PhoneEditorComponent} from '@app/features/phones/phone-editor/phone-editor.component';
 import {mergeMap, of} from 'rxjs';
@@ -28,7 +28,7 @@ import {map} from 'rxjs/operators';
   templateUrl: './list-phones.component.html',
   styleUrl: './list-phones.component.scss'
 })
-export class ListPhonesComponent extends BaseTableComponent<PhoneCreate, Phone, PhoneMember, PhoneEditorComponent>  {
+export class ListPhonesComponent extends BaseTableComponent<Phone, PhoneMember, PhoneEditorComponent>  {
 
   constructor(auth: AuthService,
               svc: PhoneService,

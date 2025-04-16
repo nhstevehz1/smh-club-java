@@ -8,7 +8,7 @@ import {
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
 import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/models';
 
-import {EmailCreate, EmailMember, Email} from '@app/features/emails/models/email';
+import {EmailMember, Email} from '@app/features/emails/models/email';
 import {EmailService} from '@app/features/emails/services/email.service';
 import {EmailTableService} from '@app/features/emails/services/email-table.service';
 import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
@@ -29,7 +29,7 @@ import {map} from 'rxjs/operators';
   styleUrl: './list-emails.component.scss'
 })
 export class ListEmailsComponent
-  extends BaseTableComponent<EmailCreate, Email, EmailMember, EmailEditorComponent> {
+  extends BaseTableComponent<Email, EmailMember, EmailEditorComponent> {
 
   constructor(auth: AuthService,
               svc: EmailService,

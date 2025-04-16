@@ -1,4 +1,6 @@
-<div class="flex-row row-gap">
-  <mat-icon>{{icon()}}</mat-icon>
-  <app-data-display [data]="emailAddress()"/>
-</div>
+<app-view-model [item]="email()">
+  <div class="flex-row row-gap">
+    <mat-icon>{{icon()}}</mat-icon>
+    <app-data-display [data]="emailAddress()"/>
+  </div>
+</app-view-model>

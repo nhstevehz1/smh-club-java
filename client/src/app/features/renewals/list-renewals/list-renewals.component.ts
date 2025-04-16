@@ -9,7 +9,7 @@ import {
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
 import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/models';
 
-import {RenewalCreate, RenewalMember, Renewal} from '@app/features/renewals/models/renewal';
+import {RenewalMember, Renewal} from '@app/features/renewals/models/renewal';
 import {RenewalService} from '@app/features/renewals/services/renewal.service';
 import {RenewalTableService} from '@app/features/renewals/services/renewal-table.service';
 import {RenewalEditDialogService} from '@app/features/renewals/services/renewal-edit-dialog.service';
@@ -23,7 +23,7 @@ import {RenewalEditorComponent} from '@app/features/renewals/renewal-editor/rene
   styleUrl: './list-renewals.component.scss'
 })
 export class ListRenewalsComponent
-  extends BaseTableComponent<RenewalCreate, Renewal, RenewalMember, RenewalEditorComponent>  {
+  extends BaseTableComponent<Renewal, RenewalMember, RenewalEditorComponent>  {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
   private _table!: SortablePageableTableComponent<RenewalMember>;

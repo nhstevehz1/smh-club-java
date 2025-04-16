@@ -28,20 +28,20 @@ import {Editor} from '@app/shared/components/base-editor/editor';
   imports: [],
   template: ``
 })
-export abstract class BaseTableComponent<C, T extends Updatable, L extends Updatable, E extends Editor<T>> implements OnInit, AfterViewInit {
+export abstract class BaseTableComponent<T extends Updatable, P extends T, E extends Editor<T>> implements OnInit, AfterViewInit {
 
   @ViewChild(SortablePageableTableComponent, {static: true})
-  table!: SortablePageableTableComponent<L>;
+  table!: SortablePageableTableComponent<P>;
 
   readonly resultsLength = signal(0);
-  readonly datasource = signal(new MatTableDataSource<L>());
-  readonly columns = signal<ColumnDef<L>[]>([]);
+  readonly datasource = signal(new MatTableDataSource<P>());
+  readonly columns = signal<ColumnDef<P>[]>([]);
   readonly hasWriteRole = computed(() => this.auth.hasPermission(PermissionType.write));
   readonly errors = signal<string | undefined>(undefined);
 
   protected constructor(protected auth: AuthService,
-                        protected apiSvc: BaseApiService<L, C, T>,
-                        protected tableSvc: BaseTableService<L>,
+                        protected apiSvc: BaseApiService<T, P>,
+                        protected tableSvc: BaseTableService<P>,
                         protected dialogSvc: BaseEditDialogService<T, E>) {
   }
 
@@ -65,7 +65,7 @@ export abstract class BaseTableComponent<C, T extends Updatable, L extends Updat
     return this.dialogSvc.openDialog(dialogInput);
   }
 
-  protected updateItem(entity: L) {
+  protected updateItem(entity: P) {
     this.datasource.update((ds) => {
       const idx = ds.data.findIndex(item => item.id === entity.id);
       ds.data[idx] = entity;
@@ -99,7 +99,7 @@ export abstract class BaseTableComponent<C, T extends Updatable, L extends Updat
     return  pr;
   }
 
-  private getCurrentPage(): Observable<PagedData<L>> {
+  private getCurrentPage(): Observable<PagedData<P>> {
     const pr = this.getPageRequest(
       this.table.paginator.pageIndex, this.table.paginator.pageSize,
       this.table.sort.active, this.table.sort.direction);
@@ -107,7 +107,7 @@ export abstract class BaseTableComponent<C, T extends Updatable, L extends Updat
     return this.apiSvc.getPagedData(pr).pipe(first());
   }
 
-  protected processPageData(data: PagedData<L>): void {
+  protected processPageData(data: PagedData<P>): void {
     this.resultsLength.update(() => data.page.totalElements);
     this.datasource.update((ds) => {
       ds.data = data._content;

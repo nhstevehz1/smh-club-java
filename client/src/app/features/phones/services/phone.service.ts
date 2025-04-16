@@ -4,11 +4,11 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {PagedData, PageRequest} from '@app/shared/services/api-service/models';
-import {Phone, PhoneCreate, PhoneMember, PhoneType} from '@app/features/phones/models/phone';
+import {Phone, PhoneMember, PhoneType} from '@app/features/phones/models/phone';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 
 @Injectable()
-export class PhoneService extends BaseApiService<PhoneMember, PhoneCreate, Phone> {
+export class PhoneService extends BaseApiService<Phone, PhoneMember> {
 
   constructor(http: HttpClient) {
     super('/api/v1/phones', http);
@@ -25,7 +25,7 @@ export class PhoneService extends BaseApiService<PhoneMember, PhoneCreate, Phone
     );
   }
 
-  override create(create: PhoneCreate): Observable<Phone> {
+  override create(create: Phone): Observable<Phone> {
     return super.create(create).pipe(
       map(data => {
         data.phone_type = data.phone_type as unknown as PhoneType

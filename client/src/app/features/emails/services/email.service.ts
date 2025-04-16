@@ -5,11 +5,11 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {PagedData, PageRequest} from '@app/shared/services/api-service/models';
-import {Email, EmailCreate, EmailMember, EmailType} from '@app/features/emails/models/email';
+import {Email, EmailMember, EmailType} from '@app/features/emails/models/email';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 
 @Injectable()
-export class EmailService extends BaseApiService<EmailMember, EmailCreate, Email> {
+export class EmailService extends BaseApiService<Email, EmailMember> {
 
   constructor(http: HttpClient) {
     super('/api/v1/emails', http);
@@ -26,7 +26,7 @@ export class EmailService extends BaseApiService<EmailMember, EmailCreate, Email
     );
   }
 
-  override create(create: EmailCreate): Observable<Email> {
+  override create(create: Email): Observable<Email> {
     return super.create(create).pipe(
       map(data => {
         data.email_type = data.email_type as unknown as EmailType;

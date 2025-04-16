@@ -2,12 +2,14 @@ import {Component} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 
 
-import {SortablePageableTableComponent} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
+import {
+  SortablePageableTableComponent
+} from '@app/shared/components/sortable-pageable-table/sortable-pageable-table.component';
 import {EditAction, EditEvent, EditDialogInput, EditDialogResult} from '@app/shared/components/base-edit-dialog/models';
 
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
 import {AuthService} from '@app/core/auth/services/auth.service';
-import {TableModelCreate, TableModel} from '@app/shared/components/base-table-component/testing/models/test-models';
+import {TableModel} from '@app/shared/components/base-table-component/testing/models/test-models';
 import {MockTableApiService} from '@app/shared/components/base-table-component/testing/services/mock-table-api.service';
 import {MockTableService} from '@app/shared/components/base-table-component/testing/services/mock-table.service';
 
@@ -15,8 +17,9 @@ import {
   MockTableEditDialogService
 } from '@app/shared/components/base-table-component/testing/services/mock-table-edit-dialog.service';
 import {Observable} from 'rxjs';
-import {MockTableEditorComponent} from '@app/shared/components/base-table-component/testing/mock-editor/mock-table-editor.component';
-import {BaseTableTest} from '@app/shared/components/base-table-component/testing/test-support';
+import {
+  MockTableEditorComponent
+} from '@app/shared/components/base-table-component/testing/mock-editor/mock-table-editor.component';
 
 @Component({
   selector: 'app-mock-base-table',
@@ -26,7 +29,7 @@ import {BaseTableTest} from '@app/shared/components/base-table-component/testing
   templateUrl: './mock-base-table.component.html'
 })
 export class MockBaseTableComponent
-  extends BaseTableComponent<TableModelCreate, TableModel, TableModel, MockTableEditorComponent> {
+  extends BaseTableComponent<TableModel, TableModel, MockTableEditorComponent> {
 
   constructor(auth: AuthService,
               testSvc: MockTableApiService,

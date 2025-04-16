@@ -9,12 +9,11 @@ import {
 import {BaseTableComponent} from '@app/shared/components/base-table-component/base-table.component';
 import {EditAction, EditEvent} from '@app/shared/components/base-edit-dialog/models';
 
-import {AddressCreate, AddressMember, Address} from '@app/features/addresses/models/address';
+import {AddressMember, Address} from '@app/features/addresses/models/address';
 import {AddressService} from '@app/features/addresses/services/address.service';
 import {AddressTableService} from '@app/features/addresses/services/address-table.service';
 import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
-
 
 @Component({
   selector: 'app-list-addresses',
@@ -25,7 +24,7 @@ import {AddressEditorComponent} from '@app/features/addresses/address-editor/add
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class ListAddressesComponent
-  extends BaseTableComponent<AddressCreate, Address, AddressMember, AddressEditorComponent> {
+  extends BaseTableComponent<Address, AddressMember, AddressEditorComponent> {
 
   constructor(auth: AuthService,
               svc: AddressService,

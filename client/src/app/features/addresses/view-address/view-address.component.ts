@@ -1,20 +1,22 @@
-import {Component, input, computed} from '@angular/core';
+import {Component, computed, model} from '@angular/core';
 import {Address, AddressType} from '@app/features/addresses/models';
 import {DataDisplayComponent} from '@app/shared/components/data-display/data-display.component';
 import {MatIcon} from '@angular/material/icon';
+import {ViewModelComponent} from '@app/shared/components/view-model-component/view-model.component';
 
 @Component({
   selector: 'app-view-address',
   imports: [
     DataDisplayComponent,
-    MatIcon
+    MatIcon,
+    ViewModelComponent
   ],
   templateUrl: './view-address.component.html',
   styleUrl: './view-address.component.scss'
 })
 export class ViewAddressComponent {
 
-  address = input.required<Address>();
+  address = model.required<Address>();
 
   address1 = computed(() => this.address().address1);
   address2 = computed(() => this.address().address2);

@@ -4,12 +4,12 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {Address, AddressCreate, AddressMember, AddressType} from '@app/features/addresses/models/address';
+import {Address, AddressMember, AddressType} from '@app/features/addresses/models/address';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 
 @Injectable()
-export class AddressService extends BaseApiService<AddressMember, AddressCreate, Address>{
+export class AddressService extends BaseApiService<Address, AddressMember>{
 
   constructor(http: HttpClient) {
     super('/api/v1/addresses', http)
@@ -25,7 +25,7 @@ export class AddressService extends BaseApiService<AddressMember, AddressCreate,
       }));
   }
 
-  override create(create: AddressCreate): Observable<Address> {
+  override create(create: Address): Observable<Address> {
     return super.create(create).pipe(
       map(data => {
         data.address_type = data.address_type as unknown as AddressType;
