@@ -1,4 +1,4 @@
-import {Component, input, computed, model} from '@angular/core';
+import {Component, computed, model} from '@angular/core';
 import {Email, EmailType} from '@app/features/emails/models';
 import {DataDisplayComponent} from '@app/shared/components/data-display/data-display.component';
 import {MatIcon} from '@angular/material/icon';
