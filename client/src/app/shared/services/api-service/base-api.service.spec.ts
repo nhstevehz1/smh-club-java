@@ -51,7 +51,7 @@ describe('BaseApiService', () => {
   });
 
   it('should call POST api', () =>{
-    const mockCreate = BaseApiTest.generateCreateModel();
+    const mockCreate = BaseApiTest.generateModel();
 
     service.create(mockCreate).subscribe();
 

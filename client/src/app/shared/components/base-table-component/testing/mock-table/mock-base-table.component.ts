@@ -26,7 +26,7 @@ import {BaseTableTest} from '@app/shared/components/base-table-component/testing
   templateUrl: './mock-base-table.component.html'
 })
 export class MockBaseTableComponent
-  extends BaseTableComponent<TableModelCreate, TableModel, TableModel, MockTableEditorComponent> {
+  extends BaseTableComponent<TableModel, TableModel, MockTableEditorComponent> {
 
   constructor(auth: AuthService,
               testSvc: MockTableApiService,

@@ -3,7 +3,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {EditAction, EditDialogInput} from '@app/shared/components/base-edit-dialog/models';
 import {FormModelGroup} from '@app/shared/components/base-editor/models';
 import {ColumnDef} from '@app/shared/components/sortable-pageable-table/models';
-import {PhoneCreate, PhoneMember, Phone, PhoneType} from '@app/features/phones/models/phone';
+import {PhoneMember, Phone, PhoneType} from '@app/features/phones/models/phone';
 import {PhoneEditorComponent} from '@app/features/phones/phone-editor/phone-editor.component';
 import {PagedData} from '@app/shared/services/api-service/models';
 import {TestHelpers} from '@app/shared/testing';
@@ -37,14 +37,6 @@ export class PhoneTest {
         last_name: prefix + ' Last',
         suffix: prefix + ' Suffix'
       }
-    }
-  }
-
-  static generatePhoneCreate(): PhoneCreate {
-    return {
-      country_code: '1',
-      phone_number: `6035555555`,
-      phone_type: PhoneType.Home
     }
   }
 
