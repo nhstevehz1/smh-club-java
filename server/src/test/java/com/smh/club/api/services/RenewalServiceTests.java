@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
-import com.smh.club.api.dto.renewal.RenewalFullNameDto;
+import com.smh.club.api.dto.renewal.RenewalMemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -70,7 +69,7 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalFullNameDto.class)
+        var list = Instancio.ofList(RenewalMemberDto.class)
             .size(20)
             .create();
 
@@ -138,7 +137,7 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalFullNameDto.class)
+        var list = Instancio.ofList(RenewalMemberDto.class)
             .size(20)
             .create();
 
@@ -177,7 +176,7 @@ public class RenewalServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(RenewalFullNameDto.class)
+        var list = Instancio.ofList(RenewalMemberDto.class)
             .size(pageSize)
             .create();
 
@@ -238,7 +237,7 @@ public class RenewalServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(RenewalCreateDto.class)
+        var create = Instancio.of(RenewalDto.class)
                 .set(field(RenewalDto::getMemberId), member.getId())
                 .create();
 

@@ -2,7 +2,6 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.config.MapperConfig;
 import com.smh.club.api.domain.entities.RenewalEntity;
-import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -32,9 +31,9 @@ public class RenewalMapperTests {
             .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Test
-    public void from_createDto_to_entity() {
+    public void from_dto_to_entity() {
         // setup
-        var create = Instancio.create(RenewalCreateDto.class);
+        var create = Instancio.create(RenewalDto.class);
 
         // execute
         var entity = mapper.toEntity(create);

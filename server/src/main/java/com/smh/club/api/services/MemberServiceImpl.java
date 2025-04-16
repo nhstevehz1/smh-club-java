@@ -4,11 +4,9 @@ import com.smh.club.api.contracts.mappers.MemberMapper;
 import com.smh.club.api.contracts.services.MemberService;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
 import com.smh.club.api.response.PagedDto;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * {@inheritDoc}
@@ -62,7 +62,7 @@ public class MemberServiceImpl extends AbstractServiceBase implements MemberServ
      * {@inheritDoc}
      */
     @Override
-    public MemberDto createMember(MemberCreateDto member) {
+    public MemberDto createMember(MemberDto member) {
         log.info("creating member: {}", member);
 
         var memberEntity = memberMapper.toEntity(member);

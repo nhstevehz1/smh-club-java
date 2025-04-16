@@ -2,7 +2,6 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.config.MapperConfig;
 import com.smh.club.api.domain.entities.PhoneEntity;
-import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -32,9 +31,9 @@ public class PhoneMapperTests {
             .set(Keys.COLLECTION_MAX_SIZE, 0);
 
     @Test
-    public void from_createDto_to_entity() {
+    public void from_dto_to_entity() {
         // setup
-        var create = Instancio.create(PhoneCreateDto.class);
+        var create = Instancio.create(PhoneDto.class);
 
         // execute
         var entity = mapper.toEntity(create);

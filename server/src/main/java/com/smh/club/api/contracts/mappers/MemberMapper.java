@@ -1,13 +1,11 @@
 package com.smh.club.api.contracts.mappers;
 
 import com.smh.club.api.domain.entities.MemberEntity;
-
-import java.util.List;
-
-import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDetailDto;
 import com.smh.club.api.dto.member.MemberDto;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Maps member objects
@@ -15,11 +13,11 @@ import org.springframework.data.domain.Page;
 public interface MemberMapper {
 
     /**
-     * Maps a {@link MemberCreateDto} to a {@link MemberEntity}.
-     * @param dto The {@link MemberCreateDto} to map.
+     * Maps a {@link MemberDto} to a {@link MemberEntity}.
+     * @param dto The {@link MemberDto} to map.
      * @return The resulting {@link MemberEntity}.
      */
-    MemberEntity toEntity(MemberCreateDto dto);
+    MemberEntity toEntity(MemberDto dto);
 
     /**
      * Maps a {@link MemberEntity} to a {@link MemberEntity}

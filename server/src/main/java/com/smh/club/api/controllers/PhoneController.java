@@ -1,9 +1,8 @@
 package com.smh.club.api.controllers;
 
 import com.smh.club.api.contracts.services.PhoneService;
-import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
-import com.smh.club.api.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.dto.phone.PhoneMemberDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -37,13 +36,13 @@ public class PhoneController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link PhoneFullNameDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link PhoneMemberDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("page")
-    public ResponseEntity<PagedDto<PhoneFullNameDto>> page(
+    public ResponseEntity<PagedDto<PhoneMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(PhoneFullNameDto.class)
+        @SortConstraint(PhoneMemberDto.class)
         Pageable pageable) {
 
         var page = phoneSvc.getPage(pageable);
@@ -79,13 +78,13 @@ public class PhoneController {
     /**
      * Endpoint for creating a phone.
      *
-     * @param phone The {@link PhoneCreateDto} used to create the object in the database
+     * @param phone The {@link PhoneDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link PhoneDto} representing the newly created object.
      */
     @PostMapping
     @PreAuthorize("hasAuthority('permission:write')")
     public ResponseEntity<PhoneDto> create(
-        @NotNull @Valid @RequestBody PhoneCreateDto phone) {
+        @NotNull @Valid @RequestBody PhoneDto phone) {
         return ResponseEntity.status(HttpStatus.CREATED).body(phoneSvc.createPhone(phone));
     }
 

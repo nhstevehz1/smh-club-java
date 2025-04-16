@@ -1,11 +1,11 @@
 package com.smh.club.api.contracts.mappers;
 
 import com.smh.club.api.domain.entities.EmailEntity;
-import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
-import com.smh.club.api.dto.email.EmailFullNameDto;
-import java.util.List;
+import com.smh.club.api.dto.email.EmailMemberDto;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Maps email objects
@@ -13,12 +13,12 @@ import org.springframework.data.domain.Page;
 public interface EmailMapper {
 
     /**
-     * Maps a {@link EmailCreateDto} to a {@link EmailEntity}.
+     * Maps a {@link EmailDto} to a {@link EmailEntity}.
      *
-     * @param dto The {@link EmailCreateDto} to map.
+     * @param dto The {@link EmailDto} to map.
      * @return The resulting {@link EmailEntity}.
      */
-    EmailEntity toEntity(EmailCreateDto dto);
+    EmailEntity toEntity(EmailDto dto);
 
     /**
      * Maps a {@link EmailEntity} to a {@link EmailDto}
@@ -29,12 +29,12 @@ public interface EmailMapper {
     EmailDto toDto(EmailEntity entity);
 
     /**
-     * Maps a {@link EmailEntity} to a {@link EmailFullNameDto}
+     * Maps a {@link EmailEntity} to a {@link EmailMemberDto}
      *
      * @param entity {@link EmailEntity} to map.
      * @return The resulting {@link EmailDto}.
      */
-    EmailFullNameDto toEmailMemberDto(EmailEntity entity);
+    EmailMemberDto toEmailMemberDto(EmailEntity entity);
     /**
      * Updates a email object.
      *
@@ -45,10 +45,10 @@ public interface EmailMapper {
     EmailEntity updateEntity(EmailDto dto, EmailEntity entity);
 
     /**
-     * Maps a list of {@link EmailEntity} to a list of {@link EmailFullNameDto}.
+     * Maps a list of {@link EmailEntity} to a list of {@link EmailMemberDto}.
      *
      * @param entityList the {@link List} of {@link EmailEntity} to map.
-     * @return A list of {@link EmailFullNameDto}.
+     * @return A list of {@link EmailMemberDto}.
      */
     List<EmailDto> toDtoList(List<EmailEntity> entityList);
 
@@ -58,5 +58,5 @@ public interface EmailMapper {
      * @param page The {@link Page} of {@link EmailEntity} to map.
      * @return A page of {@link EmailDto}
      */
-    Page<EmailFullNameDto> toPage(Page<EmailEntity> page);
+    Page<EmailMemberDto> toPage(Page<EmailEntity> page);
 }

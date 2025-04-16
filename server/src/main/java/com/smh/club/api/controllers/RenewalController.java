@@ -1,9 +1,8 @@
 package com.smh.club.api.controllers;
 
 import com.smh.club.api.contracts.services.RenewalService;
-import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
-import com.smh.club.api.dto.renewal.RenewalFullNameDto;
+import com.smh.club.api.dto.renewal.RenewalMemberDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -37,13 +36,13 @@ public class RenewalController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link RenewalFullNameDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link RenewalMemberDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("page")
-    public ResponseEntity<PagedDto<RenewalFullNameDto>> page(
+    public ResponseEntity<PagedDto<RenewalMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(RenewalFullNameDto.class)
+        @SortConstraint(RenewalMemberDto.class)
         Pageable pageable) {
 
         var page = renewSvc.getPage(pageable);
@@ -79,13 +78,13 @@ public class RenewalController {
     /**
      * Endpoint for creating a renewal.
      *
-     * @param renewal The {@link RenewalCreateDto } used to create the object in the database
+     * @param renewal The {@link RenewalDto } used to create the object in the database
      * @return A {@link ResponseEntity} containing a {@link RenewalDto} representing the newly created object.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping
     public ResponseEntity<RenewalDto> create(
-        @NotNull @Valid @RequestBody RenewalCreateDto renewal) {
+        @NotNull @Valid @RequestBody RenewalDto renewal) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(renewSvc.createRenewal(renewal));
     }

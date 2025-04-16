@@ -2,7 +2,6 @@ package com.smh.club.api.mappers;
 
 import com.smh.club.api.config.MapperConfig;
 import com.smh.club.api.domain.entities.MemberEntity;
-import com.smh.club.api.dto.member.MemberCreateDto;
 import com.smh.club.api.dto.member.MemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
@@ -33,9 +32,9 @@ public class MemberMapperTests {
             .set(Keys.COLLECTION_MIN_SIZE, 1);
 
     @Test
-    public void from_create_to_entity() {
+    public void from_dto_to_entity() {
         // setup
-        var create = Instancio.of(MemberCreateDto.class)
+        var create = Instancio.of(MemberDto.class)
             .withSetting(Keys.COLLECTION_MAX_SIZE, 1)
             .create();
 
@@ -51,34 +50,6 @@ public class MemberMapperTests {
         assertEquals(create.getSuffix(), entity.getSuffix());
         assertEquals(create.getBirthDate(), entity.getBirthDate());
         assertEquals(create.getJoinedDate(), entity.getJoinedDate());
-
-
-        assertEquals(create.getAddresses().size(), entity.getAddresses().size());
-        var expAddress = create.getAddresses().getFirst();
-        var actAddress = entity.getAddresses().getFirst();
-        assertEquals(expAddress.getAddress1(), actAddress.getAddress1());
-        assertEquals(expAddress.getAddress2(), actAddress.getAddress2());
-        assertEquals(expAddress.getCity(), actAddress.getCity());
-        assertEquals(expAddress.getState(), actAddress.getState());
-        assertEquals(expAddress.getPostalCode(), actAddress.getPostalCode());
-        assertEquals(expAddress.getAddressType().getAddressTypeName(),
-            actAddress.getAddressType().getAddressTypeName());
-
-        assertEquals(create.getEmails().size(), entity.getEmails().size());
-        var expEmail = create.getEmails().getFirst();
-        var actEmail = entity.getEmails().getFirst();
-        assertEquals(expEmail.getEmail(), actEmail.getEmail());
-        assertEquals(expEmail.getEmailType().getEmailTypeName(),
-            actEmail.getEmailType().getEmailTypeName());
-
-        assertEquals(create.getPhones().size(), entity.getPhones().size());
-        var expPhone = create.getPhones().getFirst();
-        var actPhone = entity.getPhones().getFirst();
-        assertEquals(expPhone.getPhoneNumber(), actPhone.getPhoneNumber());
-        assertEquals(expPhone.getPhoneType().getPhoneTypeName(),
-            actPhone.getPhoneType().getPhoneTypeName());
-
-        assertEquals(0, entity.getRenewals().size());
 
         // id should be zero
         assertEquals(0, entity.getId());

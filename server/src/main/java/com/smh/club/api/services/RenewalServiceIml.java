@@ -5,9 +5,8 @@ import com.smh.club.api.contracts.services.RenewalService;
 import com.smh.club.api.domain.entities.RenewalEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.RenewalsRepo;
-import com.smh.club.api.dto.renewal.RenewalCreateDto;
 import com.smh.club.api.dto.renewal.RenewalDto;
-import com.smh.club.api.dto.renewal.RenewalFullNameDto;
+import com.smh.club.api.dto.renewal.RenewalMemberDto;
 import com.smh.club.api.response.PagedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<RenewalFullNameDto> getPage(Pageable pageable) {
+    public PagedDto<RenewalMemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -75,7 +74,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
      * {@inheritDoc}
      */
     @Override
-    public RenewalDto createRenewal(RenewalCreateDto renewal) {
+    public RenewalDto createRenewal(RenewalDto renewal) {
         log.debug("creating renewal: {}", renewal);
 
         var memberRef = memberRepo.getReferenceById(renewal.getMemberId());
@@ -126,7 +125,7 @@ public class RenewalServiceIml extends AbstractServiceBase implements RenewalSer
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSortString(o.getProperty(), RenewalFullNameDto.class, RenewalEntity.class)
+                    getSortString(o.getProperty(), RenewalMemberDto.class, RenewalEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

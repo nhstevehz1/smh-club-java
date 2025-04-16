@@ -5,9 +5,8 @@ import com.smh.club.api.domain.entities.AddressEntity;
 import com.smh.club.api.domain.entities.MemberEntity;
 import com.smh.club.api.domain.repos.AddressRepo;
 import com.smh.club.api.domain.repos.MembersRepo;
-import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
-import com.smh.club.api.dto.address.AddressFullNameDto;
+import com.smh.club.api.dto.address.AddressMemberDto;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.WithSettings;
@@ -71,7 +70,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressFullNameDto.class)
+        var list = Instancio.ofList(AddressMemberDto.class)
             .size(20)
             .create();
 
@@ -141,7 +140,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressFullNameDto.class)
+        var list = Instancio.ofList(AddressMemberDto.class)
             .size(20)
             .create();
 
@@ -181,7 +180,7 @@ public class AddressServiceTests extends ServiceTests {
         var orderRequest = new Sort.Order(Sort.Direction.valueOf(direction), sort);
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(orderRequest));
 
-        var list = Instancio.ofList(AddressFullNameDto.class)
+        var list = Instancio.ofList(AddressMemberDto.class)
             .size(pageSize)
             .create();
 
@@ -242,8 +241,8 @@ public class AddressServiceTests extends ServiceTests {
         var member = Instancio.create(MemberEntity.class);
         when(memRepoMock.getReferenceById(member.getId())).thenReturn(member);
 
-        var create = Instancio.of(AddressCreateDto.class)
-                .set(field(AddressCreateDto::getMemberId), member.getId())
+        var create = Instancio.of(AddressDto.class)
+                .set(field(AddressDto::getMemberId), member.getId())
                 .create();
 
         var address = Instancio.of(AddressDto.class)

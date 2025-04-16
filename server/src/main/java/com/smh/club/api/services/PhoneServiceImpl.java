@@ -5,9 +5,8 @@ import com.smh.club.api.contracts.services.PhoneService;
 import com.smh.club.api.domain.entities.PhoneEntity;
 import com.smh.club.api.domain.repos.MembersRepo;
 import com.smh.club.api.domain.repos.PhoneRepo;
-import com.smh.club.api.dto.phone.PhoneCreateDto;
 import com.smh.club.api.dto.phone.PhoneDto;
-import com.smh.club.api.dto.phone.PhoneFullNameDto;
+import com.smh.club.api.dto.phone.PhoneMemberDto;
 import com.smh.club.api.response.PagedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public PagedDto<PhoneFullNameDto> getPage(Pageable pageable) {
+    public PagedDto<PhoneMemberDto> getPage(Pageable pageable) {
 
         var pageRequest = PageRequest.of(
             pageable.getPageNumber(),
@@ -75,7 +74,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
      * {@inheritDoc}
      */
     @Override
-    public PhoneDto createPhone(PhoneCreateDto createDto) {
+    public PhoneDto createPhone(PhoneDto createDto) {
         log.debug("creating phone: {}", createDto);
 
         var memberRef = memberRepo.getReferenceById(createDto.getMemberId());
@@ -126,7 +125,7 @@ public class PhoneServiceImpl extends AbstractServiceBase implements PhoneServic
         var orders =
             sort.get()
                 .map(o -> new Sort.Order(o.getDirection(),
-                    getSortString(o.getProperty(), PhoneFullNameDto.class, PhoneEntity.class)
+                    getSortString(o.getProperty(), PhoneMemberDto.class, PhoneEntity.class)
                         .orElseThrow(IllegalArgumentException::new))).toList();
 
         return Sort.by(orders);

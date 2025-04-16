@@ -1,9 +1,8 @@
 package com.smh.club.api.controllers;
 
 import com.smh.club.api.contracts.services.AddressService;
-import com.smh.club.api.dto.address.AddressCreateDto;
 import com.smh.club.api.dto.address.AddressDto;
-import com.smh.club.api.dto.address.AddressFullNameDto;
+import com.smh.club.api.dto.address.AddressMemberDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -38,13 +37,13 @@ public class AddressController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link AddressFullNameDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link AddressMemberDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("page")
-    public ResponseEntity<PagedDto<AddressFullNameDto>> page(
+    public ResponseEntity<PagedDto<AddressMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(AddressFullNameDto.class)
+        @SortConstraint(AddressMemberDto.class)
         Pageable pageable) {
 
         var page = addressSvc.getPage(pageable);
@@ -85,7 +84,7 @@ public class AddressController {
     @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping
     public ResponseEntity<AddressDto> create(
-        @NotNull @Valid @RequestBody AddressCreateDto address) {
+        @NotNull @Valid @RequestBody AddressDto address) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addressSvc.createAddress(address));
     }

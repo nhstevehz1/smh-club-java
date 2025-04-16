@@ -1,9 +1,8 @@
 package com.smh.club.api.controllers;
 
 import com.smh.club.api.contracts.services.EmailService;
-import com.smh.club.api.dto.email.EmailCreateDto;
 import com.smh.club.api.dto.email.EmailDto;
-import com.smh.club.api.dto.email.EmailFullNameDto;
+import com.smh.club.api.dto.email.EmailMemberDto;
 import com.smh.club.api.response.CountResponse;
 import com.smh.club.api.response.PagedDto;
 import com.smh.club.api.validation.constraints.SortConstraint;
@@ -37,13 +36,13 @@ public class EmailController {
      * if no sort is specified then the DEFAULT_SORT is used.
      *
      * @param pageable A {@link Pageable} that describes the sort.
-     * @return A {@link ResponseEntity} containing a page of {@link EmailFullNameDto}.
+     * @return A {@link ResponseEntity} containing a page of {@link EmailMemberDto}.
      */
     @PreAuthorize("hasAuthority('permission:read')")
     @GetMapping("page")
-    public ResponseEntity<PagedDto<EmailFullNameDto>> page(
+    public ResponseEntity<PagedDto<EmailMemberDto>> page(
         @PageableDefault(sort = {DEFAULT_SORT})
-        @SortConstraint(EmailFullNameDto.class)
+        @SortConstraint(EmailMemberDto.class)
         Pageable pageable) {
 
         var page = emailSvc.getPage(pageable);
@@ -78,13 +77,13 @@ public class EmailController {
     /**
      * Endpoint for creating an email.
      *
-     * @param email The {@link EmailCreateDto} used to create the object in the database
+     * @param email The {@link EmailDto} used to create the object in the database
      * @return A {@link ResponseEntity} containing an {@link EmailDto} representing the newly created object.
      */
     @PreAuthorize("hasAuthority('permission:write')")
     @PostMapping
     public ResponseEntity<EmailDto> create(
-        @NotNull @Valid @RequestBody EmailCreateDto email) {
+        @NotNull @Valid @RequestBody EmailDto email) {
         return ResponseEntity.status(HttpStatus.CREATED).body(emailSvc.createEmail(email));
     }
 

@@ -1,17 +1,18 @@
 package com.smh.club.api.validation;
 
-import com.smh.club.api.dto.renewal.RenewalCreateDto;
+import com.smh.club.api.dto.renewal.RenewalDto;
 import com.smh.club.api.validation.constraints.ValidRenewal;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import java.time.ZoneId;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.ZoneId;
+
 @Slf4j
-public class RenewalValidator implements ConstraintValidator<ValidRenewal, RenewalCreateDto> {
+public class RenewalValidator implements ConstraintValidator<ValidRenewal, RenewalDto> {
 
   @Override
-  public boolean isValid(RenewalCreateDto renewal, ConstraintValidatorContext constraintValidatorContext) {
+  public boolean isValid(RenewalDto renewal, ConstraintValidatorContext constraintValidatorContext) {
 
     // we are not validating on null.
     if (renewal == null || renewal.getRenewalDate() == null) {
