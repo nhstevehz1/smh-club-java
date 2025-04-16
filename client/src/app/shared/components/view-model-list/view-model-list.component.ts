@@ -3,7 +3,6 @@ import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
 import {ViewModelComponent} from '@app/shared/components/view-model-component/view-model.component';
-import {T} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-view-model-list',

@@ -1,11 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ViewModelListComponent } from './view-model-list.component';
+import {ViewModelListComponent} from './view-model-list.component';
 import {
   ViewModelListHostComponent
 } from '@app/shared/components/view-model-list/testing/view-model-list-host/view-model-list-host.component';
 import {ViewListModel, ViewModelListTest} from '@app/shared/components/view-model-list/testing/test-support';
-import {async} from 'rxjs';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness, ButtonHarnessFilters} from '@angular/material/button/testing';

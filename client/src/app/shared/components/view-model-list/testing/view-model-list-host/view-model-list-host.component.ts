@@ -15,12 +15,15 @@ export class ViewModelListHostComponent {
   allowEdit = input(false);
   allowDelete = input(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onAdd(): void {}
+  onAdd(): void {
+    console.trace('view model list, onAdd');
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-  onEditItem(item: ViewListModel) {}
+  onEditItem(item: ViewListModel) {
+    console.trace('view model list, onEditItem', item);
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-  onDeleteItem(item: ViewListModel) {}
+  onDeleteItem(item: ViewListModel) {
+    console.trace('view model list, onDeleteItem', item);
+  }
 }
