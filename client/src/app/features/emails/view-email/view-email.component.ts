@@ -1,4 +1,4 @@
-import {Component, computed, model} from '@angular/core';
+import {Component, input, computed, model} from '@angular/core';
 import {Email, EmailType} from '@app/features/emails/models';
 import {DataDisplayComponent} from '@app/shared/components/data-display/data-display.component';
 import {MatIcon} from '@angular/material/icon';
@@ -15,6 +15,7 @@ import {ViewModelComponent} from '@app/shared/components/view-model-component/vi
   styleUrl: './view-email.component.scss'
 })
 export class ViewEmailComponent {
+
   email = model.required<Email>();
 
   emailAddress = computed(() => this.email().email);
