@@ -8,10 +8,6 @@ import {DateTime} from 'luxon';
 import {Member} from '@app/features/members/models/member';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
-import {Address} from '@app/features/addresses/models';
-import {Email} from '@app/features/emails/models';
-import {Phone} from '@app/features/phones/models';
-import {Renewal} from '@app/features/renewals/models';
 
 @Injectable()
 export class MemberService extends BaseApiService<Member, Member> {
@@ -51,26 +47,6 @@ export class MemberService extends BaseApiService<Member, Member> {
 
   override delete(id: number): Observable<void> {
     return super.delete(id);
-  }
-
-  getAddresses(memberId: number): Observable<Address[]> {
-    const uri = `${this.baseUri}/${memberId}/addresses`;
-    return this.http.get<Address[]>(uri);
-  }
-
-  getEmails(memberId: number): Observable<Email[]> {
-    const uri = `${this.baseUri}/${memberId}/emails`;
-    return this.http.get<Email[]>(uri);
-  }
-
-  getPhones(memberId: number): Observable<Phone[]> {
-    const uri = `${this.baseUri}/${memberId}/phones`;
-    return this.http.get<Phone[]>(uri);
-  }
-
-  getRenewals(memberId: number): Observable<Renewal[]> {
-    const uri = `${this.baseUri}/${memberId}/renewals`;
-    return this.http.get<Renewal[]>(uri);
   }
 
   private castDateTimeValues(member: Member): Member {

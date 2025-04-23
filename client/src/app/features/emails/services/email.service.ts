@@ -7,9 +7,10 @@ import {map} from 'rxjs/operators';
 import {PagedData, PageRequest} from '@app/shared/services/api-service/models';
 import {Email, EmailMember, EmailType} from '@app/features/emails/models/email';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
+import {FilterByMemberService} from '@app/shared/services/api-service/filter-by-member-service';
 
 @Injectable()
-export class EmailService extends BaseApiService<Email, EmailMember> {
+export class EmailService extends BaseApiService<Email, EmailMember> implements FilterByMemberService<Email>{
 
   constructor(http: HttpClient) {
     super('/api/v1/emails', http);
@@ -19,7 +20,7 @@ export class EmailService extends BaseApiService<Email, EmailMember> {
     return super.getPagedData(pageRequest).pipe(
       map(pd => {
         if (pd && pd._content) {
-          pd._content.forEach(e => e.email_type = e.email_type as unknown as EmailType);
+          pd._content.map(e => this.castEmailType(e));
         }
         return pd;
       })
@@ -28,23 +29,29 @@ export class EmailService extends BaseApiService<Email, EmailMember> {
 
   override create(create: Email): Observable<Email> {
     return super.create(create).pipe(
-      map(data => {
-        data.email_type = data.email_type as unknown as EmailType;
-        return data;
-      })
+      map(data => this.castEmailType(data))
     )
   }
 
   override update(update: Email): Observable<Email> {
     return super.update(update).pipe(
-      map(data => {
-        data.email_type = data.email_type as unknown as EmailType;
-        return data;
-      })
+      map(data => this.castEmailType(data))
     )
   }
 
   override delete(id: number): Observable<void> {
     return super.delete(id);
+  }
+
+  public getAllByMember(memberId: number): Observable<Email[]> {
+    const uri = `/members/${memberId}/emails`;
+    return this.http.get<Email[]>(uri).pipe(
+      map(data => data.map(email => this.castEmailType(email)))
+    )
+  }
+
+  private castEmailType(email: Email): Email {
+    email.email_type = email.email_type as unknown as EmailType;
+    return email;
   }
 }

@@ -1,14 +1,14 @@
 <div class="content">
   <ng-content />
   <div class="flex-row end">
-    @if(showAllButtons() || showEditButton()){
+    @if(allowEdit()){
       <button mat-icon-button id="editButton"
               matTooltip="base.view.edit.toolTip"
               (click)="onEdit()">
         <mat-icon>edit</mat-icon>
       </button>
     }
-    @if(showAllButtons() || showDeleteButton()) {
+    @if(allowDelete()) {
       <button mat-icon-button id="deleteButton"
               matTooltip="base.view.edit.toolTip"
               (click)="onDelete()">

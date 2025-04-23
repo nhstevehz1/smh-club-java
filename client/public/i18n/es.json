@@ -76,6 +76,18 @@
       "title": "Detalles del perfil"
     }
   },
+  "editDialog": {
+    "address": {
+      "create": "Crear dirección",
+      "delete": "¿Borrar dirección?",
+      "update": "Actualizar dirección"
+    },
+    "email": {
+      "create": "Crear correo electrónico",
+      "delete": "¿Borrar el correo electrónico?",
+      "update": "Actualizar correo electrónico"
+    }
+  },
   "emails": {
     "editor": {
       "email": {
