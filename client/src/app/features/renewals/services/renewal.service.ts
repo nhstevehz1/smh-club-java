@@ -8,10 +8,11 @@ import {DateTime} from 'luxon';
 import {Renewal, RenewalMember} from '@app/features/renewals/models/renewal';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
+import {FilterByMemberService} from '@app/shared/services/api-service/filter-by-member-service';
 
 
 @Injectable()
-export class RenewalService extends BaseApiService<Renewal, RenewalMember>{
+export class RenewalService extends BaseApiService<Renewal, RenewalMember> implements FilterByMemberService<Renewal> {
 
   constructor(http: HttpClient) {
     super('/api/v1/renewals', http);
@@ -21,10 +22,7 @@ export class RenewalService extends BaseApiService<Renewal, RenewalMember>{
     return super.getPagedData(pageRequest).pipe(
       map(pd => {
         if (pd && pd._content) {
-          pd._content.forEach(r => {
-            const date = r.renewal_date as unknown as string;
-            r.renewal_date = DateTime.fromISO(date);
-          })
+          pd._content.map(r => this.castDateTimeValue(r))
         }
         return pd;
       })
@@ -33,25 +31,31 @@ export class RenewalService extends BaseApiService<Renewal, RenewalMember>{
 
   override create(create: Renewal): Observable<Renewal> {
     return super.create(create).pipe(
-      map(data => {
-        const date = data.renewal_date as unknown as string;
-        data.renewal_date = DateTime.fromISO(date);
-        return data;
-      })
+      map(data => this.castDateTimeValue(data))
     );
   }
 
   override update(update: Renewal): Observable<Renewal> {
     return super.update(update).pipe(
-      map(data => {
-        const date = data.renewal_date as unknown as string;
-        data.renewal_date = DateTime.fromISO(date);
-        return data;
-      })
+      map(data => this.castDateTimeValue(data))
     );
   }
 
   override delete(id: number): Observable<void> {
     return super.delete(id);
+  }
+
+  public getAllByMember(memberId: number): Observable<Renewal[]> {
+    const uri = `/members/${memberId}/renewals`;
+    return this.http.get<Renewal[]>(uri).pipe(
+      map(data => data.map(address => this.castDateTimeValue(address)))
+    );
+  }
+
+  private castDateTimeValue(renewal: Renewal): Renewal {
+    const date = renewal.renewal_date as unknown as string;
+    renewal.renewal_date = DateTime.fromISO(date);
+
+    return renewal;
   }
 }

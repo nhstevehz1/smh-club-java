@@ -1,24 +1,24 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ViewAddressListComponent} from './view-address-list.component';
-import {AuthService} from '@app/core/auth/services/auth.service';
-import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
-import {AddressService} from '@app/features/addresses/services/address.service';
-import {asyncData} from '@app/shared/testing';
+import {ViewRenewalListComponent} from './view-renewal-list.component';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {AddressTest} from '@app/features/addresses/testing';
+import {AuthService} from '@app/core/auth/services/auth.service';
 import {ViewModelListHarness} from '@app/shared/components/view-model-list/testing/view-model-list-harness';
 import {ViewModelHarness} from '@app/shared/components/view-model-component/testing/view-model-harness';
+import {RenewalEditDialogService} from '@app/features/renewals/services/renewal-edit-dialog.service';
+import {RenewalService} from '@app/features/renewals/services/renewal.service';
+import {asyncData} from '@app/shared/testing';
+import {RenewalTest} from '@app/features/renewals/testing/test-support';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 
-describe('ViewAddressListComponent', () => {
-  let component: ViewAddressListComponent;
-  let fixture: ComponentFixture<ViewAddressListComponent>;
+describe('ViewRenewalListComponent', () => {
+  let component: ViewRenewalListComponent;
+  let fixture: ComponentFixture<ViewRenewalListComponent>;
   let loader: HarnessLoader;
 
   let authSvcMock: jasmine.SpyObj<AuthService>;
-  let dialogSvcMock: jasmine.SpyObj<AddressEditDialogService>;
-  let apiSvcMock: jasmine.SpyObj<AddressService>;
+  let dialogSvcMock: jasmine.SpyObj<RenewalEditDialogService>;
+  let apiSvcMock: jasmine.SpyObj<RenewalService>;
 
   let harness: ViewModelListHarness;
   let modelHarnesses: ViewModelHarness[];
@@ -28,66 +28,66 @@ describe('ViewAddressListComponent', () => {
   beforeEach(async () => {
     authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
 
-    dialogSvcMock = jasmine.createSpyObj('AddressEditDialogService',
+    dialogSvcMock = jasmine.createSpyObj('RenewalEditDialogService',
       ['openDialog', 'generateDialogInput']);
 
-    apiSvcMock = jasmine.createSpyObj('AddressService', ['getAllByMember']);
+    apiSvcMock = jasmine.createSpyObj('RenewalService', ['getAllByMember']);
 
     await TestBed.configureTestingModule({
-      imports: [ViewAddressListComponent],
+      imports: [ViewRenewalListComponent],
       providers: [
         {provide: AuthService, useValue: {}},
-        {provide: AddressEditDialogService, useValue: {}},
-        {provide: AddressService, useValue: {}}
+        {provide: RenewalEditDialogService, useValue: {}},
+        {provide: RenewalService, useValue: {}}
       ]
     }).overrideProvider(AuthService, {useValue: authSvcMock})
-      .overrideProvider(AddressEditDialogService, {useValue: dialogSvcMock})
-      .overrideProvider(AddressService, {useValue: apiSvcMock})
-      .compileComponents();
+      .overrideProvider(RenewalEditDialogService, {useValue: dialogSvcMock})
+      .overrideProvider(RenewalService, {useValue: apiSvcMock})
+    .compileComponents();
 
-    fixture = TestBed.createComponent(ViewAddressListComponent);
+    fixture = TestBed.createComponent(ViewRenewalListComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should create', async () => {
+  it('should create', () => {
     fixture.componentRef.setInput('memberId', 0);
     expect(component).toBeTruthy();
   });
 
   describe('component interactions', () => {
     beforeEach(async () => {
-      const address = AddressTest.generateAddress();
-      fixture.componentRef.setInput('memberId', address.member_id);
+      const renewal = RenewalTest.generateRenewal();
+      fixture.componentRef.setInput('memberId', renewal.member_id);
 
       // must set to true for buttons to be rendered
       authSvcMock.hasPermission.and.returnValue(true);
-      apiSvcMock.getAllByMember.and.returnValue(asyncData([address]));
+      apiSvcMock.getAllByMember.and.returnValue(asyncData([renewal]));
 
       harness = await loader.getHarness(ViewModelListHarness);
       modelHarnesses = await loader.getAllHarnesses(ViewModelHarness);
     });
 
-    it('should call onAddItem when add address click', async () => {
+    it('should call onAddItem when add renewal click', async () => {
       const spy = spyOn(component, 'onAddItem').and.stub();
       await harness.addClick();
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should call onEditItem when edit address click', async () => {
+    it('should call onEditItem when edit renewal click', async () => {
       const spy = spyOn(component, 'onEditItem').and.stub();
       await modelHarnesses[0].editClick();
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should call onDeleteItem when delete address click', async() => {
+    it('should call onDeleteItem when delete renewal click', async() => {
       const spy = spyOn(component, 'onDeleteItem').and.stub();
       await modelHarnesses[0].deleteClick();
       expect(spy).toHaveBeenCalled();
     });
   });
 
-  describe('test address view list init', () => {
+  describe('test renewal view list init', () => {
     beforeEach(() => {
       memberId = 5;
       fixture.componentRef.setInput('memberId', memberId);

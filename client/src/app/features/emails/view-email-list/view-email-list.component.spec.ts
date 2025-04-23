@@ -1,24 +1,24 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ViewAddressListComponent} from './view-address-list.component';
-import {AuthService} from '@app/core/auth/services/auth.service';
-import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
-import {AddressService} from '@app/features/addresses/services/address.service';
-import {asyncData} from '@app/shared/testing';
+import {ViewEmailListComponent} from './view-email-list.component';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {AddressTest} from '@app/features/addresses/testing';
+import {AuthService} from '@app/core/auth/services/auth.service';
 import {ViewModelListHarness} from '@app/shared/components/view-model-list/testing/view-model-list-harness';
 import {ViewModelHarness} from '@app/shared/components/view-model-component/testing/view-model-harness';
+import {EmailEditDialogService} from '@app/features/emails/services/email-edit-dialog.service';
+import {EmailService} from '@app/features/emails/services/email.service';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {asyncData} from '@app/shared/testing';
+import {EmailTest} from '@app/features/emails/testing';
 
-describe('ViewAddressListComponent', () => {
-  let component: ViewAddressListComponent;
-  let fixture: ComponentFixture<ViewAddressListComponent>;
+describe('ViewEmailListComponent', () => {
+  let component: ViewEmailListComponent;
+  let fixture: ComponentFixture<ViewEmailListComponent>;
   let loader: HarnessLoader;
 
   let authSvcMock: jasmine.SpyObj<AuthService>;
-  let dialogSvcMock: jasmine.SpyObj<AddressEditDialogService>;
-  let apiSvcMock: jasmine.SpyObj<AddressService>;
+  let dialogSvcMock: jasmine.SpyObj<EmailEditDialogService>;
+  let apiSvcMock: jasmine.SpyObj<EmailService>;
 
   let harness: ViewModelListHarness;
   let modelHarnesses: ViewModelHarness[];
@@ -28,66 +28,66 @@ describe('ViewAddressListComponent', () => {
   beforeEach(async () => {
     authSvcMock = jasmine.createSpyObj('AuthService', ['hasPermission']);
 
-    dialogSvcMock = jasmine.createSpyObj('AddressEditDialogService',
+    dialogSvcMock = jasmine.createSpyObj('EmailEditDialogService',
       ['openDialog', 'generateDialogInput']);
 
-    apiSvcMock = jasmine.createSpyObj('AddressService', ['getAllByMember']);
+    apiSvcMock = jasmine.createSpyObj('EmailService', ['getAllByMember']);
 
     await TestBed.configureTestingModule({
-      imports: [ViewAddressListComponent],
+      imports: [ViewEmailListComponent],
       providers: [
         {provide: AuthService, useValue: {}},
-        {provide: AddressEditDialogService, useValue: {}},
-        {provide: AddressService, useValue: {}}
+        {provide: EmailEditDialogService, useValue: {}},
+        {provide: EmailService, useValue: {}}
       ]
     }).overrideProvider(AuthService, {useValue: authSvcMock})
-      .overrideProvider(AddressEditDialogService, {useValue: dialogSvcMock})
-      .overrideProvider(AddressService, {useValue: apiSvcMock})
-      .compileComponents();
+      .overrideProvider(EmailEditDialogService, {useValue: dialogSvcMock})
+      .overrideProvider(EmailService, {useValue: apiSvcMock})
+    .compileComponents();
 
-    fixture = TestBed.createComponent(ViewAddressListComponent);
+    fixture = TestBed.createComponent(ViewEmailListComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should create', async () => {
+  it('should create', () => {
     fixture.componentRef.setInput('memberId', 0);
     expect(component).toBeTruthy();
   });
 
   describe('component interactions', () => {
     beforeEach(async () => {
-      const address = AddressTest.generateAddress();
-      fixture.componentRef.setInput('memberId', address.member_id);
+      const email = EmailTest.generateEmail();
+      fixture.componentRef.setInput('memberId', email.member_id);
 
       // must set to true for buttons to be rendered
       authSvcMock.hasPermission.and.returnValue(true);
-      apiSvcMock.getAllByMember.and.returnValue(asyncData([address]));
+      apiSvcMock.getAllByMember.and.returnValue(asyncData([email]));
 
       harness = await loader.getHarness(ViewModelListHarness);
       modelHarnesses = await loader.getAllHarnesses(ViewModelHarness);
     });
 
-    it('should call onAddItem when add address click', async () => {
+    it('should call onAddItem when add email click', async () => {
       const spy = spyOn(component, 'onAddItem').and.stub();
       await harness.addClick();
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should call onEditItem when edit address click', async () => {
+    it('should call onEditItem when edit email click', async () => {
       const spy = spyOn(component, 'onEditItem').and.stub();
       await modelHarnesses[0].editClick();
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should call onDeleteItem when delete address click', async() => {
+    it('should call onDeleteItem when delete email click', async() => {
       const spy = spyOn(component, 'onDeleteItem').and.stub();
       await modelHarnesses[0].deleteClick();
       expect(spy).toHaveBeenCalled();
     });
   });
 
-  describe('test address view list init', () => {
+  describe('test email view list init', () => {
     beforeEach(() => {
       memberId = 5;
       fixture.componentRef.setInput('memberId', memberId);
