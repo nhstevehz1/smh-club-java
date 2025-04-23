@@ -53,26 +53,6 @@ export class MemberService extends BaseApiService<Member, Member> {
     return super.delete(id);
   }
 
-  getAddresses(memberId: number): Observable<Address[]> {
-    const uri = `${this.baseUri}/${memberId}/addresses`;
-    return this.http.get<Address[]>(uri);
-  }
-
-  getEmails(memberId: number): Observable<Email[]> {
-    const uri = `${this.baseUri}/${memberId}/emails`;
-    return this.http.get<Email[]>(uri);
-  }
-
-  getPhones(memberId: number): Observable<Phone[]> {
-    const uri = `${this.baseUri}/${memberId}/phones`;
-    return this.http.get<Phone[]>(uri);
-  }
-
-  getRenewals(memberId: number): Observable<Renewal[]> {
-    const uri = `${this.baseUri}/${memberId}/renewals`;
-    return this.http.get<Renewal[]>(uri);
-  }
-
   private castDateTimeValues(member: Member): Member {
       let date = member.birth_date as unknown as string;
       member.birth_date = DateTime.fromISO(date);

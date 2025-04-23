@@ -1,7 +1,5 @@
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-
-import {CrudService} from '@app/shared/services/api-service/crud-service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
 import {Updatable} from '@app/shared/models/updatable';
 import {PagedDataService} from '@app/shared/services/api-service/paged-data-service';

@@ -28,70 +28,55 @@ describe('ViewModelComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should contain one button when showAllButtons is false', async () => {
-    const harnesses = await loader.getAllHarnesses(MatButtonHarness);
-    expect(harnesses.length).toEqual(0);
-  });
-
-  it('show contain two buttons when showAllButtons is true', async () => {
-    fixture.componentRef.setInput('showButtons', true);
-    const harnesses = await loader.getAllHarnesses(MatButtonHarness);
-    expect(harnesses.length).toEqual(2);
-  })
-
-  it('should show edit button when showEditButton is true and showAllButtons is false', async() => {
-    fixture.componentRef.setInput('showEdit', true);
-    fixture.componentRef.setInput('showButtons', false);
+  it('should show edit button when allowEdit is true', async() => {
+    fixture.componentRef.setInput('allowEdit', true);
 
     const harness =
-      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', text: 'edit'}));
+      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', selector: '#editButton'}));
 
     expect(harness).toBeTruthy();
   });
 
-  it('should show edit button when showEditButton is false and showAllButtons is true', async() => {
-    fixture.componentRef.setInput('showEdit', false);
-    fixture.componentRef.setInput('showButtons', true);
+  it('should NOT show edit button when allowEdit is false', async() => {
+    fixture.componentRef.setInput('allowEdit', false);
 
     const harness =
-      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', text: 'edit'}));
+      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', selector: '#editButton'}));
 
-    expect(harness).toBeTruthy();
+    expect(harness).toBeFalsy();
   });
 
   it('edit button click should emit event with model', async () => {
-    fixture.componentRef.setInput('showEdit', true);
+    fixture.componentRef.setInput('allowEdit', true);
     const spy = spyOn(component, 'onEdit').and.stub();
 
     const harness =
-      await loader.getHarness(MatButtonHarness.with({variant: 'icon', text: 'edit'}));
+      await loader.getHarness(MatButtonHarness.with({variant: 'icon', selector: '#editButton'}));
     await harness.click();
 
     expect(spy).toHaveBeenCalledWith(component.model());
   });
 
-  it('should show delete button when showDeleteButton is true and showAllButtons is false', async() => {
-    fixture.componentRef.setInput('showDelete', true);
-    fixture.componentRef.setInput('showButtons', false);
+  it('should show delete button when allowDelete is true', async() => {
+    fixture.componentRef.setInput('allowDelete', true);
 
     const harness =
-      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', text: 'delete'}));
+      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', selector: '#deleteButton'}));
 
     expect(harness).toBeTruthy();
   });
 
-  it('should show delete button when showDeleteButton is false and showAllButtons is true', async() => {
-    fixture.componentRef.setInput('showDelete', false);
-    fixture.componentRef.setInput('showButtons', true);
+  it('should NOT show delete button when allowDelete is false', async() => {
+    fixture.componentRef.setInput('allowDelete', false);
 
     const harness =
-      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', text: 'delete'}));
+      await loader.getHarnessOrNull(MatButtonHarness.with({variant: 'icon', selector: '#deleteButton'}));
 
-    expect(harness).toBeTruthy();
+    expect(harness).toBeFalsy();
   });
 
   it('delete button click should emit event with model', async () => {
-    fixture.componentRef.setInput('showDelete', true);
+    fixture.componentRef.setInput('allowDelete', true);
     const spy = spyOn(component, 'onDelete').and.stub();
 
     const harness =

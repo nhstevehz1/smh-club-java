@@ -12,8 +12,8 @@ export abstract class BaseViewList<T extends Updatable, C extends Editor<T>> {
   items = model<T[]>([]);
   error = model<string>();
 
-  constructor(private apiSvc: CrudService<T>,
-              private dialogSvc: EditDialogService<T, C>) {}
+  protected constructor(private apiSvc: CrudService<T>,
+                        private dialogSvc: EditDialogService<T, C>) {}
 
 
   protected processAction(title: string, context: T, action: EditAction): void {

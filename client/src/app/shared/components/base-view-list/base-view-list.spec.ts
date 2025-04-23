@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 
-import {MockBaseViewListComponent} from './mock-base-view-list.component';
+import {MockBaseViewListComponent} from './testing/mock-base-view-list.component';
 import {
   MockViewListApiService,
   MockViewListDialogService,

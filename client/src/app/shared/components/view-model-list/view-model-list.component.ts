@@ -3,6 +3,7 @@ import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
 import {ViewModelComponent} from '@app/shared/components/view-model-component/view-model.component';
+import {Updatable} from '@app/shared/models/updatable';
 
 @Component({
   selector: 'app-view-model-list',
@@ -15,7 +16,7 @@ import {ViewModelComponent} from '@app/shared/components/view-model-component/vi
   templateUrl: './view-model-list.component.html',
   styleUrl: './view-model-list.component.scss'
 })
-export class ViewModelListComponent<T> {
+export class ViewModelListComponent<T extends Updatable> {
   list = model<T[]>();
   allowAdd = input(false);
   allowItemEdit = input(false);

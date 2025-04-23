@@ -7,20 +7,20 @@ import {ViewModelTest, ViewModel} from '@app/shared/components/view-model-compon
   imports: [
     ViewModelComponent
   ],
-  template: `<app-view-model
-    [item]="model()"
-    [allowEdit]="showEdit()"
-    [allowDelete]="showDelete()"
-    (deleteClick)="onDelete(model())"
-    (editClick)="onEdit(model())">
+  template: `
+    <app-view-model
+      [item]="model()"
+      [allowEdit]="allowEdit()"
+      [allowDelete]="allowDelete()"
+      (deleteClick)="onDelete(model())"
+      (editClick)="onEdit(model())">
       <span>this is a test</span>
-  </app-view-model>`
+    </app-view-model>`
 })
 export class MockViewModelHostComponent {
  model = signal(ViewModelTest.generateModel(1));
- showButtons = input(false);
- showDelete = input(false);
- showEdit = input(false);
+ allowDelete = input(false);
+ allowEdit = input(false);
 
   onDelete(model: ViewModel) {
     console.debug('delete clicked', model);
