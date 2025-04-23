@@ -1,19 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ViewAddressListComponent } from './view-address-list.component';
+import {ViewAddressListComponent} from './view-address-list.component';
 import {AuthService} from '@app/core/auth/services/auth.service';
 import {AddressEditDialogService} from '@app/features/addresses/services/address-edit-dialog.service';
 import {AddressService} from '@app/features/addresses/services/address.service';
-import {async} from 'rxjs';
 import {asyncData} from '@app/shared/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {AddressTest} from '@app/features/addresses/testing';
-import {MatButton} from '@angular/material/button';
-import {MatButtonHarness} from '@angular/material/button/testing';
 import {ViewModelListHarness} from '@app/shared/components/view-model-list/testing/view-model-list-harness';
 import {ViewModelHarness} from '@app/shared/components/view-model-component/testing/view-model-harness';
-import {PermissionType} from '@app/core/auth/models/permission-type';
 
 describe('ViewAddressListComponent', () => {
   let component: ViewAddressListComponent;

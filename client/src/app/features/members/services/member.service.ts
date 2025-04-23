@@ -8,10 +8,6 @@ import {DateTime} from 'luxon';
 import {Member} from '@app/features/members/models/member';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
-import {Address} from '@app/features/addresses/models';
-import {Email} from '@app/features/emails/models';
-import {Phone} from '@app/features/phones/models';
-import {Renewal} from '@app/features/renewals/models';
 
 @Injectable()
 export class MemberService extends BaseApiService<Member, Member> {

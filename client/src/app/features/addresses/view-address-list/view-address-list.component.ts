@@ -1,4 +1,4 @@
-import {Component, input, signal, model, OnInit} from '@angular/core';
+import {Component, input, signal, OnInit} from '@angular/core';
 import {AuthService} from '@app/core/auth/services/auth.service';
 import {PermissionType} from '@app/core/auth/models/permission-type';
 import {ViewModelListComponent} from '@app/shared/components/view-model-list/view-model-list.component';
