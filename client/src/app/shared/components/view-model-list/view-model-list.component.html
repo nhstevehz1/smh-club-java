@@ -1,18 +1,19 @@
 <div class="flex-column">
   @if(allowAdd()) {
     <div class="flex-row end">
-      <button id="addButton" mat-icon-button (click)="onAddItem()">
+      <button id="addButton"
+              mat-icon-button
+              [matTooltip]="addTooltip() | translate"
+              (click)="onAddItem()">
         <mat-icon>add</mat-icon>
       </button>
     </div>
+
     <mat-divider/>
   }
-  @for(item of list(); track item.id) {
-    <app-view-model
-        [item]="item"
-        [allowEdit]="allowItemEdit()"
-        [allowDelete]="allowItemDelete()"
-        (editClick)="onEdItItem(item)"
-        (deleteClick)="onDeleteItem(item)"/>
+
+  <ng-content/>
+  @if(list().length > 0) {
+    <mat-divider/>
   }
 </div>

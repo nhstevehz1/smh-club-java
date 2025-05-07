@@ -1,18 +1,20 @@
-<app-view-model [item]="member()">
-  <div class="container">
-    <div class="content">
-      <div class="flex-row space-evenly row-gap">
-        <app-data-display id='fullName' [data]="fullName()" label="members.view.member"/>
-        <app-data-display id="memberNumber" [data]="member()!.member_number" label="members.view.number" />
-      </div>
-      <div class="flex-row space-evenly row-gap">
-        <app-data-display id="birthDate"
-          [data]="birthDate() | dateTimeToLocal | dateTimeToFormat: DateTime.DATE_SHORT: {locale: lang()}"
-          label="members.view.birthDate" />
-        <app-data-display id="joinedDate"
-          [data]="joinedDate() | dateTimeToLocal | dateTimeToFormat: DateTime.DATE_SHORT : {locale: lang()}"
-          label="members.view.joinedDate" />
+@if(member()) {
+  <app-view-model [item]="member()!">
+    <div class="container">
+      <div class="content">
+        <div class="flex-row space-evenly row-gap">
+          <app-data-display id='fullName' [data]="fullName()" label="members.view.member"/>
+          <app-data-display id="memberNumber" [data]="member()!.member_number" label="members.view.number" />
+        </div>
+        <div class="flex-row space-evenly row-gap">
+          <app-data-display id="birthDate"
+                            [data]="birthDate() | dateTimeToLocal | dateTimeToFormat: DateTime.DATE_SHORT: {locale: lang()}"
+                            label="members.view.birthDate" />
+          <app-data-display id="joinedDate"
+                            [data]="joinedDate() | dateTimeToLocal | dateTimeToFormat: DateTime.DATE_SHORT : {locale: lang()}"
+                            label="members.view.joinedDate" />
+        </div>
       </div>
     </div>
-  </div>
-</app-view-model>
+  </app-view-model>
+}

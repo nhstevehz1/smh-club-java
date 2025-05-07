@@ -20,8 +20,10 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(auth ->
         auth
-            .requestMatchers("/api/**")
-            .authenticated()
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            //.requestMatchers("/api/**")
+            .anyRequest().authenticated()
+
     );
 
     http.oauth2ResourceServer(oauth2ResourceServer ->
@@ -35,5 +37,4 @@ public class SecurityConfig {
 
     return http.build();
   }
-
 }

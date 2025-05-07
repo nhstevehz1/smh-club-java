@@ -43,7 +43,7 @@ export class PhoneService extends BaseApiService<Phone, PhoneMember> implements 
   }
 
   public getAllByMember(memberId: number): Observable<Phone[]> {
-    const uri = `/members/${memberId}/phones`;
+    const uri = `/api/v1/members/${memberId}/phones`;
     return this.http.get<Phone[]>(uri).pipe(
       map(data => data.map(phone => this.castPhoneType(phone)))
     )

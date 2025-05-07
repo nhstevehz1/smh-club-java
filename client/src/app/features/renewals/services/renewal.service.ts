@@ -46,7 +46,7 @@ export class RenewalService extends BaseApiService<Renewal, RenewalMember> imple
   }
 
   public getAllByMember(memberId: number): Observable<Renewal[]> {
-    const uri = `/members/${memberId}/renewals`;
+    const uri = `/api/v1/members/${memberId}/renewals`;
     return this.http.get<Renewal[]>(uri).pipe(
       map(data => data.map(address => this.castDateTimeValue(address)))
     );

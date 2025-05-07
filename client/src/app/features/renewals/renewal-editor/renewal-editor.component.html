@@ -1,19 +1,22 @@
 <div [formGroup]="editorForm()!" class="flex-column space-evenly">
-  <div class="flex-row start row-gap">
-    <app-input-form-field
-      ngDefaultControl
-      [appearance]="fieldAppearance()"
-      [formControl]="renewalYear()"
-      [controlErrors]="renewalYearErrors()"
-      [inputType]="InputType.Number"
-      label="renewals.editor.renewalYear.label">
-    </app-input-form-field>
-    <app-date-form-field
-      ngDefaultControl
-      [appearance]="fieldAppearance()"
-      [formControl]="renewalDate()"
-      [controlErrors]="renewalDateErrors()"
-      label="renewals.editor.renewalDate.label">
-    </app-date-form-field>
+  <div class="flex-column space-evenly">
+    <div class="flex-row start row-gap">
+      <app-input-form-field
+        ngDefaultControl
+        [appearance]="fieldAppearance()"
+        [formControl]="renewalYear()"
+        [controlErrors]="renewalYearErrors()"
+        [inputType]="InputType.Number"
+        label="renewals.editor.renewalYear.label">
+      </app-input-form-field>
+
+      <app-date-form-field
+        ngDefaultControl
+        [appearance]="fieldAppearance()"
+        [formControl]="renewalDate()"
+        [controlErrors]="renewalDateErrors()"
+        label="renewals.editor.renewalDate.label">
+      </app-date-form-field>
+    </div>
   </div>
 </div>

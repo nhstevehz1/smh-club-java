@@ -10,20 +10,10 @@ import {ViewListModel} from '@app/shared/components/view-model-list/testing/test
   templateUrl: './view-model-list-host.component.html'
 })
 export class ViewModelListHostComponent {
-  models = model<ViewListModel[]>([]);
+  list = model<ViewListModel[]>([]);
   allowAdd = input(false);
-  allowEdit = input(false);
-  allowDelete = input(false);
 
   onAdd(): void {
     console.trace('view model list, onAdd');
-  }
-
-  onEditItem(item: ViewListModel) {
-    console.trace('view model list, onEditItem', item);
-  }
-
-  onDeleteItem(item: ViewListModel) {
-    console.trace('view model list, onDeleteItem', item);
   }
 }

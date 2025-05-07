@@ -10,6 +10,7 @@ import {EmailService} from '@app/features/emails/services/email.service';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {asyncData} from '@app/shared/testing';
 import {EmailTest} from '@app/features/emails/testing';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewEmailListComponent', () => {
   let component: ViewEmailListComponent;
@@ -34,7 +35,10 @@ describe('ViewEmailListComponent', () => {
     apiSvcMock = jasmine.createSpyObj('EmailService', ['getAllByMember']);
 
     await TestBed.configureTestingModule({
-      imports: [ViewEmailListComponent],
+      imports: [
+        ViewEmailListComponent,
+        TranslateModule.forRoot({})
+      ],
       providers: [
         {provide: AuthService, useValue: {}},
         {provide: EmailEditDialogService, useValue: {}},

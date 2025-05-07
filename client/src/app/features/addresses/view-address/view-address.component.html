@@ -1,4 +1,12 @@
-<app-view-model [item]="address()">
+<app-view-model
+  [item]="address()"
+  [allowEdit]="allowEdit()"
+  [allowDelete]="allowDelete()"
+  [editTooltip]="'modelView.address.edit' | translate"
+  [deleteTooltip]="'modelView.address.delete' | translate"
+  (editClick)="onEdit()"
+  (deleteClick)="onDelete()">
+
   <div class="container col-gap">
     <mat-icon>{{icon()}}</mat-icon>
     <app-data-display [data]="address1()"/>

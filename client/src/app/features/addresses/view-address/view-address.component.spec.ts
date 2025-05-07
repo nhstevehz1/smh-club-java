@@ -7,6 +7,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatIconHarness} from '@angular/material/icon/testing';
 import {DataDisplayHarness} from '@app/shared/components/data-display/testing/data-display-harness';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewAddressComponent', () => {
   let component: ViewAddressComponent;
@@ -19,7 +20,10 @@ describe('ViewAddressComponent', () => {
     address = AddressTest.generateAddress();
 
     await TestBed.configureTestingModule({
-      imports: [ViewAddressComponent]
+      imports: [
+        ViewAddressComponent,
+        TranslateModule.forRoot({})
+      ]
     })
     .compileComponents();
 

@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
 import {CrudService} from '@app/shared/services/api-service/crud-service';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Updatable} from '@app/shared/models/updatable';
 
-@Injectable()
-export class BaseCrudService<T extends Updatable> implements CrudService<T>{
+export abstract class BaseCrudService<T extends Updatable> implements CrudService<T>{
 
   readonly baseUri: string;
 

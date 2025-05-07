@@ -1,8 +1,17 @@
 <app-view-model-list
     [list]="items()"
     [allowAdd]="hasWritePrivileges()"
-    [allowItemEdit]="hasWritePrivileges()"
-    [allowItemDelete]="hasWritePrivileges()"
-    (addClicked)="onAddItem()"
-    (editItemClicked)="onEditItem($event)"
-    (deleteItemClicked)="onDeleteItem($event)"/>
+    [addTooltip]="'modelView.address.add' | translate"
+    (addClicked)="onAddItem()">
+
+  <div class="content">
+    @for(address of items(); track address) {
+      <app-view-address
+        [address]="address"
+        [allowEdit]="hasWritePrivileges()"
+        [allowDelete]="hasWritePrivileges()"
+        (editClick)="onEditItem(address)"
+        (deleteClick)="onDeleteItem(address)"/>
+    }
+  </div>
+</app-view-model-list>

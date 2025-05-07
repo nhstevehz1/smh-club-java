@@ -7,6 +7,7 @@ import {MatIconHarness} from '@angular/material/icon/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {DataDisplayHarness} from '@app/shared/components/data-display/testing/data-display-harness';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewEmailComponent', () => {
   let component: ViewEmailComponent;
@@ -19,7 +20,10 @@ describe('ViewEmailComponent', () => {
     email = EmailTest.generateEmail();
 
     await TestBed.configureTestingModule({
-      imports: [ViewEmailComponent]
+      imports: [
+        ViewEmailComponent,
+        TranslateModule.forRoot({})
+      ]
     })
     .compileComponents();
 

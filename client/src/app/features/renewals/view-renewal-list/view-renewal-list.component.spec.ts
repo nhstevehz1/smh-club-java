@@ -10,6 +10,7 @@ import {RenewalService} from '@app/features/renewals/services/renewal.service';
 import {asyncData} from '@app/shared/testing';
 import {RenewalTest} from '@app/features/renewals/testing/test-support';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewRenewalListComponent', () => {
   let component: ViewRenewalListComponent;
@@ -34,7 +35,10 @@ describe('ViewRenewalListComponent', () => {
     apiSvcMock = jasmine.createSpyObj('RenewalService', ['getAllByMember']);
 
     await TestBed.configureTestingModule({
-      imports: [ViewRenewalListComponent],
+      imports: [
+        ViewRenewalListComponent,
+        TranslateModule.forRoot({})
+      ],
       providers: [
         {provide: AuthService, useValue: {}},
         {provide: RenewalEditDialogService, useValue: {}},

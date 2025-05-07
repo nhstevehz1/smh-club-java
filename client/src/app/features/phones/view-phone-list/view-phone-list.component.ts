@@ -8,11 +8,20 @@ import {PhoneEditDialogService} from '@app/features/phones/services/phone-edit-d
 import {PermissionType} from '@app/core/auth/models/permission-type';
 import {ViewModelListComponent} from '@app/shared/components/view-model-list/view-model-list.component';
 import {EditAction} from '@app/shared/components/base-edit-dialog/models';
+import {ViewPhoneComponent} from '@app/features/phones/view-phone/view-phone.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-phone-list',
   imports: [
-    ViewModelListComponent
+    ViewModelListComponent,
+    ViewPhoneComponent,
+    TranslatePipe
+  ],
+  providers: [
+    AuthService,
+    PhoneService,
+    PhoneEditDialogService
   ],
   templateUrl: './view-phone-list.component.html',
   styleUrl: './view-phone-list.component.scss'

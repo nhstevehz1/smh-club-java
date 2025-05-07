@@ -20,6 +20,9 @@ export class ViewModelComponent<T extends Updatable> {
   allowEdit = input(false);
   allowDelete = input(false);
 
+  editTooltip = input('modelView.edit');
+  deleteTooltip = input('modelView.delete')
+
   editClick = output<T>();
   deleteClick = output<T>();
 

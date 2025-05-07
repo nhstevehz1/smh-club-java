@@ -13,7 +13,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {By} from '@angular/platform-browser';
 import {MatButtonHarness} from '@angular/material/button/testing';
 
-describe('DialogComponent', () => {
+describe('BaseEditDialogComponent', () => {
   let component: MockDialogComponent;
   let fixture: ComponentFixture<MockDialogComponent>;
   let dialogRef: MatDialogRef<MockDialogComponent>;
@@ -100,7 +100,6 @@ describe('DialogComponent', () => {
       });
     });
 
-
     it('form should be visible when action is create', async () => {
       fixture.detectChanges();
       await fixture.whenStable();
@@ -109,9 +108,9 @@ describe('DialogComponent', () => {
       expect(form).toBeTruthy();
     });
 
-    it('form should NOT be set to context', async() => {
+    it('form should be set to context', async() => {
       const value = component.editForm().value as EditDialogModel;
-      expect(value).not.toEqual(dialogInput.context);
+      expect(value).toEqual(dialogInput.context);
     });
 
     it('form should be set to original values', () => {
@@ -126,26 +125,26 @@ describe('DialogComponent', () => {
 
     it('should contain cancel button when action is create', async () => {
       const harness = await loader.getHarnessOrNull(MatButtonHarness.
-            with({text: 'cancel', variant: 'basic'}));
+            with({text: 'cancel', variant: 'icon'}));
 
       expect(harness).toBeTruthy();
     });
 
     it('should contain save button when action is create', async () => {
       const harness =
-        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'save', variant: 'basic'}));
+        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'save', variant: 'icon'}));
       expect(harness).toBeTruthy();
     });
 
     it('should NOT contain delete button action is create', async () => {
       const harness =
-        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'delete', variant: 'basic'}));
+        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'delete', variant: 'icon'}));
       expect(harness).toBeFalsy();
     });
 
     it('save button should be disabled on init when action is create', async () => {
       const harness =
-        await loader.getHarness(MatButtonHarness.with({text: 'save', variant: 'basic'}));
+        await loader.getHarness(MatButtonHarness.with({text: 'save', variant: 'icon'}));
       const disabled = await harness.isDisabled();
       expect(disabled).toBeTrue();
     });
@@ -153,7 +152,7 @@ describe('DialogComponent', () => {
     it('cancel click should close the dialog when action is create', async () => {
       const spy = spyOn(dialogRef, 'close').and.callThrough();
       const harness = await loader.getHarness(MatButtonHarness.
-      with({text: 'cancel', variant: 'basic'}));
+      with({text: 'cancel', variant: 'icon'}));
 
       await harness.click();
       expect(spy).toHaveBeenCalled();
@@ -165,7 +164,7 @@ describe('DialogComponent', () => {
 
       const spy = spyOn(dialogRef, 'close').and.callThrough();
       const harness = await loader.getHarness(MatButtonHarness.
-      with({text: 'save', variant: 'basic'}));
+      with({text: 'save', variant: 'icon'}));
       await harness.click();
 
       expect(spy).toHaveBeenCalled();
@@ -200,25 +199,25 @@ describe('DialogComponent', () => {
 
     it('should contain cancel button when action is edit', async () => {
       const harness = await loader.getHarnessOrNull(MatButtonHarness.
-      with({text: 'cancel', variant: 'basic'}));
+      with({text: 'cancel', variant: 'icon'}));
       expect(harness).toBeTruthy();
     });
 
     it('should contain save button when action is edit', async () => {
       const harness =
-        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'save', variant: 'basic'}));
+        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'save', variant: 'icon'}));
       expect(harness).toBeTruthy();
     });
 
     it('should NOT contain delete button action is edit', async () => {
       const harness =
-        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'delete', variant: 'basic'}));
+        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'delete', variant: 'icon'}));
       expect(harness).toBeFalsy();
     });
 
     it('save button should be disabled when form is untouched', async () => {
       const harness =
-        await loader.getHarness(MatButtonHarness.with({text: 'save', variant: 'basic'}));
+        await loader.getHarness(MatButtonHarness.with({text: 'save', variant: 'icon'}));
       const disabled = await harness.isDisabled();
       expect(disabled).toBeTrue();
     });
@@ -226,7 +225,7 @@ describe('DialogComponent', () => {
     it('cancel click should close the dialog when action is edit', async () => {
       const spy = spyOn(dialogRef, 'close').and.callThrough();
       const harness = await loader.getHarness(MatButtonHarness.
-      with({text: 'cancel', variant: 'basic'}));
+      with({text: 'cancel', variant: 'icon'}));
 
       await harness.click();
       expect(spy).toHaveBeenCalled();
@@ -238,7 +237,7 @@ describe('DialogComponent', () => {
 
       const spy = spyOn(dialogRef, 'close').and.callThrough();
       const harness = await loader.getHarness(MatButtonHarness.
-      with({text: 'save', variant: 'basic'}));
+      with({text: 'save', variant: 'icon'}));
       await harness.click();
 
       expect(spy).toHaveBeenCalled();
@@ -268,19 +267,19 @@ describe('DialogComponent', () => {
 
     it('should contain cancel button when action is delete', async () => {
       const harness = await loader.getHarnessOrNull(MatButtonHarness.
-      with({text: 'cancel', variant: 'basic'}));
+      with({text: 'cancel', variant: 'icon'}));
       expect(harness).toBeTruthy();
     });
 
-    it('should contain ok button when action is delete', async () => {
+    it('should contain delete button when action is delete', async () => {
       const harness =
-        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'ok', variant: 'basic'}));
+        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'delete', variant: 'icon'}));
       expect(harness).toBeTruthy();
     });
 
     it('should NOT contain save button action is edit', async () => {
       const harness =
-        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'save', variant: 'basic'}));
+        await loader.getHarnessOrNull(MatButtonHarness.with({text: 'save', variant: 'icon'}));
       expect(harness).toBeFalsy();
     });
 
@@ -288,7 +287,7 @@ describe('DialogComponent', () => {
     it('cancel click should close the dialog when action is delete', async () => {
       const spy = spyOn(dialogRef, 'close').and.callThrough();
       const harness = await loader.getHarness(MatButtonHarness.
-          with({text: 'cancel', variant: 'basic'}));
+          with({text: 'cancel', variant: 'icon'}));
 
       await harness.click();
       expect(spy).toHaveBeenCalled();
@@ -298,7 +297,7 @@ describe('DialogComponent', () => {
     it('ok click should close the dialog when action is delete', async () => {
       const spy = spyOn(dialogRef, 'close').and.callThrough();
       const harness = await loader.getHarness(MatButtonHarness.
-      with({text: 'ok', variant: 'basic'}));
+      with({text: 'delete', variant: 'icon'}));
 
       await harness.click();
       expect(spy).toHaveBeenCalled();

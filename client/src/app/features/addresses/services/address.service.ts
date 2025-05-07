@@ -43,7 +43,7 @@ export class AddressService extends BaseApiService<Address, AddressMember> imple
   }
 
   public getAllByMember(memberId: number): Observable<Address[]> {
-    const uri = `/members/${memberId}/addresses`;
+    const uri = `/api/v1/members/${memberId}/addresses`;
     return this.http.get<Address[]>(uri).pipe(
       map(data => data.map(address => this.castAddressType(address)))
     );

@@ -33,17 +33,17 @@ import {ViewModelComponent} from '@app/shared/components/view-model-component/vi
   styleUrl: './view-member.component.scss'
 })
 export class ViewMemberComponent {
-  member = model.required<Member>();
+  member = model<Member>();
 
   number = computed(() => this.member()?.member_number);
-  birthDate = computed(() => this.member().birth_date);
-  joinedDate = computed(() => this.member().joined_date);
+  birthDate = computed(() => this.member()?.birth_date);
+  joinedDate = computed(() => this.member()?.joined_date);
 
   fullName = computed<string>(() => {
     const member = this.member();
-    const middle = member.middle_name  ? ` ${member.middle_name}` : '';
-    const suffix = member?.suffix  ? ` ${member.suffix}` : '';
-    return `${member.first_name}${middle} ${member?.last_name}${suffix}`;
+    const middle = member?.middle_name  ? ` ${member?.middle_name}` : '';
+    const suffix = member?.suffix  ? ` ${member?.suffix}` : '';
+    return `${member?.first_name}${middle} ${member?.last_name}${suffix}`;
   });
 
   lang: WritableSignal<string>;

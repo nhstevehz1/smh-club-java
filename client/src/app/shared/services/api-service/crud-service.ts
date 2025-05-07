@@ -1,6 +1,4 @@
 import {Observable} from 'rxjs';
-
-import {PagedData, PageRequest} from '@app-shared/services/api-service/models';
 import {Updatable} from '@app/shared/models/updatable';
 
 export interface CrudService<T extends Updatable>  {

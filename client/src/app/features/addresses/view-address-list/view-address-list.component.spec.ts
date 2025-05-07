@@ -10,6 +10,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {AddressTest} from '@app/features/addresses/testing';
 import {ViewModelListHarness} from '@app/shared/components/view-model-list/testing/view-model-list-harness';
 import {ViewModelHarness} from '@app/shared/components/view-model-component/testing/view-model-harness';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewAddressListComponent', () => {
   let component: ViewAddressListComponent;
@@ -34,7 +35,10 @@ describe('ViewAddressListComponent', () => {
     apiSvcMock = jasmine.createSpyObj('AddressService', ['getAllByMember']);
 
     await TestBed.configureTestingModule({
-      imports: [ViewAddressListComponent],
+      imports: [
+        ViewAddressListComponent,
+        TranslateModule.forRoot({})
+      ],
       providers: [
         {provide: AuthService, useValue: {}},
         {provide: AddressEditDialogService, useValue: {}},

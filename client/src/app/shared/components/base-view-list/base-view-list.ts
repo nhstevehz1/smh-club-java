@@ -3,10 +3,11 @@ import {CrudService} from '@app/shared/services/api-service/crud-service';
 import {Editor} from '@app/shared/components/base-editor/editor';
 import {EditDialogService} from '@app/shared/services/dialog-edit-service/edit-dialog-service';
 import {EditAction} from '@app/shared/components/base-edit-dialog/models';
-import {model} from '@angular/core';
+import {model, Directive} from '@angular/core';
 import {mergeMap, map} from 'rxjs/operators';
 import {of} from 'rxjs';
 
+@Directive()
 export abstract class BaseViewList<T extends Updatable, C extends Editor<T>> {
 
   items = model<T[]>([]);
@@ -71,6 +72,7 @@ export abstract class BaseViewList<T extends Updatable, C extends Editor<T>> {
     this.dialogSvc.openDialog(input).pipe(
       mergeMap(result => {
         if(result.action == EditAction.Delete) {
+          console.debug('action is DELETE')
           return this.apiSvc.delete(result.context.id).pipe(map(() => result));
         } else {
           return of(result);

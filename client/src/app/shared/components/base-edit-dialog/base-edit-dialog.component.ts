@@ -29,10 +29,8 @@ export class BaseEditDialogComponent<T, C extends Editor<T>> implements EditDial
 
   readonly editForm = computed(() => {
     const form = this.dialogInput().editorConfig.form;
-    if(this.dialogInput().action == EditAction.Edit) {
+    if(this.dialogInput().action == EditAction.Edit || this.dialogInput().action == EditAction.Create) {
       form.patchValue(this.dialogInput().context!);
-    } else {
-      form.reset();
     }
     return form;
   });

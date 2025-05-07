@@ -1,4 +1,12 @@
-<app-view-model [item]="renewal()">
+<app-view-model
+  [item]="renewal()"
+  [allowEdit]="allowEdit()"
+  [allowDelete]="allowDelete()"
+  [editTooltip]="'modelView.renewal.edit' | translate"
+  [deleteTooltip]="'modelView.renewal.delete' | translate"
+  (editClick)="onEdit()"
+  (deleteClick)="onDelete()">
+
   <div class="flex-row gap">
     <app-data-display [data]="year()"/>
     <app-data-display

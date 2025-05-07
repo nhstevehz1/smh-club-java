@@ -2,8 +2,9 @@ import {Component, input, output, model} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
-import {ViewModelComponent} from '@app/shared/components/view-model-component/view-model.component';
 import {Updatable} from '@app/shared/models/updatable';
+import {MatTooltip} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-model-list',
@@ -11,30 +12,19 @@ import {Updatable} from '@app/shared/models/updatable';
     MatIconButton,
     MatIcon,
     MatDivider,
-    ViewModelComponent
+    MatTooltip,
+    TranslatePipe
   ],
   templateUrl: './view-model-list.component.html',
   styleUrl: './view-model-list.component.scss'
 })
 export class ViewModelListComponent<T extends Updatable> {
-  list = model<T[]>();
+  list = model.required<T[]>();
   allowAdd = input(false);
-  allowItemEdit = input(false);
-  allowItemDelete = input(false);
-
+  addTooltip = input('modelView.add')
   addClicked = output<void>();
-  editItemClicked = output<T>();
-  deleteItemClicked = output<T>();
 
   onAddItem(): void {
     this.addClicked.emit();
-  }
-
-  onEdItItem(item: T) {
-    this.editItemClicked.emit(item);
-  }
-
-  onDeleteItem(item: T): void {
-    this.deleteItemClicked.emit(item);
   }
 }

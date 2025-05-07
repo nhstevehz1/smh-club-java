@@ -58,5 +58,4 @@ export class MemberService extends BaseApiService<Member, Member> {
 
       return member;
   }
-
 }

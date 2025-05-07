@@ -10,6 +10,7 @@ import {BaseEditorComponent} from '@app/shared/components/base-editor/base-edito
 import {
   DateFormFieldComponent
 } from '@app/shared/components/editor-form-fields/date-form-field/date-form-field.component';
+import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 
 @Component({
   selector: 'app-renewal-editor',
@@ -17,6 +18,9 @@ import {
     ReactiveFormsModule,
     InputFormFieldComponent,
     DateFormFieldComponent
+  ],
+  providers: [
+    provideLuxonDateAdapter()
   ],
   templateUrl: './renewal-editor.component.html',
   styleUrl: './renewal-editor.component.scss'
