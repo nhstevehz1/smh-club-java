@@ -1,8 +1,17 @@
-<<app-view-model-list
+<app-view-model-list
   [list]="items()"
   [allowAdd]="hasWritePrivileges()"
-  [allowItemEdit]="hasWritePrivileges()"
-  [allowItemDelete]="hasWritePrivileges()"
-  (addClicked)="onAddItem()"
-  (editItemClicked)="onEditItem($event)"
-  (deleteItemClicked)="onDeleteItem($event)"/>
+  [addTooltip]="'modelView.email.add' | translate"
+  (addClicked)="onAddItem()">
+
+  <div class="content">
+    @for(email of items(); track email) {
+      <app-view-email
+        [email]="email"
+        [allowEdit]="hasWritePrivileges()"
+        [allowDelete]="hasWritePrivileges()"
+        (editClick)="onEditItem(email)"
+        (deleteClick)="onDeleteItem(email)"/>
+    }
+  </div>
+</app-view-model-list>

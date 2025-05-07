@@ -112,7 +112,7 @@ describe('ListMembersComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    component.onViewClick(item);
-    expect(spy).toHaveBeenCalledWith(['p/members/view', item.data.id]);
+    component.onView(item);
+    expect(spy).toHaveBeenCalledWith(['p/members', item.data.id]);
   })
 });

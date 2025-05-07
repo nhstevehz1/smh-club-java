@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value ="/api/v1/members/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value ="/api/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MemberDetailsController {
 
     private final AddressService addressSvc;
@@ -41,7 +41,7 @@ public class MemberDetailsController {
      * @return A list of {@link AddressDto}'s.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping("addresses")
+    @GetMapping("{id}/addresses")
     public ResponseEntity<List<AddressDto>> addresses(@PathVariable int id) {
         return ResponseEntity.ok(addressSvc.findAllByMemberId(id));
     }
@@ -53,7 +53,7 @@ public class MemberDetailsController {
      * @return A list of {@link EmailDto}'s.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping("emails")
+    @GetMapping("{id}/emails")
     public ResponseEntity<List<EmailDto>> emails(@PathVariable int id) {
         return ResponseEntity.ok(emailSvc.findAllByMemberId(id));
     }
@@ -65,7 +65,7 @@ public class MemberDetailsController {
      * @return A list of {@link PhoneDto}'s.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping("phones")
+    @GetMapping("{id}/phones")
     public ResponseEntity<List<PhoneDto>> phones(@PathVariable int id) {
         return ResponseEntity.ok(phoneSvc.findAllByMemberId(id));
     }
@@ -77,7 +77,7 @@ public class MemberDetailsController {
      * @return A list of {@link RenewalDto}'s.
      */
     @PreAuthorize("hasAuthority('permission:read')")
-    @GetMapping("renewals")
+    @GetMapping("{id}/renewals")
     public ResponseEntity<List<RenewalDto>> renewals(@PathVariable int id) {
         return ResponseEntity.ok(renewalSvc.findAllByMemberId(id));
     }

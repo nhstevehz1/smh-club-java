@@ -7,6 +7,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatIconHarness} from '@angular/material/icon/testing';
 import {DataDisplayHarness} from '@app/shared/components/data-display/testing/data-display-harness';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewPhoneComponent', () => {
   let component: ViewPhoneComponent;
@@ -19,7 +20,10 @@ describe('ViewPhoneComponent', () => {
     phone = PhoneTest.generatePhone();
 
     await TestBed.configureTestingModule({
-      imports: [ViewPhoneComponent]
+      imports: [
+        ViewPhoneComponent,
+        TranslateModule.forRoot({})
+      ]
     })
     .compileComponents();
 

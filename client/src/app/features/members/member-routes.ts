@@ -13,9 +13,9 @@ export const memberRoutes: Routes = [{
         .then(mod => mod.AddMemberComponent),
     canActivate: [writeGuard]
   }, {
-    path: 'view/:id',
-    loadComponent: () => import('./view-member/view-member.component')
-      .then(mod => mod.ViewMemberComponent),
+    path: ':id',
+    loadComponent: () => import('./view-member-details/view-member-details.component')
+      .then(mod => mod.ViewMemberDetailsComponent),
     canActivate: [readGuard]
   }
 ]

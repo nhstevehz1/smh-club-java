@@ -9,11 +9,21 @@ import {PermissionType} from '@app/core/auth/models/permission-type';
 import {DateTime} from 'luxon';
 import {EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {ViewModelListComponent} from '@app/shared/components/view-model-list/view-model-list.component';
+import {ViewRenewalComponent} from '@app/features/renewals/view-renewal/view-renewal.component';
+import {TranslatePipe} from '@ngx-translate/core';
+import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 
 @Component({
   selector: 'app-view-renewal-list',
   imports: [
-    ViewModelListComponent
+    ViewModelListComponent,
+    ViewRenewalComponent,
+    TranslatePipe
+  ],
+  providers: [
+    AuthService,
+    RenewalService,
+    RenewalEditDialogService
   ],
   templateUrl: './view-renewal-list.component.html',
   styleUrl: './view-renewal-list.component.scss'
@@ -47,7 +57,7 @@ export class ViewRenewalListComponent extends BaseViewList<Renewal, RenewalEdito
   }
 
   public onEditItem(item: Renewal): void {
-    const title = 'editDialog,renewal.edit';
+    const title = 'editDialog,renewal.update';
     this.processAction(title, item, EditAction.Edit);
   }
 
@@ -60,7 +70,7 @@ export class ViewRenewalListComponent extends BaseViewList<Renewal, RenewalEdito
     return {
       id: 0,
       member_id: this.memberId(),
-      renewal_year: 0,
+      renewal_year: DateTime.now().year,
       renewal_date: DateTime.now()
     }
   }

@@ -8,11 +8,20 @@ import {EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {AddressService} from '@app/features/addresses/services/address.service';
 import {BaseViewList} from '@app/shared/components/base-view-list/base-view-list';
 import {AddressEditorComponent} from '@app/features/addresses/address-editor/address-editor.component';
+import {ViewAddressComponent} from '@app/features/addresses/view-address/view-address.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-address-list',
   imports: [
-    ViewModelListComponent
+    ViewModelListComponent,
+    ViewAddressComponent,
+    TranslatePipe
+  ],
+  providers: [
+    AuthService,
+    AddressService,
+    AddressEditDialogService
   ],
   templateUrl: './view-address-list.component.html',
   styleUrl: './view-address-list.component.scss'
@@ -35,13 +44,14 @@ export class ViewAddressListComponent extends BaseViewList<Address, AddressEdito
 
     this.addressSvc.getAllByMember(this.memberId()).subscribe({
       next: list => this.items.update(() => list),
-      error: err => console.debug(err) // TODO: better error handling
+      error: err => console.debug(err.toString()) // TODO: better error handling
     })
   }
 
   onAddItem(): void {
     const title = 'editDialog.address.create';
     const context = this.generateEmptyAddress();
+    context.member_id = this.memberId();
     this.processAction(title, context, EditAction.Create);
   }
 

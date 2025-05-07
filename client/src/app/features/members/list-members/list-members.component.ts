@@ -52,11 +52,13 @@ export class ListMembersComponent extends BaseTableComponent<Member, Member, Mem
     super(auth, svc, tableSvc, dialogSvc);
   }
 
-  onAddMemberClick(): void {
+  onAdd(): void {
     this.router.navigate(['p/members/add']).then();
   }
 
-  onViewClick(event: EditEvent<Member>): void {
-    this.router.navigate(['p/members/view', event.data.id]).then();
+  onView(event: EditEvent<Member>): void {
+    this.router.navigate(['p/members', event.data.id]).then();
   }
+
+
 }

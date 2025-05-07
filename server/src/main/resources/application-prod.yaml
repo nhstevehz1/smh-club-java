@@ -36,3 +36,8 @@ spring:
         jwt:
           issuer-uri: ${CLUB_REST_API_ISSUER_URI}
           jwk-set-uri: ${CLUB_REST_API_JWK_SET_URI}
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

@@ -1,8 +1,15 @@
 <app-view-model-list
   [list]="items()"
   [allowAdd]="hasWritePrivileges()"
-  [allowItemEdit]="hasWritePrivileges()"
-  [allowItemDelete]="hasWritePrivileges()"
-  (addClicked)="onAddItem()"
-  (editItemClicked)="onEditItem($event)"
-  (deleteItemClicked)="onDeleteItem($event)"/>
+  [addTooltip]="'modelView.renewal.add' | translate"
+  (addClicked)="onAddItem()">
+
+  @for(renewal of items(); track renewal) {
+    <app-view-renewal
+      [renewal]="renewal"
+      [allowEdit]="hasWritePrivileges()"
+      [allowDelete]="hasWritePrivileges()"
+      (editClick)="onEditItem(renewal)"
+      (deleteClick)="onDeleteItem(renewal)"/>
+  }
+</app-view-model-list>

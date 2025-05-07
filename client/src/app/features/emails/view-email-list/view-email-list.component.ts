@@ -8,11 +8,20 @@ import {EmailEditDialogService} from '@app/features/emails/services/email-edit-d
 import {PermissionType} from '@app/core/auth/models/permission-type';
 import {EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {ViewModelListComponent} from '@app/shared/components/view-model-list/view-model-list.component';
+import {ViewEmailComponent} from '@app/features/emails/view-email/view-email.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-email-list',
   imports: [
-    ViewModelListComponent
+    ViewModelListComponent,
+    ViewEmailComponent,
+    TranslatePipe
+  ],
+  providers: [
+    AuthService,
+    EmailService,
+    EmailEditDialogService
   ],
   templateUrl: './view-email-list.component.html',
   styleUrl: './view-email-list.component.scss'

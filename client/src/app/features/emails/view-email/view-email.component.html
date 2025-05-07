@@ -1,4 +1,12 @@
-<app-view-model [item]="email()">
+<app-view-model
+  [item]="email()"
+  [allowEdit]="allowEdit()"
+  [allowDelete]="allowDelete()"
+  [editTooltip]="'modelView.email.edit' | translate"
+  [deleteTooltip]="'modelView.email.delete' | translate"
+  (editClick)="onEdit()"
+  (deleteClick)="onDelete()">
+
   <div class="flex-row row-gap">
     <mat-icon>{{icon()}}</mat-icon>
     <app-data-display [data]="emailAddress()"/>

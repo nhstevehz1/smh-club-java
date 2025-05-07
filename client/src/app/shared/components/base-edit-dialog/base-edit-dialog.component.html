@@ -4,18 +4,18 @@
 @if(isDeleteAction()) {
   <mat-dialog-actions align="end">
     <button class="cancel-button"
-            mat-button
+            mat-icon-button
             type="button"
             (click)="onCancel()"
-            matTooltip="cancel tooltip">
+            [matTooltip]="'editDialog.tooltip.cancel' | translate">
       <mat-icon>cancel</mat-icon>
     </button>
     <button class="delete-button"
-            mat-button
+            mat-icon-button
             type="button"
             (click)="onDelete()"
-            matTooltip="delete tooltip">
-      <mat-icon>ok</mat-icon>
+            [matTooltip]="'editDialog.tooltip.delete' | translate">
+      <mat-icon>delete</mat-icon>
     </button>
   </mat-dialog-actions>
 } @else {
@@ -29,18 +29,18 @@
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button class="cancel-button"
-              mat-button
+              mat-icon-button
               type="button"
               (click)="onCancel()"
-              matTooltip="cancel tooltip">
+              [matTooltip]="'editDialog.tooltip.cancel' | translate">
         <mat-icon>cancel</mat-icon>
       </button>
       <button class="submit-button"
-              mat-button
+              mat-icon-button
               type="submit"
               [disabled]="editForm()!.invalid || editForm()!.untouched"
               (click)="onSave()"
-              matTooltip="save tooltip">
+              [matTooltip]="'editDialog.tooltip.save' | translate">
         <mat-icon>save</mat-icon>
       </button>
     </mat-dialog-actions>

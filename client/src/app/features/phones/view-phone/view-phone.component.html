@@ -1,4 +1,12 @@
-<app-view-model [item]="phone()">
+<app-view-model
+  [item]="phone()"
+  [allowEdit]="allowDelete()"
+  [allowDelete]="allowDelete()"
+  [editTooltip]="'modelView.phone.edit' | translate"
+  [deleteTooltip]="'modelView.phone.delete' | translate"
+  (editClick)="onEdit()"
+  (deleteClick)="onDelete()">
+
   <div class="flex-row row-gap">
     <mat-icon>{{icon()}}</mat-icon>
     <app-data-display [data]="phoneNumber()"/>

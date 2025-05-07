@@ -83,9 +83,25 @@
       "update": "Actualizar dirección"
     },
     "email": {
-      "create": "Crear correo electrónico",
+      "create": "Añadir correo electrónico",
       "delete": "¿Borrar el correo electrónico?",
       "update": "Actualizar correo electrónico"
+    },
+    "phone": {
+      "create": "Añadir número de teléfono",
+      "delete": "Borrar número de teléfono",
+      "update": "Actualizar el número de teléfono"
+    },
+    "renewal": {
+      "create": "Renovar afiliación",
+      "delete": "Suprimir renovación",
+      "update": "Renovación de la actualización"
+    },
+    "tooltip": {
+      "add": "Añadir artículo",
+      "cancel": "Cancelar operación",
+      "delete": "Borrar elemento",
+      "save": "Guardar artículo"
     }
   },
   "emails": {
@@ -271,6 +287,31 @@
       "renewals": "Renovaciones"
     }
   },
+  "modelView": {
+    "add": "Añadir artículo",
+    "address": {
+      "add": "Añadir dirección",
+      "delete": "Borrar dirección",
+      "edit": "Editar Dirección"
+    },
+    "delete": "Borrar elemento",
+    "edit": "Editar elemento",
+    "email": {
+      "add": "Añadir correo electrónico",
+      "delete": "Borrar correo electrónico",
+      "edit": "Editar correo electrónico"
+    },
+    "phone": {
+      "add": "Añadir teléfono",
+      "delete": "Borrar teléfono",
+      "edit": "Editar teléfono"
+    },
+    "renewal": {
+      "add": "Añadir renovación",
+      "delete": "Suprimir renovación",
+      "edit": "Editar renovación"
+    }
+  },
   "okCancel": {
     "defaultTitleMessage": "Éxito",
     "defaultToolTip": "Ok"
@@ -313,6 +354,14 @@
     }
   },
   "renewals": {
+    "editor": {
+      "renewalDate": {
+        "label": "Fecha de renovación"
+      },
+      "renewalYear": {
+        "label": "Año de renovación"
+      }
+    },
     "list": {
       "columns": {
         "fullName": "Miembro",

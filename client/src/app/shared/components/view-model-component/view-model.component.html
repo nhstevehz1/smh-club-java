@@ -1,16 +1,16 @@
-<div class="content">
+<div class="container">
   <ng-content />
-  <div class="flex-row end">
+  <div class="buttons">
     @if(allowEdit()){
       <button mat-icon-button id="editButton"
-              matTooltip="base.view.edit.toolTip"
+              [matTooltip]="editTooltip()"
               (click)="onEdit()">
         <mat-icon>edit</mat-icon>
       </button>
     }
     @if(allowDelete()) {
       <button mat-icon-button id="deleteButton"
-              matTooltip="base.view.edit.toolTip"
+              [matTooltip]="deleteTooltip()"
               (click)="onDelete()">
         <mat-icon>delete</mat-icon>
       </button>

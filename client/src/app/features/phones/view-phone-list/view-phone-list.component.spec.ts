@@ -10,6 +10,7 @@ import {PhoneService} from '@app/features/phones/services/phone.service';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {asyncData} from '@app/shared/testing';
 import {PhoneTest} from '@app/features/phones/testing';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewPhoneListComponent', () => {
   let component: ViewPhoneListComponent;
@@ -34,7 +35,10 @@ describe('ViewPhoneListComponent', () => {
     apiSvcMock = jasmine.createSpyObj('PhoneService', ['getAllByMember']);
 
     await TestBed.configureTestingModule({
-      imports: [ViewPhoneListComponent],
+      imports: [
+        ViewPhoneListComponent,
+        TranslateModule.forRoot({})
+      ],
       providers: [
         {provide: AuthService, useValue: {}},
         {provide: PhoneEditDialogService, useValue: {}},

@@ -83,9 +83,25 @@
       "update": "Mise à jour de l'adresse"
     },
     "email": {
-      "create": "Créer un courriel",
+      "create": "Ajouter un courriel",
       "delete": "Supprimer le courrier électronique ?",
       "update": "Mise à jour du courrier électronique"
+    },
+    "phone": {
+      "create": "Ajouter un numéro de téléphone",
+      "delete": "Supprimer un numéro de téléphone",
+      "update": "Mise à jour du numéro de téléphone"
+    },
+    "renewal": {
+      "create": "Renouveler l'adhésion",
+      "delete": "Supprimer le renouvellement",
+      "update": "Renouvellement de la mise à jour"
+    },
+    "tooltip": {
+      "add": "Ajouter un article",
+      "cancel": "Annuler l'opération",
+      "delete": "Supprimer un élément",
+      "save": "Sauvegarder l'article"
     }
   },
   "emails": {
@@ -271,6 +287,31 @@
       "renewals": "Renouvellements"
     }
   },
+  "modelView": {
+    "add": "Ajouter un article",
+    "address": {
+      "add": "Ajouter une adresse",
+      "delete": "Supprimer l'adresse",
+      "edit": "Modifier l'adresse"
+    },
+    "delete": "Supprimer un élément",
+    "edit": "Modifier l'article",
+    "email": {
+      "add": "Ajouter un courriel",
+      "delete": "Supprimer le courriel",
+      "edit": "Modifier l'e-mail"
+    },
+    "phone": {
+      "add": "Ajouter un téléphone",
+      "delete": "Supprimer le téléphone",
+      "edit": "Modifier le téléphone"
+    },
+    "renewal": {
+      "add": "Ajouter le renouvellement",
+      "delete": "Supprimer le renouvellement",
+      "edit": "Renouvellement de l'édition"
+    }
+  },
   "okCancel": {
     "defaultTitleMessage": "Succès",
     "defaultToolTip": "Ok"
@@ -313,6 +354,14 @@
     }
   },
   "renewals": {
+    "editor": {
+      "renewalDate": {
+        "label": "Date de renouvellement"
+      },
+      "renewalYear": {
+        "label": "Année de renouvellement"
+      }
+    },
     "list": {
       "columns": {
         "fullName": "Membre",

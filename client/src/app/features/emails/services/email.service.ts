@@ -44,7 +44,7 @@ export class EmailService extends BaseApiService<Email, EmailMember> implements 
   }
 
   public getAllByMember(memberId: number): Observable<Email[]> {
-    const uri = `/members/${memberId}/emails`;
+    const uri = `/api/v1/members/${memberId}/emails`;
     return this.http.get<Email[]>(uri).pipe(
       map(data => data.map(email => this.castEmailType(email)))
     )

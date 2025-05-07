@@ -1,63 +1,67 @@
-<!--<mat-accordion displayMode="flat">
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>{{'members.view.addresses' | translate}}</mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="flex-column col-gap">
-        @for(address of addresses(); track address.id){
-          <app-view-address [address]="address"/>
-        }
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
-
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>{{'members.view.phoneNumbers' | translate}}</mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="flex-column gap">
-        @for(phone of phones(); track phone.id){
-          <app-view-phone [phone]="phone"/>
-        }
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
-
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>{{'members.view.emailAddresses' | translate}}</mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="flex-column gap">
-        @for(email of emails(); track email.id) {
-          <app-view-email [email]="email"/>
-        }
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
-
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>{{'members.view.renewals' | translate}}</mat-panel-title>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <div class="flex-column gap">
-        @for(renewal of renewals(); track renewal.id) {
-          <app-view-renewal [renewal]="renewal"/>
-        }
-      </div>
-    </ng-template>
-  </mat-expansion-panel>
-</mat-accordion>
-
-<mat-divider />
-
-<div class="flex-row center">
-  <button mat-icon-button
-          [matTooltip]="'members.view.back.toolTip' | translate"
-          (click)="onBack()">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
+<!--<div class="container">
+  <div class="content">
+    <div class="member">
+      <app-view-member [member]="member()"/>
+    </div>
+    <mat-divider/>
+    <app-view-address-list [memberId]="id()"/>
+    <app-view-email-list [memberId]="id()"/>
+    <app-view-phone-list [memberId]="id()"/>
+    <app-view-renewal-list [memberId]="id()"/>
+  </div>
 </div>-->
+
+
+<div class="container">
+  <div class="content">
+    <div class="member">
+      <app-view-member [member]="member()"/>
+    </div>
+    <mat-accordion displayMode="flat">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{'members.view.addresses' | translate}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+          <app-view-address-list [memberId]="id()"/>
+        </ng-template>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{'members.view.phoneNumbers' | translate}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+          <app-view-phone-list [memberId]="id()"/>
+        </ng-template>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{'members.view.emailAddresses' | translate}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+          <app-view-email-list [memberId]="id()"/>
+        </ng-template>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{'members.view.renewals' | translate}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+          <app-view-renewal-list [memberId]="id()"/>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-divider />
+
+    <div class="flex-row center">
+      <button mat-icon-button
+              [matTooltip]="'members.view.back.toolTip' | translate"
+              (click)="onBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
