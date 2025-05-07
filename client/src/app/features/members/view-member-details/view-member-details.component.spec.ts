@@ -1,26 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ViewMemberDetailsComponent } from './view-member-details.component';
+import {ViewMemberDetailsComponent} from './view-member-details.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MemberService} from '@app/features/members/services/member.service';
 import {Location} from '@angular/common';
 import {Member} from '@app/features/members/models';
 import {asyncData} from '@app/shared/testing';
 import {MemberTest} from '@app/features/members/testing/test-support';
-import {async} from 'rxjs';
 
 describe('ViewMemberDetailsComponent', () => {
   let component: ViewMemberDetailsComponent;
   let fixture: ComponentFixture<ViewMemberDetailsComponent>;
 
   let svcMock: jasmine.SpyObj<MemberService>;
-  let locationMock: jasmine.SpyObj<Location>;
+  //let locationMock: jasmine.SpyObj<Location>;
 
   let member: Member;
 
   beforeEach(async () => {
     svcMock = jasmine.createSpyObj('MemberService', ['get']);
-    locationMock = jasmine.createSpyObj('Location', ['back']);
+    //locationMock = jasmine.createSpyObj('Location', ['back']);
 
     await TestBed.configureTestingModule({
       imports: [

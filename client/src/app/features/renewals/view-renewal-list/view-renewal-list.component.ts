@@ -11,7 +11,6 @@ import {EditAction} from '@app/shared/components/base-edit-dialog/models';
 import {ViewModelListComponent} from '@app/shared/components/view-model-list/view-model-list.component';
 import {ViewRenewalComponent} from '@app/features/renewals/view-renewal/view-renewal.component';
 import {TranslatePipe} from '@ngx-translate/core';
-import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 
 @Component({
   selector: 'app-view-renewal-list',

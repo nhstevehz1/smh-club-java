@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Profile;
 public class SwaggerConfig {
 
     String SCHEME_NAME = "OPENID_CONNECT";
-    String PROTOCOL_URL = "http://localhost:8080/realms/smh-club/protocol/openid-connect/";
     String OPEN_ID_CONNECT_URL = "http://localhost:8080/realms/smh-club/.well-known/openid-configuration";
 
     @Bean

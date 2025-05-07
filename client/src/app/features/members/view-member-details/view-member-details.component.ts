@@ -1,4 +1,4 @@
-import {Component, input, computed, signal, OnInit} from '@angular/core';
+import {Component, input, signal, OnInit} from '@angular/core';
 import {Member} from '@app/features/members/models';
 import {ViewMemberComponent} from '@app/features/members/view-member/view-member.component';
 import {ViewAddressListComponent} from '@app/features/addresses/view-address-list/view-address-list.component';

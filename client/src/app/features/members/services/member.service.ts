@@ -8,7 +8,6 @@ import {DateTime} from 'luxon';
 import {Member} from '@app/features/members/models/member';
 import {BaseApiService} from '@app/shared/services/api-service/base-api.service';
 import {PageRequest, PagedData} from '@app/shared/services/api-service/models';
-import {toSignal} from '@angular/core/rxjs-interop';
 
 @Injectable()
 export class MemberService extends BaseApiService<Member, Member> {

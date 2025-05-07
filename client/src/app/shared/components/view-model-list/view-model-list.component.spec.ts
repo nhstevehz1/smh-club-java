@@ -8,7 +8,6 @@ import {ViewListModel, ViewModelListTest} from '@app/shared/components/view-mode
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonHarness, ButtonHarnessFilters} from '@angular/material/button/testing';
-import {ViewModelHarness} from '@app/shared/components/view-model-component/testing/view-model-harness';
 import {TranslateModule} from '@ngx-translate/core';
 
 describe('ViewModelListComponent', () => {
